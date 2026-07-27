@@ -1,0 +1,6 @@
+[
+  { "countryCode": "CR", "name": "Costa Rica", "continent": "north-america", "languageCode": "es", "active": true },
+  { "countryCode": "MX", "name": "Mexico", "continent": "north-america", "languageCode": "es", "active": false },
+  { "countryCode": "AR", "name": "Argentina", "continent": "south-america", "languageCode": "es", "active": false },
+  { "countryCode": "FR", "name": "France", "continent": "europe", "languageCode": "fr", "active": false }
+]

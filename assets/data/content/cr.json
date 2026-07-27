@@ -1,0 +1,67 @@
+{
+  "food-cooking": [
+    {
+      "phrase": "la sartén",
+      "translation": "the frying pan",
+      "partOfSpeech": "noun",
+      "gender": "feminine",
+      "number": "singular"
+    },
+    {
+      "phrase": "hervir",
+      "translation": "to boil",
+      "partOfSpeech": "verb"
+    },
+    {
+      "phrase": "el agua",
+      "translation": "water",
+      "partOfSpeech": "noun",
+      "gender": "feminine",
+      "number": "mass"
+    },
+    {
+      "phrase": "los ingredientes",
+      "translation": "the ingredients",
+      "partOfSpeech": "noun",
+      "gender": "masculine",
+      "number": "plural"
+    }
+  ],
+  "museums": [
+    {
+      "phrase": "la entrada",
+      "translation": "the entrance ticket",
+      "partOfSpeech": "noun",
+      "gender": "feminine",
+      "number": "singular"
+    },
+    {
+      "phrase": "el museo",
+      "translation": "the museum",
+      "partOfSpeech": "noun",
+      "gender": "masculine",
+      "number": "singular"
+    }
+  ],
+  "hiking": [
+    {
+      "phrase": "el sendero",
+      "translation": "the trail",
+      "partOfSpeech": "noun",
+      "gender": "masculine",
+      "number": "singular"
+    },
+    {
+      "phrase": "la mochila",
+      "translation": "the backpack",
+      "partOfSpeech": "noun",
+      "gender": "feminine",
+      "number": "singular"
+    },
+    {
+      "phrase": "¿Qué tan difícil es este sendero?",
+      "translation": "How difficult is this trail?",
+      "partOfSpeech": "expression"
+    }
+  ]
+}

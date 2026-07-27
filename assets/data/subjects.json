@@ -1,0 +1,33 @@
+[
+  { "id": "food", "name": "Food", "parentId": null },
+  { "id": "food-cooking", "name": "Cooking", "parentId": "food" },
+  { "id": "food-grocery", "name": "Grocery Shopping", "parentId": "food" },
+
+  { "id": "shopping", "name": "Shopping", "parentId": null },
+  { "id": "shopping-malls", "name": "Malls", "parentId": "shopping" },
+  { "id": "shopping-souvenirs", "name": "Souvenirs", "parentId": "shopping" },
+
+  { "id": "hiking", "name": "Hiking / The Outdoors", "parentId": null },
+  { "id": "family", "name": "Talking About Family", "parentId": null },
+  { "id": "aesthetics", "name": "Talking About Aesthetics", "parentId": null },
+
+  { "id": "transportation", "name": "Transportation", "parentId": null },
+  { "id": "transportation-airports", "name": "Airports / Flying", "parentId": "transportation" },
+  { "id": "transportation-bus", "name": "Bus Stations", "parentId": "transportation" },
+  { "id": "transportation-taxis", "name": "Taxis", "parentId": "transportation" },
+
+  { "id": "houses", "name": "Talking About Houses", "parentId": null },
+  { "id": "museums", "name": "Museums", "parentId": null },
+  { "id": "music", "name": "Music", "parentId": null },
+  { "id": "occupations", "name": "Occupations", "parentId": null },
+  { "id": "casual", "name": "Speaking Casually", "parentId": null },
+
+  { "id": "celebrations", "name": "Celebrations", "parentId": null },
+  { "id": "celebrations-wedding", "name": "Wedding", "parentId": "celebrations" },
+  { "id": "celebrations-graduation", "name": "Graduation", "parentId": "celebrations" },
+  { "id": "celebrations-birthday", "name": "Birthday", "parentId": "celebrations" },
+  { "id": "celebrations-holiday", "name": "Holiday", "parentId": "celebrations" },
+
+  { "id": "tv-movies", "name": "TV Shows / Movies", "parentId": null },
+  { "id": "party", "name": "Going to a Party", "parentId": null }
+]

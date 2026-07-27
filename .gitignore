@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Vocab tagging tool (dev-only, not part of the Flutter app)
+tools/vocab_tagger/.venv/

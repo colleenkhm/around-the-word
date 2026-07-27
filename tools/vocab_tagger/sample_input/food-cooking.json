@@ -1,0 +1,7 @@
+[
+  { "phrase": "la sartén", "translation": "the frying pan" },
+  { "phrase": "hervir", "translation": "to boil" },
+  { "phrase": "el agua", "translation": "water" },
+  { "phrase": "los ingredientes", "translation": "the ingredients" },
+  { "phrase": "¿Dónde está...?", "translation": "Where is...?", "isExpression": true }
+]

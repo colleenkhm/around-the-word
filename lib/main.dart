@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'screens/category_list_screen.dart';
+import 'screens/continent_map_screen.dart';
+import 'state/trip_selection.dart';
 
 void main() {
   runApp(const AroundTheWordApp());
@@ -11,13 +13,16 @@ class AroundTheWordApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Around the Word',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (context) => TripSelection()..loadReferenceData(),
+      child: MaterialApp(
+        title: 'Around the Word',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const ContinentMapScreen(),
       ),
-      home: const CategoryListScreen(),
     );
   }
 }
