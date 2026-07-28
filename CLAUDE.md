@@ -15,12 +15,17 @@ static JSON bundled as assets, keyed **per country** (not per language) so
 Costa Rica/Mexico/Argentina etc. can each have their own regionally-accurate
 Spanish vocab. First language: Spanish. First country: Costa Rica.
 
-Two earlier product directions were explored and superseded — see the
-superseded-notices at the top of [app-design-doc.md](app-design-doc.md) and
-[HANDOFF.md](HANDOFF.md) for what changed and why. Nothing from them was
-deleted; ideas that got scoped out (trip/activity-specific curation, grammar-
-tagged vocab + fill-in-blank exercises, a personal phrasebook) are flagged in
-the new doc's roadmap as things that could resurface later, not abandoned.
+The core idea (a travel-focused language-learning app) hasn't changed — what's
+evolved is scope. Two earlier, more ambitious explorations were scoped down
+into what's now in language-app-system-design.md; see the notices at the top
+of [app-design-doc.md](app-design-doc.md) and [HANDOFF.md](HANDOFF.md) for
+specifics. Nothing from them was deleted or contradicted; ideas that got
+scoped out (trip/activity-specific curation, grammar-tagged vocab +
+fill-in-blank exercises, a personal phrasebook) are flagged in the new doc's
+roadmap as later work, not abandoned. Separately: early English/TEFL framing
+(in app-design-doc.md's history) was a brief exploratory angle, never the
+app's actual intended direction — don't read it as an early "version" of the
+product identity.
 
 ## External context (why V1 is scoped the way it is)
 
@@ -64,3 +69,17 @@ the new doc's roadmap as things that could resurface later, not abandoned.
   existing app-design-doc.md got a fast, decisive resolution ("default to the
   new doc, update anything else accordingly") rather than friction — she
   wants the flag, then to make the call herself.
+- Prefers isolating risky/unproven UI pieces (things likely to need real
+  trial-and-error, like an interactive map widget) as standalone prototypes
+  on their own branch, proven out before being wired into the main app's
+  screens/navigation — rather than building the surrounding screens first
+  and fitting the risky piece in after. Specifically decided for the
+  continent-tap/country-tap-with-search map interactions (2026-07-27); likely
+  the right default for similar future pieces too.
+
+## Pending, not started yet
+
+- Map prototyping: continent-tap and country-tap-with-search, built and
+  tested in isolation before touching `ContinentMapScreen`/`CountryMapScreen`
+  or any other screen. Do this on a new branch — don't start until Colleen
+  says go.

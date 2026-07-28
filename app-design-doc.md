@@ -6,11 +6,11 @@
 
 ## ⚠️ Superseded by [language-app-system-design.md](language-app-system-design.md)
 
-That doc is now the authoritative plan. Specifically overridden from this doc:
+That doc is now the authoritative plan — a more realistically-scoped version of the same core idea explored here, not a contradiction of it. Specifically overridden from this doc:
 - **Subject list:** reverted to the original generic 14-category list below (Food, Shopping, Hiking, Family, etc.), not the Costa-Rica-specific activity list (Airport, Hotel, Beach Day, Nature Tours, etc.) developed further down in this doc.
 - **Trip/activity selection as the core differentiator:** explicitly out of scope for V1-V3 in the new doc ("Explicitly not on this roadmap: trip/itinerary planning"). Not discarded — flagged in the new doc's roadmap as something that could resurface in later, master's-dependent work.
 - **Exercises:** simplified to flip-card flashcards (Learn mode) — the reveal/recall + multiple-choice-fill-in-blank + matching set, and the per-activity scenario framing, are not part of current scope.
-- **Vocab grammar tagging** (part of speech, gender, number, activity tags) and the spaCy tagging pipeline: not needed for the new content model (`{phrase, translation}` pairs only), so that work is paused, not continued.
+- **Vocab grammar tagging** (part of speech, gender, number): not read by V1's UI, but kept in the content schema and the spaCy tagging pipeline (`tools/vocab_tagger/`) either way, since it's cheap to generate now and expensive to backfill once exercises that use it come back into scope. Activity-specific tagging (many-to-many activity tags per word) specifically is not needed for the new content model.
 - **Phrasebook:** not in V1 — the new doc has zero persistence in V1 (browse-only, no accounts).
 - **Place-first framing still holds** in spirit — content is scoped per-country in the new doc too — but via a continent/country map UI rather than a single first-place choice, and Costa Rica (Spanish) is still the working first country.
 
@@ -98,7 +98,7 @@ Idea: layer social-media-style features on top of the core structure —
 - Added Celebrations (with sub-items), TV shows/movies, Going to a party
 - New future-direction idea: social/community layer — liking phrases, recommending places — doubles as both a user-facing feature and a data source for better recommendations later
 - MVP built in Flutter: category list → subject list (where applicable) → phrase list, with hardcoded English phrases for every subject; added a "20 Common Verbs" category alongside the topic-based ones. Implementation-level decisions and rationale tracked separately in [HANDOFF.md](HANDOFF.md)
-- **Major pivot:** reframed target user from "English learner tied to TEFL" to "traveler preparing for a specific trip" (Colleen herself) — the actual problem is that curriculum-based apps (Duolingo, Babbel) bury relevant content behind a full skill tree and pad relevant units with irrelevant vocab
+- Sharpened the target user to "traveler preparing for a specific trip" (Colleen herself) — the core idea was always a travel-focused app; English/TEFL (above) was an early angle explored because it overlapped with real teaching material, not the app's intended direction. The actual problem being solved: curriculum-based apps (Duolingo, Babbel) bury relevant content behind a full skill tree and pad relevant units with irrelevant vocab
 - MVP is explicitly not a fluency tool — it prioritizes phrases/practice tied to a specific trip over a general learning arc
 - Confirmed MVP includes a small exercise set (reveal/recall, multiple-choice fill-in-the-blank, matching) rather than being a passive word list, since the product is meant to function as a secondary language-learning tool
 - Exercises should be framed per-activity/scenario rather than generically, so trip-relevance shows up in practice, not just vocab — deliberately kept to proven exercise mechanics rather than novel game formats, to avoid spending MVP effort validating unproven pedagogy instead of the actual product hypothesis

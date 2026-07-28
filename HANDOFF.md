@@ -4,16 +4,17 @@
 
 ---
 
-## ⚠️ Product direction has pivoted twice since this code was built
+## Note on this doc's history
 
-Everything below this note describes the **English/TEFL-framed MVP** — subject list → phrase list, no exercises, no place/language concept. Since then the product direction has moved on twice:
+The core idea behind this app — a travel-focused language-learning tool — hasn't actually changed. What's changed is scope and level of ambition, refined over a couple of passes:
 
-1. First to a **trip-specific, place-first app** (Costa Rica/Spanish, activities → bilingual phrases + exercises + a grammar-tagged vocab system + a phrasebook) — captured in [app-design-doc.md](app-design-doc.md).
-2. Then, per [language-app-system-design.md](language-app-system-design.md) (now the authoritative doc), **scoped down and restructured** to: a continent/country map for destination selection, checkbox category selection (back to the original generic subject list, not the Costa-Rica activity list), a cosmetic "personalizing your dictionary" step, and a **Learn/Use fork** — Learn is flip-card flashcards, Use is the original category→vocab-list flow with a flashcard option bolted on. No fill-in-blank exercises, no grammar tagging, no phrasebook, no accounts/persistence in V1.
+- Very early on, English/TEFL was floated as a possible starting angle and got documented as a decision at the time. In hindsight it was never really the app's intended direction, just an idea explored briefly before the real shape of the product took hold — worth knowing so the sections below aren't read as a committed direction that later got abandoned.
+- A fuller exploration then worked out what a trip-specific, place-first version could look like in real detail — Costa Rica/Spanish, activity-specific curation, multiple exercise types, a grammar-tagged vocab system, a phrasebook (captured in [app-design-doc.md](app-design-doc.md)).
+- [language-app-system-design.md](language-app-system-design.md) (now the authoritative doc) is the realistically-scoped version of that same idea, sized to an actual 5-8 hrs/week budget: a continent/country map for destination selection, checkbox category selection, a cosmetic "personalizing your dictionary" step, and a Learn/Use fork (flip-card flashcards, plus the original category→vocab-list flow). These two aren't contradictory directions — the fuller exploration's ideas (activity-specific curation, richer exercises, the grammar-tagging use case) are flagged in that doc's roadmap as later work, not discarded.
 
 **The vocab grammar-tagging pipeline (spaCy) is back in scope, in a lighter form.** Even though V1's UI only reads `phrase`/`translation`, we're tagging `partOfSpeech`/`gender`/`number` on every entry now rather than backfilling later, since it's cheap (an automated pass, not manual per-word effort) and expensive to redo once exercises come back into scope. Built and tested in `tools/vocab_tagger/` — a one-time/occasional dev tool (Python + spaCy, venv-isolated, not a runtime dependency of the Flutter app). Confirmed working against a sample Spanish batch: correctly tagged `"el agua"` as `gender: feminine` despite the masculine-looking article (a real Spanish exception), and correctly separated `"hervir"` (verb, no gender/number) from noun entries. Mass-vs-countable noun distinction and anything flagged `needsReview` still need a human pass — see `tools/vocab_tagger/README.md`. What's *not* being built yet: any exercise UI/logic that consumes these tags (fill-in-blank, matching) — that's still deferred per the current roadmap.
 
-The codebase has now been rebuilt to match `language-app-system-design.md` — see "Current State" and "Implementation Decisions" immediately below. Everything from "Current State (of the original English MVP build — pre-pivot)" onward is kept as history, not current.
+The codebase has now been rebuilt to match `language-app-system-design.md` — see "Current State" and "Implementation Decisions" immediately below. Everything from "Current State (of the original English MVP build)" onward is kept as history, not current.
 
 ## Current State
 
@@ -35,9 +36,11 @@ The five-screen flow from `language-app-system-design.md` is built and wired end
 
 - **Deleted the old English-MVP `lib/` files** (`models/vocab_category.dart`, `data/vocab_data.dart`, the three old screens) rather than keeping them alongside the new structure — they're preserved in git history (commit `bdf23b2`), and keeping unused code around would just be confusing dead weight given the new doc fully supersedes that direction.
 
+- **Data models and JSON loading/parsing have dedicated unit tests, separate from the end-to-end widget test.** `test/models/*_test.dart` covers `Country.fromJson`/`VocabEntry.fromJson`/`Subject.fromJson` plus the `SubjectListX` tree helpers (`topLevel`, `childrenOf`, `idAndDescendantIds` — including a synthetic three-level tree, since the real `subjects.json` is only two levels deep and wouldn't otherwise exercise deeper recursion). `test/data/content_repository_test.dart` loads the real bundled `assets/data/*.json` (catches malformed placeholder JSON directly, not just via the UI flow) and exercises `personalize()`'s filtering rules: a parent id pulls in its children's content but not its own (parents don't carry phrases directly), multiple selected ids merge into one result map, and a selected id with no matching content just yields no entry rather than an error. 23 tests total, all passing alongside the original end-to-end widget test.
+
 ## Open Questions
 
-- Real map rendering for the continent/country screens — which package, and how much of a scope item that is on its own, is still unevaluated.
+- Real map rendering for the continent/country screens — which package, and how much of a scope item that is on its own, is still unevaluated. **Approach decided (2026-07-27):** prototype the continent-tap and country-tap-with-search interactions in isolation, standalone, before wiring either into the real screens/navigation — and do that work on its own branch, not on top of the current scaffold.
 - Placeholder content (`food-cooking`, `museums`, `hiking`) needs to become real, reviewed Costa Rica vocab — next step is running actual content through `tools/vocab_tagger/` rather than hand-writing tagged JSON.
 - Flashcard visuals (flip animation, swipe gestures) are intentionally minimal right now — worth a pass once the core flow is validated, not before.
 
@@ -50,7 +53,7 @@ The five-screen flow from `language-app-system-design.md` is built and wired end
 
 ---
 
-## Current State (of the original English MVP build — pre-pivot, historical)
+## Current State (of the original English MVP build, historical)
 
 A working Flutter prototype: launch the app → see a list of categories → tap one → see either a subject list (if the category has niche sub-subjects) or the phrase list directly (if it doesn't) → see the vocab words/phrases. All content is hardcoded in Dart, no backend, no persistence, nothing committed to git yet.
 
