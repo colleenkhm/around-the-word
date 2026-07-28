@@ -3,9 +3,10 @@ import 'package:countries_world_map/data/maps/world_map.dart';
 import 'package:flutter/material.dart';
 
 import '../data/content_repository.dart';
-import 'continent_names.dart';
+import '../data/continent_names.dart';
+import '../data/map_tap_resolution.dart';
+import '../models/world_map_country.dart';
 import 'country_tap_search_screen.dart';
-import 'world_map_country.dart';
 
 /// Prototype: tap anywhere on the world map, resolve the tapped country to
 /// its continent, then either continue (continent has active content) or
@@ -13,6 +14,10 @@ import 'world_map_country.dart';
 /// here — the whole point of this screen is picking a continent, so the
 /// full world stays visible; InteractiveViewer's pinch/pan is enough on its
 /// own for a prototype.
+///
+/// This interaction has since graduated into the real app —
+/// see lib/screens/continent_map_screen.dart. Kept as a standalone demo,
+/// now sharing the same resolution logic so the two can't drift apart.
 class ContinentTapScreen extends StatefulWidget {
   const ContinentTapScreen({super.key});
 
@@ -45,38 +50,33 @@ class _ContinentTapScreenState extends State<ContinentTapScreen> {
     final activeContinents = _activeContinents;
     if (worldCountries == null || activeContinents == null) return;
 
-    WorldMapCountry? match;
-    for (final c in worldCountries) {
-      if (c.id == id) {
-        match = c;
-        break;
-      }
-    }
-    if (match == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unrecognized region — try again.')),
-      );
-      return;
-    }
-
-    final continent = match.continent;
-
-    if (!activeContinents.contains(continent)) {
-      final continentName = continentDisplayNames[continent] ?? continent;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content:
-              Text('No languages available for travel to $continentName at the moment.'),
-        ),
-      );
-      return;
-    }
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => CountryTapSearchScreen(continent: continent),
-      ),
+    final result = resolveContinentTap(
+      tappedId: id,
+      worldCountries: worldCountries,
+      isContinentActive: activeContinents.contains,
     );
+
+    switch (result) {
+      case ContinentTapUnrecognized():
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unrecognized region — try again.')),
+        );
+      case ContinentTapUnavailable(:final continent):
+        final continentName = continentDisplayNames[continent] ?? continent;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'No languages available for travel to $continentName at the moment.',
+            ),
+          ),
+        );
+      case ContinentTapAvailable(:final continent):
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CountryTapSearchScreen(continent: continent),
+          ),
+        );
+    }
   }
 
   @override

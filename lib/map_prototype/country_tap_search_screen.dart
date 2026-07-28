@@ -2,9 +2,9 @@ import 'package:countries_world_map/countries_world_map.dart';
 import 'package:countries_world_map/data/maps/world_map.dart';
 import 'package:flutter/material.dart';
 
-import 'continent_names.dart';
-import 'continent_zoom_bounds.dart';
-import 'world_map_country.dart';
+import '../data/continent_names.dart';
+import '../data/continent_zoom_bounds.dart';
+import '../models/world_map_country.dart';
 
 /// Prototype: same world map as ContinentTapScreen, but zoomed to the
 /// selected continent (if we have a hand-computed bounds entry for it —
@@ -26,10 +26,8 @@ class _CountryTapSearchScreenState extends State<CountryTapSearchScreen> {
   static const _mapSize = Size(2000, 857);
 
   final _transformController = TransformationController();
-  final _searchController = TextEditingController();
 
   List<WorldMapCountry>? _countries;
-  String _query = '';
   WorldMapCountry? _selected;
   bool _didInitialZoom = false;
 
@@ -49,7 +47,6 @@ class _CountryTapSearchScreenState extends State<CountryTapSearchScreen> {
   @override
   void dispose() {
     _transformController.dispose();
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -76,11 +73,7 @@ class _CountryTapSearchScreenState extends State<CountryTapSearchScreen> {
   }
 
   void _selectCountry(WorldMapCountry country) {
-    setState(() {
-      _selected = country;
-      _query = '';
-      _searchController.clear();
-    });
+    setState(() => _selected = country);
   }
 
   void _onMapTapped(String id, String name, TapUpDetails details) {
@@ -106,28 +99,16 @@ class _CountryTapSearchScreenState extends State<CountryTapSearchScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final results = _query.isEmpty
-        ? const <WorldMapCountry>[]
-        : countries
-            .where((c) => c.name.toLowerCase().contains(_query.toLowerCase()))
-            .toList();
-
     return Scaffold(
       appBar: AppBar(title: Text(continentName)),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              controller: _searchController,
-              decoration: const InputDecoration(
-                labelText: 'Search countries',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) => setState(() => _query = value),
-            ),
-          ),
+          // Owns its own search-text state, deliberately kept out of this
+          // widget's state — SimpleMap re-parses ~290KB of embedded JSON on
+          // every rebuild (no internal caching), so if the search field's
+          // setState lived up here, every keystroke would rebuild — and
+          // re-parse — the whole map below it too.
+          _CountrySearchField(countries: countries, onSelected: _selectCountry),
           if (_selected != null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -137,68 +118,115 @@ class _CountryTapSearchScreenState extends State<CountryTapSearchScreen> {
               ),
             ),
           Expanded(
-            child: Stack(
-              children: [
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    if (!_didInitialZoom) {
-                      _didInitialZoom = true;
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _zoomToContinent(constraints.biggest);
-                      });
-                    }
-                    return InteractiveViewer(
-                      transformationController: _transformController,
-                      constrained: false,
-                      minScale: 0.5,
-                      maxScale: 12,
-                      boundaryMargin: const EdgeInsets.all(400),
-                      child: SizedBox(
-                        width: _mapSize.width,
-                        height: _mapSize.height,
-                        child: SimpleMap(
-                          instructions: SMapWorld.instructions,
-                          defaultColor: Colors.grey.shade300,
-                          countryBorder:
-                              CountryBorder(color: Colors.grey.shade600, width: 0.5),
-                          colors: _selected == null
-                              ? null
-                              : {_selected!.id: Colors.green},
-                          callback: _onMapTapped,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                if (results.isNotEmpty)
-                  Positioned(
-                    left: 16,
-                    right: 16,
-                    top: 0,
-                    child: Material(
-                      elevation: 4,
-                      borderRadius: BorderRadius.circular(8),
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: 240),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: results.length,
-                          itemBuilder: (context, index) {
-                            final country = results[index];
-                            return ListTile(
-                              title: Text(country.name),
-                              onTap: () => _selectCountry(country),
-                            );
-                          },
-                        ),
-                      ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                if (!_didInitialZoom) {
+                  _didInitialZoom = true;
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _zoomToContinent(constraints.biggest);
+                  });
+                }
+                return InteractiveViewer(
+                  transformationController: _transformController,
+                  constrained: false,
+                  minScale: 0.5,
+                  maxScale: 12,
+                  boundaryMargin: const EdgeInsets.all(400),
+                  child: SizedBox(
+                    width: _mapSize.width,
+                    height: _mapSize.height,
+                    child: SimpleMap(
+                      instructions: SMapWorld.instructions,
+                      defaultColor: Colors.grey.shade300,
+                      countryBorder:
+                          CountryBorder(color: Colors.grey.shade600, width: 0.5),
+                      colors: _selected == null
+                          ? null
+                          : {_selected!.id: Colors.green},
+                      callback: _onMapTapped,
                     ),
                   ),
-              ],
+                );
+              },
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _CountrySearchField extends StatefulWidget {
+  const _CountrySearchField({required this.countries, required this.onSelected});
+
+  final List<WorldMapCountry> countries;
+  final ValueChanged<WorldMapCountry> onSelected;
+
+  @override
+  State<_CountrySearchField> createState() => _CountrySearchFieldState();
+}
+
+class _CountrySearchFieldState extends State<_CountrySearchField> {
+  final _controller = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final results = _query.isEmpty
+        ? const <WorldMapCountry>[]
+        : widget.countries
+            .where((c) => c.name.toLowerCase().contains(_query.toLowerCase()))
+            .toList();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              labelText: 'Search countries',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(),
+            ),
+            onChanged: (value) => setState(() => _query = value),
+          ),
+        ),
+        if (results.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Material(
+              elevation: 4,
+              borderRadius: BorderRadius.circular(8),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 240),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: results.length,
+                  itemBuilder: (context, index) {
+                    final country = results[index];
+                    return ListTile(
+                      title: Text(country.name),
+                      onTap: () {
+                        widget.onSelected(country);
+                        setState(() {
+                          _query = '';
+                          _controller.clear();
+                        });
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
