@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:around_the_word/data/map_tap_resolution.dart';
@@ -39,6 +41,46 @@ void main() {
       );
       expect(result, isA<ContinentTapAvailable>());
       expect((result as ContinentTapAvailable).continent, 'north-america');
+    });
+
+    test('unrecognized id but tap position falls inside fallback bounds', () {
+      final result = resolveContinentTap(
+        tappedId: '', // what a background (no-path) tap resolves to
+        worldCountries: worldCountries,
+        isContinentActive: (continent) => continent == 'north-america',
+        tapPosition: const Offset(0.25, 0.48),
+        fallbackBounds: const Rect.fromLTRB(0.20, 0.44, 0.30, 0.53),
+        fallbackContinent: 'north-america',
+      );
+      expect(result, isA<ContinentTapAvailable>());
+      expect((result as ContinentTapAvailable).continent, 'north-america');
+    });
+
+    test('unrecognized id with tap position outside fallback bounds stays unrecognized', () {
+      final result = resolveContinentTap(
+        tappedId: '',
+        worldCountries: worldCountries,
+        isContinentActive: (_) => true,
+        tapPosition: const Offset(0.9, 0.9),
+        fallbackBounds: const Rect.fromLTRB(0.20, 0.44, 0.30, 0.53),
+        fallbackContinent: 'north-america',
+      );
+      expect(result, isA<ContinentTapUnrecognized>());
+    });
+
+    test('a real match takes priority over the fallback bounds', () {
+      final result = resolveContinentTap(
+        tappedId: 'jp',
+        worldCountries: worldCountries,
+        isContinentActive: (_) => true,
+        // Inside the fallback rect, but 'jp' is a real match — should
+        // resolve to Japan/asia, not get overridden by the fallback.
+        tapPosition: const Offset(0.25, 0.48),
+        fallbackBounds: const Rect.fromLTRB(0.20, 0.44, 0.30, 0.53),
+        fallbackContinent: 'north-america',
+      );
+      expect(result, isA<ContinentTapAvailable>());
+      expect((result as ContinentTapAvailable).continent, 'asia');
     });
   });
 

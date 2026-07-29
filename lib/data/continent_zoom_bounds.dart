@@ -18,3 +18,15 @@ const mapSize = Size(2000, 857);
 const continentZoomBounds = <String, Rect>{
   'north-america': Rect.fromLTRB(0.0498, 0.0012, 0.4722, 0.5315),
 };
+
+/// Fallback rect (same 0..1-fraction convention as [continentZoomBounds]) for
+/// taps on the continent-picker screen that miss every drawn country path —
+/// Belize/Guatemala/Honduras/El Salvador/Nicaragua/Costa Rica/Panama's actual
+/// path data bounds to roughly x 0.234–0.275, y 0.447–0.532, but they're
+/// narrow enough (and Mexico's coastline ends close by) that real gaps
+/// between them are easy to tap at typical zoom levels. Padded out a bit
+/// past that tight bounding box on purpose — this only ever fires when
+/// [resolveContinentTap] already failed to match a real country id, so a
+/// generous rect just means "background taps in this neighborhood count as
+/// Central America" rather than needing pixel-precise geography.
+const centralAmericaFallbackBounds = Rect.fromLTRB(0.20, 0.44, 0.30, 0.53);

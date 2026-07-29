@@ -1,3 +1,5 @@
+import 'dart:ui' show Offset, Rect;
+
 import '../models/country.dart';
 import '../models/world_map_country.dart';
 
@@ -25,10 +27,23 @@ class ContinentTapAvailable extends ContinentTapResult {
 
 /// Resolves a tapped map region id to a continent, and whether that
 /// continent has any active content.
+///
+/// [tapPosition]/[fallbackBounds]/[fallbackContinent] are an optional escape
+/// hatch for taps that miss every drawn country path entirely (background,
+/// not "recognized but wrong id") — countries_world_map leaves real
+/// unrendered gaps between small/narrow countries at typical zoom levels, so
+/// a tap that lands in one would otherwise always read as unrecognized. When
+/// [tappedId] doesn't match any country and a tap position is given that
+/// falls inside [fallbackBounds] (fractions 0..1 of the map's drawable
+/// area, same convention as [continentZoomBounds]), [fallbackContinent] is
+/// used instead of failing outright.
 ContinentTapResult resolveContinentTap({
   required String tappedId,
   required List<WorldMapCountry> worldCountries,
   required bool Function(String continent) isContinentActive,
+  Offset? tapPosition,
+  Rect? fallbackBounds,
+  String? fallbackContinent,
 }) {
   WorldMapCountry? match;
   for (final c in worldCountries) {
@@ -37,12 +52,23 @@ ContinentTapResult resolveContinentTap({
       break;
     }
   }
-  if (match == null) return const ContinentTapUnrecognized();
 
-  if (!isContinentActive(match.continent)) {
-    return ContinentTapUnavailable(match.continent);
+  String? continent = match?.continent;
+
+  if (continent == null &&
+      tapPosition != null &&
+      fallbackBounds != null &&
+      fallbackContinent != null &&
+      fallbackBounds.contains(tapPosition)) {
+    continent = fallbackContinent;
   }
-  return ContinentTapAvailable(match.continent);
+
+  if (continent == null) return const ContinentTapUnrecognized();
+
+  if (!isContinentActive(continent)) {
+    return ContinentTapUnavailable(continent);
+  }
+  return ContinentTapAvailable(continent);
 }
 
 sealed class CountryTapResult {
