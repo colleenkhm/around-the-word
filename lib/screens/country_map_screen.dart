@@ -21,8 +21,6 @@ class CountryMapScreen extends StatefulWidget {
 }
 
 class _CountryMapScreenState extends State<CountryMapScreen> {
-  static const _mapSize = Size(2000, 857);
-
   final _transformController = TransformationController();
 
   List<WorldMapCountry>? _worldCountries;
@@ -53,10 +51,10 @@ class _CountryMapScreenState extends State<CountryMapScreen> {
     if (bounds == null) return; // no hand-computed bounds yet — stay unzoomed
 
     final rect = Rect.fromLTRB(
-      bounds.left * _mapSize.width,
-      bounds.top * _mapSize.height,
-      bounds.right * _mapSize.width,
-      bounds.bottom * _mapSize.height,
+      bounds.left * mapSize.width,
+      bounds.top * mapSize.height,
+      bounds.right * mapSize.width,
+      bounds.bottom * mapSize.height,
     );
 
     final scale = (viewportSize.width / rect.width)
@@ -150,8 +148,8 @@ class _CountryMapScreenState extends State<CountryMapScreen> {
                   maxScale: 12,
                   boundaryMargin: const EdgeInsets.all(400),
                   child: SizedBox(
-                    width: _mapSize.width,
-                    height: _mapSize.height,
+                    width: mapSize.width,
+                    height: mapSize.height,
                     child: SimpleMap(
                       instructions: SMapWorld.instructions,
                       defaultColor: Colors.grey.shade300,

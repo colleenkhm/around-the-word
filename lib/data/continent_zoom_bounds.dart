@@ -1,4 +1,9 @@
-import 'dart:ui' show Rect;
+import 'dart:ui' show Rect, Size;
+
+/// Native pixel size of the world map SimpleMap draws (from the package's
+/// embedded instructions' "w"/"h" fields) — shared by both map screens so
+/// zoom/pan math has a single source of truth for the map's coordinate space.
+const mapSize = Size(2000, 857);
 
 /// Hand-computed (not runtime-computed) bounding box per continent, as
 /// fractions (0..1) of the map's drawable area — matches the coordinate
