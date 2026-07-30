@@ -1,21 +1,19 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:around_the_word/main.dart';
 
 void main() {
   testWidgets(
-    'Continent -> country -> categories -> personalizing -> use -> vocab flow',
+    'Destination search -> categories -> personalizing -> use -> vocab flow',
     (WidgetTester tester) async {
       await tester.pumpWidget(const AroundTheWordApp());
       await tester.pumpAndSettle(); // reference data loads async
 
-      // Continent screen: only continents with active countries are enabled.
+      // Destination screen: search field filters the full country list.
       expect(find.text('Where are you going?'), findsOneWidget);
-      await tester.tap(find.text('North America'));
+      await tester.enterText(find.byType(TextField), 'Costa');
       await tester.pumpAndSettle();
-
-      // Country screen: search field plus Costa Rica active.
-      expect(find.text('Choose a country'), findsOneWidget);
       expect(find.text('Costa Rica'), findsOneWidget);
       await tester.tap(find.text('Costa Rica'));
       await tester.pumpAndSettle();

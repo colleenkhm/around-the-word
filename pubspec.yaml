@@ -38,6 +38,7 @@ dependencies:
   # State management for trip selection (continent/country/categories) and
   # the personalized content, threaded across the map -> categories -> learn/use flow.
   provider: ^6.1.2
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +65,7 @@ flutter:
   assets:
     - assets/data/countries.json
     - assets/data/subjects.json
+    - assets/data/resources.json
     - assets/data/content/
 
   # An image asset can refer to one or more resolution-specific "variants", see

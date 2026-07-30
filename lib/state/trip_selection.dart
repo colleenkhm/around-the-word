@@ -2,11 +2,13 @@ import 'package:flutter/foundation.dart';
 
 import '../data/content_repository.dart';
 import '../models/country.dart';
+import '../models/resource.dart';
 import '../models/subject.dart';
 import '../models/vocab_entry.dart';
 
-/// Holds the selection state threaded across the map -> categories ->
-/// personalizing -> learn/use flow (language-app-system-design.md section 2).
+/// Holds the selection state threaded across the destination -> categories
+/// -> personalizing -> learn/use flow (language-app-system-design.md
+/// section 2).
 class TripSelection extends ChangeNotifier {
   TripSelection({ContentRepository? repository})
       : _repository = repository ?? ContentRepository();
@@ -15,9 +17,9 @@ class TripSelection extends ChangeNotifier {
 
   List<Country> countries = [];
   List<Subject> subjects = [];
+  List<Resource> resources = [];
   bool loadingReferenceData = true;
 
-  String? selectedContinent;
   Country? selectedCountry;
   final Set<String> selectedCategoryIds = {};
 
@@ -27,20 +29,8 @@ class TripSelection extends ChangeNotifier {
   Future<void> loadReferenceData() async {
     countries = await _repository.loadCountries();
     subjects = await _repository.loadSubjects();
+    resources = await _repository.loadResources();
     loadingReferenceData = false;
-    notifyListeners();
-  }
-
-  List<Country> countriesInContinent(String continent) =>
-      countries.where((c) => c.continent == continent).toList();
-
-  /// A continent shows as active if at least one of its countries is active
-  /// — no separate continent-level flag to maintain.
-  bool isContinentActive(String continent) =>
-      countriesInContinent(continent).any((c) => c.active);
-
-  void selectContinent(String continent) {
-    selectedContinent = continent;
     notifyListeners();
   }
 

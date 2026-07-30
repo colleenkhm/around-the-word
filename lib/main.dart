@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/continent_map_screen.dart';
+import 'screens/destination_screen.dart';
 import 'state/trip_selection.dart';
 
 void main() {
@@ -21,7 +21,7 @@ class AroundTheWordApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const ContinentMapScreen(),
+        home: const DestinationScreen(),
       ),
     );
   }

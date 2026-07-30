@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 
 import '../models/country.dart';
+import '../models/resource.dart';
 import '../models/subject.dart';
 import '../models/vocab_entry.dart';
 
@@ -25,12 +26,32 @@ class ContentRepository {
         .toList();
   }
 
+  /// The shared, generic links shown on the coming-soon screen for
+  /// countries without content yet (language-app-system-design.md section
+  /// 3) — one set reused everywhere, not curated per country.
+  Future<List<Resource>> loadResources() async {
+    final raw = await rootBundle.loadString('assets/data/resources.json');
+    final list = jsonDecode(raw) as List<dynamic>;
+    return list
+        .map((e) => Resource.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
   /// All vocab for [countryCode], keyed by subject id, straight from
-  /// assets/data/content/{countryCode}.json.
+  /// assets/data/content/{countryCode}.json. Only `active` countries reach
+  /// this in the normal flow (inactive ones dead-end at the coming-soon
+  /// screen before content is ever loaded), so a missing file here means
+  /// `active` was flipped without the content file existing yet — resolves
+  /// to an empty map rather than throwing, as a safety net for that case.
   Future<Map<String, List<VocabEntry>>> loadContent(String countryCode) async {
     final path =
         'assets/data/content/${countryCode.toLowerCase()}.json';
-    final raw = await rootBundle.loadString(path);
+    String raw;
+    try {
+      raw = await rootBundle.loadString(path);
+    } catch (_) {
+      return const {};
+    }
     final map = jsonDecode(raw) as Map<String, dynamic>;
     return map.map(
       (subjectId, entries) => MapEntry(
