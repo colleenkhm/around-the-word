@@ -11,17 +11,20 @@ const _tabLabels = {
   CountryTab.language: 'LANGUAGE',
 };
 
-/// The country-page header/chrome: flag, name, native name, the tab-pill
-/// row (replaces the old single content_status text pill — see below),
-/// and the passport-style MRZ strip. Built against
-/// country-page-mockups.html (2026-08-10 spec).
+/// The country-page header/chrome: flag, name, native name, the
+/// content_status pill, the tab-pill row, and the passport-style MRZ
+/// strip. Built against country-page-mockups.html (2026-08-10 spec).
 ///
-/// **Tab pills, not a text pill.** The mockup's "Building out Greece —
-/// some sections are further along than others" pill is replaced by one
-/// pill per available tab. This gets the content_status signal for free:
-/// [CountryBundle.availableTabs] already omits tabs with nothing to show
-/// (client design doc), so a partial country's pill row is just visibly
-/// shorter — no separate "still building this out" text needed.
+/// **Two separate pills, not one merged into the other** (corrected
+/// 2026-08-10 — an earlier version of this widget replaced the
+/// content_status text pill with the tab-pill row, reasoning that a
+/// shorter row already signals partial content for free; turned out that
+/// conflated two different things). The status pill is exactly what the
+/// mockup shows — content *depth*. The tab-pill row is navigation, and is
+/// deliberately **not** derived from [CountryBundle] content presence —
+/// [tabs] is passed in by the caller and only grows as each tab actually
+/// gets built (Explore, Guide, Language, one at a time), independent of
+/// whether the data for it already exists.
 ///
 /// **Two known data gaps, not yet fixed:**
 /// - Native name + its romanization (the mockup's "Ελλάδα · Ellàda") isn't
@@ -37,6 +40,10 @@ const _tabLabels = {
 ///   than guessed from the summary text.
 class CountryHeader extends StatelessWidget {
   final CountryBundle bundle;
+
+  /// Which tabs to show as pills — driven by what's actually been built
+  /// so far, not by [CountryBundle] content presence. See class doc.
+  final List<CountryTab> tabs;
   final CountryTab activeTab;
   final ValueChanged<CountryTab> onTabSelected;
   final String? nativeName;
@@ -50,6 +57,7 @@ class CountryHeader extends StatelessWidget {
   const CountryHeader({
     super.key,
     required this.bundle,
+    required this.tabs,
     required this.activeTab,
     required this.onTabSelected,
     this.nativeName,
@@ -106,9 +114,11 @@ class CountryHeader extends StatelessWidget {
               ),
             ],
           ),
+          if (bundle.country.contentStatus == ContentStatus.partial)
+            _StatusPill(countryName: bundle.country.nameCommon),
           const SizedBox(height: 12),
           _TabPillRow(
-            tabs: bundle.availableTabs,
+            tabs: tabs,
             active: activeTab,
             onSelected: onTabSelected,
           ),
@@ -150,6 +160,33 @@ class _Flag extends StatelessWidget {
           debugPrint('Flag fetch failed for $isoCode: $error');
           return placeholder;
         },
+      ),
+    );
+  }
+}
+
+/// The content-depth signal (.pill in the mockup) — shown only when
+/// `content_status = 'partial'`. `'complete'` gets no badge at all:
+/// silence signals trust, per the client design doc's reasoning against
+/// training users to read a "✓ Complete" label's *absence* as a warning.
+class _StatusPill extends StatelessWidget {
+  final String countryName;
+
+  const _StatusPill({required this.countryName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(999),
+        color: Colors.white.withValues(alpha: 0.11),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+      ),
+      child: Text(
+        'Building out $countryName — some sections are further along than others',
+        style: CountryTheme.pillLabel.copyWith(color: CountryTheme.pillInactiveText),
       ),
     );
   }

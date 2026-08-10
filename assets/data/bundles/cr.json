@@ -16,6 +16,7 @@
     "officialLanguages": ["Spanish"],
     "latitude": 9.7489,
     "longitude": -83.7534,
+    "utcOffsetMinutes": -360,
     "lastImportedAt": "2026-07-01T00:00:00Z"
   },
   "cities": [
@@ -29,6 +30,10 @@
     "bestTimes": [
       { "months": "December–April", "whyShort": "dry season nationwide", "why": "Dry season nationwide — the most reliable weather for a first trip covering multiple regions.", "crowdLevel": "high", "weatherNote": "Little to no rain; Guanacaste gets dusty and brown by March." },
       { "months": "May–June", "whyShort": "green season, fewer crowds", "why": "Green season begins, but mornings are usually still dry.", "crowdLevel": "moderate", "weatherNote": "Predictable afternoon showers, lush landscape, noticeably fewer crowds." }
+    ],
+    "seasons": [
+      { "startMonth": 12, "endMonth": 4, "label": "Dry season" },
+      { "startMonth": 5, "endMonth": 11, "label": "Green season" }
     ],
     "practicalNorms": [
       { "type": "tipping_norm", "title": "Service charge is already included", "body": "Restaurants add a mandatory 10% service charge plus 13% tax to the bill — an additional tip isn't expected, though rounding up for great service is appreciated.", "severity": "important" },

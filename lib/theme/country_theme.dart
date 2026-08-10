@@ -81,6 +81,27 @@ class CountryTheme {
     color: inkSoft,
   );
 
+  /// The "Right now" live strip (.live .k/.v/.s) — a small mono label, a
+  /// big bold value, and a muted subtitle, stacked per column.
+  static const liveLabel = TextStyle(
+    fontFamily: _mono,
+    fontSize: 9.5,
+    letterSpacing: 1.14,
+    color: inkSoft,
+  );
+  static const liveValue = TextStyle(
+    fontFamily: _archivo,
+    fontWeight: FontWeight.w700,
+    fontSize: 17,
+    letterSpacing: -0.34,
+    color: ink,
+  );
+  static const liveSubtitle = TextStyle(
+    fontFamily: _publicSans,
+    fontSize: 11,
+    color: inkSoft,
+  );
+
   /// MRZ strip (.mrz) — monospace, muted; `strong` variant for the
   /// bracketed data tokens (.mrz b).
   static const mrz = TextStyle(

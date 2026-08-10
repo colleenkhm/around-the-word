@@ -66,6 +66,18 @@ class CountryFacts {
   final List<String> officialLanguages;
   final double? latitude;
   final double? longitude;
+
+  /// Fixed offset from UTC, in minutes (e.g. -360 for UTC-6). Added
+  /// 2026-08-10 for the Overview tab's "Right now" local-time display —
+  /// flagged but not yet added in the data architecture doc's External
+  /// Data Sources table ("Timezone / current local time... needed for the
+  /// MVP's 'current time' widget"). **Deliberately a fixed offset, not a
+  /// DST-aware IANA timezone name** — good enough for "what time is it
+  /// there right now" at a glance; a country that observes DST will show
+  /// an hour off part of the year. Revisit with a real timezone package
+  /// if that turns out to matter more than the simplicity is worth.
+  final int? utcOffsetMinutes;
+
   final DateTime? lastImportedAt;
 
   const CountryFacts({
@@ -78,6 +90,7 @@ class CountryFacts {
     required this.officialLanguages,
     this.latitude,
     this.longitude,
+    this.utcOffsetMinutes,
     this.lastImportedAt,
   });
 
@@ -92,6 +105,7 @@ class CountryFacts {
       officialLanguages: (json['officialLanguages'] as List<dynamic>? ?? [])
           .map((e) => e as String)
           .toList(),
+      utcOffsetMinutes: json['utcOffsetMinutes'] as int?,
       latitude: (json['latitude'] as num?)?.toDouble(),
       longitude: (json['longitude'] as num?)?.toDouble(),
       lastImportedAt: json['lastImportedAt'] == null
@@ -196,9 +210,15 @@ class CountryBundle {
   });
 
   /// Which tabs actually have something to show — Overview is trivially
-  /// always included once a bundle exists at all. Drives both the sparse
-  /// tab-pill row in the header and which tabs the page renders; empty
-  /// tabs are omitted, not shown empty (client design doc).
+  /// always included once a bundle exists at all. Implements the client
+  /// design doc's "empty tabs are omitted, not shown empty" rule.
+  ///
+  /// **Not currently wired to [CountryHeader]'s pill row** (corrected
+  /// 2026-08-10 — see that widget's doc comment): the pill row shows
+  /// whichever tabs have actually been *built* so far, independent of
+  /// whether their content exists yet. This getter is still correct and
+  /// still the right thing to filter the real `TabBarView` on once
+  /// CountryPageScreen exists and hosts all four tabs for real.
   List<CountryTab> get availableTabs => [
         CountryTab.overview,
         if (pointsOfInterest.isNotEmpty) CountryTab.explore,
