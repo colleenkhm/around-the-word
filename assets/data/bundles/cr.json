@@ -1,0 +1,244 @@
+{
+  "country": {
+    "id": "country-cr",
+    "isoCode": "CR",
+    "nameCommon": "Costa Rica",
+    "nameOfficial": "Republic of Costa Rica",
+    "contentStatus": "partial"
+  },
+  "facts": {
+    "flagSvgUrl": "https://mock.aroundtheword.app/flags/cr.svg",
+    "capital": "San José",
+    "population": 5180829,
+    "currencyCode": "CRC",
+    "currencyName": "Costa Rican Colón",
+    "callingCode": "+506",
+    "officialLanguages": ["Spanish"],
+    "latitude": 9.7489,
+    "longitude": -83.7534,
+    "lastImportedAt": "2026-07-01T00:00:00Z"
+  },
+  "cities": [
+    { "id": "city-cr-san-jose", "name": "San José", "population": 342188, "latitude": 9.9281, "longitude": -84.0907, "isFeatured": true },
+    { "id": "city-cr-la-fortuna", "name": "La Fortuna", "population": 14169, "latitude": 10.4676, "longitude": -84.6425, "isFeatured": true },
+    { "id": "city-cr-tamarindo", "name": "Tamarindo", "population": 6000, "latitude": 10.2993, "longitude": -85.8371, "isFeatured": true },
+    { "id": "city-cr-limon", "name": "Limón", "population": 61072, "latitude": 9.9908, "longitude": -83.0367, "isFeatured": false }
+  ],
+  "leader": null,
+  "guide": {
+    "bestTimes": [
+      { "months": "December–April", "whyShort": "dry season nationwide", "why": "Dry season nationwide — the most reliable weather for a first trip covering multiple regions.", "crowdLevel": "high", "weatherNote": "Little to no rain; Guanacaste gets dusty and brown by March." },
+      { "months": "May–June", "whyShort": "green season, fewer crowds", "why": "Green season begins, but mornings are usually still dry.", "crowdLevel": "moderate", "weatherNote": "Predictable afternoon showers, lush landscape, noticeably fewer crowds." }
+    ],
+    "practicalNorms": [
+      { "type": "tipping_norm", "title": "Service charge is already included", "body": "Restaurants add a mandatory 10% service charge plus 13% tax to the bill — an additional tip isn't expected, though rounding up for great service is appreciated.", "severity": "important" },
+      { "type": "punctuality_norm", "title": "\"Tico time\" is real, but not everywhere", "body": "Social plans routinely start 15–30 minutes later than stated. Tours and transport, however, run on schedule — don't apply the same flexibility there.", "severity": "fyi" },
+      { "type": "transport_norm", "title": "Use Uber, not street taxis, in San José", "body": "Uber operates in a legal gray area but is what nearly every tourist actually uses — cheaper and more reliable than flagging red taxis, and it avoids the fixed-rate disputes that are a common complaint.", "severity": "important" }
+    ],
+    "dressExpectations": [
+      { "context": "Beach towns", "expectation": "Casual and beachwear are completely normal, even at dinner.", "appliesTo": "all" },
+      { "context": "San José business and government offices", "expectation": "More conservative than the coast — pants and closed-toe shoes expected.", "appliesTo": "all" }
+    ],
+    "cuisine": [
+      { "dish": "Gallo pinto", "description": "Rice and beans cooked together with onion, pepper, and cilantro — the default breakfast, served everywhere from roadside sodas to hotels.", "where": "Any soda (local diner)", "dietaryFlags": ["vegetarian", "vegan"] },
+      { "dish": "Casado", "description": "The standard lunch plate: rice, beans, salad, plantain, and a choice of protein.", "where": "Sodas nationwide", "dietaryFlags": [] }
+    ],
+    "historicalEvents": [
+      { "year": 1948, "title": "Costa Rica abolishes its military", "whyItMatters": "Explains why the country has no armed forces today and why national identity leans heavily on peace and environment rather than military history — a fact tourists genuinely ask about." }
+    ],
+    "festivals": [
+      { "title": "Fiestas de Palmares", "body": "A two-week national fair in a small Alajuela province town — concerts, rodeo, carnival rides. One of the biggest annual events in the country, but not well known outside it.", "months": "January" }
+    ],
+    "prepNotes": [
+      { "title": "Bring cash for rural areas", "body": "Card acceptance drops off fast outside San José and the main tourist towns, and small-town ATMs can be unreliable — withdraw before heading somewhere remote.", "urgency": "recommended" },
+      { "title": "Confirm entry health requirements close to travel", "body": "Requirements have shifted before for travelers arriving via certain third countries — worth a final check a week or two out rather than relying on this note alone.", "urgency": "optional" }
+    ],
+    "lastReviewedAt": "2026-06-15T00:00:00Z"
+  },
+  "pointsOfInterest": [
+    { "id": "poi-cr-arenal", "poiType": "landmark", "tags": [], "name": "Arenal Volcano", "description": "Costa Rica's most iconic volcano, dormant since 2010 but still the visual centerpiece of the La Fortuna area.", "dressCode": null, "visitNotes": "Clear views are weather-dependent — mornings tend to be clearer than afternoons. Combine with the nearby hanging bridges or hot springs.", "latitude": 10.4630, "longitude": -84.7033, "cityId": "city-cr-la-fortuna" },
+    { "id": "poi-cr-soda-tapia", "poiType": "restaurant", "tags": ["breakfast", "lunch"], "name": "Soda Tapia", "description": "A long-running, no-frills soda near La Sabana park — casados and gallo pinto done well, popular with locals, not just tourists.", "dressCode": null, "visitNotes": "Cash preferred. Gets a lunch rush around 12–1pm.", "latitude": 9.9355, "longitude": -84.1046, "cityId": "city-cr-san-jose" },
+    { "id": "poi-cr-monteverde", "poiType": "landmark", "tags": [], "name": "Monteverde Cloud Forest Reserve", "description": "High-elevation cloud forest reserve — a genuinely different ecosystem from the lowland rainforest most itineraries otherwise cover.", "dressCode": null, "visitNotes": "Book reserve entry in advance during high season; go at opening for the best wildlife-spotting odds. Not near a profiled city — displays under Regional.", "latitude": 10.3010, "longitude": -84.7934, "cityId": null }
+  ],
+  "tips": [
+    { "id": "tip-cr-atm", "title": "Skip the resort currency exchange", "body": "Airport and resort exchange counters routinely offer noticeably worse rates than a bank ATM. Withdraw colones from a bank-affiliated ATM (not an independent one) once you're past the arrivals area.", "cityId": null, "categoryId": null },
+    { "id": "tip-cr-fortuna", "title": "La Fortuna Waterfall gets crowded by 10am", "body": "Tour buses arrive mid-morning. Going at opening (7am) means a genuinely quiet swim rather than a queue for the viewing platform.", "cityId": "city-cr-la-fortuna", "categoryId": null }
+  ],
+  "phrases": [
+    {
+      "id": "phrase-cr-bano",
+      "categoryId": "cat-basics",
+      "text": "¿Dónde está el baño?",
+      "translation": "Where is the bathroom?",
+      "literalTranslation": null,
+      "pronunciation": "DON-deh es-TA el BA-nyo",
+      "audioUrl": null,
+      "formality": "either",
+      "usageNote": "Works in any register — one of the first phrases worth having ready.",
+      "tokens": [
+        { "position": 0, "surfaceForm": "¿", "wordId": null, "isMaskable": false, "type": "punctuation" },
+        { "position": 1, "surfaceForm": "Dónde", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 2, "surfaceForm": "está", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 3, "surfaceForm": "el", "wordId": null, "isMaskable": false, "type": "particle" },
+        { "position": 4, "surfaceForm": "baño", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 5, "surfaceForm": "?", "wordId": null, "isMaskable": false, "type": "punctuation" }
+      ]
+    },
+    {
+      "id": "phrase-cr-cuenta",
+      "categoryId": "cat-food",
+      "text": "La cuenta, por favor.",
+      "translation": "The check, please.",
+      "literalTranslation": null,
+      "pronunciation": "la KWEN-ta por fa-VOR",
+      "audioUrl": null,
+      "formality": "either",
+      "usageNote": null,
+      "tokens": [
+        { "position": 0, "surfaceForm": "La", "wordId": null, "isMaskable": false, "type": "particle" },
+        { "position": 1, "surfaceForm": "cuenta", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 2, "surfaceForm": ",", "wordId": null, "isMaskable": false, "type": "punctuation" },
+        { "position": 3, "surfaceForm": "por", "wordId": null, "isMaskable": false, "type": "particle" },
+        { "position": 4, "surfaceForm": "favor", "wordId": "word-cr-por-favor", "isMaskable": true, "type": "word" },
+        { "position": 5, "surfaceForm": ".", "wordId": null, "isMaskable": false, "type": "punctuation" }
+      ]
+    },
+    {
+      "id": "phrase-cr-pura-vida",
+      "categoryId": "cat-greetings",
+      "text": "Pura vida",
+      "translation": "All good / hello / take it easy (lit. \"pure life\")",
+      "literalTranslation": "pure life",
+      "pronunciation": "POO-ra VEE-da",
+      "audioUrl": null,
+      "formality": "informal",
+      "usageNote": "The single most iconic Costa Rican expression — used as a greeting, a farewell, an exclamation, and a general answer to \"how are you.\" Genuinely used by locals constantly, not just tourist marketing.",
+      "tokens": [
+        { "position": 0, "surfaceForm": "Pura", "wordId": null, "isMaskable": false, "type": "word" },
+        { "position": 1, "surfaceForm": "vida", "wordId": null, "isMaskable": false, "type": "word" }
+      ]
+    },
+    {
+      "id": "phrase-cr-hirviendo",
+      "categoryId": "cat-food-cooking",
+      "text": "El agua ya está hirviendo.",
+      "translation": "The water is already boiling.",
+      "literalTranslation": null,
+      "pronunciation": "el A-gwa ya es-TA eer-vee-EN-do",
+      "audioUrl": null,
+      "formality": "either",
+      "usageNote": null,
+      "tokens": [
+        { "position": 0, "surfaceForm": "El", "wordId": null, "isMaskable": false, "type": "particle" },
+        { "position": 1, "surfaceForm": "agua", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 2, "surfaceForm": "ya", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 3, "surfaceForm": "está", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 4, "surfaceForm": "hirviendo", "wordId": "word-cr-hervir", "isMaskable": true, "type": "word" },
+        { "position": 5, "surfaceForm": ".", "wordId": null, "isMaskable": false, "type": "punctuation" }
+      ]
+    },
+    {
+      "id": "phrase-cr-sarten",
+      "categoryId": "cat-food-cooking",
+      "text": "Necesito una sartén grande.",
+      "translation": "I need a big frying pan.",
+      "literalTranslation": null,
+      "pronunciation": "neh-seh-SEE-to OO-na sar-TEN GRAN-deh",
+      "audioUrl": null,
+      "formality": "either",
+      "usageNote": null,
+      "tokens": [
+        { "position": 0, "surfaceForm": "Necesito", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 1, "surfaceForm": "una", "wordId": null, "isMaskable": false, "type": "particle" },
+        { "position": 2, "surfaceForm": "sartén", "wordId": "word-cr-sarten", "isMaskable": true, "type": "word" },
+        { "position": 3, "surfaceForm": "grande", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 4, "surfaceForm": ".", "wordId": null, "isMaskable": false, "type": "punctuation" }
+      ]
+    },
+    {
+      "id": "phrase-cr-entrada",
+      "categoryId": "cat-museums",
+      "text": "¿Cuánto cuesta la entrada?",
+      "translation": "How much does the ticket cost?",
+      "literalTranslation": null,
+      "pronunciation": "KWAN-to KWES-ta la en-TRA-da",
+      "audioUrl": null,
+      "formality": "either",
+      "usageNote": null,
+      "tokens": [
+        { "position": 0, "surfaceForm": "¿", "wordId": null, "isMaskable": false, "type": "punctuation" },
+        { "position": 1, "surfaceForm": "Cuánto", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 2, "surfaceForm": "cuesta", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 3, "surfaceForm": "la", "wordId": null, "isMaskable": false, "type": "particle" },
+        { "position": 4, "surfaceForm": "entrada", "wordId": "word-cr-entrada", "isMaskable": true, "type": "word" },
+        { "position": 5, "surfaceForm": "?", "wordId": null, "isMaskable": false, "type": "punctuation" }
+      ]
+    },
+    {
+      "id": "phrase-cr-autobus",
+      "categoryId": "cat-transportation",
+      "text": "¿Dónde puedo tomar el autobús?",
+      "translation": "Where can I catch the bus?",
+      "literalTranslation": null,
+      "pronunciation": "DON-deh PWEH-do to-MAR el ow-to-BOOS",
+      "audioUrl": null,
+      "formality": "either",
+      "usageNote": null,
+      "tokens": [
+        { "position": 0, "surfaceForm": "¿", "wordId": null, "isMaskable": false, "type": "punctuation" },
+        { "position": 1, "surfaceForm": "Dónde", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 2, "surfaceForm": "puedo", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 3, "surfaceForm": "tomar", "wordId": null, "isMaskable": true, "type": "word" },
+        { "position": 4, "surfaceForm": "el", "wordId": null, "isMaskable": false, "type": "particle" },
+        { "position": 5, "surfaceForm": "autobús", "wordId": "word-cr-autobus", "isMaskable": true, "type": "word" },
+        { "position": 6, "surfaceForm": "?", "wordId": null, "isMaskable": false, "type": "punctuation" }
+      ]
+    }
+  ],
+  "words": [
+    { "id": "word-cr-hervir", "lemma": "hervir", "translation": "to boil", "partOfSpeech": "verb", "gender": null, "pronunciation": "air-VEER", "ipa": "eɾˈβiɾ", "audioUrl": null, "usageNote": null, "difficulty": 2, "categoryIds": ["cat-food-cooking"] },
+    { "id": "word-cr-sarten", "lemma": "la sartén", "translation": "the frying pan", "partOfSpeech": "noun", "gender": "f", "pronunciation": "sar-TEN", "ipa": "saɾˈten", "audioUrl": null, "usageNote": null, "difficulty": 1, "categoryIds": ["cat-food-cooking"] },
+    { "id": "word-cr-entrada", "lemma": "la entrada", "translation": "the entrance / the ticket", "partOfSpeech": "noun", "gender": "f", "pronunciation": "en-TRA-da", "ipa": "enˈtɾaða", "audioUrl": null, "usageNote": "Context decides which sense — \"entrance\" for a building, \"ticket\" for an admission price.", "difficulty": 1, "categoryIds": ["cat-museums"] },
+    { "id": "word-cr-hola", "lemma": "hola", "translation": "hello", "partOfSpeech": "interjection", "gender": null, "pronunciation": "OH-la", "ipa": "ˈola", "audioUrl": null, "usageNote": null, "difficulty": 1, "categoryIds": ["cat-greetings"] },
+    { "id": "word-cr-adios", "lemma": "adiós", "translation": "goodbye", "partOfSpeech": "interjection", "gender": null, "pronunciation": "ah-DYOS", "ipa": "aˈðjos", "audioUrl": null, "usageNote": null, "difficulty": 1, "categoryIds": ["cat-greetings"] },
+    { "id": "word-cr-por-favor", "lemma": "por favor", "translation": "please", "partOfSpeech": "interjection", "gender": null, "pronunciation": "por fa-VOR", "ipa": "poɾ faˈβoɾ", "audioUrl": null, "usageNote": null, "difficulty": 1, "categoryIds": ["cat-greetings"] },
+    { "id": "word-cr-gracias", "lemma": "gracias", "translation": "thank you", "partOfSpeech": "interjection", "gender": null, "pronunciation": "GRA-syas", "ipa": "ˈgɾasjas", "audioUrl": null, "usageNote": null, "difficulty": 1, "categoryIds": ["cat-greetings"] },
+    { "id": "word-cr-autobus", "lemma": "el autobús", "translation": "the bus", "partOfSpeech": "noun", "gender": "m", "pronunciation": "ow-to-BOOS", "ipa": "el awtoˈβus", "audioUrl": null, "usageNote": null, "difficulty": 1, "categoryIds": ["cat-transportation"] },
+    { "id": "word-cr-taxi", "lemma": "el taxi", "translation": "the taxi", "partOfSpeech": "noun", "gender": "m", "pronunciation": "el TAK-see", "ipa": "el ˈtaksi", "audioUrl": null, "usageNote": null, "difficulty": 1, "categoryIds": ["cat-transportation"] },
+    { "id": "word-cr-bosque", "lemma": "el bosque", "translation": "the forest", "partOfSpeech": "noun", "gender": "m", "pronunciation": "el BOS-keh", "ipa": "el ˈboske", "audioUrl": null, "usageNote": null, "difficulty": 1, "categoryIds": ["cat-nature"] },
+    { "id": "word-cr-playa", "lemma": "la playa", "translation": "the beach", "partOfSpeech": "noun", "gender": "f", "pronunciation": "la PLA-ya", "ipa": "la ˈplaʝa", "audioUrl": null, "usageNote": null, "difficulty": 1, "categoryIds": ["cat-nature"] }
+  ],
+  "categories": [
+    { "id": "cat-greetings", "slug": "greetings", "name": "Greetings", "children": [], "sortOrder": 0 },
+    { "id": "cat-basics", "slug": "basics", "name": "Basics", "children": [], "sortOrder": 1 },
+    {
+      "id": "cat-food",
+      "slug": "food",
+      "name": "Food",
+      "sortOrder": 2,
+      "children": [
+        { "id": "cat-food-cooking", "slug": "food-cooking", "name": "Cooking", "children": [], "sortOrder": 0 },
+        { "id": "cat-food-grocery", "slug": "food-grocery", "name": "Grocery Shopping", "children": [], "sortOrder": 1 }
+      ]
+    },
+    { "id": "cat-museums", "slug": "museums", "name": "Museums", "children": [], "sortOrder": 3 },
+    { "id": "cat-transportation", "slug": "transportation", "name": "Transportation", "children": [], "sortOrder": 4 },
+    { "id": "cat-nature", "slug": "nature", "name": "Hiking / The Outdoors", "children": [], "sortOrder": 5 }
+  ],
+  "advisories": [
+    { "issuingAuthority": "US State Department", "level": "Level 1", "levelLabel": "Exercise Normal Precautions", "summary": "Overall a very safe destination; standard precautions apply, with elevated caution around petty theft in tourist areas and unattended beaches or parked cars.", "officialUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/costa-rica-travel-advisory.html", "issuedAt": "2026-03-01", "lastVerifiedAt": "2026-07-01T00:00:00Z" },
+    { "issuingAuthority": "UK FCDO", "level": null, "levelLabel": "Most visits are trouble-free", "summary": "No parts of the country are advised against for travel. Standard guidance on petty crime and road safety applies.", "officialUrl": "https://www.gov.uk/foreign-travel-advice/costa-rica", "issuedAt": null, "lastVerifiedAt": "2026-06-20T00:00:00Z" }
+  ],
+  "contributorNames": ["Sarah M.", "the Whitfield family"],
+  "visa": {
+    "summary": "US citizens may enter Costa Rica visa-free for stays up to 90 days with a passport valid for the duration of the stay.",
+    "officialUrl": "https://costarica-embassy.org/visas/",
+    "applicationUrl": null,
+    "lastVerifiedAt": "2026-07-01T00:00:00Z",
+    "nationalityIsoCode": "US",
+    "prohibitedOnEntry": "Firearms and ammunition without a prior permit; certain fresh plant and animal products.",
+    "prohibitedOnExit": null
+  },
+  "regionalNote": null,
+  "fetchedAt": "2026-08-06T00:00:00Z"
+}

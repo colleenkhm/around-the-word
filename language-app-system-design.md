@@ -1,5 +1,12 @@
 # Around the Word: System Design & Roadmap
 
+> **⚠️ Superseded as of 2026-08-06.** The no-backend, static-bundled-JSON premise this whole doc is built on is gone — the app pivoted to a Supabase/Postgres backend with a curated travel database as the actual product, per Colleen's explicit instruction to override this doc's direction "even if it means rearchitecture." The three current docs are:
+> - [around-the-word-client-design.md](around-the-word-client-design.md) — screens, flows, client state, offline caching (supersedes this doc's sections 1, 2, and most of 4)
+> - [around-the-word-data-architecture.md](around-the-word-data-architecture.md) — schema, backend, client data objects (supersedes this doc's section 3, most of 5)
+> - [around-the-word-scratch-notes.md](around-the-word-scratch-notes.md) — loose ends, not decisions
+>
+> Kept below as history, same as [app-design-doc.md](app-design-doc.md) and the pre-pivot parts of [HANDOFF.md](HANDOFF.md) it itself superseded. Nothing below this notice is current.
+
 *Living doc, built section by section as we work through it. This is the current authoritative plan for the app — supersedes the activity/exercise/vocab-tagging direction explored in [app-design-doc.md](app-design-doc.md) and [HANDOFF.md](HANDOFF.md); see the superseded-notice at the top of each for what changed and why.*
 
 ---
@@ -14,7 +21,7 @@
 - **Music** — an embedded playlist of music from the destination
 - **Word of the Day** — a dashboard widget and lock-screen/notification feature, thematically the app's namesake. Ties directly to the local-notification roadmap idea below.
 
-**Why this section exists:** so V1's scope stays deliberately small without losing sight of where it's going. The data-file pattern already established below (one JSON file per feature per country, with a "coming soon" fallback where content doesn't exist yet) is what makes this vision buildable in stages without a redesign each time — weather, tips, playlists, and word-of-the-day all slot into the same shape as `content/{countryCode}.json` did for language: a file, keyed by country, with graceful "not yet available" handling built in from the start.
+**Why this section exists:** so V1's scope stays deliberately small without losing sight of where it's going. The country-keyed data pattern already established below is what makes this vision buildable in stages without a redesign each time — but "one JSON file per feature per country" turns out not to be the right shape for all four future features equally; see **Data shape for future dashboard features** in section 3 for the actual per-feature breakdown (curated file, scalar field, live API call, or derived view) and how country-level availability generalizes once there's more than one feature to gate.
 
 ---
 
@@ -144,6 +151,28 @@ Each entry also carries **grammatical tagging** — `partOfSpeech` (noun/verb/ad
 
 **The "personalized dictionary" is not new data — it's a filtered view.** Given a selected country and a set of selected category ids, the "personalizing" step just pulls the matching entries out of that country's content file into an in-memory list. That in-memory list is what both Learn (flashcards) and Use (category list) read from. This keeps V1 fully backend-free — the personalization step is a filter function, not a fetch, even though it's built to look and behave like one.
 
+### Data shape for future dashboard features (planning ahead, not built in V1)
+
+Not every feature in the Product Vision fits the "curated file per country" pattern language uses — forcing all of them into that one shape would be a mismatch for at least two of them. Four different shapes, by feature:
+
+1. **Static curated collections** (Language, and later Friend-sourced tips) — real content someone authors and reviews, naturally a list. Own file per country: `content/{cc}.json` (exists), `tips/{cc}.json` (V3.5). This is the pattern that's actually earning its "own file" treatment.
+2. **Simple scalar references** (Music) — a country doesn't need a whole *file* for "here's the playlist URL," it needs one field. This belongs directly on the country record in `countries.json` (e.g. `musicPlaylistUrl`), not a separate `music/{cc}.json`.
+3. **Live/dynamic data** (Weather) — not bundled content at all. As section 6 (V1.5) already notes, this is the one piece that breaks the zero-backend rule — it's a runtime API call keyed by the country (likely lat/long or a weather-service city id stored on the country record), not a JSON file in `assets/`.
+4. **Derived views** (Word of the Day) — no new data needed at all. It's "pick one entry from that country's existing `content/{cc}.json` today," the same "filtered view, not new data" philosophy already used for the personalizing step above.
+
+**`active` doesn't generalize past one feature.** Right now `active: bool` gates the one feature that exists (language). Once a country can have language content but no tips yet, or tips but no music, a single boolean can't express that — it needs to become per-feature availability. When V1.5+ features actually get built, the plan is to replace the flat `active` flag with a `features` map on the country record:
+```json
+{
+  "countryCode": "CR",
+  "name": "Costa Rica",
+  "continent": "north-america",
+  "languageCode": "es",
+  "musicPlaylistUrl": null,
+  "features": { "language": true, "tips": false, "music": false }
+}
+```
+`weather` and `wordOfDay` deliberately aren't in `features` — their availability is computed, not flagged: weather from whether the live API call succeeds, word-of-day from whether `features.language` is true. This keeps `countries.json` as the cheap index the destination/dashboard screens check to decide what to show, without needing to touch weather's live API or open every country's content file just to know what's available. **Not built now** — V1 only has language, so the existing single `active` flag is still the right amount of structure; this is here so the migration is a known, deliberate step rather than a surprise refactor when V1.5 starts.
+
 ## 4. Architecture & Tech Stack
 
 - **Framework:** Flutter (existing skill, matches nightglow.studio)
@@ -170,7 +199,7 @@ Still no real backend in V1 — the "personalizing" step is a local filter funct
 
 **V1.2 — second language:** first country whose `languageCode` isn't `es` (e.g. France/French). Tests that the coming-soon/full-flow branch genuinely doesn't care which language is behind a country, only this doc's earlier language-agnostic design intent is finally exercised for real.
 
-**V1.5 — weather + music:** the two cheap dashboard additions from the Product Vision above. Weather is the one piece that breaks V1's zero-backend rule (needs a live API call), but it's a single contained integration, not a general backend. Music is just an embedded playlist per country, no real engineering lift. Both slot onto the same country-selection screen the language flow already uses.
+**V1.5 — weather + music:** the two cheap dashboard additions from the Product Vision above. Weather is the one piece that breaks V1's zero-backend rule (needs a live API call), but it's a single contained integration, not a general backend. Music is just an embedded playlist per country, no real engineering lift. Both slot onto the same country-selection screen the language flow already uses. This is also the point the `active` flag needs to become a `features` map — see "Data shape for future dashboard features" in section 3.
 
 **V2 — real personalization:** replace the cosmetic "personalizing your dictionary" filter with actual computation — this is the point the loading screen's async-shaped placeholder function gets swapped for a real call. Likely also where accounts arrive, since real personalization pairs naturally with saved preferences and persistent flashcard progress.
 
@@ -178,7 +207,7 @@ Still no real backend in V1 — the "personalizing" step is a local filter funct
 
 **V3.5 (or parallel to V3) — friend-sourced travel tips:** a `tips.json` per country, same shape as the content files elsewhere in this doc. The sourcing model is deliberately different from the language content though — rather than Colleen curating tips from research the way phrase content gets curated, this is collected directly from her own network of well-traveled friends. No submission UI needed at this stage — could start as simple as a shared doc or form she personally compiles into the JSON file, with an open crowdsourcing submission system (if ever built) as a much later, separate step layered on top of the V3 social/accounts groundwork.
 
-**V4 (or later) — location-aware word of the day:** the app's namesake feature. A lock-screen/notification prompt and dashboard widget showing a relevant word or phrase for whatever country the user is currently traveling to. **Implementation note for when this gets built:** this almost certainly doesn't need true push notifications (server-triggered, requiring a backend and APNs/FCM integration) — Flutter supports *local* notifications, scheduled entirely on-device from already-bundled content, no server required. The simpler version — "which country did the user most recently select in-app" rather than real-time GPS detection — is the natural first cut; GPS-based auto-detection would be a further-later refinement layered on top, and would need location-permission handling this doc hasn't scoped yet.
+**V4 (or later) — location-aware word of the day:** the app's namesake feature. A lock-screen/notification prompt and dashboard widget showing a relevant word or phrase for whatever country the user is currently traveling to. No new content file — per section 3's data-shape breakdown, this is a derived view that picks one entry from that country's existing `content/{cc}.json`, not new data to author. **Implementation note for when this gets built:** this almost certainly doesn't need true push notifications (server-triggered, requiring a backend and APNs/FCM integration) — Flutter supports *local* notifications, scheduled entirely on-device from already-bundled content, no server required. The simpler version — "which country did the user most recently select in-app" rather than real-time GPS detection — is the natural first cut; GPS-based auto-detection would be a further-later refinement layered on top, and would need location-permission handling this doc hasn't scoped yet.
 
 **Later, master's-dependent:** the "Second Convergence Point" from the career/roadmap doc — personalized, itinerary-aware lesson generation, drawing on real SLA theory across languages. The V2 "real personalization" work is a direct, smaller-scale preview of this — not a separate track, an earlier step on the same path. *(This is also where the trip/activity-specific curation and grammar-aware exercise work explored in [app-design-doc.md](app-design-doc.md) could resurface — it's shelved for V1-V3, not discarded.)*
 
