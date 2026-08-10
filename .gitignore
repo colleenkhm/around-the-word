@@ -46,3 +46,6 @@ app.*.map.json
 
 # Vocab tagging tool (dev-only, not part of the Flutter app)
 tools/vocab_tagger/.venv/
+
+# Commodity importer (dev-only, not part of the Flutter app)
+tools/commodity_importer/.venv/

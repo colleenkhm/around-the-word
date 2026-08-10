@@ -44,7 +44,7 @@ Everything below runs **server-side in a Supabase Edge Function**, never from th
 
 | Data | Source | Notes |
 |---|---|---|
-| Country facts (capital, currency, calling code, languages, coords, flag) | **REST Countries** (`restcountries.com`, `/v3.1/all`, `/v3.1/alpha/{iso2}`, no key) | Also returns **`nativeName`** — exactly what the country-page header needs for the small-type native name under the English name |
+| Country facts (capital, currency, calling code, languages, coords, flag) | **REST Countries** (`api.restcountries.com/countries/v5/codes.alpha_2/{iso2}`, `Authorization: Bearer {key}`) | **⚠️ Confirmed 2026-08-09: v3.1 is deprecated, no-key access no longer works.** v5 requires a free API key (sign up at restcountries.com/sign-up) — the `rc_live_demo` key runs but always echoes one fixed sample record regardless of the country requested, so it's only useful for verifying a script doesn't crash, not for real data. Response shape changed too: `capital`→`capitals[0].name`, `currencies`/`languages` are now lists not dicts, `latlng`→`coordinates.{lat,lng}`, `flags.svg`→`flag.url_svg`, native name lives at `names.native`. `tools/commodity_importer/fetch_country_facts.py` implements the current shape. |
 | Cities (name, population, coordinates) | **GeoNames** (`api.geonames.org`, free username registration) | Populates `is_major` only; must never touch `is_featured` |
 | Travel advisories | **State Dept CA API** + **Global Affairs Canada** | See "Automated refresh" below. Two of three issuing authorities automatable |
 | Visa / entry-exit requirements | **State Dept CA API** (`entry_exit_requirements` field) | US-nationality-scoped, which matches V1 exactly |

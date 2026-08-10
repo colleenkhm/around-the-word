@@ -62,7 +62,10 @@ guide content (cuisine/dress/norms/festivals), language content, or social
 norms this way — that's hand-curated by design, API or not.
 
 - **Country facts** (capital, currency, calling code, languages, coords,
-  flag, native name): **REST Countries** (`restcountries.com/v3.1`, no key)
+  flag, native name): **REST Countries** — ⚠️ v3.1 is deprecated (confirmed
+  2026-08-09); now `api.restcountries.com/countries/v5`, needs a free API
+  key (`Authorization: Bearer`), and several field names/shapes changed.
+  See `tools/commodity_importer/` for the current implementation.
 - **Cities**: **GeoNames** (`api.geonames.org`, free username) — populates
   `is_major` only, never `is_featured`
 - **US advisories + entry/exit requirements (visa data)**: **State Dept
