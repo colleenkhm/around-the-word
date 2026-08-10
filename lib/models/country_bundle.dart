@@ -17,6 +17,13 @@ import 'travel_info.dart';
 
 enum ContentStatus { none, partial, complete }
 
+/// The four country-page tabs — **not** five. Confirmed 2026-08-10 against
+/// the country-page-mockups.html spec: the client design doc's original
+/// fifth tab, Travel Info (advisories + visa), folds into Overview instead
+/// of staying separate. That doc still describes five as of this comment
+/// and needs updating to match.
+enum CountryTab { overview, explore, guide, language }
+
 ContentStatus _contentStatusFromJson(String value) =>
     ContentStatus.values.firstWhere((e) => e.name == value);
 
@@ -187,6 +194,17 @@ class CountryBundle {
     this.regionalNote,
     required this.fetchedAt,
   });
+
+  /// Which tabs actually have something to show — Overview is trivially
+  /// always included once a bundle exists at all. Drives both the sparse
+  /// tab-pill row in the header and which tabs the page renders; empty
+  /// tabs are omitted, not shown empty (client design doc).
+  List<CountryTab> get availableTabs => [
+        CountryTab.overview,
+        if (pointsOfInterest.isNotEmpty) CountryTab.explore,
+        if (guide.hasGuideTabContent) CountryTab.guide,
+        if (phrases.isNotEmpty || words.isNotEmpty) CountryTab.language,
+      ];
 
   factory CountryBundle.fromJson(Map<String, dynamic> json) {
     return CountryBundle(

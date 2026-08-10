@@ -40,8 +40,7 @@ class CountryGuide {
     this.lastReviewedAt,
   });
 
-  /// True when every section is empty — the Guide tab isn't rendered at all
-  /// in that case (see client design doc: empty tabs are omitted).
+  /// True when every section is empty, including [bestTimes]/[practicalNorms].
   bool get isEmpty =>
       bestTimes.isEmpty &&
       practicalNorms.isEmpty &&
@@ -50,6 +49,19 @@ class CountryGuide {
       historicalEvents.isEmpty &&
       festivals.isEmpty &&
       prepNotes.isEmpty;
+
+  /// Whether the **Guide tab** specifically has anything to show —
+  /// deliberately excludes [bestTimes]/[practicalNorms], which display in
+  /// Overview instead (see client design doc: "best_time and the *_norm
+  /// types display in Overview, the rest here"). A country with only
+  /// best-times/practical-norms content clears [isEmpty] but should still
+  /// omit the Guide tab.
+  bool get hasGuideTabContent =>
+      dressExpectations.isNotEmpty ||
+      cuisine.isNotEmpty ||
+      historicalEvents.isNotEmpty ||
+      festivals.isNotEmpty ||
+      prepNotes.isNotEmpty;
 
   factory CountryGuide.fromJson(Map<String, dynamic> json) {
     return CountryGuide(
