@@ -102,6 +102,34 @@ class CountryTheme {
     color: inkSoft,
   );
 
+  /// Shared list-row styling (.cn / .cmeta) — used by both the best-times
+  /// list and the cities list, per the mockup reusing the same markup
+  /// pattern for both.
+  static const listRowTitle = TextStyle(
+    fontFamily: _publicSans,
+    fontWeight: FontWeight.w600,
+    fontSize: 14.5,
+    color: ink,
+  );
+  static const listRowMeta = TextStyle(
+    fontFamily: _publicSans,
+    fontSize: 11.5,
+    color: inkSoft,
+  );
+  // (.idx) — light-background mono index, distinct from the header's
+  // .mrz styles even though both are "small muted mono" — those are
+  // colored for the dark header background and would be too faint here.
+  static const listRowIndex = TextStyle(
+    fontFamily: _mono,
+    fontSize: 10,
+    color: inkSoft,
+  );
+  static const listRowDetail = TextStyle(
+    fontFamily: _publicSans,
+    fontSize: 13.5,
+    color: inkSoft,
+  );
+
   /// MRZ strip (.mrz) — monospace, muted; `strong` variant for the
   /// bracketed data tokens (.mrz b).
   static const mrz = TextStyle(

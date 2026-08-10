@@ -6,6 +6,8 @@ import 'package:flutter/services.dart' show rootBundle;
 import '../models/country_bundle.dart';
 import '../models/live_data.dart';
 import '../theme/country_theme.dart';
+import '../widgets/country_page/best_times_section.dart';
+import '../widgets/country_page/cities_section.dart';
 import '../widgets/country_page/country_header.dart';
 import '../widgets/country_page/right_now_strip.dart';
 import '../widgets/country_page/section_heading.dart';
@@ -98,6 +100,13 @@ class _CountryHeaderPreviewScreenState
                               fetchedAt: DateTime.now(),
                             ),
                             currencyName: bundle.facts.currencyName,
+                          ),
+                          const SizedBox(height: 18),
+                          BestTimesSection(bestTimes: bundle.guide.bestTimes),
+                          const SizedBox(height: 18),
+                          CitiesSection(
+                            cities: bundle.cities,
+                            capital: bundle.facts.capital,
                           ),
                           const SizedBox(height: 24),
                           Text(
