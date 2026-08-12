@@ -78,6 +78,21 @@ class CountryFacts {
   /// if that turns out to matter more than the simplicity is worth.
   final int? utcOffsetMinutes;
 
+  /// A representative color from the country's flag, as "#RRGGBB" — kept
+  /// as a raw hex string here rather than a `Color`, same reasoning as
+  /// `flagSvgUrl` being a `String` and not an `Image`: models stay
+  /// Flutter-free (no `dart:ui`/`package:flutter` import), rendering
+  /// widgets do the interpreting. Added 2026-08-11 for the Travel Info
+  /// section's alternating row tint (see [CountryTheme.lightTint]).
+  /// **Hand-picked for now, not derived automatically** — real dominant-
+  /// color extraction from a flag image is a small vision problem of its
+  /// own and would need real tuning (a flag's most common pixel isn't
+  /// always its most *representative* color); one considered swatch per
+  /// country fits the project's existing curated-over-automated bias
+  /// better than an extraction pipeline for a single accent color. Revisit
+  /// if/when this needs to scale past hand-picking.
+  final String? accentColorHex;
+
   final DateTime? lastImportedAt;
 
   const CountryFacts({
@@ -91,6 +106,7 @@ class CountryFacts {
     this.latitude,
     this.longitude,
     this.utcOffsetMinutes,
+    this.accentColorHex,
     this.lastImportedAt,
   });
 
@@ -106,6 +122,7 @@ class CountryFacts {
           .map((e) => e as String)
           .toList(),
       utcOffsetMinutes: json['utcOffsetMinutes'] as int?,
+      accentColorHex: json['accentColorHex'] as String?,
       latitude: (json['latitude'] as num?)?.toDouble(),
       longitude: (json['longitude'] as num?)?.toDouble(),
       lastImportedAt: json['lastImportedAt'] == null

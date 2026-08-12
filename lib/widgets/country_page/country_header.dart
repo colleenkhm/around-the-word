@@ -13,7 +13,13 @@ const _tabLabels = {
 
 /// The country-page header/chrome: flag, name, native name, the
 /// content_status pill, the tab-pill row, and the passport-style MRZ
-/// strip. Built against country-page-mockups.html (2026-08-10 spec).
+/// strip. Built against country-page-mockups.html (2026-08-10 spec) —
+/// **with one deliberate deviation from it**: the mockup's flat,
+/// square-cornered dark bar was rounded at the bottom and given a soft
+/// shadow 2026-08-11 (see the color/radius/shadow tokens' doc comments in
+/// `CountryTheme`) because it read as an official banner rather than a
+/// page header. The mockup is still the source of truth for everything
+/// else here.
 ///
 /// **Two separate pills, not one merged into the other** (corrected
 /// 2026-08-10 — an earlier version of this widget replaced the
@@ -70,8 +76,19 @@ class CountryHeader extends StatelessWidget {
     final isDesktop = MediaQuery.sizeOf(context).width >= 900;
 
     return Container(
-      color: CountryTheme.ink,
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      // Rounded bottom edge + a soft shadow (added 2026-08-11, per
+      // Colleen: the flat full-width dark bar read as an official banner
+      // rather than a page header) — the header now reads as a card
+      // sitting on top of the page rather than an institutional strip
+      // it's bolted to. clipBehavior keeps the MRZ strip's own border and
+      // the flag's corners from poking past the curve.
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: CountryTheme.ink,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+        boxShadow: CountryTheme.cardShadow,
+      ),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -156,7 +173,7 @@ class _Flag extends StatelessWidget {
       height: height,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(3),
+        borderRadius: BorderRadius.circular(6),
         border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
       ),
       child: Image.network(

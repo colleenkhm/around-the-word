@@ -18,7 +18,10 @@ import 'section_heading.dart';
 /// left, visa/entry on the right, at the same >=900 breakpoint
 /// [CountryHeader] uses. Stacked (advisories above visa) below that.
 /// Falls back to whichever half has data if only one does, rather than
-/// leaving an empty column next to it.
+/// leaving an empty column next to it. When both sit side by side, they're
+/// forced to the same box height (the taller one's) via `IntrinsicHeight`
+/// + stretch — otherwise a short advisories list next to a long visa
+/// writeup looks like a layout bug rather than just "less content."
 ///
 /// Every field here carries a required source link and verified date —
 /// never rendered as the app's own assessment. See the data architecture
@@ -42,21 +45,30 @@ class TravelInfoSection extends StatelessWidget {
     final showVisa = visa != null;
     if (!showAdvisories && !showVisa) return const SizedBox.shrink();
 
-    final advisoriesColumn =
-        showAdvisories ? _AdvisoriesColumn(advisories: advisories) : null;
+    final isDesktop = MediaQuery.sizeOf(context).width >= 900;
+    final sideBySide = showAdvisories && showVisa && isDesktop;
+
+    final advisoriesColumn = showAdvisories
+        ? _AdvisoriesColumn(advisories: advisories, matchHeight: sideBySide)
+        : null;
     final visaColumn = showVisa
-        ? _VisaColumn(visa: visa!, regionalNote: regionalNote)
+        ? _VisaColumn(
+            visa: visa!,
+            regionalNote: regionalNote,
+            matchHeight: sideBySide,
+          )
         : null;
 
-    final isDesktop = MediaQuery.sizeOf(context).width >= 900;
-    if (advisoriesColumn != null && visaColumn != null && isDesktop) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(child: advisoriesColumn),
-          const SizedBox(width: 16),
-          Expanded(child: visaColumn),
-        ],
+    if (sideBySide) {
+      return IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: advisoriesColumn!),
+            const SizedBox(width: 16),
+            Expanded(child: visaColumn!),
+          ],
+        ),
       );
     }
 
@@ -74,20 +86,25 @@ class TravelInfoSection extends StatelessWidget {
 
 class _AdvisoriesColumn extends StatelessWidget {
   final List<TravelAdvisory> advisories;
+  final bool matchHeight;
 
-  const _AdvisoriesColumn({required this.advisories});
+  const _AdvisoriesColumn({
+    required this.advisories,
+    this.matchHeight = false,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final card = DividedCard(
+      children: [
+        for (final advisory in advisories) _AdvisoryRow(advisory: advisory),
+      ],
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SectionHeading('Advisories'),
-        DividedCard(
-          children: [
-            for (final advisory in advisories) _AdvisoryRow(advisory: advisory),
-          ],
-        ),
+        matchHeight ? Expanded(child: card) : card,
       ],
     );
   }
@@ -183,62 +200,68 @@ class _LevelBadge extends StatelessWidget {
 class _VisaColumn extends StatelessWidget {
   final VisaInfo visa;
   final RegionalNote? regionalNote;
+  final bool matchHeight;
 
-  const _VisaColumn({required this.visa, this.regionalNote});
+  const _VisaColumn({
+    required this.visa,
+    this.regionalNote,
+    this.matchHeight = false,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final card = DividedCard(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(15, 11, 15, 11),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'For ${visa.nationalityIsoCode} passport holders',
+                style: CountryTheme.listRowTitle,
+              ),
+              const SizedBox(height: 6),
+              Text(visa.summary, style: CountryTheme.listRowDetail),
+              if (visa.prohibitedOnEntry != null) ...[
+                const SizedBox(height: 8),
+                _ProhibitedNote(label: 'Prohibited on entry', body: visa.prohibitedOnEntry!),
+              ],
+              if (visa.prohibitedOnExit != null) ...[
+                const SizedBox(height: 8),
+                _ProhibitedNote(label: 'Prohibited on exit', body: visa.prohibitedOnExit!),
+              ],
+              const SizedBox(height: 8),
+              _SourceFooter(
+                officialUrl: visa.officialUrl,
+                lastVerifiedAt: visa.lastVerifiedAt,
+                applicationUrl: visa.applicationUrl,
+              ),
+            ],
+          ),
+        ),
+        if (regionalNote != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 11, 15, 11),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(regionalNote!.summary, style: CountryTheme.listRowDetail),
+                const SizedBox(height: 8),
+                _SourceFooter(
+                  officialUrl: regionalNote!.officialUrl,
+                  lastVerifiedAt: regionalNote!.lastVerifiedAt,
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SectionHeading('Visa & entry'),
-        DividedCard(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(15, 11, 15, 11),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'For ${visa.nationalityIsoCode} passport holders',
-                    style: CountryTheme.listRowTitle,
-                  ),
-                  const SizedBox(height: 6),
-                  Text(visa.summary, style: CountryTheme.listRowDetail),
-                  if (visa.prohibitedOnEntry != null) ...[
-                    const SizedBox(height: 8),
-                    _ProhibitedNote(label: 'Prohibited on entry', body: visa.prohibitedOnEntry!),
-                  ],
-                  if (visa.prohibitedOnExit != null) ...[
-                    const SizedBox(height: 8),
-                    _ProhibitedNote(label: 'Prohibited on exit', body: visa.prohibitedOnExit!),
-                  ],
-                  const SizedBox(height: 8),
-                  _SourceFooter(
-                    officialUrl: visa.officialUrl,
-                    lastVerifiedAt: visa.lastVerifiedAt,
-                    applicationUrl: visa.applicationUrl,
-                  ),
-                ],
-              ),
-            ),
-            if (regionalNote != null)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 11, 15, 11),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(regionalNote!.summary, style: CountryTheme.listRowDetail),
-                    const SizedBox(height: 8),
-                    _SourceFooter(
-                      officialUrl: regionalNote!.officialUrl,
-                      lastVerifiedAt: regionalNote!.lastVerifiedAt,
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        ),
+        matchHeight ? Expanded(child: card) : card,
       ],
     );
   }

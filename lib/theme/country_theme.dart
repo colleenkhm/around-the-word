@@ -13,12 +13,41 @@ class CountryTheme {
 
   // Document ink navy / cool document-stock paper — deliberately not a
   // warm cream, per the mockup's own comment.
-  static const ink = Color(0xFF12213A);
+  //
+  // `ink` and `rule` were both softened 2026-08-11 (per Colleen: the
+  // original mockup values read as "government website" / intimidating,
+  // not just "official"). `ink` moved from a near-black navy toward the
+  // existing `stamp` teal's hue family — still a serious document color,
+  // but warmer and closer to the one accent already used for links, so
+  // the header doesn't feel like a colder, unrelated block bolted onto
+  // the rest of the page. `rule` is a lighter, lower-contrast version of
+  // the same grey-green so card borders read as gentle definition rather
+  // than ruled form lines. See also `cardRadius`/`cardShadow` below,
+  // which round and soften the boxes those rules outline.
+  static const ink = Color(0xFF1E3F52);
   static const inkSoft = Color(0xFF3A4A63);
   static const paper = Color(0xFFE7EBE6);
   static const card = Color(0xFFFBFCFA);
-  static const rule = Color(0xFFC8D0C9);
+  static const rule = Color(0xFFDCE1DB);
   static const stamp = Color(0xFF0E6E6E); // "customs teal" — links, verification stamps
+
+  /// Shared corner radius for card-style boxes (Right Now, Travel Info,
+  /// Cities) and the header — bumped from the mockup's 10px 2026-08-11,
+  /// alongside `cardShadow`, so boxes read as soft cards rather than
+  /// sharp-edged form fields.
+  static const cardRadius = 16.0;
+
+  /// A soft, low-contrast shadow standing in for the mockup's hard
+  /// `border`-only card style — added 2026-08-11 so cards read as sitting
+  /// on the page rather than boxed into it. Kept as a getter (not a
+  /// `const`) since `Color.withValues` isn't a const constructor call.
+  static List<BoxShadow> get cardShadow => [
+        BoxShadow(
+          color: ink.withValues(alpha: 0.07),
+          blurRadius: 16,
+          offset: const Offset(0, 4),
+        ),
+      ];
 
   // Header text sits on the ink background, not the paper — separate,
   // lighter tokens.
@@ -40,6 +69,31 @@ class CountryTheme {
         3 => advisoryLevel3,
         _ => advisoryLevel4,
       };
+
+  /// A light pastel of [base]'s hue — used for the country page's
+  /// background (added 2026-08-11, corrected same day: originally applied
+  /// to the Travel Info boxes, but Colleen's actual ask was the *page*
+  /// background between sections, not the card boxes — see
+  /// `CountryHeaderPreviewScreen`'s `Scaffold.backgroundColor`. Card boxes
+  /// stay plain white/[card], same as [DividedCard]'s original look,
+  /// reading as documents sitting on a colored surface).
+  ///
+  /// **Takes only the hue from [base]; saturation and lightness are fixed**
+  /// — two earlier versions (`withValues(alpha: 0.08)`, then `0.16`) both
+  /// alpha-blended [base] toward white in *RGB* space via
+  /// `Color.alphaBlend`, which was the real problem, not the percentage.
+  /// Costa Rica's flag blue is close to fully saturated in HSL (S≈1.0) —
+  /// blending a saturated dark color toward white in RGB crushes
+  /// saturation fast (16% blend left under 10% saturation), so the result
+  /// read as grey no matter how far the alpha was pushed up. Working in
+  /// HSL and fixing saturation/lightness instead of diluting them fixes
+  /// that at the root, and also means every country's accent tints
+  /// consistently regardless of how saturated or dark its own flag color
+  /// happens to be.
+  static Color lightTint(Color base) {
+    final hue = HSLColor.fromColor(base).hue;
+    return HSLColor.fromAHSL(1.0, hue, 0.42, 0.90).toColor();
+  }
 
   // --- Text styles -----------------------------------------------------
 

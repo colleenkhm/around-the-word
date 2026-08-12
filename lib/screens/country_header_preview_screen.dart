@@ -7,6 +7,7 @@ import '../models/country_bundle.dart';
 import '../models/live_data.dart';
 import '../models/travel_info.dart';
 import '../theme/country_theme.dart';
+import '../utils/hex_color.dart';
 import '../widgets/country_page/cities_section.dart';
 import '../widgets/country_page/country_header.dart';
 import '../widgets/country_page/right_now_strip.dart';
@@ -72,11 +73,23 @@ class _CountryHeaderPreviewScreenState
       .where((a) => a.issuingAuthority == 'US State Department')
       .toList();
 
+  /// The page background between sections (per Colleen, 2026-08-11) — a
+  /// light pastel of the country's flag color instead of the flat
+  /// [CountryTheme.paper] grey, so the whole page reads as "this country's
+  /// page" rather than one fixed neutral shared by every country. Falls
+  /// back to plain `paper` when there's no bundle yet or no accent color
+  /// curated for this country (see `CountryFacts.accentColorHex`'s doc
+  /// comment on why this is hand-picked, not derived).
+  Color _pageBackground(CountryBundle? bundle) {
+    final hex = bundle?.facts.accentColorHex;
+    return hex == null ? CountryTheme.paper : CountryTheme.lightTint(hexToColor(hex));
+  }
+
   @override
   Widget build(BuildContext context) {
     final bundle = _bundle;
     return Scaffold(
-      backgroundColor: CountryTheme.paper,
+      backgroundColor: _pageBackground(bundle),
       body: bundle == null
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(

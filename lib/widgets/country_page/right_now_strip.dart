@@ -69,8 +69,9 @@ class _RightNowStripState extends State<RightNowStrip> {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: CountryTheme.rule),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(CountryTheme.cardRadius),
         color: CountryTheme.card,
+        boxShadow: CountryTheme.cardShadow,
       ),
       clipBehavior: Clip.antiAlias,
       child: IntrinsicHeight(

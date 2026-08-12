@@ -17,6 +17,7 @@
     "latitude": 9.7489,
     "longitude": -83.7534,
     "utcOffsetMinutes": -360,
+    "accentColorHex": "#002B7F",
     "lastImportedAt": "2026-07-01T00:00:00Z"
   },
   "cities": [
