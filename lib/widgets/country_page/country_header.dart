@@ -14,13 +14,12 @@ const _tabLabels = {
 
 /// The country-page header/chrome: flag, name, native name, the
 /// content_status pill, the tab-pill row, and the passport-style MRZ
-/// strip. Built against country-page-mockups.html (2026-08-10 spec) —
-/// **with one deliberate deviation from it**: the mockup's flat,
-/// square-cornered dark bar was rounded at the bottom and given a soft
-/// shadow 2026-08-11 (see the color/radius/shadow tokens' doc comments in
-/// `CountryTheme`) because it read as an official banner rather than a
-/// page header. The mockup is still the source of truth for everything
-/// else here.
+/// strip. Built against country-page-mockups.html (2026-08-10 spec), with
+/// several deliberate deviations from it since — most recently
+/// (2026-08-11) the header container itself moved from a dark navy bar to
+/// the same light [CountryTheme.card] surface every other card on the
+/// page uses; only the MRZ strip at the bottom keeps a dark board panel.
+/// See [CountryTheme]'s class doc for the full reasoning.
 ///
 /// **Two separate pills, not one merged into the other** (corrected
 /// 2026-08-10 — an earlier version of this widget replaced the
@@ -77,18 +76,14 @@ class CountryHeader extends StatelessWidget {
     final isDesktop = MediaQuery.sizeOf(context).width >= 900;
 
     return Container(
-      // A small rounded bottom edge, no shadow — softened from a flat
-      // square bar 2026-08-11 (read as an official banner), then that
-      // rounding itself walked back from a pronounced 24px "floating
-      // card" curve + drop shadow the same day, once the whole page went
-      // dark and the header needed to read as one more board panel
-      // (see [CountryTheme.cardRadius]'s doc comment) rather than a hero
-      // card sitting apart from everything below it. clipBehavior keeps
-      // the MRZ strip's own panel and the flag's corners from poking past
-      // the curve.
+      // A small rounded bottom edge — softened from a flat square bar
+      // 2026-08-11 (read as an official banner). clipBehavior keeps the
+      // MRZ strip's own dark panel and the flag's corners from poking
+      // past the curve.
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: CountryTheme.ink,
+        color: CountryTheme.card,
+        border: Border.all(color: CountryTheme.rule),
         borderRadius: const BorderRadius.vertical(
           bottom: Radius.circular(CountryTheme.cardRadius),
         ),
@@ -133,8 +128,8 @@ class CountryHeader extends StatelessWidget {
                                       text: nativeNameRomanized,
                                       style: CountryTheme.nativeNameRomanized
                                           .copyWith(
-                                              color: CountryTheme.headerNative
-                                                  .withValues(alpha: 0.62)),
+                                              color: CountryTheme.inkSoft
+                                                  .withValues(alpha: 0.75)),
                                     ),
                                   ],
                                 ],
@@ -185,7 +180,7 @@ class _Flag extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = desktop ? 62.0 : 46.0;
     final height = desktop ? 42.0 : 32.0;
-    final placeholder = ColoredBox(color: CountryTheme.inkSoft);
+    final placeholder = ColoredBox(color: CountryTheme.rule);
 
     return Container(
       width: width,
@@ -193,7 +188,7 @@ class _Flag extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
+        border: Border.all(color: CountryTheme.rule),
       ),
       child: Image.network(
         flagPngUrl(isoCode),
@@ -227,12 +222,12 @@ class _StatusPill extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(999),
-        color: Colors.white.withValues(alpha: 0.11),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+        color: CountryTheme.paper,
+        border: Border.all(color: CountryTheme.rule),
       ),
       child: Text(
         'Building out $countryName — some sections are further along than others',
-        style: CountryTheme.pillLabel.copyWith(color: CountryTheme.pillInactiveText),
+        style: CountryTheme.pillLabel.copyWith(color: CountryTheme.inkSoft),
       ),
     );
   }
@@ -283,14 +278,14 @@ class _TabPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      // Selected fill is boardAmber now, not the old teal `stamp`
-      // (changed 2026-08-11, "no more teal now that we're doing the
-      // amber") — text switches to dark `ink` rather than the usual
-      // light `headerText` specifically for this state, since light text
-      // on a bright amber fill fails contrast (checked: ~2.2:1); dark
-      // text on amber is the classic high-contrast pairing real tickets
-      // and caution tags use.
-      color: selected ? CountryTheme.boardAmber : Colors.white.withValues(alpha: 0.11),
+      // Selected fill is boardAmber — dark `ink` text on top rather than
+      // a light color, since light text on a bright amber fill fails
+      // contrast (checked: ~2.2:1); dark text on amber is the classic
+      // high-contrast pairing real tickets and caution tags use.
+      // Unselected uses `paper`/`rule` now, not a white-alpha overlay —
+      // the header sits on a light `card` surface (2026-08-11), not a
+      // dark one, so a white wash no longer reads as a subtle pill.
+      color: selected ? CountryTheme.boardAmber : CountryTheme.paper,
       borderRadius: BorderRadius.circular(999),
       child: InkWell(
         borderRadius: BorderRadius.circular(999),
@@ -300,15 +295,13 @@ class _TabPill extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(999),
             border: Border.all(
-              color: selected
-                  ? Colors.transparent
-                  : Colors.white.withValues(alpha: 0.2),
+              color: selected ? Colors.transparent : CountryTheme.rule,
             ),
           ),
           child: Text(
             label,
             style: CountryTheme.pillLabel.copyWith(
-              color: selected ? CountryTheme.ink : CountryTheme.pillInactiveText,
+              color: selected ? CountryTheme.ink : CountryTheme.inkSoft,
               fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
             ),
           ),

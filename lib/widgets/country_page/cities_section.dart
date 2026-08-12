@@ -88,7 +88,7 @@ class _CityRow extends StatelessWidget {
                     Text(city.name, style: CountryTheme.listRowTitle),
                     if (city.isFeatured) ...[
                       const SizedBox(width: 5),
-                      Text('★', style: TextStyle(color: CountryTheme.boardAmber, fontSize: 10)),
+                      Text('★', style: TextStyle(color: CountryTheme.ticketRust, fontSize: 10)),
                     ],
                   ],
                 ),

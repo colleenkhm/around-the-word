@@ -28,11 +28,11 @@ class ExternalLink extends StatelessWidget {
               fontFamily: 'Public Sans',
               fontWeight: FontWeight.w600,
               fontSize: 11.5,
-              color: CountryTheme.boardAmber,
+              color: CountryTheme.ticketRust,
             ),
           ),
           const SizedBox(width: 2),
-          const Icon(Icons.arrow_outward, size: 11, color: CountryTheme.boardAmber),
+          const Icon(Icons.arrow_outward, size: 11, color: CountryTheme.ticketRust),
         ],
       ),
     );

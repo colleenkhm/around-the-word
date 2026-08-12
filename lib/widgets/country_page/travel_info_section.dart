@@ -224,15 +224,12 @@ class _LevelBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = CountryTheme.advisoryColor(level);
-    // Alpha bumped from 0.12/0.35 to 0.22/0.5 (2026-08-11) — those were
-    // tuned to sit on a light card; alpha-composited over the now-dark
-    // panel they read as too dim/murky at the original values.
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.22),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: color.withValues(alpha: 0.5)),
+        border: Border.all(color: color.withValues(alpha: 0.35)),
       ),
       child: Text(
         label.toUpperCase(),

@@ -6,6 +6,7 @@ import '../../models/country_guide.dart';
 import '../../models/live_data.dart';
 import '../../theme/country_theme.dart';
 import 'external_link.dart';
+import 'ticket_panel.dart';
 
 /// The Overview tab's "Right now" section — local time, season, currency
 /// conversion, three columns matching the mockup's .live strip.
@@ -69,13 +70,7 @@ class _RightNowStripState extends State<RightNowStrip> {
   Widget build(BuildContext context) {
     final local = _localDateTime();
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: CountryTheme.rule),
-        borderRadius: BorderRadius.circular(CountryTheme.cardRadius),
-        color: CountryTheme.ink,
-      ),
-      clipBehavior: Clip.antiAlias,
+    return TicketPanel(
       child: IntrinsicHeight(
         child: Row(
           children: [
