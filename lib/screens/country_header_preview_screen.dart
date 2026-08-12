@@ -5,12 +5,13 @@ import 'package:flutter/services.dart' show rootBundle;
 
 import '../models/country_bundle.dart';
 import '../models/live_data.dart';
+import '../models/travel_info.dart';
 import '../theme/country_theme.dart';
-import '../widgets/country_page/best_times_section.dart';
 import '../widgets/country_page/cities_section.dart';
 import '../widgets/country_page/country_header.dart';
 import '../widgets/country_page/right_now_strip.dart';
 import '../widgets/country_page/section_heading.dart';
+import '../widgets/country_page/travel_info_section.dart';
 
 /// Temporary review screen for the Overview tab, built up one section at a
 /// time against real (Costa Rica) mock data — not part of the real
@@ -52,6 +53,24 @@ class _CountryHeaderPreviewScreenState
         ? DateTime.now()
         : DateTime.now().toUtc().add(Duration(minutes: offset));
   }
+
+  /// US State Department only, for now (per Colleen, 2026-08-11) — the
+  /// only advisory source actually wired up in `tools/commodity_importer`;
+  /// UK FCDO and Global Affairs Canada are real sources per the data
+  /// architecture doc but nothing fetches them yet, so `bundle.advisories`
+  /// having a UK entry (mock data only) shouldn't imply the app is
+  /// multi-government-ready. `TravelInfoSection` itself still renders a
+  /// list generically — this filter is the temporary policy, not a widget
+  /// change — so removing it later is a one-line reversal once a second
+  /// source is real.
+  ///
+  /// Matches on `issuingAuthority`'s free text (see [TravelAdvisory]'s doc
+  /// comment: no government-code field exists to match on instead) — fine
+  /// for one hardcoded mock country, worth revisiting if that ever proves
+  /// fragile against real imported data.
+  List<TravelAdvisory> _usAdvisories(CountryBundle bundle) => bundle.advisories
+      .where((a) => a.issuingAuthority == 'US State Department')
+      .toList();
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +121,11 @@ class _CountryHeaderPreviewScreenState
                             currencyName: bundle.facts.currencyName,
                           ),
                           const SizedBox(height: 18),
-                          BestTimesSection(bestTimes: bundle.guide.bestTimes),
+                          TravelInfoSection(
+                            advisories: _usAdvisories(bundle),
+                            visa: bundle.visa,
+                            regionalNote: bundle.regionalNote,
+                          ),
                           const SizedBox(height: 18),
                           CitiesSection(
                             cities: bundle.cities,

@@ -114,14 +114,24 @@ class CountryHeader extends StatelessWidget {
               ),
             ],
           ),
-          if (bundle.country.contentStatus == ContentStatus.partial)
+          // Both the status pill and the tab-pill row are about signaling
+          // unevenness *across tabs* ("some sections are further along
+          // than others" / a row of tabs to jump between) — neither means
+          // anything with a single tab built. Gated on tabs.length > 1
+          // (2026-08-11) rather than removed outright, so both come back
+          // on their own once Explore/Guide/Language join the tabs list,
+          // with nothing to remember to re-add.
+          if (bundle.country.contentStatus == ContentStatus.partial &&
+              tabs.length > 1)
             _StatusPill(countryName: bundle.country.nameCommon),
-          const SizedBox(height: 12),
-          _TabPillRow(
-            tabs: tabs,
-            active: activeTab,
-            onSelected: onTabSelected,
-          ),
+          if (tabs.length > 1) ...[
+            const SizedBox(height: 12),
+            _TabPillRow(
+              tabs: tabs,
+              active: activeTab,
+              onSelected: onTabSelected,
+            ),
+          ],
           _MrzStrip(bundle: bundle, onAdvisoryTap: onAdvisorySegmentTap),
         ],
       ),
