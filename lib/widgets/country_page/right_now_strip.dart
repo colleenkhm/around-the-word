@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../models/country_guide.dart';
 import '../../models/live_data.dart';
 import '../../theme/country_theme.dart';
+import 'external_link.dart';
 
 /// The Overview tab's "Right now" section — local time, season, currency
 /// conversion, three columns matching the mockup's .live strip.
@@ -66,18 +67,30 @@ class _RightNowStripState extends State<RightNowStrip> {
 
   @override
   Widget build(BuildContext context) {
+    final local = _localDateTime();
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: CountryTheme.rule),
         borderRadius: BorderRadius.circular(CountryTheme.cardRadius),
-        color: CountryTheme.card,
-        boxShadow: CountryTheme.cardShadow,
+        color: CountryTheme.ink,
       ),
       clipBehavior: Clip.antiAlias,
       child: IntrinsicHeight(
         child: Row(
           children: [
-            Expanded(child: _column('LOCAL TIME', _localTime(), _utcLabel())),
+            Expanded(
+              child: _column(
+                'LOCAL TIME',
+                local == null ? '—' : _timeLabel(local),
+                // The date rides along with the time now, not just the
+                // UTC offset (added 2026-08-11, per Colleen: late enough
+                // in the day somewhere, and it's already tomorrow there
+                // relative to here — the offset alone doesn't make that
+                // obvious at a glance the way an actual date does).
+                local == null ? '' : '${_dateLabel(local)} · ${_utcLabel()}',
+              ),
+            ),
             _divider(),
             Expanded(
               child: _column(
@@ -92,6 +105,16 @@ class _RightNowStripState extends State<RightNowStrip> {
                 '\$1 USD',
                 widget.exchangeRate == null ? '—' : _rateLabel(widget.exchangeRate!),
                 widget.currencyName ?? 'Daily rate',
+                // Only once we actually know the currency code — pulled
+                // from the (mock, not-live) exchangeRate rather than a
+                // separate param, since nothing else on this widget knows
+                // the code independently of it.
+                trailing: widget.exchangeRate == null
+                    ? null
+                    : ExternalLink(
+                        label: 'Convert',
+                        url: _converterUrl(widget.exchangeRate!.currencyCode),
+                      ),
               ),
             ),
           ],
@@ -102,7 +125,7 @@ class _RightNowStripState extends State<RightNowStrip> {
 
   Widget _divider() => Container(width: 1, color: CountryTheme.rule);
 
-  Widget _column(String label, String value, String subtitle) {
+  Widget _column(String label, String value, String subtitle, {Widget? trailing}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
       child: Column(
@@ -116,19 +139,28 @@ class _RightNowStripState extends State<RightNowStrip> {
             const SizedBox(height: 1),
             Text(subtitle, style: CountryTheme.liveSubtitle),
           ],
+          if (trailing != null) ...[
+            const SizedBox(height: 4),
+            trailing,
+          ],
         ],
       ),
     );
   }
 
-  String _localTime() {
+  DateTime? _localDateTime() {
     final offset = widget.utcOffsetMinutes;
-    if (offset == null) return '—';
-    final local = DateTime.now().toUtc().add(Duration(minutes: offset));
+    if (offset == null) return null;
+    return DateTime.now().toUtc().add(Duration(minutes: offset));
+  }
+
+  String _timeLabel(DateTime local) {
     final h = local.hour.toString().padLeft(2, '0');
     final m = local.minute.toString().padLeft(2, '0');
     return '$h:$m';
   }
+
+  String _dateLabel(DateTime local) => '${_monthAbbrev[local.month - 1]} ${local.day}';
 
   String _utcLabel() {
     final offset = widget.utcOffsetMinutes;
@@ -162,4 +194,14 @@ class _RightNowStripState extends State<RightNowStrip> {
         'CRC' => '₡',
         _ => '$code ',
       };
+
+  /// A live, interactive USD-to-[currencyCode] calculator on xe.com — a
+  /// public webpage the user opens themselves, not an API call this app
+  /// makes. Distinct from the data architecture doc's "Currency
+  /// conversion: ExchangeRate-API, live, never bundled" guidance, which is
+  /// about this app *fetching* a rate server-side (not built yet, see the
+  /// mock `ExchangeRate` this widget already renders) — this is just an
+  /// outbound link, so it doesn't need an Edge Function or a key.
+  String _converterUrl(String currencyCode) =>
+      'https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To=$currencyCode';
 }

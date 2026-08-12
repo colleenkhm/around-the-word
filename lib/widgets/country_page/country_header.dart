@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/country_bundle.dart';
 import '../../theme/country_theme.dart';
 import '../../utils/flag_url.dart';
+import 'split_flap_text.dart';
 
 const _tabLabels = {
   CountryTab.overview: 'OVERVIEW',
@@ -76,79 +77,97 @@ class CountryHeader extends StatelessWidget {
     final isDesktop = MediaQuery.sizeOf(context).width >= 900;
 
     return Container(
-      // Rounded bottom edge + a soft shadow (added 2026-08-11, per
-      // Colleen: the flat full-width dark bar read as an official banner
-      // rather than a page header) — the header now reads as a card
-      // sitting on top of the page rather than an institutional strip
-      // it's bolted to. clipBehavior keeps the MRZ strip's own border and
-      // the flag's corners from poking past the curve.
+      // A small rounded bottom edge, no shadow — softened from a flat
+      // square bar 2026-08-11 (read as an official banner), then that
+      // rounding itself walked back from a pronounced 24px "floating
+      // card" curve + drop shadow the same day, once the whole page went
+      // dark and the header needed to read as one more board panel
+      // (see [CountryTheme.cardRadius]'s doc comment) rather than a hero
+      // card sitting apart from everything below it. clipBehavior keeps
+      // the MRZ strip's own panel and the flag's corners from poking past
+      // the curve.
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: CountryTheme.ink,
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
-        boxShadow: CountryTheme.cardShadow,
+        borderRadius: const BorderRadius.vertical(
+          bottom: Radius.circular(CountryTheme.cardRadius),
+        ),
       ),
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _Flag(isoCode: bundle.country.isoCode, desktop: isDesktop),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
+          Padding(
+            // Bottom padding stops at the MRZ strip — that panel is
+            // full-bleed (its own [CountryTheme.boardBg] block, not
+            // padded content), so it's a sibling of this Padding rather
+            // than a child inside it. See the class doc on why: it reads
+            // as a physical board mounted in the header, not just more
+            // header content.
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      bundle.country.nameCommon,
-                      style: CountryTheme.countryName(isDesktop ? 42 : 31),
-                    ),
-                    if (nativeName != null) ...[
-                      const SizedBox(height: 5),
-                      Text.rich(
-                        TextSpan(
-                          style: CountryTheme.nativeName,
-                          children: [
-                            TextSpan(text: nativeName),
-                            if (nativeNameRomanized != null) ...[
-                              const TextSpan(text: '   '),
+                    _Flag(isoCode: bundle.country.isoCode, desktop: isDesktop),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SplitFlapText(
+                            text: bundle.country.nameCommon,
+                            fontSize: isDesktop ? 42 : 31,
+                          ),
+                          if (nativeName != null) ...[
+                            const SizedBox(height: 7),
+                            Text.rich(
                               TextSpan(
-                                text: nativeNameRomanized,
-                                style: CountryTheme.nativeNameRomanized
-                                    .copyWith(
-                                        color: CountryTheme.headerNative
-                                            .withValues(alpha: 0.62)),
+                                style: CountryTheme.nativeName,
+                                children: [
+                                  TextSpan(text: nativeName),
+                                  if (nativeNameRomanized != null) ...[
+                                    const TextSpan(text: '   '),
+                                    TextSpan(
+                                      text: nativeNameRomanized,
+                                      style: CountryTheme.nativeNameRomanized
+                                          .copyWith(
+                                              color: CountryTheme.headerNative
+                                                  .withValues(alpha: 0.62)),
+                                    ),
+                                  ],
+                                ],
                               ),
-                            ],
+                            ),
                           ],
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          // Both the status pill and the tab-pill row are about signaling
-          // unevenness *across tabs* ("some sections are further along
-          // than others" / a row of tabs to jump between) — neither means
-          // anything with a single tab built. Gated on tabs.length > 1
-          // (2026-08-11) rather than removed outright, so both come back
-          // on their own once Explore/Guide/Language join the tabs list,
-          // with nothing to remember to re-add.
-          if (bundle.country.contentStatus == ContentStatus.partial &&
-              tabs.length > 1)
-            _StatusPill(countryName: bundle.country.nameCommon),
-          if (tabs.length > 1) ...[
-            const SizedBox(height: 12),
-            _TabPillRow(
-              tabs: tabs,
-              active: activeTab,
-              onSelected: onTabSelected,
+                // Both the status pill and the tab-pill row are about
+                // signaling unevenness *across tabs* ("some sections are
+                // further along than others" / a row of tabs to jump
+                // between) — neither means anything with a single tab
+                // built. Gated on tabs.length > 1 (2026-08-11) rather than
+                // removed outright, so both come back on their own once
+                // Explore/Guide/Language join the tabs list, with nothing
+                // to remember to re-add.
+                if (bundle.country.contentStatus == ContentStatus.partial &&
+                    tabs.length > 1)
+                  _StatusPill(countryName: bundle.country.nameCommon),
+                if (tabs.length > 1) ...[
+                  const SizedBox(height: 12),
+                  _TabPillRow(
+                    tabs: tabs,
+                    active: activeTab,
+                    onSelected: onTabSelected,
+                  ),
+                ],
+              ],
             ),
-          ],
+          ),
           _MrzStrip(bundle: bundle, onAdvisoryTap: onAdvisorySegmentTap),
         ],
       ),
@@ -264,7 +283,14 @@ class _TabPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: selected ? CountryTheme.stamp : Colors.white.withValues(alpha: 0.11),
+      // Selected fill is boardAmber now, not the old teal `stamp`
+      // (changed 2026-08-11, "no more teal now that we're doing the
+      // amber") — text switches to dark `ink` rather than the usual
+      // light `headerText` specifically for this state, since light text
+      // on a bright amber fill fails contrast (checked: ~2.2:1); dark
+      // text on amber is the classic high-contrast pairing real tickets
+      // and caution tags use.
+      color: selected ? CountryTheme.boardAmber : Colors.white.withValues(alpha: 0.11),
       borderRadius: BorderRadius.circular(999),
       child: InkWell(
         borderRadius: BorderRadius.circular(999),
@@ -282,7 +308,7 @@ class _TabPill extends StatelessWidget {
           child: Text(
             label,
             style: CountryTheme.pillLabel.copyWith(
-              color: selected ? CountryTheme.headerText : CountryTheme.pillInactiveText,
+              color: selected ? CountryTheme.ink : CountryTheme.pillInactiveText,
               fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
             ),
           ),
@@ -292,7 +318,11 @@ class _TabPill extends StatelessWidget {
   }
 }
 
-/// The passport-style "machine readable zone" strip. Segments are built
+/// The passport-style "machine readable zone" strip — now its own
+/// full-bleed amber-on-black board panel (changed 2026-08-11, see
+/// [CountryTheme.boardBg]'s doc comment) rather than a plain divider line
+/// on the header's navy background, leaning further into the departures-
+/// board read this strip already had going for it. Segments are built
 /// from whatever real data is available and cleanly derivable; see the
 /// class doc on [CountryHeader] for the one segment (VISA) left out.
 class _MrzStrip extends StatelessWidget {
@@ -322,13 +352,9 @@ class _MrzStrip extends StatelessWidget {
     ];
 
     return Container(
-      margin: const EdgeInsets.only(top: 18),
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: Colors.white.withValues(alpha: 0.16)),
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 9),
+      width: double.infinity,
+      color: CountryTheme.boardBg,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(

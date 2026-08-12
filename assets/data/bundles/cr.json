@@ -238,8 +238,8 @@
   "contributorNames": ["Sarah M.", "the Whitfield family"],
   "visa": {
     "summary": "US citizens may enter Costa Rica visa-free for stays up to 90 days with a passport valid for the duration of the stay.",
-    "officialUrl": "https://costarica-embassy.org/visas/",
-    "applicationUrl": null,
+    "officialUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/costa-rica-travel-advisory.html",
+    "applicationUrl": "https://costarica-embassy.org/visas/",
     "lastVerifiedAt": "2026-07-01T00:00:00Z",
     "nationalityIsoCode": "US",
     "prohibitedOnEntry": "Firearms and ammunition without a prior permit; certain fresh plant and animal products.",

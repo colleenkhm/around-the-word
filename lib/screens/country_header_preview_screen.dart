@@ -73,14 +73,23 @@ class _CountryHeaderPreviewScreenState
       .where((a) => a.issuingAuthority == 'US State Department')
       .toList();
 
-  /// The page background between sections (per Colleen, 2026-08-11) — a
-  /// light pastel of the country's flag color instead of the flat
-  /// [CountryTheme.paper] grey, so the whole page reads as "this country's
-  /// page" rather than one fixed neutral shared by every country. Falls
-  /// back to plain `paper` when there's no bundle yet or no accent color
-  /// curated for this country (see `CountryFacts.accentColorHex`'s doc
-  /// comment on why this is hand-picked, not derived).
+  /// Whether the page background uses a light pastel of the country's
+  /// flag color (via [CountryTheme.lightTint]) instead of the fixed
+  /// parchment [CountryTheme.paper]. **Off for now** (2026-08-11, per
+  /// Colleen: "we don't have to stick with the background color thing we
+  /// did earlier... I want the page theme to be more overarchingly
+  /// cohesive" — a different pastel per country was working against the
+  /// one amber/board identity the rest of the page just adopted). The
+  /// capability itself is intentionally left in place rather than
+  /// deleted — this flag, `lightTint`, `hexToColor`, and
+  /// `CountryFacts.accentColorHex` all still work; flipping this to
+  /// `true` is the entire change if per-country backgrounds come back
+  /// later. `final`, not `const`, specifically so the analyzer doesn't
+  /// const-fold the `if` below into a dead-code warning.
+  static final bool _useAccentPageBackground = false;
+
   Color _pageBackground(CountryBundle? bundle) {
+    if (!_useAccentPageBackground) return CountryTheme.paper;
     final hex = bundle?.facts.accentColorHex;
     return hex == null ? CountryTheme.paper : CountryTheme.lightTint(hexToColor(hex));
   }

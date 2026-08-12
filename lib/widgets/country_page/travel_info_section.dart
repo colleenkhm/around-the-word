@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/travel_info.dart';
 import '../../theme/country_theme.dart';
 import '../../utils/format_date.dart';
 import 'divided_card.dart';
+import 'external_link.dart';
 import 'section_heading.dart';
 
 /// The Overview tab's Travel Info section: advisories (one per issuing
@@ -27,6 +27,26 @@ import 'section_heading.dart';
 /// never rendered as the app's own assessment. See the data architecture
 /// doc's "Legally sensitive" section and [TravelAdvisory]/[VisaInfo]'s doc
 /// comments.
+///
+/// **One shared "Source" for advisories + visa, not two** (changed
+/// 2026-08-11, per Colleen: for Costa Rica, the advisory and the entry/exit
+/// summary are both actually published on the same US State Department
+/// page — showing "Verified · Source" once per card repeated an
+/// attribution that was never really two different sources to begin with.
+/// `_shareSource` covers that case (advisories present *and* visa
+/// present); each row's own footer is hidden and one connecting
+/// `_SharedSourceFooter` runs below both cards instead, citing the
+/// advisory's `officialUrl`/`lastVerifiedAt` as the shared citation. Visa
+/// keeps its own separate "Apply" link (`VisaInfo.applicationUrl` — the
+/// embassy site, not State Dept) since that's a genuinely different
+/// resource, not a citation. **This assumes the one State Dept advisory is
+/// the shared source** — correct for the current US-only advisory filter
+/// (see `CountryHeaderPreviewScreen._usAdvisories`), but would need
+/// revisiting (which advisory, if several, actually matches the visa's
+/// source?) if a second government's advisory shows up later. Falls back
+/// to each card citing its own source independently — the pre-2026-08-11
+/// behavior — whenever only one of advisories/visa is present, since
+/// there's nothing to share in that case.
 class TravelInfoSection extends StatelessWidget {
   final List<TravelAdvisory> advisories;
   final VisaInfo? visa;
@@ -45,40 +65,59 @@ class TravelInfoSection extends StatelessWidget {
     final showVisa = visa != null;
     if (!showAdvisories && !showVisa) return const SizedBox.shrink();
 
+    final shareSource = showAdvisories && showVisa;
+
     final isDesktop = MediaQuery.sizeOf(context).width >= 900;
     final sideBySide = showAdvisories && showVisa && isDesktop;
 
     final advisoriesColumn = showAdvisories
-        ? _AdvisoriesColumn(advisories: advisories, matchHeight: sideBySide)
+        ? _AdvisoriesColumn(
+            advisories: advisories,
+            matchHeight: sideBySide,
+            hideOwnSource: shareSource,
+          )
         : null;
     final visaColumn = showVisa
         ? _VisaColumn(
             visa: visa!,
             regionalNote: regionalNote,
             matchHeight: sideBySide,
+            hideOwnSource: shareSource,
           )
         : null;
 
-    if (sideBySide) {
-      return IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(child: advisoriesColumn!),
-            const SizedBox(width: 16),
-            Expanded(child: visaColumn!),
-          ],
-        ),
-      );
-    }
+    final cards = sideBySide
+        ? IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: advisoriesColumn!),
+                const SizedBox(width: 16),
+                Expanded(child: visaColumn!),
+              ],
+            ),
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ?advisoriesColumn,
+              if (advisoriesColumn != null && visaColumn != null)
+                const SizedBox(height: 18),
+              ?visaColumn,
+            ],
+          );
+
+    if (!shareSource) return cards;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ?advisoriesColumn,
-        if (advisoriesColumn != null && visaColumn != null)
-          const SizedBox(height: 18),
-        ?visaColumn,
+        cards,
+        const SizedBox(height: 10),
+        _SharedSourceFooter(
+          officialUrl: advisories.first.officialUrl,
+          lastVerifiedAt: advisories.first.lastVerifiedAt,
+        ),
       ],
     );
   }
@@ -87,17 +126,20 @@ class TravelInfoSection extends StatelessWidget {
 class _AdvisoriesColumn extends StatelessWidget {
   final List<TravelAdvisory> advisories;
   final bool matchHeight;
+  final bool hideOwnSource;
 
   const _AdvisoriesColumn({
     required this.advisories,
     this.matchHeight = false,
+    this.hideOwnSource = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final card = DividedCard(
       children: [
-        for (final advisory in advisories) _AdvisoryRow(advisory: advisory),
+        for (final advisory in advisories)
+          _AdvisoryRow(advisory: advisory, hideSource: hideOwnSource),
       ],
     );
     return Column(
@@ -113,7 +155,11 @@ class _AdvisoriesColumn extends StatelessWidget {
 class _AdvisoryRow extends StatelessWidget {
   final TravelAdvisory advisory;
 
-  const _AdvisoryRow({required this.advisory});
+  /// True when [TravelInfoSection] is showing one connecting
+  /// `_SharedSourceFooter` below both cards instead — see its doc comment.
+  final bool hideSource;
+
+  const _AdvisoryRow({required this.advisory, this.hideSource = false});
 
   /// Pulls the leading digit out of a level string like "Level 2" so it
   /// can be matched against [CountryTheme.advisoryColor]. Not every
@@ -156,11 +202,13 @@ class _AdvisoryRow extends StatelessWidget {
             const SizedBox(height: 6),
             Text(advisory.summary!, style: CountryTheme.listRowDetail),
           ],
-          const SizedBox(height: 8),
-          _SourceFooter(
-            officialUrl: advisory.officialUrl,
-            lastVerifiedAt: advisory.lastVerifiedAt,
-          ),
+          if (!hideSource) ...[
+            const SizedBox(height: 8),
+            _SourceFooter(
+              officialUrl: advisory.officialUrl,
+              lastVerifiedAt: advisory.lastVerifiedAt,
+            ),
+          ],
         ],
       ),
     );
@@ -176,12 +224,15 @@ class _LevelBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = CountryTheme.advisoryColor(level);
+    // Alpha bumped from 0.12/0.35 to 0.22/0.5 (2026-08-11) — those were
+    // tuned to sit on a light card; alpha-composited over the now-dark
+    // panel they read as too dim/murky at the original values.
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+        color: color.withValues(alpha: 0.22),
         borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: color.withValues(alpha: 0.35)),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Text(
         label.toUpperCase(),
@@ -202,10 +253,18 @@ class _VisaColumn extends StatelessWidget {
   final RegionalNote? regionalNote;
   final bool matchHeight;
 
+  /// True when [TravelInfoSection] is showing one connecting
+  /// `_SharedSourceFooter` below both cards instead of this card citing
+  /// its own `officialUrl`/`lastVerifiedAt` — see that class's doc
+  /// comment. `applicationUrl` (the embassy site — where to actually
+  /// apply, not a citation) still shows either way.
+  final bool hideOwnSource;
+
   const _VisaColumn({
     required this.visa,
     this.regionalNote,
     this.matchHeight = false,
+    this.hideOwnSource = false,
   });
 
   @override
@@ -231,12 +290,19 @@ class _VisaColumn extends StatelessWidget {
                 const SizedBox(height: 8),
                 _ProhibitedNote(label: 'Prohibited on exit', body: visa.prohibitedOnExit!),
               ],
-              const SizedBox(height: 8),
-              _SourceFooter(
-                officialUrl: visa.officialUrl,
-                lastVerifiedAt: visa.lastVerifiedAt,
-                applicationUrl: visa.applicationUrl,
-              ),
+              if (hideOwnSource) ...[
+                if (visa.applicationUrl != null) ...[
+                  const SizedBox(height: 8),
+                  ExternalLink(label: 'Apply', url: visa.applicationUrl!),
+                ],
+              ] else ...[
+                const SizedBox(height: 8),
+                _SourceFooter(
+                  officialUrl: visa.officialUrl,
+                  lastVerifiedAt: visa.lastVerifiedAt,
+                  applicationUrl: visa.applicationUrl,
+                ),
+              ],
             ],
           ),
         ),
@@ -263,6 +329,26 @@ class _VisaColumn extends StatelessWidget {
         const SectionHeading('Visa & entry'),
         matchHeight ? Expanded(child: card) : card,
       ],
+    );
+  }
+}
+
+/// The connecting footer shown once, below both cards, when advisories and
+/// visa share one real-world source (State Dept covers both for Costa
+/// Rica) — see [TravelInfoSection]'s doc comment. Same visual language as
+/// [_SourceFooter], just not tied to either card individually — centered
+/// and given a bit more breathing room so it reads as belonging to both
+/// boxes above it rather than as a stray extra line.
+class _SharedSourceFooter extends StatelessWidget {
+  final String officialUrl;
+  final DateTime lastVerifiedAt;
+
+  const _SharedSourceFooter({required this.officialUrl, required this.lastVerifiedAt});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: _SourceFooter(officialUrl: officialUrl, lastVerifiedAt: lastVerifiedAt),
     );
   }
 }
@@ -312,39 +398,9 @@ class _SourceFooter extends StatelessWidget {
           'Verified ${formatShortDate(lastVerifiedAt)}',
           style: CountryTheme.listRowIndex,
         ),
-        _LinkLabel(label: 'Source (see latest)', url: officialUrl),
-        if (applicationUrl != null) _LinkLabel(label: 'Apply', url: applicationUrl!),
+        ExternalLink(label: 'Source (see latest)', url: officialUrl),
+        if (applicationUrl != null) ExternalLink(label: 'Apply', url: applicationUrl!),
       ],
-    );
-  }
-}
-
-class _LinkLabel extends StatelessWidget {
-  final String label;
-  final String url;
-
-  const _LinkLabel({required this.label, required this.url});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontFamily: 'Public Sans',
-              fontWeight: FontWeight.w600,
-              fontSize: 11.5,
-              color: CountryTheme.stamp,
-            ),
-          ),
-          const SizedBox(width: 2),
-          const Icon(Icons.arrow_outward, size: 11, color: CountryTheme.stamp),
-        ],
-      ),
     );
   }
 }
