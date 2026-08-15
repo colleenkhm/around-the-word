@@ -16,6 +16,13 @@ import '../../theme/country_theme.dart';
 /// stay pixel-consistent by construction, not by two numbers kept in
 /// sync by hand.
 ///
+/// **Dashed, not solid** (changed 2026-08-11, alongside the notches
+/// themselves being pushed further per Colleen: the theme still read as
+/// "half leaning in") — a solid 1px border around a rounded rect is the
+/// one shape every plain card component defaults to; a perforated outline
+/// reads as the same tear-line language as [DashedDivider] and the
+/// notches, not a generic border.
+///
 /// Deliberately **not** applied to [CountryHeader] — its shape (rounded
 /// bottom, full-bleed MRZ panel) is already distinct, and a notch at
 /// vertical center would land somewhere in the middle of the flag/name
@@ -77,13 +84,31 @@ class _TicketEdgePainter extends CustomPainter {
 
   const _TicketEdgePainter({required this.clipper, required this.color});
 
+  static const _dashLength = 4.0;
+  static const _gapLength = 3.0;
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-    canvas.drawPath(clipper.path(size), paint);
+      ..strokeWidth = 1.2;
+    // Walk each contour of the (already-notched) outline and stroke it in
+    // dash/gap segments, rather than the whole path at once — dashing a
+    // `Path` isn't a builtin, but `PathMetrics` gives exact-length
+    // sub-paths to alternate between drawing and skipping.
+    for (final metric in clipper.path(size).computeMetrics()) {
+      var distance = 0.0;
+      var drawing = true;
+      while (distance < metric.length) {
+        final next = distance + (drawing ? _dashLength : _gapLength);
+        if (drawing) {
+          canvas.drawPath(metric.extractPath(distance, next.clamp(0, metric.length)), paint);
+        }
+        distance = next;
+        drawing = !drawing;
+      }
+    }
   }
 
   @override

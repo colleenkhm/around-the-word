@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/country_bundle.dart';
 import '../../theme/country_theme.dart';
 import '../../utils/flag_url.dart';
+import 'dashed_divider.dart';
 import 'split_flap_text.dart';
 
 const _tabLabels = {
@@ -311,11 +312,12 @@ class _TabPill extends StatelessWidget {
   }
 }
 
-/// The passport-style "machine readable zone" strip — now its own
-/// full-bleed amber-on-black board panel (changed 2026-08-11, see
-/// [CountryTheme.boardBg]'s doc comment) rather than a plain divider line
-/// on the header's navy background, leaning further into the departures-
-/// board read this strip already had going for it. Segments are built
+/// The passport-style "machine readable zone" strip — sits directly on
+/// the header's light [CountryTheme.card] surface, set off from the
+/// name/flag row above by a perforated [DashedDivider] rather than a
+/// solid dark background (see [CountryTheme]'s class doc: an earlier
+/// version was its own full-bleed dark panel, which read as a stray
+/// leftover once the rest of the header went light). Segments are built
 /// from whatever real data is available and cleanly derivable; see the
 /// class doc on [CountryHeader] for the one segment (VISA) left out.
 class _MrzStrip extends StatelessWidget {
@@ -346,19 +348,29 @@ class _MrzStrip extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      color: CountryTheme.boardBg,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            for (final s in segments)
-              GestureDetector(
-                onTap: s.onTap,
-                child: Text(s.text, style: s.strong ? CountryTheme.mrzStrong : CountryTheme.mrz),
-              ),
-          ],
-        ),
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const DashedDivider(),
+          const SizedBox(height: 9),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final s in segments)
+                  GestureDetector(
+                    onTap: s.onTap,
+                    child: Text(
+                      s.text,
+                      style: s.strong ? CountryTheme.mrzStrong : CountryTheme.mrz,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

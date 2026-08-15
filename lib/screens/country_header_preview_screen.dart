@@ -10,6 +10,7 @@ import '../theme/country_theme.dart';
 import '../utils/hex_color.dart';
 import '../widgets/country_page/cities_section.dart';
 import '../widgets/country_page/country_header.dart';
+import '../widgets/country_page/paper_texture.dart';
 import '../widgets/country_page/right_now_strip.dart';
 import '../widgets/country_page/section_heading.dart';
 import '../widgets/country_page/travel_info_section.dart';
@@ -99,9 +100,10 @@ class _CountryHeaderPreviewScreenState
     final bundle = _bundle;
     return Scaffold(
       backgroundColor: _pageBackground(bundle),
-      body: bundle == null
-          ? const Center(child: CircularProgressIndicator())
-          : SafeArea(
+      body: PaperTexture(
+        child: bundle == null
+            ? const Center(child: CircularProgressIndicator())
+            : SafeArea(
               child: Column(
                 children: [
                   CountryHeader(
@@ -169,6 +171,7 @@ class _CountryHeaderPreviewScreenState
                 ],
               ),
             ),
+      ),
     );
   }
 }

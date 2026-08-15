@@ -4,20 +4,22 @@ import 'package:flutter/material.dart';
 /// **ticket** as the base, with the dark **arrivals-board** treatment kept
 /// as an inset, not spread across the whole page.
 ///
-/// **Re-based 2026-08-11, a third time** — per Colleen: "I don't think I
-/// like how dark it is... maybe we should make it look more like a ticket
-/// than an arrivals/departure board... or a combination of both but all
-/// within one color theme." The previous pass made *everything* dark
-/// (page, header, every card) to chase the board metaphor as hard as
-/// possible; this walks that back to a light, warm "ticket stock" surface
-/// for the page and every card, and keeps the near-black board panel only
-/// where it was actually earned — the MRZ strip and [SplitFlapText]'s
-/// name cells, the two pieces Colleen specifically said she liked ("the
-/// part that looks like <<ATW<< and mimics travel/ticket stuff"). One
-/// accent color (`ticketRust`, a dark saturated amber) carries the theme
-/// on every light surface; the board panels keep their own brighter
-/// `boardAmber` pair, since that's tuned for a dark background a light
-/// accent color isn't.
+/// **Re-based twice more the same day.** First: per Colleen, "I don't
+/// think I like how dark it is... maybe we should make it look more like
+/// a ticket than an arrivals/departure board" — walked the whole-page-dark
+/// pass back to a light, warm "ticket stock" surface for the page and
+/// every card, keeping the near-black board panel only on the MRZ strip
+/// and [SplitFlapText]'s name cells (what Colleen said she actually liked
+/// — "the part that looks like <<ATW<< and mimics travel/ticket stuff").
+/// Second: per Colleen again, that MRZ strip's solid dark bar itself then
+/// read as "one bar of black... it looks off" once it was the only dark
+/// rectangle left on an otherwise light page — so the MRZ strip's
+/// background came off too; only [SplitFlapText]'s flap cells still use
+/// the dark board surface now, each one small and clearly a mechanical
+/// cell rather than a leftover panel. One accent color (`ticketRust`, a
+/// dark saturated amber) now carries the theme almost everywhere,
+/// including the MRZ text itself; `boardAmber` is reserved for the flap
+/// cells alone.
 ///
 /// Plain static consts rather than a ThemeExtension: this app's styling
 /// has stayed deliberately simple so far (see HANDOFF.md on `provider` vs
@@ -62,23 +64,21 @@ class CountryTheme {
   /// Shared corner radius for card-style panels and the header.
   static const cardRadius = 8.0;
 
-  // --- Board insets (dark) — MRZ strip + split-flap name cells only ---
+  // --- Board inset (dark) — [SplitFlapText]'s flap cells only ---------
 
-  /// The board panel's own dark surface — deliberately **not** reused for
-  /// anything else on the page anymore (an earlier pass unified this with
-  /// `ink`/every card; that's what made the whole page read as one giant
-  /// dark board instead of a ticket with one printed data-strip on it).
+  /// The flap cells' own dark surface — deliberately **not** reused for
+  /// anything else on the page (not even the MRZ strip anymore, see the
+  /// class doc). Each flap cell is small and individually mechanical-
+  /// looking, which reads as intentional in a way one big dark rectangle
+  /// didn't.
   static const boardBg = Color(0xFF17191B);
 
   /// The flap's physical center crease in [SplitFlapText]'s cells.
   static const boardSeam = Color(0x59000000);
 
-  /// Bright board-panel text (MRZ's emphasized segments, flap-cell
-  /// letters) — only ever sits on [boardBg], never on a ticket surface.
+  /// Flap-cell letter color — only ever sits on [boardBg], never on a
+  /// ticket surface.
   static const boardAmber = Color(0xFFF2A93B);
-
-  /// Dimmer board-panel text — MRZ's plain segments.
-  static const boardAmberMuted = Color(0xFFA9793E);
 
   // Advisory levels 1–4, low to high risk — back to darker, light-card-
   // tuned values now that every card is light again.
@@ -202,21 +202,24 @@ class CountryTheme {
     color: inkSoft,
   );
 
-  /// MRZ strip — monospace, on the dark [boardBg] panel; `strong` variant
-  /// for the bracketed data tokens. Unchanged by this pass — the MRZ
-  /// strip is one of the two pieces that kept the dark board treatment.
+  /// MRZ strip — monospace; `strong` variant for the bracketed data
+  /// tokens. Moved off the dark [boardBg]/[boardAmber] pair onto the
+  /// light-surface accent this pass (2026-08-11) — the strip's solid
+  /// dark background read as a stray leftover dark-theme fragment once
+  /// the rest of the header went light, not an intentional design piece.
+  /// Only [SplitFlapText]'s flap cells keep the dark board treatment now.
   static const mrz = TextStyle(
     fontFamily: _mono,
     fontSize: 10.5,
     letterSpacing: 0.63,
-    color: boardAmberMuted,
+    color: inkSoft,
   );
   static const mrzStrong = TextStyle(
     fontFamily: _mono,
     fontSize: 10.5,
     letterSpacing: 0.63,
     fontWeight: FontWeight.w500,
-    color: boardAmber,
+    color: ticketRust,
   );
 
   /// Tab pill label text.
