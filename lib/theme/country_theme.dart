@@ -113,9 +113,17 @@ class CountryTheme {
   /// `ticketRust` covered. See [navy] for the link/CTA-text role instead.
   static const gold = Color(0xFFC4850A);
 
-  /// Deep red used for the "who" attribution in a source row and (once the
-  /// Travel Info restyle lands) the emergency-number stamp.
+  /// Deep red used for the "who" attribution in a source row and the
+  /// Travel Info section's emergency-number badge.
   static const stampRed = Color(0xFF9E3020);
+
+  /// A second, distinct warm tone from [gold] — the mockup's `--amber`,
+  /// used only for the visa "upcoming requirement" warning box. Not a
+  /// duplicate of [gold]: the mockup keeps these visually separate
+  /// (`.adv-bar-l2`/`.city-star`/`.btn-gold` are `--gold`; `.visa-warn` is
+  /// `--amber`), so this file does too rather than collapsing them into
+  /// one token for convenience.
+  static const amber = Color(0xFF8A6200);
 
   /// Layered elevation shadow for the new flat (non-notched) cards — the
   /// Cities list card, the Languages/Word-of-day pair. [TicketPanel]'s own

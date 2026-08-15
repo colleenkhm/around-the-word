@@ -18,7 +18,8 @@
     "longitude": -83.7534,
     "utcOffsetMinutes": -360,
     "accentColorHex": "#002B7F",
-    "lastImportedAt": "2026-07-01T00:00:00Z"
+    "lastImportedAt": "2026-07-01T00:00:00Z",
+    "emergencyNumber": "911"
   },
   "cities": [
     { "id": "city-cr-san-jose", "name": "San José", "population": 342188, "latitude": 9.9281, "longitude": -84.0907, "isFeatured": true },

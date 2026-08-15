@@ -95,6 +95,19 @@ class CountryFacts {
 
   final DateTime? lastImportedAt;
 
+  /// The country's general emergency services number (e.g. "911", "112") —
+  /// added 2026-08-15 for the Travel Info restyle's emergency-number badge
+  /// (`trip-dashboard-v3.html`'s corner "112" stamp). **Hand-curated, no
+  /// importer wired yet** — same status as [accentColorHex] was when it
+  /// was added: flagged in the data architecture doc's External Data
+  /// Sources table (next to the existing "embassy/consulate contacts...
+  /// no field yet" line) rather than silently assumed solved. A free-text
+  /// `String`, not parsed/typed further — some countries have separate
+  /// police/fire/ambulance numbers rather than one unified number, which
+  /// this field can't yet distinguish; revisit if that turns out to matter
+  /// for a real imported country.
+  final String? emergencyNumber;
+
   const CountryFacts({
     this.flagSvgUrl,
     this.capital,
@@ -108,6 +121,7 @@ class CountryFacts {
     this.utcOffsetMinutes,
     this.accentColorHex,
     this.lastImportedAt,
+    this.emergencyNumber,
   });
 
   factory CountryFacts.fromJson(Map<String, dynamic> json) {
@@ -128,6 +142,7 @@ class CountryFacts {
       lastImportedAt: json['lastImportedAt'] == null
           ? null
           : DateTime.parse(json['lastImportedAt'] as String),
+      emergencyNumber: json['emergencyNumber'] as String?,
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../models/travel_info.dart';
@@ -47,16 +49,40 @@ import 'section_heading.dart';
 /// to each card citing its own source independently — the pre-2026-08-11
 /// behavior — whenever only one of advisories/visa is present, since
 /// there's nothing to share in that case.
+///
+/// **2026-08-15 restyle**, built against `trip-dashboard-v3.html`:
+/// - Each advisory row gets a colored left accent bar
+///   ([CountryTheme.advisoryColor]) and its level renders as one bold
+///   heading line ("Level 1 — Exercise Normal Precautions") instead of a
+///   separate pill badge. The mockup puts this bar on the whole card
+///   (single-advisory comp); it's per-*row* here since this list can hold
+///   more than one government's advisory at once.
+/// - [emergencyNumber] (new — [CountryFacts.emergencyNumber], hand-curated,
+///   see its doc comment) renders as a badge next to the "Advisories"
+///   heading when known.
+/// - [RegionalNote.summary] now renders as a highlighted warning box
+///   ([CountryTheme.amber]) rather than a plain paragraph, and
+///   [RegionalNote.groupSlug] renders as a rotated corner stamp — both map
+///   onto data that already existed, no new fields. The visa's own
+///   `summary` stays the single paragraph it always was; a separate bold
+///   headline (the mockup's "No visa required") has no backing field
+///   ([VisaInfo] only has one `summary` string) and isn't fabricated here
+///   — flagged as an open idea in the data architecture doc instead.
 class TravelInfoSection extends StatelessWidget {
   final List<TravelAdvisory> advisories;
   final VisaInfo? visa;
   final RegionalNote? regionalNote;
+
+  /// From `CountryFacts.emergencyNumber` — badge next to the Advisories
+  /// heading, omitted entirely when unknown.
+  final String? emergencyNumber;
 
   const TravelInfoSection({
     super.key,
     required this.advisories,
     this.visa,
     this.regionalNote,
+    this.emergencyNumber,
   });
 
   @override
@@ -75,6 +101,7 @@ class TravelInfoSection extends StatelessWidget {
             advisories: advisories,
             matchHeight: sideBySide,
             hideOwnSource: shareSource,
+            emergencyNumber: emergencyNumber,
           )
         : null;
     final visaColumn = showVisa
@@ -127,11 +154,13 @@ class _AdvisoriesColumn extends StatelessWidget {
   final List<TravelAdvisory> advisories;
   final bool matchHeight;
   final bool hideOwnSource;
+  final String? emergencyNumber;
 
   const _AdvisoriesColumn({
     required this.advisories,
     this.matchHeight = false,
     this.hideOwnSource = false,
+    this.emergencyNumber,
   });
 
   @override
@@ -145,8 +174,51 @@ class _AdvisoriesColumn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeading('Advisories'),
+        SectionHeading(
+          'Advisories',
+          trailing: emergencyNumber == null ? null : _EmergencyBadge(number: emergencyNumber!),
+        ),
         matchHeight ? Expanded(child: card) : card,
+      ],
+    );
+  }
+}
+
+/// "EMERGENCY / 112"-style badge next to the Advisories heading — only
+/// rendered when [CountryFacts.emergencyNumber] is known. See that field's
+/// doc comment: hand-curated, no importer wired yet.
+class _EmergencyBadge extends StatelessWidget {
+  final String number;
+
+  const _EmergencyBadge({required this.number});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'EMERGENCY',
+          style: CountryTheme.sectionLabel.copyWith(fontSize: 8, letterSpacing: 1.0),
+        ),
+        const SizedBox(height: 2),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.call, size: 11, color: CountryTheme.stampRed),
+            const SizedBox(width: 4),
+            Text(
+              number,
+              style: const TextStyle(
+                fontFamily: 'Cormorant Garamond',
+                fontWeight: FontWeight.w800,
+                fontSize: 16,
+                color: CountryTheme.stampRed,
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -164,8 +236,9 @@ class _AdvisoryRow extends StatelessWidget {
   /// Pulls the leading digit out of a level string like "Level 2" so it
   /// can be matched against [CountryTheme.advisoryColor]. Not every
   /// government publishes a numbered level (the UK FCDO entries in the
-  /// mock data use a level-less summary label instead) — the badge is
-  /// simply omitted rather than guessed at when this comes back null.
+  /// mock data use a level-less summary label instead) — the accent bar
+  /// and colored heading are simply omitted rather than guessed at when
+  /// this comes back null.
   int? _levelNumber() {
     final match = RegExp(r'(\d+)').firstMatch(advisory.level ?? '');
     return match == null ? null : int.parse(match.group(1)!);
@@ -174,28 +247,30 @@ class _AdvisoryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final level = _levelNumber();
+    final color = level == null ? null : CountryTheme.advisoryColor(level);
 
-    return Padding(
+    // A left-border decoration, not a `Row`+`stretch` sibling bar — this
+    // row sits inside `DividedCard` -> `IntrinsicHeight` on desktop (see
+    // `TravelInfoSection`'s side-by-side layout), and `stretch` needs a
+    // bounded height there that intrinsic-height computation can't supply
+    // (the exact failure mode `section_heading_test.dart` already guards
+    // against for `LayoutBuilder` — same underlying conflict, different
+    // widget). A border paints along its box's own edge regardless, so it
+    // doesn't have that dependency.
+    return Container(
       padding: const EdgeInsets.fromLTRB(15, 11, 15, 11),
+      decoration: BoxDecoration(
+        border: Border(left: BorderSide(color: color ?? Colors.transparent, width: 4)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(advisory.issuingAuthority, style: CountryTheme.listRowTitle),
-              ),
-              if (level != null) ...[
-                const SizedBox(width: 8),
-                _LevelBadge(level: level, label: advisory.level!),
-              ],
-            ],
-          ),
-          if (advisory.levelLabel != null) ...[
-            const SizedBox(height: 2),
+          Text(advisory.issuingAuthority, style: CountryTheme.listRowIndex),
+          if (advisory.level != null || advisory.levelLabel != null) ...[
+            const SizedBox(height: 3),
             Text(
-              advisory.levelLabel!,
-              style: CountryTheme.listRowDetail.copyWith(fontWeight: FontWeight.w600),
+              [advisory.level, advisory.levelLabel].nonNulls.join(' — '),
+              style: CountryTheme.listRowTitle.copyWith(color: color ?? CountryTheme.ink),
             ),
           ],
           if (advisory.summary != null) ...[
@@ -210,36 +285,6 @@ class _AdvisoryRow extends StatelessWidget {
             ),
           ],
         ],
-      ),
-    );
-  }
-}
-
-class _LevelBadge extends StatelessWidget {
-  final int level;
-  final String label; // e.g. "Level 2" — shown verbatim, not reworded
-
-  const _LevelBadge({required this.level, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    final color = CountryTheme.advisoryColor(level);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: color.withValues(alpha: 0.35)),
-      ),
-      child: Text(
-        label.toUpperCase(),
-        style: TextStyle(
-          fontFamily: 'IBM Plex Mono',
-          fontSize: 9.5,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.6,
-          color: color,
-        ),
       ),
     );
   }
@@ -266,7 +311,7 @@ class _VisaColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final card = DividedCard(
+    final cardContent = DividedCard(
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(15, 11, 15, 11),
@@ -279,14 +324,25 @@ class _VisaColumn extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(visa.summary, style: CountryTheme.listRowDetail),
-              if (visa.prohibitedOnEntry != null) ...[
-                const SizedBox(height: 8),
-                _ProhibitedNote(label: 'Prohibited on entry', body: visa.prohibitedOnEntry!),
-              ],
-              if (visa.prohibitedOnExit != null) ...[
-                const SizedBox(height: 8),
-                _ProhibitedNote(label: 'Prohibited on exit', body: visa.prohibitedOnExit!),
-              ],
+              if (visa.prohibitedOnEntry != null || visa.prohibitedOnExit != null)
+                Container(
+                  margin: const EdgeInsets.only(top: 11),
+                  padding: const EdgeInsets.only(top: 11),
+                  decoration: const BoxDecoration(
+                    border: Border(top: BorderSide(color: CountryTheme.rule)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (visa.prohibitedOnEntry != null)
+                        _ProhibitedNote(label: 'Prohibited on entry', body: visa.prohibitedOnEntry!),
+                      if (visa.prohibitedOnEntry != null && visa.prohibitedOnExit != null)
+                        const SizedBox(height: 8),
+                      if (visa.prohibitedOnExit != null)
+                        _ProhibitedNote(label: 'Prohibited on exit', body: visa.prohibitedOnExit!),
+                    ],
+                  ),
+                ),
               if (hideOwnSource) ...[
                 if (visa.applicationUrl != null) ...[
                   const SizedBox(height: 8),
@@ -309,7 +365,7 @@ class _VisaColumn extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(regionalNote!.summary, style: CountryTheme.listRowDetail),
+                _RegionalNoteWarning(summary: regionalNote!.summary),
                 const SizedBox(height: 8),
                 _SourceFooter(
                   officialUrl: regionalNote!.officialUrl,
@@ -320,12 +376,93 @@ class _VisaColumn extends StatelessWidget {
           ),
       ],
     );
+
+    // The rotated group-membership stamp (e.g. "SCHENGEN") overlays the
+    // card's bottom-right corner — only when there's a regionalNote to
+    // name. A Stack rather than baking this into DividedCard itself, since
+    // no other DividedCard user wants a corner overlay.
+    final card = regionalNote == null
+        ? cardContent
+        : Stack(
+            children: [
+              cardContent,
+              Positioned(
+                bottom: 12,
+                right: 12,
+                child: _RegionalStamp(groupSlug: regionalNote!.groupSlug),
+              ),
+            ],
+          );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SectionHeading('Visa & entry'),
         matchHeight ? Expanded(child: card) : card,
       ],
+    );
+  }
+}
+
+/// The visa card's "upcoming requirement" highlight box — maps onto
+/// [RegionalNote.summary], which used to render as a plain paragraph.
+/// [CountryTheme.amber], not [CountryTheme.gold] — see that token's doc
+/// comment on why the mockup keeps them distinct.
+class _RegionalNoteWarning extends StatelessWidget {
+  final String summary;
+
+  const _RegionalNoteWarning({required this.summary});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
+      decoration: BoxDecoration(
+        color: CountryTheme.amber.withValues(alpha: 0.06),
+        border: Border.all(color: CountryTheme.amber.withValues(alpha: 0.22)),
+        borderRadius: BorderRadius.circular(3),
+      ),
+      child: Text(
+        summary,
+        style: const TextStyle(
+          fontFamily: 'Public Sans',
+          fontSize: 12,
+          color: CountryTheme.amber,
+          height: 1.5,
+        ),
+      ),
+    );
+  }
+}
+
+/// The rotated corner stamp naming [RegionalNote.groupSlug] (e.g.
+/// "schengen") — matches `.visa-stamp`.
+class _RegionalStamp extends StatelessWidget {
+  final String groupSlug;
+
+  const _RegionalStamp({required this.groupSlug});
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: -5 * math.pi / 180,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(3),
+          border: Border.all(color: CountryTheme.navy.withValues(alpha: 0.22), width: 1.5),
+        ),
+        child: Text(
+          groupSlug.toUpperCase(),
+          style: TextStyle(
+            fontFamily: 'Courier Prime',
+            fontSize: 9,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.6,
+            color: CountryTheme.navy.withValues(alpha: 0.32),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -361,7 +498,17 @@ class _ProhibitedNote extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label.toUpperCase(), style: CountryTheme.listRowIndex),
+        Text(
+          label.toUpperCase(),
+          // Red, not the shared muted default — matches `.vb-lbl`
+          // (CountryTheme.advisoryLevel4 already equals the mockup's
+          // `--red`, so this reuses it rather than adding a duplicate
+          // token for the same color).
+          style: CountryTheme.listRowIndex.copyWith(
+            color: CountryTheme.advisoryLevel4,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         const SizedBox(height: 2),
         Text(body, style: CountryTheme.listRowDetail),
       ],
