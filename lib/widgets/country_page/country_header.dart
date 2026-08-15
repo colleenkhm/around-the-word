@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../models/country_bundle.dart';
+import '../../models/live_data.dart';
 import '../../theme/country_theme.dart';
 import '../../utils/flag_url.dart';
 import 'dashed_divider.dart';
-import 'split_flap_text.dart';
+import 'external_link.dart';
 
 const _tabLabels = {
   CountryTab.overview: 'OVERVIEW',
@@ -14,38 +17,37 @@ const _tabLabels = {
 };
 
 /// The country-page header/chrome: flag, name, native name, the
-/// content_status pill, the tab-pill row, and the passport-style MRZ
-/// strip. Built against country-page-mockups.html (2026-08-10 spec), with
-/// several deliberate deviations from it since — most recently
-/// (2026-08-11) the header container itself moved from a dark navy bar to
-/// the same light [CountryTheme.card] surface every other card on the
-/// page uses; only the MRZ strip at the bottom keeps a dark board panel.
-/// See [CountryTheme]'s class doc for the full reasoning.
+/// content_status pill, the tab-pill row, and a "ticket stub" with local
+/// time + a $1 USD conversion.
 ///
-/// **Two separate pills, not one merged into the other** (corrected
-/// 2026-08-10 — an earlier version of this widget replaced the
-/// content_status text pill with the tab-pill row, reasoning that a
-/// shorter row already signals partial content for free; turned out that
-/// conflated two different things). The status pill is exactly what the
-/// mockup shows — content *depth*. The tab-pill row is navigation, and is
-/// deliberately **not** derived from [CountryBundle] content presence —
-/// [tabs] is passed in by the caller and only grows as each tab actually
-/// gets built (Explore, Guide, Language, one at a time), independent of
-/// whether the data for it already exists.
+/// **2026-08-15 rewrite**, built against `trip-dashboard-v3.html`. Two
+/// pieces of the prior header are gone rather than reskinned, per Colleen
+/// (asked directly rather than assumed — see HANDOFF.md):
+/// - The country name no longer renders as [SplitFlapText]'s individual
+///   flap cells — plain styled text now ([CountryTheme.countryName]),
+///   matching the mockup's plainer `.tk-name`.
+/// - The passport-style MRZ strip (ISO code, official name, advisory
+///   level, verified date in bracket notation) is gone. Its `ADV:`/
+///   `VERIFIED:` data has nowhere to land yet — the plan is for it to move
+///   into the restyled Travel Info section (advisory bar + a shared source
+///   line already live there), not to be dropped for good.
 ///
-/// **Two known data gaps, not yet fixed:**
-/// - Native name + its romanization (the mockup's "Ελλάδα · Ellàda") isn't
-///   in `country_facts`/[CountryFacts] at all yet — REST Countries returns
-///   the native-script name (already noted as a bonus field in
-///   `tools/commodity_importer`), but not a romanization, which would need
-///   to be curated. Both are optional constructor params here rather than
-///   pulled from the bundle, so this renders correctly once that's decided
-///   without another widget change.
-/// - The MRZ strip's `VISA:` segment needs a short status code
-///   ("NONE"/"REQUIRED"/"SEE SOURCE") that doesn't exist on [VisaInfo] —
-///   only a free-text `summary`. Omitted from the strip for now rather
-///   than guessed from the summary text.
-class CountryHeader extends StatelessWidget {
+/// **[RightNowStrip] is retired, not reskinned** — its local-time and
+/// currency columns are absorbed directly into this header's stub
+/// (`_TicketStub`, mirroring the mockup's `.tk-stub`), and its season
+/// column is dropped from the Overview tab entirely for this pass (per
+/// Colleen: fold time+currency into the header, drop season from view).
+/// That's why this widget is a [StatefulWidget] now — the local-time
+/// column needs the same live-updating [Timer] [RightNowStrip] used to
+/// have; see `_CountryHeaderState`.
+///
+/// **One known data gap, not yet fixed:** native name + its romanization
+/// (the mockup's "Ελλάδα · Ellàda") isn't in `country_facts`/[CountryFacts]
+/// at all yet — REST Countries returns the native-script name already, but
+/// not a romanization, which would need to be curated. Both stay optional
+/// constructor params here rather than pulled from the bundle, so this
+/// renders correctly once that's decided without another widget change.
+class CountryHeader extends StatefulWidget {
   final CountryBundle bundle;
 
   /// Which tabs to show as pills — driven by what's actually been built
@@ -56,10 +58,18 @@ class CountryHeader extends StatelessWidget {
   final String? nativeName;
   final String? nativeNameRomanized;
 
-  /// Fires when the MRZ strip's advisory/verification segment is tapped —
-  /// null-safe no-op until the Advisory section exists on the page for it
-  /// to scroll to.
-  final VoidCallback? onAdvisorySegmentTap;
+  /// Feeds the stub's "Local time" column — see [CountryFacts.utcOffsetMinutes]'s
+  /// doc comment on the fixed-offset/no-DST simplification this inherits
+  /// unchanged from [RightNowStrip].
+  final int? utcOffsetMinutes;
+
+  /// Feeds the stub's "$1 USD" column. **Not live** — see [ExchangeRate]'s
+  /// doc comment; `null` renders an em dash rather than inventing a value.
+  final ExchangeRate? exchangeRate;
+
+  /// From `CountryFacts.currencyName` — shown as the currency column's
+  /// subtitle in place of a generic label.
+  final String? currencyName;
 
   const CountryHeader({
     super.key,
@@ -69,69 +79,73 @@ class CountryHeader extends StatelessWidget {
     required this.onTabSelected,
     this.nativeName,
     this.nativeNameRomanized,
-    this.onAdvisorySegmentTap,
+    this.utcOffsetMinutes,
+    this.exchangeRate,
+    this.currencyName,
   });
+
+  @override
+  State<CountryHeader> createState() => _CountryHeaderState();
+}
+
+class _CountryHeaderState extends State<CountryHeader> {
+  Timer? _ticker;
+
+  @override
+  void initState() {
+    super.initState();
+    // Minute-granularity display, so a timer tick once every 30s is
+    // plenty — carried over unchanged from the retired RightNowStrip.
+    _ticker = Timer.periodic(const Duration(seconds: 30), (_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _ticker?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.sizeOf(context).width >= 900;
 
     return Container(
-      // A small rounded bottom edge — softened from a flat square bar
-      // 2026-08-11 (read as an official banner). clipBehavior keeps the
-      // MRZ strip's own dark panel and the flag's corners from poking
-      // past the curve.
+      // Square corners, not rounded — matches the mockup's `.tk-head`/
+      // `.tk-stub` (`border-radius: 0` in both), a deliberate flat-ticket
+      // look rather than the prior rounded-bottom bar.
       clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: CountryTheme.card,
-        border: Border.all(color: CountryTheme.rule),
-        borderRadius: const BorderRadius.vertical(
-          bottom: Radius.circular(CountryTheme.cardRadius),
-        ),
-      ),
+      decoration: const BoxDecoration(color: CountryTheme.navy),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _TopStripe(),
           Padding(
-            // Bottom padding stops at the MRZ strip — that panel is
-            // full-bleed (its own [CountryTheme.boardBg] block, not
-            // padded content), so it's a sibling of this Padding rather
-            // than a child inside it. See the class doc on why: it reads
-            // as a physical board mounted in the header, not just more
-            // header content.
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+            padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _Flag(isoCode: bundle.country.isoCode, desktop: isDesktop),
-                    const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SplitFlapText(
-                            text: bundle.country.nameCommon,
-                            fontSize: isDesktop ? 42 : 31,
+                          Text(
+                            widget.bundle.country.nameCommon,
+                            style: CountryTheme.countryName(isDesktop ? 34 : 24)
+                                .copyWith(color: CountryTheme.onNavy),
                           ),
-                          if (nativeName != null) ...[
-                            const SizedBox(height: 7),
+                          if (widget.nativeName != null) ...[
+                            const SizedBox(height: 6),
                             Text.rich(
                               TextSpan(
-                                style: CountryTheme.nativeName,
+                                style: CountryTheme.ticketNativeName,
                                 children: [
-                                  TextSpan(text: nativeName),
-                                  if (nativeNameRomanized != null) ...[
-                                    const TextSpan(text: '   '),
-                                    TextSpan(
-                                      text: nativeNameRomanized,
-                                      style: CountryTheme.nativeNameRomanized
-                                          .copyWith(
-                                              color: CountryTheme.inkSoft
-                                                  .withValues(alpha: 0.75)),
-                                    ),
+                                  TextSpan(text: widget.nativeName),
+                                  if (widget.nativeNameRomanized != null) ...[
+                                    const TextSpan(text: '   ·   '),
+                                    TextSpan(text: widget.nativeNameRomanized),
                                   ],
                                 ],
                               ),
@@ -140,31 +154,54 @@ class CountryHeader extends StatelessWidget {
                         ],
                       ),
                     ),
+                    const SizedBox(width: 14),
+                    _Flag(isoCode: widget.bundle.country.isoCode, desktop: isDesktop),
                   ],
                 ),
                 // Both the status pill and the tab-pill row are about
-                // signaling unevenness *across tabs* ("some sections are
-                // further along than others" / a row of tabs to jump
-                // between) — neither means anything with a single tab
-                // built. Gated on tabs.length > 1 (2026-08-11) rather than
-                // removed outright, so both come back on their own once
-                // Explore/Guide/Language join the tabs list, with nothing
-                // to remember to re-add.
-                if (bundle.country.contentStatus == ContentStatus.partial &&
-                    tabs.length > 1)
-                  _StatusPill(countryName: bundle.country.nameCommon),
-                if (tabs.length > 1) ...[
+                // signaling unevenness *across tabs* — neither means
+                // anything with a single tab built. Gated on tabs.length
+                // > 1, same as before this rewrite.
+                if (widget.bundle.country.contentStatus == ContentStatus.partial &&
+                    widget.tabs.length > 1)
+                  _StatusPill(countryName: widget.bundle.country.nameCommon),
+                if (widget.tabs.length > 1) ...[
                   const SizedBox(height: 12),
                   _TabPillRow(
-                    tabs: tabs,
-                    active: activeTab,
-                    onSelected: onTabSelected,
+                    tabs: widget.tabs,
+                    active: widget.activeTab,
+                    onSelected: widget.onTabSelected,
                   ),
                 ],
               ],
             ),
           ),
-          _MrzStrip(bundle: bundle, onAdvisoryTap: onAdvisorySegmentTap),
+          _TicketStub(
+            utcOffsetMinutes: widget.utcOffsetMinutes,
+            exchangeRate: widget.exchangeRate,
+            currencyName: widget.currencyName,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The `.tk-head::after` two-tone top stripe — gold for the first ~62%,
+/// navyMid for the rest. A `Row` of two flex-weighted `ColoredBox`s reads
+/// clearer than reaching for a `LinearGradient` with hard color stops for
+/// what's really just two flat blocks side by side.
+class _TopStripe extends StatelessWidget {
+  const _TopStripe();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      height: 4,
+      child: Row(
+        children: [
+          Expanded(flex: 62, child: ColoredBox(color: CountryTheme.gold)),
+          Expanded(flex: 38, child: ColoredBox(color: CountryTheme.navyMid)),
         ],
       ),
     );
@@ -181,15 +218,18 @@ class _Flag extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = desktop ? 62.0 : 46.0;
     final height = desktop ? 42.0 : 32.0;
-    final placeholder = ColoredBox(color: CountryTheme.rule);
+    final placeholder = ColoredBox(color: CountryTheme.onNavyMuted);
 
     return Container(
       width: width,
       height: height,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: CountryTheme.rule),
+        borderRadius: BorderRadius.circular(3),
+        // Translucent white, not `CountryTheme.rule` — this always sits
+        // on the navy block now (the mockup's `.tk-flag` box-shadow is
+        // `rgba(255,255,255,.15)`), never on a light card surface.
+        border: Border.all(color: CountryTheme.onNavyMuted),
       ),
       child: Image.network(
         flagPngUrl(isoCode),
@@ -223,12 +263,12 @@ class _StatusPill extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(999),
-        color: CountryTheme.paper,
-        border: Border.all(color: CountryTheme.rule),
+        color: CountryTheme.onNavyMuted.withValues(alpha: 0.12),
+        border: Border.all(color: CountryTheme.onNavyMuted),
       ),
       child: Text(
         'Building out $countryName — some sections are further along than others',
-        style: CountryTheme.pillLabel.copyWith(color: CountryTheme.inkSoft),
+        style: CountryTheme.pillLabel.copyWith(color: CountryTheme.onNavySoft),
       ),
     );
   }
@@ -278,15 +318,12 @@ class _TabPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Selected fill is gold — dark navy text on top, the same pairing the
+    // mockup's `.btn-gold` uses (light text on bright gold fails contrast).
+    // Unselected stays translucent-outlined on the navy surface, same
+    // family as `_StatusPill`.
     return Material(
-      // Selected fill is boardAmber — dark `ink` text on top rather than
-      // a light color, since light text on a bright amber fill fails
-      // contrast (checked: ~2.2:1); dark text on amber is the classic
-      // high-contrast pairing real tickets and caution tags use.
-      // Unselected uses `paper`/`rule` now, not a white-alpha overlay —
-      // the header sits on a light `card` surface (2026-08-11), not a
-      // dark one, so a white wash no longer reads as a subtle pill.
-      color: selected ? CountryTheme.boardAmber : CountryTheme.paper,
+      color: selected ? CountryTheme.gold : Colors.transparent,
       borderRadius: BorderRadius.circular(999),
       child: InkWell(
         borderRadius: BorderRadius.circular(999),
@@ -296,13 +333,13 @@ class _TabPill extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(999),
             border: Border.all(
-              color: selected ? Colors.transparent : CountryTheme.rule,
+              color: selected ? Colors.transparent : CountryTheme.onNavyMuted,
             ),
           ),
           child: Text(
             label,
             style: CountryTheme.pillLabel.copyWith(
-              color: selected ? CountryTheme.ink : CountryTheme.inkSoft,
+              color: selected ? CountryTheme.navy : CountryTheme.onNavySoft,
               fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
             ),
           ),
@@ -312,61 +349,66 @@ class _TabPill extends StatelessWidget {
   }
 }
 
-/// The passport-style "machine readable zone" strip — sits directly on
-/// the header's light [CountryTheme.card] surface, set off from the
-/// name/flag row above by a perforated [DashedDivider] rather than a
-/// solid dark background (see [CountryTheme]'s class doc: an earlier
-/// version was its own full-bleed dark panel, which read as a stray
-/// leftover once the rest of the header went light). Segments are built
-/// from whatever real data is available and cleanly derivable; see the
-/// class doc on [CountryHeader] for the one segment (VISA) left out.
-class _MrzStrip extends StatelessWidget {
-  final CountryBundle bundle;
-  final VoidCallback? onAdvisoryTap;
+/// The ticket's light stub — local time + a $1 USD conversion, matching
+/// `.tk-stub`. Absorbs what [RightNowStrip] used to render as its first
+/// and third columns (see class doc on why the middle "season" column
+/// isn't a fourth field here — it's dropped from view this pass, not
+/// moved).
+///
+/// Time/currency formatting logic below is carried over verbatim from
+/// [RightNowStrip] — same fixed-offset/no-DST simplification, same
+/// significant-figures currency rounding, same xe.com outbound converter
+/// link (not a live in-app rate fetch — see [ExchangeRate]'s doc comment).
+class _TicketStub extends StatelessWidget {
+  final int? utcOffsetMinutes;
+  final ExchangeRate? exchangeRate;
+  final String? currencyName;
 
-  const _MrzStrip({required this.bundle, required this.onAdvisoryTap});
+  const _TicketStub({
+    required this.utcOffsetMinutes,
+    required this.exchangeRate,
+    required this.currencyName,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final officialName = bundle.country.nameOfficial
-        .toUpperCase()
-        .replaceAll(' ', '<');
-    final advisory = bundle.advisories.isEmpty ? null : bundle.advisories.first;
-    final advisoryCode = advisory == null ? null : _shortLevel(advisory.level);
-
-    final segments = <_MrzSegment>[
-      _MrzSegment.plain('ATW<<'),
-      _MrzSegment.strong('${bundle.country.isoCode}<<'),
-      _MrzSegment.plain('$officialName<<'),
-      if (advisoryCode != null)
-        _MrzSegment.strong('ADV:$advisoryCode<<', onTap: onAdvisoryTap),
-      if (bundle.visa != null)
-        _MrzSegment.strong(
-          'VERIFIED:${_isoDate(bundle.visa!.lastVerifiedAt)}<<',
-        ),
-    ];
+    final local = _localDateTime();
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 12),
+      color: CountryTheme.card,
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           const DashedDivider(),
-          const SizedBox(height: 9),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (final s in segments)
-                  GestureDetector(
-                    onTap: s.onTap,
-                    child: Text(
-                      s.text,
-                      style: s.strong ? CountryTheme.mrzStrong : CountryTheme.mrz,
-                    ),
+                Expanded(
+                  child: _field(
+                    'LOCAL TIME',
+                    local == null ? '—' : _timeLabel(local),
+                    local == null ? '' : '${_dateLabel(local)} · ${_utcLabel()}',
                   ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _field(
+                    r'$1 USD',
+                    exchangeRate == null ? '—' : _rateLabel(exchangeRate!),
+                    currencyName ?? 'Daily rate',
+                    trailing: exchangeRate == null
+                        ? null
+                        : ExternalLink(
+                            label: 'Convert',
+                            url: _converterUrl(exchangeRate!.currencyCode),
+                          ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -375,27 +417,76 @@ class _MrzStrip extends StatelessWidget {
     );
   }
 
-  static String _isoDate(DateTime dt) =>
-      '${dt.year.toString().padLeft(4, '0')}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
-
-  /// "Level 1" -> "L1". Best-effort — falls back to null (segment omitted)
-  /// for advisory levels that don't follow that pattern, since `level` is
-  /// free text set by whichever government issued it (data architecture
-  /// doc), not a guaranteed enum.
-  static String? _shortLevel(String? level) {
-    if (level == null) return null;
-    final match = RegExp(r'\d+').firstMatch(level);
-    return match == null ? null : 'L${match.group(0)}';
+  Widget _field(String label, String value, String subtitle, {Widget? trailing}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(label, style: CountryTheme.ticketStubLabel),
+        const SizedBox(height: 3),
+        Text(value, style: CountryTheme.ticketStubValue),
+        if (subtitle.isNotEmpty) ...[
+          const SizedBox(height: 2),
+          Text(subtitle, style: CountryTheme.ticketStubSub),
+        ],
+        if (trailing != null) ...[
+          const SizedBox(height: 4),
+          trailing,
+        ],
+      ],
+    );
   }
-}
 
-class _MrzSegment {
-  final String text;
-  final bool strong;
-  final VoidCallback? onTap;
+  DateTime? _localDateTime() {
+    final offset = utcOffsetMinutes;
+    if (offset == null) return null;
+    return DateTime.now().toUtc().add(Duration(minutes: offset));
+  }
 
-  _MrzSegment.plain(this.text)
-      : strong = false,
-        onTap = null;
-  _MrzSegment.strong(this.text, {this.onTap}) : strong = true;
+  String _timeLabel(DateTime local) {
+    final h = local.hour.toString().padLeft(2, '0');
+    final m = local.minute.toString().padLeft(2, '0');
+    return '$h:$m';
+  }
+
+  String _dateLabel(DateTime local) => '${_monthAbbrev[local.month - 1]} ${local.day}';
+
+  String _utcLabel() {
+    final offset = utcOffsetMinutes;
+    if (offset == null) return '';
+    final sign = offset >= 0 ? '+' : '-';
+    final hours = (offset.abs() / 60).floor();
+    final minutes = offset.abs() % 60;
+    return minutes == 0 ? 'UTC$sign$hours' : 'UTC$sign$hours:${minutes.toString().padLeft(2, '0')}';
+  }
+
+  static const _monthAbbrev = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  ];
+
+  String _rateLabel(ExchangeRate r) {
+    // Costa Rica-style four-figure rates read better with no decimal;
+    // sub-10 rates (EUR-style) want two. A single significant-figures
+    // rule rather than hardcoding per currency.
+    final rate = r.rateFromUsd;
+    final formatted = rate >= 100 ? rate.round().toString() : rate.toStringAsFixed(2);
+    return _currencySymbol(r.currencyCode) + formatted;
+  }
+
+  String _currencySymbol(String code) => switch (code) {
+        'EUR' => '€',
+        'GBP' => '£',
+        'CRC' => '₡',
+        _ => '$code ',
+      };
+
+  /// A live, interactive USD-to-[currencyCode] calculator on xe.com — a
+  /// public webpage the user opens themselves, not an API call this app
+  /// makes. Distinct from the data architecture doc's "Currency
+  /// conversion: ExchangeRate-API, live, never bundled" guidance, which is
+  /// about this app *fetching* a rate server-side (not built yet) — this
+  /// is just an outbound link, so it doesn't need an Edge Function or key.
+  String _converterUrl(String currencyCode) =>
+      'https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To=$currencyCode';
 }

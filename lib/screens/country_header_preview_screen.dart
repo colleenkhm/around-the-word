@@ -11,8 +11,6 @@ import '../utils/hex_color.dart';
 import '../widgets/country_page/cities_section.dart';
 import '../widgets/country_page/country_header.dart';
 import '../widgets/country_page/paper_texture.dart';
-import '../widgets/country_page/right_now_strip.dart';
-import '../widgets/country_page/section_heading.dart';
 import '../widgets/country_page/travel_info_section.dart';
 
 /// Temporary review screen for the Overview tab, built up one section at a
@@ -44,16 +42,6 @@ class _CountryHeaderPreviewScreenState
     setState(() {
       _bundle = CountryBundle.fromJson(jsonDecode(raw) as Map<String, dynamic>);
     });
-  }
-
-  /// "Right now" in the country's own timezone, not wherever this device
-  /// happens to be — a season lookup keyed off the wrong local date could
-  /// show the wrong season near a month boundary.
-  DateTime _localDate(CountryBundle bundle) {
-    final offset = bundle.facts.utcOffsetMinutes;
-    return offset == null
-        ? DateTime.now()
-        : DateTime.now().toUtc().add(Duration(minutes: offset));
   }
 
   /// US State Department only, for now (per Colleen, 2026-08-11) — the
@@ -119,6 +107,20 @@ class _CountryHeaderPreviewScreenState
                     // these are constructor params, not bundle fields.
                     nativeName: 'Costa Rica',
                     nativeNameRomanized: null,
+                    utcOffsetMinutes: bundle.facts.utcOffsetMinutes,
+                    // Mock instance, not bundle data — currency conversion
+                    // is explicitly never bundled (see CountryHeader's doc
+                    // comment). A stand-in for what a live Edge Function
+                    // call would return. Season (the retired RightNowStrip's
+                    // third column) is dropped from the Overview tab for
+                    // this pass, not moved anywhere — see CountryHeader's
+                    // class doc.
+                    exchangeRate: ExchangeRate(
+                      currencyCode: bundle.facts.currencyCode ?? 'CRC',
+                      rateFromUsd: 519.8,
+                      fetchedAt: DateTime.now(),
+                    ),
+                    currencyName: bundle.facts.currencyName,
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -126,25 +128,6 @@ class _CountryHeaderPreviewScreenState
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SectionHeading('Right now'),
-                          RightNowStrip(
-                            utcOffsetMinutes: bundle.facts.utcOffsetMinutes,
-                            // Real curated content, resolved against the
-                            // country's own local date — not mock data,
-                            // unlike the exchange rate below.
-                            season: bundle.guide.seasonFor(_localDate(bundle)),
-                            // Mock instance, not bundle data — currency
-                            // conversion is explicitly never bundled (see
-                            // RightNowStrip's doc comment). A stand-in for
-                            // what a live Edge Function call would return.
-                            exchangeRate: ExchangeRate(
-                              currencyCode: bundle.facts.currencyCode ?? 'CRC',
-                              rateFromUsd: 519.8,
-                              fetchedAt: DateTime.now(),
-                            ),
-                            currencyName: bundle.facts.currencyName,
-                          ),
-                          const SizedBox(height: 18),
                           TravelInfoSection(
                             advisories: _usAdvisories(bundle),
                             visa: bundle.visa,

@@ -19,6 +19,12 @@ import 'package:flutter/material.dart';
 /// anyway so call sites stay self-documenting ("this is the page" vs. "this
 /// is a card surface") even though they currently match.
 ///
+/// [CountryHeader] (split-flap name + MRZ strip removed, replaced by plain
+/// text + a merged time/currency stub) is done as of this pass; Cities,
+/// Travel Info, Best Times, and the new Language-pair/Practical-norms
+/// sections are still on the light-theme-era visuals and land as their own
+/// follow-up passes — see HANDOFF.md.
+///
 /// --- Prior history (kept, not re-litigated) ---
 /// **Re-based twice in one day, 2026-08-11.** First: per Colleen, "I don't
 /// think I like how dark it is... maybe we should make it look more like
@@ -125,21 +131,6 @@ class CountryTheme {
   /// Shared corner radius for card-style panels and the header.
   static const cardRadius = 8.0;
 
-  // --- Board inset (dark) — [SplitFlapText]'s flap cells only -------------
-  // Slated for removal once SplitFlapText/the MRZ strip are deleted (see
-  // class doc) — both still reference these as of this pass, so they stay
-  // defined until that follow-up lands.
-
-  static const boardBg = Color(0xFF17191B);
-  static const boardSeam = Color(0x59000000);
-  static const boardAmber = Color(0xFFF2A93B);
-
-  /// Old single-accent token — still referenced by [mrzStrong] until the
-  /// MRZ strip is removed. Every other former consumer has moved to
-  /// [gold] or [navy], whichever the mockup's equivalent element actually
-  /// uses (they diverge — see [gold]'s doc comment).
-  static const ticketRust = Color(0xFF8E5A0B);
-
   // Advisory levels 1–4, low to high risk — per trip-dashboard-v3.html's
   // `.adv-bar-l1`..`l4` (level 2 uses [gold], not a separate amber — that
   // was the old palette's choice, not this one's).
@@ -168,16 +159,14 @@ class CountryTheme {
 
   // --- Text styles ---------------------------------------------------------
 
-  static const _archivo = 'Archivo';
   static const _publicSans = 'Public Sans';
-  static const _mono = 'IBM Plex Mono';
   static const _cormorant = 'Cormorant Garamond';
   static const _libreBaskerville = 'Libre Baskerville';
   static const _courierPrime = 'Courier Prime';
 
-  /// The big country name. Was unused (SplitFlapText rendered the header's
-  /// name as individual flap cells instead) — back in use once that's
-  /// removed and the header goes back to plain text, per the mockup's
+  /// The big country name. Was unused for a while (SplitFlapText rendered
+  /// the header's name as individual flap cells instead) — back in use now
+  /// that [CountryHeader] renders plain text again, per the mockup's
   /// `.tk-name`. Defaults to [ink]; the header overrides to [onNavy] via
   /// `.copyWith` since it sits on the navy block, not a light surface.
   static TextStyle countryName(double fontSize) => TextStyle(
@@ -189,26 +178,7 @@ class CountryTheme {
         color: ink,
       );
 
-  /// Native name + romanization (`.native`/`.native em`) — **not updated
-  /// this pass**. Still styled for the header's old light-card surface;
-  /// still referenced by [CountryHeader] as-is until that widget's own
-  /// restyle (its own follow-up step) moves it onto the new navy block and
-  /// switches these to [onNavy]/[onNavyMuted].
-  static const nativeName = TextStyle(
-    fontFamily: _publicSans,
-    fontSize: 12.5,
-    color: inkSoft,
-  );
-  static const nativeNameRomanized = TextStyle(
-    fontFamily: _publicSans,
-    fontStyle: FontStyle.italic,
-    fontSize: 11.5,
-    color: inkSoft,
-  );
-
-  /// The ticket header's native name, on the navy block — [onNavySoft]/
-  /// [onNavyMuted] rather than the light-surface [nativeName] above.
-  /// Unused until [CountryHeader]'s restyle lands.
+  /// The ticket header's native name, on the navy block.
   static const ticketNativeName = TextStyle(
     fontFamily: _courierPrime,
     fontSize: 11,
@@ -217,7 +187,6 @@ class CountryTheme {
   );
 
   /// The ticket stub's field label ("LOCAL TIME", "$1 USD" — `.tk-f-label`).
-  /// Unused until [CountryHeader]'s restyle lands.
   static const ticketStubLabel = TextStyle(
     fontFamily: _courierPrime,
     fontSize: 8,
@@ -227,7 +196,6 @@ class CountryTheme {
   );
 
   /// The ticket stub's big value ("19:42", "€0.92" — `.tk-f-val`).
-  /// Unused until [CountryHeader]'s restyle lands.
   static const ticketStubValue = TextStyle(
     fontFamily: _cormorant,
     fontWeight: FontWeight.w700,
@@ -236,15 +204,16 @@ class CountryTheme {
   );
 
   /// The ticket stub's small subtitle ("Aug 12 · UTC+3" — `.tk-f-sub`).
-  /// Unused until [CountryHeader]'s restyle lands.
   static const ticketStubSub = TextStyle(
     fontFamily: _courierPrime,
     fontSize: 10,
     color: inkSoft,
   );
 
-  /// The ticket stub's "Convert →" link (`.tk-f-link`).
-  /// Unused until [CountryHeader]'s restyle lands.
+  /// The ticket stub's "Convert →" link (`.tk-f-link`). Currently unused —
+  /// [ExternalLink] (used for that CTA) has its own literal style rather
+  /// than reading this token; kept in case a future call site wants the
+  /// stub-specific sizing/weight instead of ExternalLink's shared look.
   static const ticketStubLink = TextStyle(
     fontFamily: _courierPrime,
     fontSize: 10,
@@ -255,37 +224,14 @@ class CountryTheme {
 
   /// Small caps-style mono labels — section headings, and anywhere else a
   /// "field label" tone is wanted. **Recolored this pass**: [inkSoft], not
-  /// [ticketRust]/[gold] — the mockup's `.s-label` uses its muted `--ink-3`
-  /// tone, not the warm accent (see [gold]'s doc comment on why that
-  /// accent is reserved for specific elements, not every label).
+  /// the old `ticketRust`/[gold] — the mockup's `.s-label` uses its muted
+  /// `--ink-3` tone, not the warm accent (see [gold]'s doc comment on why
+  /// that accent is reserved for specific elements, not every label).
   static const sectionLabel = TextStyle(
     fontFamily: _courierPrime,
     fontSize: 10,
     fontWeight: FontWeight.w600,
     letterSpacing: 1.5,
-    color: inkSoft,
-  );
-
-  /// The "Right now" live strip's styles — **not updated this pass**.
-  /// [RightNowStrip] is being retired (its content folds into the header's
-  /// ticket stub — see [ticketStubLabel] etc. above) rather than reskinned,
-  /// so these stay exactly as they were until that follow-up deletes them.
-  static const liveLabel = TextStyle(
-    fontFamily: _mono,
-    fontSize: 9.5,
-    letterSpacing: 1.14,
-    color: ticketRust,
-  );
-  static const liveValue = TextStyle(
-    fontFamily: _archivo,
-    fontWeight: FontWeight.w700,
-    fontSize: 17,
-    letterSpacing: -0.34,
-    color: ink,
-  );
-  static const liveSubtitle = TextStyle(
-    fontFamily: _publicSans,
-    fontSize: 11,
     color: inkSoft,
   );
 
@@ -331,23 +277,6 @@ class CountryTheme {
     fontFamily: _publicSans,
     fontSize: 13.5,
     color: inkBody,
-  );
-
-  /// MRZ strip styles — **not updated this pass**. Slated for removal
-  /// alongside the MRZ strip itself (see class doc); [ticketRust] stays
-  /// defined only because this still references it.
-  static const mrz = TextStyle(
-    fontFamily: _mono,
-    fontSize: 10.5,
-    letterSpacing: 0.63,
-    color: inkSoft,
-  );
-  static const mrzStrong = TextStyle(
-    fontFamily: _mono,
-    fontSize: 10.5,
-    letterSpacing: 0.63,
-    fontWeight: FontWeight.w500,
-    color: ticketRust,
   );
 
   /// Tab pill label text. **Recolored this pass** (font family only, to

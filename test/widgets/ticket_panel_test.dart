@@ -22,9 +22,9 @@ void main() {
     // LayoutBuilder — both support intrinsic-dimension queries (they just
     // clip/paint over whatever size layout already resolved), unlike
     // LayoutBuilder (see section_heading_test.dart for the failure mode
-    // this guards against). DividedCard and RightNowStrip both build on
-    // TicketPanel and both get placed inside an IntrinsicHeight in the
-    // real page, so this is worth confirming directly.
+    // this guards against). DividedCard builds on TicketPanel and gets
+    // placed inside an IntrinsicHeight in TravelInfoSection's desktop
+    // side-by-side layout, so this is worth confirming directly.
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
