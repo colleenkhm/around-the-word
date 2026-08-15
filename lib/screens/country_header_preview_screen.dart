@@ -8,9 +8,12 @@ import '../models/live_data.dart';
 import '../models/travel_info.dart';
 import '../theme/country_theme.dart';
 import '../utils/hex_color.dart';
+import '../widgets/country_page/best_times_section.dart';
 import '../widgets/country_page/cities_section.dart';
 import '../widgets/country_page/country_header.dart';
+import '../widgets/country_page/language_pair_section.dart';
 import '../widgets/country_page/paper_texture.dart';
+import '../widgets/country_page/practical_norms_section.dart';
 import '../widgets/country_page/travel_info_section.dart';
 
 /// Temporary review screen for the Overview tab, built up one section at a
@@ -18,6 +21,17 @@ import '../widgets/country_page/travel_info_section.dart';
 /// navigation flow. Remove once CountryPageScreen exists and hosts these
 /// sections for real. Swapped in as main.dart's `home` for now
 /// specifically so this is what `flutter run` shows during review.
+///
+/// **Section order** (2026-08-15, matching `trip-dashboard-v3.html` as
+/// closely as the existing architecture allows): ticket header → Travel
+/// Info (advisories + visa) → Cities → Languages/Word-of-day → Best times
+/// → Practical notes. The mockup actually places Visa/Entry right after
+/// the ticket and Travel Advisory near the very end, next to "Getting
+/// around" — but [TravelInfoSection] deliberately combines advisories and
+/// visa into one shared-source unit (see its class doc, a 2026-08-11
+/// decision this pass didn't revisit), so they can't be split across two
+/// positions. Kept as one unit, placed early for the same "can I even go"
+/// prominence the mockup gives Visa/Entry.
 class CountryHeaderPreviewScreen extends StatefulWidget {
   const CountryHeaderPreviewScreen({super.key});
 
@@ -132,16 +146,28 @@ class _CountryHeaderPreviewScreenState
                             advisories: _usAdvisories(bundle),
                             visa: bundle.visa,
                             regionalNote: bundle.regionalNote,
+                            emergencyNumber: bundle.facts.emergencyNumber,
                           ),
                           const SizedBox(height: 18),
                           CitiesSection(
                             cities: bundle.cities,
                             capital: bundle.facts.capital,
                           ),
+                          const SizedBox(height: 18),
+                          LanguagePairSection(
+                            officialLanguages: bundle.facts.officialLanguages,
+                            // Static pick, not a real "today's word" —
+                            // see LanguagePairSection's class doc.
+                            featuredWord: bundle.words.isEmpty ? null : bundle.words.first,
+                          ),
+                          const SizedBox(height: 18),
+                          BestTimesSection(bestTimes: bundle.guide.bestTimes),
+                          const SizedBox(height: 18),
+                          PracticalNormsSection(norms: bundle.guide.practicalNorms),
                           const SizedBox(height: 24),
                           Text(
-                            '(Rest of the Overview tab not built yet — '
-                            'more sections land here one at a time.)',
+                            '(Explore/Guide/Language tabs not built yet — '
+                            'Overview is the only tab this screen previews.)',
                             style: TextStyle(
                               color: CountryTheme.inkSoft,
                               fontStyle: FontStyle.italic,
