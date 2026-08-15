@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
 
-/// Design tokens for the country page's visual language — a warm, light
-/// **ticket** as the base, with the dark **arrivals-board** treatment kept
-/// as an inset, not spread across the whole page.
+/// Design tokens for the country page's visual language.
 ///
-/// **Re-based twice more the same day.** First: per Colleen, "I don't
+/// **2026-08-15: navy/gold "boarding pass" palette**, replacing the light
+/// "ticket stock" theme below — built against `trip-dashboard-v3.html`
+/// (Colleen's mockup; confirmed via clarifying questions to be an Overview-
+/// tab restyle, not the separate "trip dashboard" feature CLAUDE.md flags
+/// as deferred). Most token *names* are unchanged so call sites don't all
+/// need touching at once — this file repoints values/adds new tokens first;
+/// each consuming widget's own structural restyle (header, cities, travel
+/// info, ...) lands as its own follow-up pass. See HANDOFF.md for the full
+/// list of what carried over vs. what didn't (split-flap name rendering and
+/// the MRZ strip, notably, are being dropped rather than reskinned).
+///
+/// [card] and [paper] are now the **same** hex — the new mockup relies on
+/// [cardShadow] (not a lighter/darker tone) to make cards read as sitting
+/// above the page, the same way it does. Kept as two separate constants
+/// anyway so call sites stay self-documenting ("this is the page" vs. "this
+/// is a card surface") even though they currently match.
+///
+/// --- Prior history (kept, not re-litigated) ---
+/// **Re-based twice in one day, 2026-08-11.** First: per Colleen, "I don't
 /// think I like how dark it is... maybe we should make it look more like
-/// a ticket than an arrivals/departure board" — walked the whole-page-dark
+/// a ticket than an arrivals/departure board" — walked a whole-page-dark
 /// pass back to a light, warm "ticket stock" surface for the page and
-/// every card, keeping the near-black board panel only on the MRZ strip
-/// and [SplitFlapText]'s name cells (what Colleen said she actually liked
-/// — "the part that looks like <<ATW<< and mimics travel/ticket stuff").
-/// Second: per Colleen again, that MRZ strip's solid dark bar itself then
-/// read as "one bar of black... it looks off" once it was the only dark
-/// rectangle left on an otherwise light page — so the MRZ strip's
-/// background came off too; only [SplitFlapText]'s flap cells still use
-/// the dark board surface now, each one small and clearly a mechanical
-/// cell rather than a leftover panel. One accent color (`ticketRust`, a
-/// dark saturated amber) now carries the theme almost everywhere,
-/// including the MRZ text itself; `boardAmber` is reserved for the flap
-/// cells alone.
+/// every card, keeping a near-black board panel only on the MRZ strip and
+/// the split-flap name cells. Second: per Colleen again, that MRZ strip's
+/// solid dark bar itself then read as "one bar of black... it looks off"
+/// once it was the only dark rectangle left on an otherwise light page —
+/// so the MRZ strip's background came off too.
 ///
 /// Plain static consts rather than a ThemeExtension: this app's styling
 /// has stayed deliberately simple so far (see HANDOFF.md on `provider` vs
@@ -30,62 +39,114 @@ import 'package:flutter/material.dart';
 class CountryTheme {
   CountryTheme._();
 
-  // --- Ticket surfaces (light, warm) — the page and every card --------
+  // --- Surfaces ---------------------------------------------------------
 
-  /// The page canvas — warm kraft/parchment, a shade deeper than [card]
-  /// so cards read as sitting on top of it.
-  static const paper = Color(0xFFF1E6CC);
+  /// The page canvas — warm cream/linen.
+  static const paper = Color(0xFFF5EDD8);
 
-  /// Every card/panel surface — Right Now, Travel Info, Cities, and the
-  /// header container itself. Lighter "ticket stock" cream, distinct from
-  /// [paper] but still warm and light — nothing on the page is a dark
-  /// surface except the two board insets below.
-  static const card = Color(0xFFFAF3E1);
+  /// Every card/panel surface. Deliberately the same hex as [paper] now —
+  /// see class doc — depth comes from [cardShadow], not a tone shift.
+  static const card = Color(0xFFF5EDD8);
 
-  /// Divider/border line, warm tan — card borders, internal row dividers,
-  /// [SectionHeading]'s dashed line.
-  static const rule = Color(0xFFD9C9A0);
+  /// Warm alternate card tone — used to visually distinguish specific
+  /// sections (e.g. Best Times) from the default [card] surface, matching
+  /// the mockup's `.card-warm` modifier.
+  static const cardWarm = Color(0xFFEDE3C4);
 
-  /// Primary text on a ticket surface — titles, values, city names. A
-  /// deep warm brown-black, not a cool grey or pure black, to match the
-  /// warmth of the paper it sits on.
-  static const ink = Color(0xFF2A2016);
+  /// Cool alternate card tone (`.card-cool` — Visa/Entry in the mockup).
+  static const cardCool = Color(0xFFE8EEE8);
 
-  /// Secondary/muted text on a ticket surface — body copy, subtitles.
-  static const inkSoft = Color(0xFF6E5D48);
+  /// Mint alternate card tone (`.card-mint` — Travel Advisory in the
+  /// mockup).
+  static const cardMint = Color(0xFFE4EFE9);
 
-  /// The one accent color for everything on a ticket surface — section
-  /// labels, links, the featured-city star, big values. A dark, saturated
-  /// amber/rust: legible against light card backgrounds, unlike
-  /// [boardAmber] below, which is tuned bright specifically for a dark
-  /// panel and would fail contrast here.
-  static const ticketRust = Color(0xFF8E5A0B);
+  /// "Aged stock" tone from the mockup's `--aged` — not currently assigned
+  /// to any specific section (the mockup itself defines it but doesn't use
+  /// it anywhere either). Kept for whichever section wants a fourth
+  /// alternate tone later, same reasoning as [lightTint] below.
+  static const aged = Color(0xFFE8DDB8);
+
+  /// Divider/border line, warm tan.
+  static const rule = Color(0xFFCFC0A0);
+
+  // --- Ink (text on a light [card]/[paper] surface) ----------------------
+
+  /// Primary text — titles, values, city names.
+  static const ink = Color(0xFF1C1A17);
+
+  /// Body/paragraph copy on a light surface (advisory and visa summaries,
+  /// prohibited-item notes, best-time reasons) — the mockup's `--ink-2`.
+  /// Distinct from [inkSoft]: this is for real reading text, not
+  /// labels/meta, which read as tiring in a muted tone at paragraph length.
+  static const inkBody = Color(0xFF3D3A35);
+
+  /// Secondary/muted text on a light surface — section labels, meta text
+  /// (population, "Verified `<date>`"), subtitles. The mockup's `--ink-3`.
+  static const inkSoft = Color(0xFF6B6048);
+
+  // --- Ink (text on a dark [navy] surface) --------------------------------
+  // For the header's navy block, the Word-of-the-day card, and the Cities
+  // section's dark header bar — introduced this pass, not yet consumed
+  // anywhere until those widgets' own restyle lands.
+
+  static const onNavy = Color(0xFFFFFFFF);
+  static const onNavySoft = Color(0xB3FFFFFF); // ~70% white
+  static const onNavyMuted = Color(0x66FFFFFF); // ~40% white
+
+  // --- Accents ------------------------------------------------------------
+
+  /// The header/word-of-day/emphasis surface — also used as a link/CTA
+  /// color on light surfaces (the mockup's `.tk-f-link`/`.src-row a` are
+  /// both navy, not gold).
+  static const navy = Color(0xFF1B3560);
+  static const navyMid = Color(0xFF254876);
+
+  /// The one *warm* accent — used sparingly (mockup: the city-row star,
+  /// the ticket's top stripe, advisory level 2's bar, the gold CTA
+  /// button) — not a blanket replacement for every accent role the old
+  /// `ticketRust` covered. See [navy] for the link/CTA-text role instead.
+  static const gold = Color(0xFFC4850A);
+
+  /// Deep red used for the "who" attribution in a source row and (once the
+  /// Travel Info restyle lands) the emergency-number stamp.
+  static const stampRed = Color(0xFF9E3020);
+
+  /// Layered elevation shadow for the new flat (non-notched) cards — the
+  /// Cities list card, the Languages/Word-of-day pair. [TicketPanel]'s own
+  /// notched shape keeps its existing dedicated painter/shadow, this is
+  /// for plain rounded-rect cards that want the same "resting on the page"
+  /// depth the mockup's `--shadow-a/b/c` give every `.card`.
+  static const cardShadow = [
+    BoxShadow(color: Color(0x1A1C1A17), blurRadius: 2, offset: Offset(0, 1)),
+    BoxShadow(color: Color(0x1A1C1A17), blurRadius: 12, offset: Offset(0, 4)),
+    BoxShadow(color: Color(0x121C1A17), blurRadius: 28, offset: Offset(0, 12)),
+  ];
 
   /// Shared corner radius for card-style panels and the header.
   static const cardRadius = 8.0;
 
-  // --- Board inset (dark) — [SplitFlapText]'s flap cells only ---------
+  // --- Board inset (dark) — [SplitFlapText]'s flap cells only -------------
+  // Slated for removal once SplitFlapText/the MRZ strip are deleted (see
+  // class doc) — both still reference these as of this pass, so they stay
+  // defined until that follow-up lands.
 
-  /// The flap cells' own dark surface — deliberately **not** reused for
-  /// anything else on the page (not even the MRZ strip anymore, see the
-  /// class doc). Each flap cell is small and individually mechanical-
-  /// looking, which reads as intentional in a way one big dark rectangle
-  /// didn't.
   static const boardBg = Color(0xFF17191B);
-
-  /// The flap's physical center crease in [SplitFlapText]'s cells.
   static const boardSeam = Color(0x59000000);
-
-  /// Flap-cell letter color — only ever sits on [boardBg], never on a
-  /// ticket surface.
   static const boardAmber = Color(0xFFF2A93B);
 
-  // Advisory levels 1–4, low to high risk — back to darker, light-card-
-  // tuned values now that every card is light again.
-  static const advisoryLevel1 = Color(0xFF2E6B4F);
-  static const advisoryLevel2 = Color(0xFF9A6714);
-  static const advisoryLevel3 = Color(0xFFB4551D);
-  static const advisoryLevel4 = Color(0xFF96262B);
+  /// Old single-accent token — still referenced by [mrzStrong] until the
+  /// MRZ strip is removed. Every other former consumer has moved to
+  /// [gold] or [navy], whichever the mockup's equivalent element actually
+  /// uses (they diverge — see [gold]'s doc comment).
+  static const ticketRust = Color(0xFF8E5A0B);
+
+  // Advisory levels 1–4, low to high risk — per trip-dashboard-v3.html's
+  // `.adv-bar-l1`..`l4` (level 2 uses [gold], not a separate amber — that
+  // was the old palette's choice, not this one's).
+  static const advisoryLevel1 = Color(0xFF2A7A4B);
+  static const advisoryLevel2 = Color(0xFFC4850A);
+  static const advisoryLevel3 = Color(0xFFB85020);
+  static const advisoryLevel4 = Color(0xFF8B2020);
 
   static Color advisoryColor(int level) => switch (level) {
         1 => advisoryLevel1,
@@ -105,28 +166,34 @@ class CountryTheme {
     return HSLColor.fromAHSL(1.0, hue, 0.42, 0.90).toColor();
   }
 
-  // --- Text styles -----------------------------------------------------
+  // --- Text styles ---------------------------------------------------------
 
   static const _archivo = 'Archivo';
   static const _publicSans = 'Public Sans';
   static const _mono = 'IBM Plex Mono';
+  static const _cormorant = 'Cormorant Garamond';
+  static const _libreBaskerville = 'Libre Baskerville';
+  static const _courierPrime = 'Courier Prime';
 
-  /// The big country name (.cname) — unused now that [SplitFlapText]
-  /// renders the header's name as individual flap cells instead of a
-  /// single `Text`; kept rather than deleted in case a plain-text name
-  /// rendering is wanted somewhere else later (a share card, a list row).
+  /// The big country name. Was unused (SplitFlapText rendered the header's
+  /// name as individual flap cells instead) — back in use once that's
+  /// removed and the header goes back to plain text, per the mockup's
+  /// `.tk-name`. Defaults to [ink]; the header overrides to [onNavy] via
+  /// `.copyWith` since it sits on the navy block, not a light surface.
   static TextStyle countryName(double fontSize) => TextStyle(
-        fontFamily: _archivo,
-        fontWeight: FontWeight.w800,
+        fontFamily: _libreBaskerville,
+        fontWeight: FontWeight.w700,
         fontSize: fontSize,
-        height: 1.02,
-        letterSpacing: fontSize * -0.028,
+        height: 1.1,
+        letterSpacing: fontSize * -0.01,
         color: ink,
       );
 
-  /// Native name + romanization (.native / .native em) — sits directly on
-  /// the header's [card] surface now (the header stopped being a dark
-  /// panel this pass), so this is [inkSoft], not a header-only token.
+  /// Native name + romanization (`.native`/`.native em`) — **not updated
+  /// this pass**. Still styled for the header's old light-card surface;
+  /// still referenced by [CountryHeader] as-is until that widget's own
+  /// restyle (its own follow-up step) moves it onto the new navy block and
+  /// switches these to [onNavy]/[onNavyMuted].
   static const nativeName = TextStyle(
     fontFamily: _publicSans,
     fontSize: 12.5,
@@ -139,19 +206,70 @@ class CountryTheme {
     color: inkSoft,
   );
 
-  /// Small caps-style mono labels used throughout the page — section
-  /// headings, and anywhere else a "field label" tone is wanted.
+  /// The ticket header's native name, on the navy block — [onNavySoft]/
+  /// [onNavyMuted] rather than the light-surface [nativeName] above.
+  /// Unused until [CountryHeader]'s restyle lands.
+  static const ticketNativeName = TextStyle(
+    fontFamily: _courierPrime,
+    fontSize: 11,
+    letterSpacing: 0.4,
+    color: onNavyMuted,
+  );
+
+  /// The ticket stub's field label ("LOCAL TIME", "$1 USD" — `.tk-f-label`).
+  /// Unused until [CountryHeader]'s restyle lands.
+  static const ticketStubLabel = TextStyle(
+    fontFamily: _courierPrime,
+    fontSize: 8,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 1.1,
+    color: inkSoft,
+  );
+
+  /// The ticket stub's big value ("19:42", "€0.92" — `.tk-f-val`).
+  /// Unused until [CountryHeader]'s restyle lands.
+  static const ticketStubValue = TextStyle(
+    fontFamily: _cormorant,
+    fontWeight: FontWeight.w700,
+    fontSize: 22,
+    color: navy,
+  );
+
+  /// The ticket stub's small subtitle ("Aug 12 · UTC+3" — `.tk-f-sub`).
+  /// Unused until [CountryHeader]'s restyle lands.
+  static const ticketStubSub = TextStyle(
+    fontFamily: _courierPrime,
+    fontSize: 10,
+    color: inkSoft,
+  );
+
+  /// The ticket stub's "Convert →" link (`.tk-f-link`).
+  /// Unused until [CountryHeader]'s restyle lands.
+  static const ticketStubLink = TextStyle(
+    fontFamily: _courierPrime,
+    fontSize: 10,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0.3,
+    color: navy,
+  );
+
+  /// Small caps-style mono labels — section headings, and anywhere else a
+  /// "field label" tone is wanted. **Recolored this pass**: [inkSoft], not
+  /// [ticketRust]/[gold] — the mockup's `.s-label` uses its muted `--ink-3`
+  /// tone, not the warm accent (see [gold]'s doc comment on why that
+  /// accent is reserved for specific elements, not every label).
   static const sectionLabel = TextStyle(
-    fontFamily: _mono,
+    fontFamily: _courierPrime,
     fontSize: 10,
     fontWeight: FontWeight.w600,
     letterSpacing: 1.5,
-    color: ticketRust,
+    color: inkSoft,
   );
 
-  /// The "Right now" live strip — a small mono label, a big bold value,
-  /// and a muted subtitle, stacked per column. Back on a light [card]
-  /// surface this pass, so `liveValue` is [ink] again, not [boardAmber].
+  /// The "Right now" live strip's styles — **not updated this pass**.
+  /// [RightNowStrip] is being retired (its content folds into the header's
+  /// ticket stub — see [ticketStubLabel] etc. above) rather than reskinned,
+  /// so these stay exactly as they were until that follow-up deletes them.
   static const liveLabel = TextStyle(
     fontFamily: _mono,
     fontSize: 9.5,
@@ -171,43 +289,53 @@ class CountryTheme {
     color: inkSoft,
   );
 
-  /// Shared list-row styling — used by the cities list and Travel Info.
+  /// Shared list-row title — city names, advisory issuing authority, visa
+  /// nationality line, best-time months. **Recolored this pass**: Libre
+  /// Baskerville bold, not Public Sans — every one of these is a
+  /// "heading/proper-noun" role the mockup consistently gives to Libre
+  /// Baskerville (`.city-name`, `.s-head`, `.wotd-word`, `.tk-name`).
   static const listRowTitle = TextStyle(
-    fontFamily: _publicSans,
-    fontWeight: FontWeight.w600,
+    fontFamily: _libreBaskerville,
+    fontWeight: FontWeight.w700,
     fontSize: 14.5,
     color: ink,
   );
+
+  /// Shared list-row meta — population counts, city sub-labels.
+  /// **Recolored this pass**: Courier Prime, matching `.city-meta`.
   static const listRowMeta = TextStyle(
-    fontFamily: _publicSans,
+    fontFamily: _courierPrime,
     fontSize: 11.5,
     color: inkSoft,
   );
 
-  /// Small mono index/footer text (city numbering, the "Verified ·
-  /// Source" line) — [ticketRust], not neutral grey, so these small mono
-  /// labels read as the same accent family as section headings and links.
+  /// Small mono index/footer text (city numbering, the "Verified `<date>`
+  /// · Source" line). A shared muted-mono default — some call sites (the
+  /// city star, a future emergency-stamp red) intentionally override the
+  /// color per-instance rather than this token trying to cover every one
+  /// of the mockup's more differentiated label colors (`--rule` for city
+  /// numbers, `--ink-3` for "Verified", `--red` for a prohibited-item
+  /// label) — same pattern the code already used before this pass.
   static const listRowIndex = TextStyle(
-    fontFamily: _mono,
+    fontFamily: _courierPrime,
     fontSize: 10,
-    color: ticketRust,
-  );
-
-  /// Body copy — advisory and visa summaries, prohibited-item notes.
-  /// Deliberately neutral [inkSoft], not [ticketRust] — amber-colored
-  /// paragraphs of real reading text would be tiring and gimmicky.
-  static const listRowDetail = TextStyle(
-    fontFamily: _publicSans,
-    fontSize: 13.5,
     color: inkSoft,
   );
 
-  /// MRZ strip — monospace; `strong` variant for the bracketed data
-  /// tokens. Moved off the dark [boardBg]/[boardAmber] pair onto the
-  /// light-surface accent this pass (2026-08-11) — the strip's solid
-  /// dark background read as a stray leftover dark-theme fragment once
-  /// the rest of the header went light, not an intentional design piece.
-  /// Only [SplitFlapText]'s flap cells keep the dark board treatment now.
+  /// Body copy — advisory and visa summaries, prohibited-item notes,
+  /// best-time reasons. **Recolored this pass**: [inkBody], not [inkSoft]
+  /// — this is real paragraph text (the mockup's `--ink-2`), not a
+  /// label/meta tone; [inkSoft] stays reserved for the muted/secondary
+  /// role most other tokens above use it for.
+  static const listRowDetail = TextStyle(
+    fontFamily: _publicSans,
+    fontSize: 13.5,
+    color: inkBody,
+  );
+
+  /// MRZ strip styles — **not updated this pass**. Slated for removal
+  /// alongside the MRZ strip itself (see class doc); [ticketRust] stays
+  /// defined only because this still references it.
   static const mrz = TextStyle(
     fontFamily: _mono,
     fontSize: 10.5,
@@ -222,9 +350,12 @@ class CountryTheme {
     color: ticketRust,
   );
 
-  /// Tab pill label text.
+  /// Tab pill label text. **Recolored this pass** (font family only, to
+  /// Courier Prime) — the mockup's single-tab comp doesn't show tab pills
+  /// at all, so this is an extrapolation to keep the mono-label language
+  /// consistent, not a direct match.
   static const pillLabel = TextStyle(
-    fontFamily: _mono,
+    fontFamily: _courierPrime,
     fontSize: 11.5,
     height: 1,
   );

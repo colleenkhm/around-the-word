@@ -9,6 +9,11 @@ import '../../theme/country_theme.dart';
 /// converter link). Extracted 2026-08-11 from what was a Travel-Info-only
 /// private `_LinkLabel`, once a second call site needed the identical
 /// look rather than a second copy of it.
+///
+/// Color is [CountryTheme.navy], not an accent — matches
+/// `trip-dashboard-v3.html`'s `.tk-f-link`/`.src-row a`, both navy (2026-08-15;
+/// see [CountryTheme.gold]'s doc comment on why gold isn't the default link
+/// color in the new palette).
 class ExternalLink extends StatelessWidget {
   final String label;
   final String url;
@@ -28,11 +33,11 @@ class ExternalLink extends StatelessWidget {
               fontFamily: 'Public Sans',
               fontWeight: FontWeight.w600,
               fontSize: 11.5,
-              color: CountryTheme.ticketRust,
+              color: CountryTheme.navy,
             ),
           ),
           const SizedBox(width: 2),
-          const Icon(Icons.arrow_outward, size: 11, color: CountryTheme.ticketRust),
+          const Icon(Icons.arrow_outward, size: 11, color: CountryTheme.navy),
         ],
       ),
     );
