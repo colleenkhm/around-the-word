@@ -70,10 +70,15 @@ flutter:
     - assets/data/bundles/
 
   # Bundled locally rather than fetched at runtime (e.g. via a Google
-  # Fonts package) so the country-page visual identity — Archivo for
-  # display type, Public Sans for body, IBM Plex Mono for the
-  # passport-document labels/MRZ strip — holds up under this app's
-  # offline-first requirement (see client design doc's Offline Behavior).
+  # Fonts package) so the country-page visual identity holds up under this
+  # app's offline-first requirement (see client design doc's Offline
+  # Behavior). Archivo/Public Sans/IBM Plex Mono were the light "ticket
+  # stock" theme's fonts; Cormorant Garamond/Libre Baskerville/Courier
+  # Prime were added 2026-08-15 for the navy/gold "boarding pass" restyle
+  # (built against trip-dashboard-v3.html) that replaces it — see
+  # CountryTheme's class doc. Left the first three in place rather than
+  # removing them: unconfirmed whether anything outside the country page
+  # (Language tab, search flow) still depends on them.
   fonts:
     - family: Archivo
       fonts:
@@ -106,6 +111,30 @@ flutter:
           weight: 500
         - asset: assets/fonts/IBMPlexMono-SemiBold.ttf
           weight: 600
+    - family: Cormorant Garamond
+      fonts:
+        - asset: assets/fonts/CormorantGaramond-Variable.ttf
+          weight: 600
+        - asset: assets/fonts/CormorantGaramond-Variable.ttf
+          weight: 700
+        - asset: assets/fonts/CormorantGaramond-Italic-Variable.ttf
+          weight: 600
+          style: italic
+    - family: Libre Baskerville
+      fonts:
+        - asset: assets/fonts/LibreBaskerville-Variable.ttf
+          weight: 400
+        - asset: assets/fonts/LibreBaskerville-Variable.ttf
+          weight: 700
+        - asset: assets/fonts/LibreBaskerville-Italic-Variable.ttf
+          weight: 400
+          style: italic
+    - family: Courier Prime
+      fonts:
+        - asset: assets/fonts/CourierPrime-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/CourierPrime-Bold.ttf
+          weight: 700
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
