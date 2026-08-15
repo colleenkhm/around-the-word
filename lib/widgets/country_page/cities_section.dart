@@ -3,15 +3,22 @@ import 'package:flutter/material.dart';
 import '../../models/country_bundle.dart';
 import '../../theme/country_theme.dart';
 import '../../utils/format_population.dart';
-import 'divided_card.dart';
-import 'section_heading.dart';
 
 /// The Overview tab's Cities section — informational only in V1, not yet
 /// linking to a dedicated city page (client design doc). The chevron on
 /// each row is a visual affordance for that future page; tapping does
-/// nothing right now (confirmed 2026-08-10), so rows are deliberately
-/// plain `Row`s rather than wrapped in `InkWell`/`GestureDetector` — no
-/// ripple feedback that would suggest a tap does something it doesn't.
+/// nothing right now (confirmed 2026-08-10, reconfirmed during the
+/// 2026-08-15 restyle), so rows are deliberately plain `Row`s rather than
+/// wrapped in `InkWell`/`GestureDetector` — no ripple feedback that would
+/// suggest a tap does something it doesn't.
+///
+/// **2026-08-15**: replaced the shared [SectionHeading]/[DividedCard]
+/// composition every other Overview section still uses with a
+/// self-contained card — a navy "CITIES · N destinations" header bar
+/// above the row list, matching `trip-dashboard-v3.html`'s
+/// `.cities-card`/`.cities-hdr`. Cities is the only section the mockup
+/// gives this dark-header treatment to; the rest keep the plain
+/// [SectionHeading] label as their own restyles land.
 class CitiesSection extends StatelessWidget {
   final List<City> cities;
 
@@ -32,21 +39,69 @@ class CitiesSection extends StatelessWidget {
     final sorted = [...cities]
       ..sort((a, b) => a.isFeatured == b.isFeatured ? 0 : (a.isFeatured ? -1 : 1));
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionHeading('Cities'),
-        DividedCard(
+    // Outer Container carries the shadow undipped; the inner ClipRRect
+    // does the actual corner/header clipping — combining both in one
+    // BoxDecoration would clip the shadow away along with the corners.
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      decoration: const BoxDecoration(boxShadow: CountryTheme.cardShadow),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(CountryTheme.cardRadius),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            for (var i = 0; i < sorted.length; i++)
-              _CityRow(
-                index: i + 1,
-                city: sorted[i],
-                isCapital: sorted[i].name == capital,
+            _CitiesHeader(count: sorted.length),
+            ColoredBox(
+              color: CountryTheme.card,
+              child: Column(
+                children: [
+                  for (var i = 0; i < sorted.length; i++)
+                    _CityRow(
+                      index: i + 1,
+                      city: sorted[i],
+                      isCapital: sorted[i].name == capital,
+                      isLast: i == sorted.length - 1,
+                    ),
+                ],
               ),
+            ),
           ],
         ),
-      ],
+      ),
+    );
+  }
+}
+
+class _CitiesHeader extends StatelessWidget {
+  final int count;
+
+  const _CitiesHeader({required this.count});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: CountryTheme.navy,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'CITIES',
+            style: CountryTheme.sectionLabel.copyWith(
+              color: CountryTheme.onNavySoft,
+              letterSpacing: 1.8,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Text(
+            '$count destination${count == 1 ? '' : 's'}',
+            style: CountryTheme.listRowMeta.copyWith(
+              color: CountryTheme.onNavyMuted,
+              letterSpacing: 0.4,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -55,11 +110,13 @@ class _CityRow extends StatelessWidget {
   final int index;
   final City city;
   final bool isCapital;
+  final bool isLast;
 
   const _CityRow({
     required this.index,
     required this.city,
     required this.isCapital,
+    required this.isLast,
   });
 
   @override
@@ -69,14 +126,20 @@ class _CityRow extends StatelessWidget {
       if (city.population != null) formatPopulation(city.population!),
     ];
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 11, 15, 11),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+      decoration: isLast
+          ? null
+          : BoxDecoration(
+              border: Border(bottom: BorderSide(color: CountryTheme.ink.withValues(alpha: 0.07))),
+            ),
       child: Row(
         children: [
           SizedBox(
             width: 18,
             child: Text(index.toString().padLeft(2, '0'), style: CountryTheme.listRowIndex),
           ),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,7 +151,7 @@ class _CityRow extends StatelessWidget {
                     Text(city.name, style: CountryTheme.listRowTitle),
                     if (city.isFeatured) ...[
                       const SizedBox(width: 5),
-                      Text('★', style: TextStyle(color: CountryTheme.gold, fontSize: 10)),
+                      Text('★', style: TextStyle(color: CountryTheme.gold, fontSize: 11)),
                     ],
                   ],
                 ),
@@ -99,7 +162,7 @@ class _CityRow extends StatelessWidget {
               ],
             ),
           ),
-          Icon(Icons.chevron_right, size: 18, color: CountryTheme.inkSoft),
+          Icon(Icons.chevron_right, size: 18, color: CountryTheme.rule),
         ],
       ),
     );
