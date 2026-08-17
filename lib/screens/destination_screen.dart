@@ -3,6 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../models/country.dart';
 import '../state/trip_selection.dart';
+import '../theme/country_theme.dart';
+import '../widgets/country_page/dashed_divider.dart';
+import '../widgets/country_page/paper_texture.dart';
+import '../widgets/country_page/site_header.dart';
+import 'about_screen.dart';
 import 'coming_soon_screen.dart';
 import 'country_header_preview_screen.dart';
 
@@ -20,6 +25,17 @@ import 'country_header_preview_screen.dart';
 /// That flow still exists — it's the Language tab's sub-flow now, reached
 /// from within the country page, per the pivot-3 docs' five-tab shape — it
 /// just isn't the first thing a destination tap leads to anymore.
+///
+/// **Same chrome as the country page now** (2026-08-17, per Colleen: "all
+/// pages follow the same general stylings/theme as the country page") —
+/// `PaperTexture` background, `SiteHeader` at the top (About only; no
+/// `onHomeTap`, since this *is* home already), ticket typography for the
+/// title/search/results. `SafeArea(top: false)` deliberately, matching
+/// `CountryHeaderPreviewScreen` — `SiteHeader` insets its own content by
+/// the status-bar height, so a normal `SafeArea` here would double that
+/// gap. Most other screens weren't hand-restyled this way; they inherit
+/// the app-wide theme in `main.dart` instead — see that file's doc
+/// comment on the scope call.
 class DestinationScreen extends StatefulWidget {
   const DestinationScreen({super.key});
 
@@ -55,7 +71,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
     final trip = context.watch<TripSelection>();
 
     if (trip.loadingReferenceData) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: PaperTexture(child: Center(child: CircularProgressIndicator())));
     }
 
     final results = _query.isEmpty
@@ -65,56 +81,69 @@ class _DestinationScreenState extends State<DestinationScreen> {
             .toList();
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+      body: PaperTexture(
+        child: SafeArea(
+          top: false,
           child: Column(
             children: [
-              const SizedBox(height: 32),
-              Text(
-                'Where are you going?',
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              TextField(
-                controller: _searchController,
-                decoration: const InputDecoration(
-                  labelText: 'Search countries',
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(),
+              SiteHeader(
+                onAboutTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const AboutScreen()),
                 ),
-                onChanged: (value) => setState(() => _query = value),
               ),
-              const SizedBox(height: 8),
               Expanded(
-                child: results.isNotEmpty
-                    ? ListView.separated(
-                        itemCount: results.length,
-                        separatorBuilder: (context, index) =>
-                            const Divider(height: 1),
-                        itemBuilder: (context, index) {
-                          final country = results[index];
-                          return ListTile(
-                            title: Text(country.name),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => _selectCountry(trip, country),
-                          );
-                        },
-                      )
-                    // Decorative filler when there's no search in progress —
-                    // just to have a little more on the page than a bare
-                    // search field.
-                    : Center(
-                        child: Icon(
-                          Icons.public,
-                          size: 160,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withValues(alpha: 0.25),
-                        ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 32),
+                      // Reusing CountryTheme.countryName here — same big
+                      // serif "ticket" look, not a country-specific style
+                      // despite the name (see that method's doc comment).
+                      Text(
+                        'Where are you going?',
+                        style: CountryTheme.countryName(28),
+                        textAlign: TextAlign.center,
                       ),
+                      const SizedBox(height: 24),
+                      TextField(
+                        controller: _searchController,
+                        style: const TextStyle(fontFamily: 'Public Sans', color: CountryTheme.ink),
+                        decoration: const InputDecoration(
+                          labelText: 'Search countries',
+                          prefixIcon: Icon(Icons.search, color: CountryTheme.inkSoft),
+                        ),
+                        onChanged: (value) => setState(() => _query = value),
+                      ),
+                      const SizedBox(height: 8),
+                      Expanded(
+                        child: results.isNotEmpty
+                            ? ListView.separated(
+                                itemCount: results.length,
+                                separatorBuilder: (context, index) => const DashedDivider(),
+                                itemBuilder: (context, index) {
+                                  final country = results[index];
+                                  return ListTile(
+                                    title: Text(country.name, style: CountryTheme.listRowTitle),
+                                    trailing: const Icon(Icons.chevron_right, color: CountryTheme.rule),
+                                    onTap: () => _selectCountry(trip, country),
+                                  );
+                                },
+                              )
+                            // Decorative filler when there's no search in
+                            // progress — just to have a little more on the
+                            // page than a bare search field.
+                            : Center(
+                                child: Icon(
+                                  Icons.public,
+                                  size: 160,
+                                  color: CountryTheme.navy.withValues(alpha: 0.15),
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
