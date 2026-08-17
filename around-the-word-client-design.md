@@ -18,6 +18,7 @@
 - **Word of the Day** — dashboard widget and lock-screen notification; the app's namesake feature
 - **Trip dashboards** (phase 2) — days until trip, checklists, pinned content, multi-country itineraries
 - **Social layer** (phase 3) — shared trips, group planning, friends' advice
+- **Trip diary & photo feed** (phase 3+, not yet scoped) — a diary of photos and notes per trip activity, calendar-style layout floated as one option; entries marked public surface in a scrollable photo feed on that country/city/activity page, for other users still deciding where to go. Builds on trip dashboards (phase 2) and the social layer (phase 3). See Roadmap and Open Questions.
 
 **The differentiator** is not exclusive information — most of it is findable across fifteen browser tabs. It's aggregation plus verification: everything a traveler needs in one place, checked against firsthand experience, framed around an actual trip.
 
@@ -130,6 +131,8 @@ These are UX-facing consequences of decisions documented fully in the data archi
 
 **V5 — social layer.** Shared trips, group planning, friends' advice, liking phrases that came in handy. Builds on V2 accounts.
 
+**V5+ — trip diary & photo feed.** Users keep a diary of photos and notes from trip activities (calendar-style layout is one option, not decided). Entries marked public feed into a scrollable photo feed on the relevant country/city/activity page — a browsing tool for travelers still deciding where to go, distinct from the private trip-planning use of V3's dashboards. Builds on V3 trips and V5 social; not yet scoped (data model, photo storage, moderation/privacy all open — see data architecture doc's Open Decisions).
+
 **Later, master's-dependent:** personalized, itinerary-aware lesson generation drawing on real SLA theory. See the career doc.
 
 ---
@@ -140,3 +143,4 @@ These are UX-facing consequences of decisions documented fully in the data archi
 - **Cache staleness UI** — how prominently to surface "this was verified in March" without making the app feel unreliable. Matters most for advisories and visas.
 - ~~**Local storage package**~~ — **resolved:** key-value/object store (Hive or a Hive-alternative like `hive_ce`/`sembast`), not sqflite. `CountryBundle` is cached and read as a single denormalized whole with no on-device relational queries in V1, so a key–blob store matches the access pattern without redundant re-normalization. Would flip only if a later phase (spaced repetition progress, checklist queries, pinned-content filtering) needs on-device relational queries — sqflite/`drift` becomes the better fit then.
 - ~~**Coming-soon resource links**~~ — **resolved:** shared generic set by default, with a `coming_soon_resources` table (see data architecture doc) supporting per-country override at any time — no usage threshold required. Adding a couple of good links for an uncovered country (e.g. Sweden) the moment they surface is enough to override the generic set for that country alone; the fallback stays generic for everything else.
+- **Trip diary / photo feed** (added 2026-08-17) — Colleen wants, in a later iteration, a trip diary where users post photos and notes from the different activities they did on a trip, possibly calendar-style. Anything an entry's author marks public would show up in a photo feed scoped to that country/city/activity, for other users to scroll while deciding where to go. Open before this is buildable: whether the diary is calendar-first or list-first UI, what "activity" ties an entry to (a `trip_pin`? a `points_of_interest` row? freeform?), how the feed is scoped/paginated per country vs. city vs. activity, and moderation/privacy (review before feed-eligible, report/takedown, who can see whose public photos). See data architecture doc's Open Decisions for the schema-side version of this note.

@@ -88,6 +88,27 @@ All of the above runs **server-side in a Supabase Edge Function**, never
 from the Flutter client — key security, and the State Dept API's bot
 detection specifically requires it.
 
+## Versioning
+
+Established 2026-08-17, since Colleen was new to versioning and the
+`pubspec.yaml` `version:` field was still the untouched `flutter create`
+default (`1.0.0+1`).
+
+- **Semver in the `version:` field** (`MAJOR.MINOR.PATCH+BUILD`) — patch for
+  fixes, minor for new features, major for a breaking/reset-expectations
+  moment. The `+BUILD` number is separate from semver and bumps by 1 on
+  every build handed to anyone (TestFlight, an APK sent to a friend),
+  regardless of whether the version name changed.
+- **Stay in `0.x.y` through all of pre-V1 development.** `1.0.0` is reserved
+  for the day V1 actually ships to real travelers (see Current Plan above)
+  — that first jump should be a deliberate marker, not a default nobody
+  chose. Currently `0.1.0+1` ([pubspec.yaml](pubspec.yaml)).
+- **[CHANGELOG.md](CHANGELOG.md)** logs one entry per version bump —
+  user-facing changes only ("what would a tester/traveler notice"), not a
+  commit-by-commit log. Distinct from [HANDOFF.md](HANDOFF.md), which logs
+  *why* a technical decision was made; CHANGELOG.md logs *what shipped and
+  when*.
+
 ## External context (why the app is scoped the way it is)
 
 - This ties to Colleen's existing **nightglow.studio** stack/experience.
