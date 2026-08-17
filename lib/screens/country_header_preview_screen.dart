@@ -3,24 +3,35 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
+import '../models/country.dart' as country_model;
 import '../models/country_bundle.dart';
 import '../models/live_data.dart';
 import '../models/travel_info.dart';
 import '../theme/country_theme.dart';
 import '../utils/hex_color.dart';
+import 'about_screen.dart';
+import 'destination_screen.dart';
 import '../widgets/country_page/best_times_section.dart';
 import '../widgets/country_page/cities_section.dart';
 import '../widgets/country_page/country_header.dart';
 import '../widgets/country_page/language_pair_section.dart';
 import '../widgets/country_page/paper_texture.dart';
 import '../widgets/country_page/practical_norms_section.dart';
+import '../widgets/country_page/site_header.dart';
 import '../widgets/country_page/travel_info_section.dart';
 
-/// Temporary review screen for the Overview tab, built up one section at a
-/// time against real (Costa Rica) mock data — not part of the real
-/// navigation flow. Remove once CountryPageScreen exists and hosts these
-/// sections for real. Swapped in as main.dart's `home` for now
-/// specifically so this is what `flutter run` shows during review.
+/// The country page — reached directly from `DestinationScreen` when an
+/// `active` country is tapped, standing in for the real multi-tab
+/// `CountryPageScreen` (Overview/Explore/Guide/Travel Info/Language) until
+/// that's built. Started as a Costa-Rica-only "review screen for the
+/// Overview tab" while sections were being built up one at a time; wired
+/// for real navigation 2026-08-17 (per Colleen: clicking a country should
+/// go straight here, not to the old `CategorySelectionScreen` checkboxes)
+/// so it now takes whichever [country_model.Country] was tapped rather than
+/// assuming Costa Rica. Only `assets/data/bundles/cr.json` actually exists
+/// today, so Costa Rica is still the only country this can render — but the
+/// only other `active: true` country would need is a matching bundle file,
+/// no code change.
 ///
 /// **Section order** (2026-08-15, matching `trip-dashboard-v3.html` as
 /// closely as the existing architecture allows): ticket header → Travel
@@ -33,7 +44,9 @@ import '../widgets/country_page/travel_info_section.dart';
 /// positions. Kept as one unit, placed early for the same "can I even go"
 /// prominence the mockup gives Visa/Entry.
 class CountryHeaderPreviewScreen extends StatefulWidget {
-  const CountryHeaderPreviewScreen({super.key});
+  final country_model.Country country;
+
+  const CountryHeaderPreviewScreen({super.key, required this.country});
 
   @override
   State<CountryHeaderPreviewScreen> createState() =>
@@ -43,6 +56,7 @@ class CountryHeaderPreviewScreen extends StatefulWidget {
 class _CountryHeaderPreviewScreenState
     extends State<CountryHeaderPreviewScreen> {
   CountryBundle? _bundle;
+  bool _loadFailed = false;
   CountryTab _activeTab = CountryTab.overview;
 
   @override
@@ -52,10 +66,20 @@ class _CountryHeaderPreviewScreenState
   }
 
   Future<void> _load() async {
-    final raw = await rootBundle.loadString('assets/data/bundles/cr.json');
-    setState(() {
-      _bundle = CountryBundle.fromJson(jsonDecode(raw) as Map<String, dynamic>);
-    });
+    final code = widget.country.countryCode.toLowerCase();
+    try {
+      final raw = await rootBundle.loadString('assets/data/bundles/$code.json');
+      setState(() {
+        _bundle = CountryBundle.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+      });
+    } catch (error) {
+      // Shouldn't happen in practice — DestinationScreen only routes here
+      // for `active` countries, and today that's Costa Rica alone — but
+      // this screen now takes an arbitrary Country, so a missing bundle
+      // file (rather than an infinite spinner) needs somewhere to go.
+      debugPrint('No bundle for $code: $error');
+      setState(() => _loadFailed = true);
+    }
   }
 
   /// US State Department only, for now (per Colleen, 2026-08-11) — the
@@ -103,11 +127,31 @@ class _CountryHeaderPreviewScreenState
     return Scaffold(
       backgroundColor: _pageBackground(bundle),
       body: PaperTexture(
-        child: bundle == null
+        child: _loadFailed
+            ? _LoadFailedView(country: widget.country)
+            : bundle == null
             ? const Center(child: CircularProgressIndicator())
+            // `top: false` — SiteHeader's gold now paints all the way to
+            // the physical top edge instead of leaving a gap in `paper`
+            // above it (see Colleen, 2026-08-17). SiteHeader insets its
+            // own content by the status-bar height so nothing sits behind
+            // the notch/clock — only the color extends, not the content.
             : SafeArea(
+              top: false,
               child: Column(
                 children: [
+                  SiteHeader(
+                    // Clears the nav stack rather than a plain push — "back
+                    // to home" should hold regardless of how deep the user
+                    // is in the flow, not just undo the last screen.
+                    onHomeTap: () => Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const DestinationScreen()),
+                      (route) => false,
+                    ),
+                    onAboutTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const AboutScreen()),
+                    ),
+                  ),
                   CountryHeader(
                     bundle: bundle,
                     // Grows one tab at a time as each screen actually gets
@@ -116,10 +160,12 @@ class _CountryHeaderPreviewScreenState
                     tabs: const [CountryTab.overview],
                     activeTab: _activeTab,
                     onTabSelected: (tab) => setState(() => _activeTab = tab),
-                    // Costa Rica has no curated native-name/romanization
-                    // data yet — see CountryHeader's doc comment on why
-                    // these are constructor params, not bundle fields.
-                    nativeName: 'Costa Rica',
+                    // No country has curated native-name/romanization data
+                    // yet (see CountryHeader's doc comment on why these are
+                    // constructor params, not bundle fields) except this
+                    // one hardcoded Costa Rica value, carried over from
+                    // when this screen only ever rendered Costa Rica.
+                    nativeName: widget.country.countryCode == 'CR' ? 'Costa Rica' : null,
                     nativeNameRomanized: null,
                     utcOffsetMinutes: bundle.facts.utcOffsetMinutes,
                     // Mock instance, not bundle data — currency conversion
@@ -164,15 +210,6 @@ class _CountryHeaderPreviewScreenState
                           BestTimesSection(bestTimes: bundle.guide.bestTimes),
                           const SizedBox(height: 18),
                           PracticalNormsSection(norms: bundle.guide.practicalNorms),
-                          const SizedBox(height: 24),
-                          Text(
-                            '(Explore/Guide/Language tabs not built yet — '
-                            'Overview is the only tab this screen previews.)',
-                            style: TextStyle(
-                              color: CountryTheme.inkSoft,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -180,6 +217,44 @@ class _CountryHeaderPreviewScreenState
                 ],
               ),
             ),
+      ),
+    );
+  }
+}
+
+/// Shown in place of the page when no bundle file exists for the tapped
+/// country — see `_load`'s catch clause. Not styled to match the ticket
+/// theme; this is a "shouldn't happen" fallback, not a designed state.
+class _LoadFailedView extends StatelessWidget {
+  final country_model.Country country;
+
+  const _LoadFailedView({required this.country});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Couldn't load content for ${country.name}.",
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const DestinationScreen()),
+                  (route) => false,
+                ),
+                child: const Text('Back to search'),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

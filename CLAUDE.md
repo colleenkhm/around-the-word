@@ -152,6 +152,13 @@ default (`1.0.0+1`).
   building, and why. Update this when a non-obvious technical call gets made
   (data modeling, navigation structure, scope cuts), not for routine code
   changes.
+- [design-preferences.md](design-preferences.md) — Colleen's visual/design
+  taste (color, typography, spacing, working style during UI iteration),
+  kept separate from the decision log above because it's meant to inform
+  *new* design work, not just explain past changes. **Read before making a
+  UI/visual call on request**, same as this doc gets read for product
+  scope. Update it when a genuinely new preference surfaces, not for every
+  individual color/spacing tweak.
 - [language-app-system-design.md](language-app-system-design.md) and
   [app-design-doc.md](app-design-doc.md) — superseded, kept as history only.
   Don't update these except to add a superseded-notice if something *else*

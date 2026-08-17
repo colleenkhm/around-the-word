@@ -51,8 +51,12 @@ class CitiesSection extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _CitiesHeader(count: sorted.length),
+            // aged, not card — card is the exact same hex as the page
+            // background (see its doc comment), which read as flat/
+            // AI-esque with only the shadow above to separate this from
+            // the page (2026-08-17, per Colleen).
             ColoredBox(
-              color: CountryTheme.card,
+              color: CountryTheme.aged,
               child: Column(
                 children: [
                   for (var i = 0; i < sorted.length; i++)

@@ -86,8 +86,11 @@ class _LanguagesCard extends StatelessWidget {
       decoration: const BoxDecoration(boxShadow: CountryTheme.cardShadow),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(CountryTheme.cardRadius),
+        // aged, not card — see CitiesSection's identical fix (2026-08-17,
+        // per Colleen); `_WordOfDayCard` alongside this one is unaffected,
+        // it's already navy.
         child: ColoredBox(
-          color: CountryTheme.card,
+          color: CountryTheme.aged,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(13, 12, 13, 13),
             child: Column(
@@ -175,7 +178,9 @@ class _WordOfDayCard extends StatelessWidget {
         child: Stack(
           children: [
             const Positioned.fill(child: ColoredBox(color: CountryTheme.navy)),
-            const Positioned(top: 0, left: 0, right: 0, child: SizedBox(height: 3, child: ColoredBox(color: CountryTheme.gold))),
+            // terracotta, not gold — see that token's doc comment
+            // (2026-08-17, gold-on-navy here read as "corporate").
+            const Positioned(top: 0, left: 0, right: 0, child: SizedBox(height: 3, child: ColoredBox(color: CountryTheme.terracotta))),
             Padding(
               padding: const EdgeInsets.fromLTRB(13, 12, 13, 13),
               child: Column(
@@ -226,21 +231,26 @@ class _WordOfDayCard extends StatelessWidget {
                     ),
                   ],
                   const SizedBox(height: 10),
-                  // Static, not tappable — see class doc.
+                  // Static, not tappable — see class doc. terracotta, not
+                  // gold — see that token's doc comment (2026-08-17).
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
                     decoration: BoxDecoration(
-                      color: CountryTheme.gold,
+                      color: CountryTheme.terracotta,
                       borderRadius: BorderRadius.circular(3),
                     ),
                     child: Text(
                       languageName == null ? 'Learn more →' : 'Learn $languageName →',
+                      // onNavy (white), not navy — navy-on-gold had ~3.9:1
+                      // contrast; navy-on-terracotta (terracotta being the
+                      // darker tone) drops to ~3:1, noticeably harder to
+                      // read. White gets back to ~4:1.
                       style: const TextStyle(
                         fontFamily: 'Courier Prime',
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.4,
-                        color: CountryTheme.navy,
+                        color: CountryTheme.onNavy,
                       ),
                     ),
                   ),

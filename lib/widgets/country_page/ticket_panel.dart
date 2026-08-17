@@ -30,7 +30,17 @@ import '../../theme/country_theme.dart';
 class TicketPanel extends StatelessWidget {
   final Widget child;
 
-  const TicketPanel({super.key, required this.child});
+  /// Fill color. Defaults to [CountryTheme.card] — which, notably, is the
+  /// *same hex as [CountryTheme.paper]* (see that token's doc comment), so
+  /// the default alone doesn't visually separate a panel from the page
+  /// behind it. Override with one of the alternate tones
+  /// ([CountryTheme.cardWarm]/[cardCool]/[cardMint]/[aged]) for a panel
+  /// that should read as sitting on the page, not flush with it — per
+  /// Colleen, 2026-08-17: an exact color match with "no texture" reads as
+  /// generic/AI-esque. See `DividedCard` callers for the actual mapping.
+  final Color color;
+
+  const TicketPanel({super.key, required this.child, this.color = CountryTheme.card});
 
   static const _cornerRadius = CountryTheme.cardRadius;
   static const _notchRadius = 7.0;
@@ -42,7 +52,7 @@ class TicketPanel extends StatelessWidget {
       children: [
         ClipPath(
           clipper: clipper,
-          child: ColoredBox(color: CountryTheme.card, child: child),
+          child: ColoredBox(color: color, child: child),
         ),
         Positioned.fill(
           child: CustomPaint(

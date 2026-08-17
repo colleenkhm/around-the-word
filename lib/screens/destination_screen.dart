@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../models/country.dart';
 import '../state/trip_selection.dart';
-import 'category_selection_screen.dart';
 import 'coming_soon_screen.dart';
+import 'country_header_preview_screen.dart';
 
 /// Screen 1: "Where are you going?" — a single search-first destination
 /// picker. Countries aren't grouped by continent in the UI; typing filters
@@ -12,6 +12,14 @@ import 'coming_soon_screen.dart';
 /// country-map two-screen flow (see HANDOFF.md for why). Every country is
 /// tappable; only `active` ones lead to the real flow, the rest dead-end at
 /// ComingSoonScreen (language-app-system-design.md section 2, step 2).
+///
+/// **2026-08-17: an active country now opens the country page directly**
+/// (`CountryHeaderPreviewScreen`, standing in for the real multi-tab
+/// `CountryPageScreen` until that's built) instead of going straight to
+/// `CategorySelectionScreen`'s "What do you want to learn?" checkboxes.
+/// That flow still exists — it's the Language tab's sub-flow now, reached
+/// from within the country page, per the pivot-3 docs' five-tab shape — it
+/// just isn't the first thing a destination tap leads to anymore.
 class DestinationScreen extends StatefulWidget {
   const DestinationScreen({super.key});
 
@@ -38,7 +46,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
     }
     trip.selectCountry(country);
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const CategorySelectionScreen()),
+      MaterialPageRoute(builder: (context) => CountryHeaderPreviewScreen(country: country)),
     );
   }
 

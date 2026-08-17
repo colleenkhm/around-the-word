@@ -17,19 +17,37 @@ import '../../theme/country_theme.dart';
 class DashedDivider extends StatelessWidget {
   final double height;
 
-  const DashedDivider({super.key, this.height = 1.5});
+  /// Defaults to [CountryTheme.rule] (the light-surface tan tone). Override
+  /// for a call site on a dark surface — `_TicketStub` (2026-08-17) passes
+  /// [CountryTheme.onNavyMuted] now that it sits on navy, not [card].
+  final Color color;
+
+  /// Line thickness. Defaults to 1.5, matching every existing call site;
+  /// `_TicketStub` (2026-08-17, per Colleen: "thinner divider please")
+  /// passes 1.0.
+  final double strokeWidth;
+
+  const DashedDivider({
+    super.key,
+    this.height = 1.5,
+    this.color = CountryTheme.rule,
+    this.strokeWidth = 1.5,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
-      child: CustomPaint(painter: const _DashedLinePainter()),
+      child: CustomPaint(painter: _DashedLinePainter(color: color, strokeWidth: strokeWidth)),
     );
   }
 }
 
 class _DashedLinePainter extends CustomPainter {
-  const _DashedLinePainter();
+  final Color color;
+  final double strokeWidth;
+
+  const _DashedLinePainter({required this.color, required this.strokeWidth});
 
   static const _dashWidth = 5.0;
   static const _gap = 4.0;
@@ -37,8 +55,8 @@ class _DashedLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = CountryTheme.rule
-      ..strokeWidth = 1.5;
+      ..color = color
+      ..strokeWidth = strokeWidth;
     final y = size.height / 2;
     var x = 0.0;
     while (x < size.width) {
@@ -48,5 +66,6 @@ class _DashedLinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _DashedLinePainter oldDelegate) => false;
+  bool shouldRepaint(covariant _DashedLinePainter oldDelegate) =>
+      oldDelegate.color != color || oldDelegate.strokeWidth != strokeWidth;
 }

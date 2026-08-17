@@ -10,15 +10,23 @@ import '../../theme/country_theme.dart';
 /// private `_LinkLabel`, once a second call site needed the identical
 /// look rather than a second copy of it.
 ///
-/// Color is [CountryTheme.navy], not an accent — matches
+/// Color defaults to [CountryTheme.navy], not an accent — matches
 /// `trip-dashboard-v3.html`'s `.tk-f-link`/`.src-row a`, both navy (2026-08-15;
 /// see [CountryTheme.gold]'s doc comment on why gold isn't the default link
-/// color in the new palette).
+/// color in the new palette). Overridable via [color] for the one call site
+/// that now sits on a navy surface itself (`_TicketStub`, 2026-08-17) —
+/// navy-on-navy would be invisible there.
 class ExternalLink extends StatelessWidget {
   final String label;
   final String url;
+  final Color color;
 
-  const ExternalLink({super.key, required this.label, required this.url});
+  const ExternalLink({
+    super.key,
+    required this.label,
+    required this.url,
+    this.color = CountryTheme.navy,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +37,15 @@ class ExternalLink extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Public Sans',
               fontWeight: FontWeight.w600,
               fontSize: 11.5,
-              color: CountryTheme.navy,
+              color: color,
             ),
           ),
           const SizedBox(width: 2),
-          const Icon(Icons.arrow_outward, size: 11, color: CountryTheme.navy),
+          Icon(Icons.arrow_outward, size: 11, color: color),
         ],
       ),
     );

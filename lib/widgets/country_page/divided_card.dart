@@ -12,11 +12,16 @@ import 'ticket_panel.dart';
 class DividedCard extends StatelessWidget {
   final List<Widget> children;
 
-  const DividedCard({super.key, required this.children});
+  /// Forwarded to [TicketPanel.color] — see that param's doc comment for
+  /// why the default is worth overriding per section.
+  final Color color;
+
+  const DividedCard({super.key, required this.children, this.color = CountryTheme.card});
 
   @override
   Widget build(BuildContext context) {
     return TicketPanel(
+      color: color,
       child: Column(
         children: [
           for (var i = 0; i < children.length; i++) ...[

@@ -9,16 +9,18 @@ import '../../utils/flag_url.dart';
 import 'dashed_divider.dart';
 import 'external_link.dart';
 
-const _tabLabels = {
-  CountryTab.overview: 'OVERVIEW',
-  CountryTab.explore: 'EXPLORE',
-  CountryTab.guide: 'GUIDE',
-  CountryTab.language: 'LANGUAGE',
-};
-
-/// The country-page header/chrome: flag, name, native name, the
-/// content_status pill, the tab-pill row, and a "ticket stub" with local
-/// time + a $1 USD conversion.
+/// The country-page header/chrome: flag, name, native name, and a "ticket
+/// stub" with local time + a $1 USD conversion.
+///
+/// **The content_status pill and tab-pill row are gone for now**
+/// (2026-08-17, per Colleen — "we're not displaying them... go ahead and
+/// fully remove them at the moment"), not just hidden: both only ever
+/// rendered once `tabs.length > 1`, and V1 only has the Overview tab built,
+/// so they'd never actually shown. `tabs`/`activeTab`/`onTabSelected` stay
+/// on the constructor — the screen still wires them — since the pills
+/// themselves are the easy part to rebuild once Explore/Guide/Language
+/// exist and `tabs.length > 1` becomes real; this just stops carrying
+/// dead-weight widgets in the meantime.
 ///
 /// **2026-08-15 rewrite**, built against `trip-dashboard-v3.html`. Two
 /// pieces of the prior header are gone rather than reskinned, per Colleen
@@ -47,6 +49,28 @@ const _tabLabels = {
 /// not a romanization, which would need to be curated. Both stay optional
 /// constructor params here rather than pulled from the bundle, so this
 /// renders correctly once that's decided without another widget change.
+///
+/// **Does not own site-wide nav chrome** (globe/About) — that briefly
+/// lived here as a row inside this navy block, then got split out to
+/// `SiteHeader` 2026-08-17. Per Colleen: this widget is *page* chrome (this
+/// specific country's flag/name/ticket), `SiteHeader` is *site* chrome
+/// (same globe/About on every country) — conflating the two into one
+/// navy-colored block was the actual complaint, not the block's padding.
+/// A screen using both puts `SiteHeader` directly above this one.
+///
+/// **Back to one flat navy block** (2026-08-17, per Colleen, reverting the
+/// two-tone-ticket pass from earlier the same day — the paper-on-top/navy-
+/// stub split "looked weird"). Content and `_TicketStub` are both navy
+/// again.
+///
+/// **The [DashedDivider] lives right under `_TopStripe` now, not at the
+/// top of `_TicketStub`** (2026-08-17, moved per Colleen: "a divider under
+/// the page header [`SiteHeader`], and the page header does not need
+/// nearly that much space between it and the divider but the country/flag
+/// section definitely needs more space between it and the page header").
+/// So the vertical rhythm reads, top to bottom: `SiteHeader` → tight gap →
+/// divider → more room → name/flag row → `_TicketStub` (no divider before
+/// it anymore — see that widget's doc).
 class CountryHeader extends StatefulWidget {
   final CountryBundle bundle;
 
@@ -109,80 +133,75 @@ class _CountryHeaderState extends State<CountryHeader> {
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.sizeOf(context).width >= 900;
 
-    return Container(
-      // Square corners, not rounded — matches the mockup's `.tk-head`/
-      // `.tk-stub` (`border-radius: 0` in both), a deliberate flat-ticket
-      // look rather than the prior rounded-bottom bar.
-      clipBehavior: Clip.antiAlias,
-      decoration: const BoxDecoration(color: CountryTheme.navy),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _TopStripe(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.bundle.country.nameCommon,
-                            style: CountryTheme.countryName(isDesktop ? 34 : 24)
-                                .copyWith(color: CountryTheme.onNavy),
-                          ),
-                          if (widget.nativeName != null) ...[
-                            const SizedBox(height: 6),
-                            Text.rich(
-                              TextSpan(
-                                style: CountryTheme.ticketNativeName,
-                                children: [
-                                  TextSpan(text: widget.nativeName),
-                                  if (widget.nativeNameRomanized != null) ...[
-                                    const TextSpan(text: '   ·   '),
-                                    TextSpan(text: widget.nativeNameRomanized),
-                                  ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _TopStripe(),
+        Container(
+          width: double.infinity,
+          color: CountryTheme.navy,
+          // Sides 20->16, bottom 16->8 (2026-08-17, per Colleen, to close
+          // up the gap before `_TicketStub`). Top no longer clears the
+          // status bar/notch itself (that moved to `SiteHeader`, which now
+          // sits above this and owns that inset) — top is now just the
+          // tight gap before the divider (6), see class doc.
+          padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // paper (cream), not onNavySoft (translucent white) — per
+              // Colleen, 2026-08-17: match the page's cream rather than a
+              // plain white, keeping this warm like the rest of the
+              // palette instead of introducing a stark white line.
+              const DashedDivider(color: CountryTheme.paper, strokeWidth: 1.0),
+              // More room here than above the divider — per Colleen, the
+              // country/flag section "definitely needs more space between
+              // it and the page header" than the tight gap on the other
+              // side of the divider.
+              const SizedBox(height: 18),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.bundle.country.nameCommon,
+                          style: CountryTheme.countryName(isDesktop ? 34 : 24)
+                              .copyWith(color: CountryTheme.onNavy),
+                        ),
+                        if (widget.nativeName != null) ...[
+                          const SizedBox(height: 6),
+                          Text.rich(
+                            TextSpan(
+                              style: CountryTheme.ticketNativeName,
+                              children: [
+                                TextSpan(text: widget.nativeName),
+                                if (widget.nativeNameRomanized != null) ...[
+                                  const TextSpan(text: '   ·   '),
+                                  TextSpan(text: widget.nativeNameRomanized),
                                 ],
-                              ),
+                              ],
                             ),
-                          ],
+                          ),
                         ],
-                      ),
+                      ],
                     ),
-                    const SizedBox(width: 14),
-                    _Flag(isoCode: widget.bundle.country.isoCode, desktop: isDesktop),
-                  ],
-                ),
-                // Both the status pill and the tab-pill row are about
-                // signaling unevenness *across tabs* — neither means
-                // anything with a single tab built. Gated on tabs.length
-                // > 1, same as before this rewrite.
-                if (widget.bundle.country.contentStatus == ContentStatus.partial &&
-                    widget.tabs.length > 1)
-                  _StatusPill(countryName: widget.bundle.country.nameCommon),
-                if (widget.tabs.length > 1) ...[
-                  const SizedBox(height: 12),
-                  _TabPillRow(
-                    tabs: widget.tabs,
-                    active: widget.activeTab,
-                    onSelected: widget.onTabSelected,
                   ),
+                  const SizedBox(width: 14),
+                  _Flag(isoCode: widget.bundle.country.isoCode, desktop: isDesktop),
                 ],
-              ],
-            ),
+              ),
+            ],
           ),
-          _TicketStub(
-            utcOffsetMinutes: widget.utcOffsetMinutes,
-            exchangeRate: widget.exchangeRate,
-            currencyName: widget.currencyName,
-          ),
-        ],
-      ),
+        ),
+        _TicketStub(
+          utcOffsetMinutes: widget.utcOffsetMinutes,
+          exchangeRate: widget.exchangeRate,
+          currencyName: widget.currencyName,
+        ),
+      ],
     );
   }
 }
@@ -226,9 +245,10 @@ class _Flag extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(3),
-        // Translucent white, not `CountryTheme.rule` — this always sits
-        // on the navy block now (the mockup's `.tk-flag` box-shadow is
-        // `rgba(255,255,255,.15)`), never on a light card surface.
+        // Translucent white — back on the navy surface again (2026-08-17,
+        // reverting the paper-content pass — see [CountryHeader]'s class
+        // doc), the mockup's `.tk-flag` box-shadow (`rgba(255,255,255,.15)`)
+        // this was originally matched to.
         border: Border.all(color: CountryTheme.onNavyMuted),
       ),
       child: Image.network(
@@ -247,113 +267,23 @@ class _Flag extends StatelessWidget {
   }
 }
 
-/// The content-depth signal (.pill in the mockup) — shown only when
-/// `content_status = 'partial'`. `'complete'` gets no badge at all:
-/// silence signals trust, per the client design doc's reasoning against
-/// training users to read a "✓ Complete" label's *absence* as a warning.
-class _StatusPill extends StatelessWidget {
-  final String countryName;
-
-  const _StatusPill({required this.countryName});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(999),
-        color: CountryTheme.onNavyMuted.withValues(alpha: 0.12),
-        border: Border.all(color: CountryTheme.onNavyMuted),
-      ),
-      child: Text(
-        'Building out $countryName — some sections are further along than others',
-        style: CountryTheme.pillLabel.copyWith(color: CountryTheme.onNavySoft),
-      ),
-    );
-  }
-}
-
-class _TabPillRow extends StatelessWidget {
-  final List<CountryTab> tabs;
-  final CountryTab active;
-  final ValueChanged<CountryTab> onSelected;
-
-  const _TabPillRow({
-    required this.tabs,
-    required this.active,
-    required this.onSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 12),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: [
-          for (final tab in tabs)
-            _TabPill(
-              label: _tabLabels[tab]!,
-              selected: tab == active,
-              onTap: () => onSelected(tab),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TabPill extends StatelessWidget {
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _TabPill({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // Selected fill is gold — dark navy text on top, the same pairing the
-    // mockup's `.btn-gold` uses (light text on bright gold fails contrast).
-    // Unselected stays translucent-outlined on the navy surface, same
-    // family as `_StatusPill`.
-    return Material(
-      color: selected ? CountryTheme.gold : Colors.transparent,
-      borderRadius: BorderRadius.circular(999),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(999),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(999),
-            border: Border.all(
-              color: selected ? Colors.transparent : CountryTheme.onNavyMuted,
-            ),
-          ),
-          child: Text(
-            label,
-            style: CountryTheme.pillLabel.copyWith(
-              color: selected ? CountryTheme.navy : CountryTheme.onNavySoft,
-              fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// The ticket's light stub — local time + a $1 USD conversion, matching
+/// The ticket's stub — local time + a $1 USD conversion, matching
 /// `.tk-stub`. Absorbs what [RightNowStrip] used to render as its first
 /// and third columns (see class doc on why the middle "season" column
 /// isn't a fourth field here — it's dropped from view this pass, not
 /// moved).
+///
+/// **Navy, not [CountryTheme.card]** (2026-08-17, per Colleen: "make the
+/// local time and currency sections have the same background as well" —
+/// once `SiteHeader` went back to navy after a gold detour, the light card
+/// stub was the one piece of this block still visually split off from it).
+/// Every text/divider/link color below got a matching on-navy pass —
+/// `ticketStubValue` in particular was [navy]-on-[card] by design (reads
+/// like ink), so it needs [onNavy] here or it's invisible.
+///
+/// **No divider at the top of this stub anymore** — it moved up to sit
+/// under `SiteHeader` instead (2026-08-17, per Colleen — see
+/// [CountryHeader]'s class doc for the reasoning and the current layout).
 ///
 /// Time/currency formatting logic below is carried over verbatim from
 /// [RightNowStrip] — same fixed-offset/no-DST simplification, same
@@ -376,13 +306,17 @@ class _TicketStub extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      color: CountryTheme.card,
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+      color: CountryTheme.navy,
+      // Horizontal 20->16 (2026-08-17), matching the header content
+      // Padding above so the stub's fields line up with the name/flag row
+      // rather than sitting a few px further out. Top is just a plain
+      // small gap now (no divider to leave room for anymore — it moved,
+      // see class doc).
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const DashedDivider(),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: Row(
@@ -406,6 +340,7 @@ class _TicketStub extends StatelessWidget {
                         : ExternalLink(
                             label: 'Convert',
                             url: _converterUrl(exchangeRate!.currencyCode),
+                            color: CountryTheme.onNavy,
                           ),
                   ),
                 ),
@@ -422,12 +357,12 @@ class _TicketStub extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(label, style: CountryTheme.ticketStubLabel),
+        Text(label, style: CountryTheme.ticketStubLabel.copyWith(color: CountryTheme.onNavySoft)),
         const SizedBox(height: 3),
-        Text(value, style: CountryTheme.ticketStubValue),
+        Text(value, style: CountryTheme.ticketStubValue.copyWith(color: CountryTheme.onNavy)),
         if (subtitle.isNotEmpty) ...[
           const SizedBox(height: 2),
-          Text(subtitle, style: CountryTheme.ticketStubSub),
+          Text(subtitle, style: CountryTheme.ticketStubSub.copyWith(color: CountryTheme.onNavySoft)),
         ],
         if (trailing != null) ...[
           const SizedBox(height: 4),

@@ -50,26 +50,44 @@ class CountryTheme {
   /// The page canvas — warm cream/linen.
   static const paper = Color(0xFFF5EDD8);
 
-  /// Every card/panel surface. Deliberately the same hex as [paper] now —
-  /// see class doc — depth comes from [cardShadow], not a tone shift.
+  /// The default `TicketPanel`/`DividedCard` fill — deliberately the same
+  /// hex as [paper] (see class doc). **Prefer an alternate tone below for
+  /// any call site meant to read as sitting on the page**: `card`-on-
+  /// `paper` with no shadow (e.g. `TicketPanel`'s dashed-notch style) is an
+  /// exact color match with zero depth cue, which reads as flat/AI-generic
+  /// rather than an intentional panel (per Colleen, 2026-08-17 — this is
+  /// what prompted [cardMint]/[cardCool]/[aged] actually getting used).
+  /// Still the right choice where [cardShadow] alone is doing the "sits on
+  /// the page" work instead of a tone shift.
   static const card = Color(0xFFF5EDD8);
 
-  /// Warm alternate card tone — used to visually distinguish specific
-  /// sections (e.g. Best Times) from the default [card] surface, matching
-  /// the mockup's `.card-warm` modifier.
+  /// Warm alternate card tone — Best Times, matching the mockup's
+  /// `.card-warm` modifier.
   static const cardWarm = Color(0xFFEDE3C4);
 
-  /// Cool alternate card tone (`.card-cool` — Visa/Entry in the mockup).
-  static const cardCool = Color(0xFFE8EEE8);
+  /// Visa/Entry's alternate card tone (`TravelInfoSection`'s
+  /// `_VisaColumn`). **No longer the mockup's cool gray-green `.card-cool`**
+  /// — swapped to a very light cream 2026-08-17, per Colleen: the original
+  /// read as "light blue" once actually on screen, which didn't fit the
+  /// page's otherwise warm palette. Deliberately the same value as
+  /// [cardMint] now (see that token's doc comment) — the name stays
+  /// `cardCool` so the call site doesn't need touching, not because it's
+  /// still cool-toned.
+  static const cardCool = Color(0xFFF1E8CE);
 
-  /// Mint alternate card tone (`.card-mint` — Travel Advisory in the
-  /// mockup).
-  static const cardMint = Color(0xFFE4EFE9);
+  /// Travel Advisories' alternate card tone (`TravelInfoSection`'s
+  /// `_AdvisoriesColumn`). **No longer the mockup's `.card-mint`** — same
+  /// 2026-08-17 swap as [cardCool], same reasoning, same new value. Kept
+  /// as a separate token from [cardCool] rather than deleted, in case a
+  /// reason to re-differentiate the two sections' tones comes up later.
+  static const cardMint = Color(0xFFF1E8CE);
 
-  /// "Aged stock" tone from the mockup's `--aged` — not currently assigned
-  /// to any specific section (the mockup itself defines it but doesn't use
-  /// it anywhere either). Kept for whichever section wants a fourth
-  /// alternate tone later, same reasoning as [lightTint] below.
+  /// "Aged stock" tone from the mockup's `--aged`. The mockup defines it
+  /// but doesn't assign it to any one section; used here (2026-08-17) as
+  /// the generic alternate for panels with no dedicated warm/cool/mint
+  /// meaning — Cities, the Language pair card, Practical Notes — so
+  /// nothing is left on the exact-page-match [card] default. See [card]'s
+  /// doc comment.
   static const aged = Color(0xFFE8DDB8);
 
   /// Divider/border line, warm tan.
@@ -107,10 +125,14 @@ class CountryTheme {
   static const navy = Color(0xFF1B3560);
   static const navyMid = Color(0xFF254876);
 
-  /// The one *warm* accent — used sparingly (mockup: the city-row star,
-  /// the ticket's top stripe, advisory level 2's bar, the gold CTA
-  /// button) — not a blanket replacement for every accent role the old
-  /// `ticketRust` covered. See [navy] for the link/CTA-text role instead.
+  /// The one *warm* accent — used sparingly: the city-row star (a "gold
+  /// star" is a common-enough motif to keep) and the ticket's top stripe.
+  /// **No longer the Word of Day card's stripe/button** — see [terracotta]
+  /// — those two read as "corporate"/"AI-looking" paired with navy (per
+  /// Colleen, 2026-08-17), and unlike the star, don't carry any
+  /// recognizable-motif reason to keep gold specifically. Not a blanket
+  /// replacement for every accent role the old `ticketRust` covered — see
+  /// [navy] for the link/CTA-text role instead.
   static const gold = Color(0xFFC4850A);
 
   /// Deep red used for the "who" attribution in a source row and the
@@ -124,6 +146,16 @@ class CountryTheme {
   /// `--amber`), so this file does too rather than collapsing them into
   /// one token for convenience.
   static const amber = Color(0xFF8A6200);
+
+  /// The Word of Day card's accent (top stripe + "Learn ___" button) —
+  /// replacing [gold] there 2026-08-17, per Colleen: gold-on-navy in that
+  /// specific card read as a "corporate" badge/certificate look, distinct
+  /// from the city star's gold, which she wants kept ("gold star is a
+  /// common thing"). A warm clay/rust tone, not another yellow-orange —
+  /// stays in the page's warm family (see [CountryTheme.card]'s doc
+  /// comment on avoiding cool tones) while being clearly a different color
+  /// from gold, not just a shade of it.
+  static const terracotta = Color(0xFFC1653D);
 
   /// Layered elevation shadow for the new flat (non-notched) cards — the
   /// Cities list card, the Languages/Word-of-day pair. [TicketPanel]'s own
@@ -195,26 +227,29 @@ class CountryTheme {
   );
 
   /// The ticket stub's field label ("LOCAL TIME", "$1 USD" — `.tk-f-label`).
+  /// Size bumped 8->10 (2026-08-17, per Colleen: "pretty teeny").
   static const ticketStubLabel = TextStyle(
     fontFamily: _courierPrime,
-    fontSize: 8,
+    fontSize: 10,
     fontWeight: FontWeight.w600,
     letterSpacing: 1.1,
     color: inkSoft,
   );
 
-  /// The ticket stub's big value ("19:42", "€0.92" — `.tk-f-val`).
+  /// The ticket stub's big value ("19:42", "€0.92" — `.tk-f-val`). Size
+  /// bumped 22->28 (2026-08-17, per Colleen: "pretty teeny").
   static const ticketStubValue = TextStyle(
     fontFamily: _cormorant,
     fontWeight: FontWeight.w700,
-    fontSize: 22,
+    fontSize: 28,
     color: navy,
   );
 
   /// The ticket stub's small subtitle ("Aug 12 · UTC+3" — `.tk-f-sub`).
+  /// Size bumped 10->12 (2026-08-17, per Colleen: "pretty teeny").
   static const ticketStubSub = TextStyle(
     fontFamily: _courierPrime,
-    fontSize: 10,
+    fontSize: 12,
     color: inkSoft,
   );
 

@@ -165,7 +165,11 @@ class _AdvisoriesColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // cardMint, per CountryTheme.cardMint's doc comment ("Travel Advisory
+    // in the mockup") — wired up 2026-08-17, previously left on the
+    // page-matching default (see Colleen's "looks very AI-esque" note).
     final card = DividedCard(
+      color: CountryTheme.cardMint,
       children: [
         for (final advisory in advisories)
           _AdvisoryRow(advisory: advisory, hideSource: hideOwnSource),
@@ -311,7 +315,11 @@ class _VisaColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // cardCool, per CountryTheme.cardCool's doc comment ("Visa/Entry in
+    // the mockup") — wired up 2026-08-17, same pass as _AdvisoriesColumn's
+    // cardMint above.
     final cardContent = DividedCard(
+      color: CountryTheme.cardCool,
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(15, 11, 15, 11),

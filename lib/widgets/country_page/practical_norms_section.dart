@@ -38,7 +38,12 @@ class PracticalNormsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SectionHeading('Practical notes'),
+        // aged — no dedicated mockup tone for this section (unlike
+        // Advisories/Visa's mint/cool), so it gets the theme's spare
+        // generic alternate rather than the page-matching default
+        // (2026-08-17, see CountryTheme.aged's doc comment).
         DividedCard(
+          color: CountryTheme.aged,
           children: [for (final norm in norms) _NormRow(norm: norm)],
         ),
       ],
