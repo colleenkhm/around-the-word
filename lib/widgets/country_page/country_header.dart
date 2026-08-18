@@ -4,87 +4,34 @@ import 'package:flutter/material.dart';
 
 import '../../models/country_bundle.dart';
 import '../../models/live_data.dart';
-import '../../theme/country_theme.dart';
+import '../../theme/accordion_theme.dart';
 import '../../utils/flag_url.dart';
 import 'dashed_divider.dart';
 import 'external_link.dart';
 
-/// The country-page header/chrome: flag, name, native name, and a "ticket
-/// stub" with local time + a $1 USD conversion.
+/// The country-page ticket header: flag, name, native name, and a "ticket
+/// stub" with local time + a $1 USD conversion, plus an "Expand all info" /
+/// "Collapse all info" link controlling every [AccordionSection] below it.
 ///
-/// **The content_status pill and tab-pill row are gone for now**
-/// (2026-08-17, per Colleen — "we're not displaying them... go ahead and
-/// fully remove them at the moment"), not just hidden: both only ever
-/// rendered once `tabs.length > 1`, and V1 only has the Overview tab built,
-/// so they'd never actually shown. `tabs`/`activeTab`/`onTabSelected` stay
-/// on the constructor — the screen still wires them — since the pills
-/// themselves are the easy part to rebuild once Explore/Guide/Language
-/// exist and `tabs.length > 1` becomes real; this just stops carrying
-/// dead-weight widgets in the meantime.
-///
-/// **2026-08-15 rewrite**, built against `trip-dashboard-v3.html`. Two
-/// pieces of the prior header are gone rather than reskinned, per Colleen
-/// (asked directly rather than assumed — see HANDOFF.md):
-/// - The country name no longer renders as [SplitFlapText]'s individual
-///   flap cells — plain styled text now ([CountryTheme.countryName]),
-///   matching the mockup's plainer `.tk-name`.
-/// - The passport-style MRZ strip (ISO code, official name, advisory
-///   level, verified date in bracket notation) is gone. Its `ADV:`/
-///   `VERIFIED:` data has nowhere to land yet — the plan is for it to move
-///   into the restyled Travel Info section (advisory bar + a shared source
-///   line already live there), not to be dropped for good.
-///
-/// **[RightNowStrip] is retired, not reskinned** — its local-time and
-/// currency columns are absorbed directly into this header's stub
-/// (`_TicketStub`, mirroring the mockup's `.tk-stub`), and its season
-/// column is dropped from the Overview tab entirely for this pass (per
-/// Colleen: fold time+currency into the header, drop season from view).
-/// That's why this widget is a [StatefulWidget] now — the local-time
-/// column needs the same live-updating [Timer] [RightNowStrip] used to
-/// have; see `_CountryHeaderState`.
-///
-/// **One known data gap, not yet fixed:** native name + its romanization
-/// (the mockup's "Ελλάδα · Ellàda") isn't in `country_facts`/[CountryFacts]
-/// at all yet — REST Countries returns the native-script name already, but
-/// not a romanization, which would need to be curated. Both stay optional
-/// constructor params here rather than pulled from the bundle, so this
-/// renders correctly once that's decided without another widget change.
-///
-/// **Does not own site-wide nav chrome** (globe/About) — that briefly
-/// lived here as a row inside this navy block, then got split out to
-/// `SiteHeader` 2026-08-17. Per Colleen: this widget is *page* chrome (this
-/// specific country's flag/name/ticket), `SiteHeader` is *site* chrome
-/// (same globe/About on every country) — conflating the two into one
-/// navy-colored block was the actual complaint, not the block's padding.
-/// A screen using both puts `SiteHeader` directly above this one.
-///
-/// **Back to one flat navy block** (2026-08-17, per Colleen, reverting the
-/// two-tone-ticket pass from earlier the same day — the paper-on-top/navy-
-/// stub split "looked weird"). Content and `_TicketStub` are both navy
-/// again.
-///
-/// **The [DashedDivider] lives right under `_TopStripe` now, not at the
-/// top of `_TicketStub`** (2026-08-17, moved per Colleen: "a divider under
-/// the page header [`SiteHeader`], and the page header does not need
-/// nearly that much space between it and the divider but the country/flag
-/// section definitely needs more space between it and the page header").
-/// So the vertical rhythm reads, top to bottom: `SiteHeader` → tight gap →
-/// divider → more room → name/flag row → `_TicketStub` (no divider before
-/// it anymore — see that widget's doc).
+/// **2026-08-18 rewrite**, built against `trip-dashboard-v5.html`'s two
+/// frames (collapsed vs. expanded) — replaces the 2026-08-15 navy/gold
+/// "boarding pass" version (see [AccordionTheme]'s class doc on why this
+/// repoints to a parallel token set instead of [CountryTheme]). Structure
+/// carries over (`_TicketStub`'s two-column local-time/currency layout,
+/// the live-updating [Timer]) since the mockup keeps that part
+/// unchanged; what's new is the dark surface recoloring to
+/// [AccordionTheme.ink] (from navy), the "DESTINATION" eyebrow label
+/// (`.tk-eyebrow`, wasn't rendered before), and the expand/collapse-all
+/// link row — the top gold/navyMid stripe is dropped, since the v5
+/// mockup doesn't have one.
 class CountryHeader extends StatefulWidget {
   final CountryBundle bundle;
-
-  /// Which tabs to show as pills — driven by what's actually been built
-  /// so far, not by [CountryBundle] content presence. See class doc.
-  final List<CountryTab> tabs;
-  final CountryTab activeTab;
-  final ValueChanged<CountryTab> onTabSelected;
   final String? nativeName;
   final String? nativeNameRomanized;
 
   /// Feeds the stub's "Local time" column — see [CountryFacts.utcOffsetMinutes]'s
   /// doc comment on the fixed-offset/no-DST simplification this inherits
-  /// unchanged from [RightNowStrip].
+  /// unchanged from the prior version.
   final int? utcOffsetMinutes;
 
   /// Feeds the stub's "$1 USD" column. **Not live** — see [ExchangeRate]'s
@@ -95,12 +42,16 @@ class CountryHeader extends StatefulWidget {
   /// subtitle in place of a generic label.
   final String? currencyName;
 
+  /// True when every [AccordionSection] below is currently open — drives
+  /// the link row's label ("Expand all info ↓" vs. "Collapse all info ↑").
+  final bool allExpanded;
+  final VoidCallback onToggleAll;
+
   const CountryHeader({
     super.key,
     required this.bundle,
-    required this.tabs,
-    required this.activeTab,
-    required this.onTabSelected,
+    required this.allExpanded,
+    required this.onToggleAll,
     this.nativeName,
     this.nativeNameRomanized,
     this.utcOffsetMinutes,
@@ -119,7 +70,7 @@ class _CountryHeaderState extends State<CountryHeader> {
   void initState() {
     super.initState();
     // Minute-granularity display, so a timer tick once every 30s is
-    // plenty — carried over unchanged from the retired RightNowStrip.
+    // plenty — carried over unchanged from the prior version.
     _ticker = Timer.periodic(const Duration(seconds: 30), (_) => setState(() {}));
   }
 
@@ -136,62 +87,49 @@ class _CountryHeaderState extends State<CountryHeader> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _TopStripe(),
         Container(
           width: double.infinity,
-          color: CountryTheme.navy,
-          // Sides 20->16, bottom 16->8 (2026-08-17, per Colleen, to close
-          // up the gap before `_TicketStub`). Top no longer clears the
-          // status bar/notch itself (that moved to `SiteHeader`, which now
-          // sits above this and owns that inset) — top is now just the
-          // tight gap before the divider (6), see class doc.
-          padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          color: AccordionTheme.ink,
+          padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
+          child: Stack(
             children: [
-              // paper (cream), not onNavySoft (translucent white) — per
-              // Colleen, 2026-08-17: match the page's cream rather than a
-              // plain white, keeping this warm like the rest of the
-              // palette instead of introducing a stark white line.
-              const DashedDivider(color: CountryTheme.paper, strokeWidth: 1.0),
-              // More room here than above the divider — per Colleen, the
-              // country/flag section "definitely needs more space between
-              // it and the page header" than the tight gap on the other
-              // side of the divider.
-              const SizedBox(height: 18),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.bundle.country.nameCommon,
-                          style: CountryTheme.countryName(isDesktop ? 34 : 24)
-                              .copyWith(color: CountryTheme.onNavy),
-                        ),
-                        if (widget.nativeName != null) ...[
-                          const SizedBox(height: 6),
-                          Text.rich(
-                            TextSpan(
-                              style: CountryTheme.ticketNativeName,
-                              children: [
-                                TextSpan(text: widget.nativeName),
-                                if (widget.nativeNameRomanized != null) ...[
-                                  const TextSpan(text: '   ·   '),
-                                  TextSpan(text: widget.nativeNameRomanized),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ],
-                      ],
+              Padding(
+                // Leaves room on the right for the flag, positioned
+                // absolutely — matches the mockup's `.tk-flag` overlay
+                // rather than sharing a Row (so the flag doesn't push the
+                // name to wrap early on a long country name).
+                padding: EdgeInsets.only(right: isDesktop ? 78 : 62),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('DESTINATION', style: AccordionTheme.tkEyebrow),
+                    const SizedBox(height: 6),
+                    Text(
+                      widget.bundle.country.nameCommon,
+                      style: AccordionTheme.tkName(isDesktop ? 48 : 34),
                     ),
-                  ),
-                  const SizedBox(width: 14),
-                  _Flag(isoCode: widget.bundle.country.isoCode, desktop: isDesktop),
-                ],
+                    if (widget.nativeName != null) ...[
+                      const SizedBox(height: 4),
+                      Text.rich(
+                        TextSpan(
+                          style: AccordionTheme.tkNative,
+                          children: [
+                            TextSpan(text: widget.nativeName),
+                            if (widget.nativeNameRomanized != null) ...[
+                              const TextSpan(text: '   ·   '),
+                              TextSpan(text: widget.nativeNameRomanized),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: _Flag(isoCode: widget.bundle.country.isoCode, desktop: isDesktop),
               ),
             ],
           ),
@@ -200,29 +138,10 @@ class _CountryHeaderState extends State<CountryHeader> {
           utcOffsetMinutes: widget.utcOffsetMinutes,
           exchangeRate: widget.exchangeRate,
           currencyName: widget.currencyName,
+          allExpanded: widget.allExpanded,
+          onToggleAll: widget.onToggleAll,
         ),
       ],
-    );
-  }
-}
-
-/// The `.tk-head::after` two-tone top stripe — gold for the first ~62%,
-/// navyMid for the rest. A `Row` of two flex-weighted `ColoredBox`s reads
-/// clearer than reaching for a `LinearGradient` with hard color stops for
-/// what's really just two flat blocks side by side.
-class _TopStripe extends StatelessWidget {
-  const _TopStripe();
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox(
-      height: 4,
-      child: Row(
-        children: [
-          Expanded(flex: 62, child: ColoredBox(color: CountryTheme.gold)),
-          Expanded(flex: 38, child: ColoredBox(color: CountryTheme.navyMid)),
-        ],
-      ),
     );
   }
 }
@@ -235,9 +154,9 @@ class _Flag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = desktop ? 62.0 : 46.0;
-    final height = desktop ? 42.0 : 32.0;
-    final placeholder = ColoredBox(color: CountryTheme.onNavyMuted);
+    final width = desktop ? 52.0 : 38.0;
+    final height = desktop ? 36.0 : 26.0;
+    final placeholder = ColoredBox(color: Colors.white.withValues(alpha: 0.15));
 
     return Container(
       width: width,
@@ -245,11 +164,7 @@ class _Flag extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(3),
-        // Translucent white — back on the navy surface again (2026-08-17,
-        // reverting the paper-content pass — see [CountryHeader]'s class
-        // doc), the mockup's `.tk-flag` box-shadow (`rgba(255,255,255,.15)`)
-        // this was originally matched to.
-        border: Border.all(color: CountryTheme.onNavyMuted),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
       ),
       child: Image.network(
         flagPngUrl(isoCode),
@@ -267,37 +182,23 @@ class _Flag extends StatelessWidget {
   }
 }
 
-/// The ticket's stub — local time + a $1 USD conversion, matching
-/// `.tk-stub`. Absorbs what [RightNowStrip] used to render as its first
-/// and third columns (see class doc on why the middle "season" column
-/// isn't a fourth field here — it's dropped from view this pass, not
-/// moved).
-///
-/// **Navy, not [CountryTheme.card]** (2026-08-17, per Colleen: "make the
-/// local time and currency sections have the same background as well" —
-/// once `SiteHeader` went back to navy after a gold detour, the light card
-/// stub was the one piece of this block still visually split off from it).
-/// Every text/divider/link color below got a matching on-navy pass —
-/// `ticketStubValue` in particular was [navy]-on-[card] by design (reads
-/// like ink), so it needs [onNavy] here or it's invisible.
-///
-/// **No divider at the top of this stub anymore** — it moved up to sit
-/// under `SiteHeader` instead (2026-08-17, per Colleen — see
-/// [CountryHeader]'s class doc for the reasoning and the current layout).
-///
-/// Time/currency formatting logic below is carried over verbatim from
-/// [RightNowStrip] — same fixed-offset/no-DST simplification, same
-/// significant-figures currency rounding, same xe.com outbound converter
-/// link (not a live in-app rate fetch — see [ExchangeRate]'s doc comment).
+/// The ticket's stub — local time + a $1 USD conversion (`.tk-stub`), plus
+/// the expand/collapse-all link (`.tk-stub`'s bottom row in the mockup).
+/// Sky background, dashed top border simulated via [DashedDivider] since
+/// Flutter has no native dashed-border support.
 class _TicketStub extends StatelessWidget {
   final int? utcOffsetMinutes;
   final ExchangeRate? exchangeRate;
   final String? currencyName;
+  final bool allExpanded;
+  final VoidCallback onToggleAll;
 
   const _TicketStub({
     required this.utcOffsetMinutes,
     required this.exchangeRate,
     required this.currencyName,
+    required this.allExpanded,
+    required this.onToggleAll,
   });
 
   @override
@@ -306,19 +207,14 @@ class _TicketStub extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      color: CountryTheme.navy,
-      // Horizontal 20->16 (2026-08-17), matching the header content
-      // Padding above so the stub's fields line up with the name/flag row
-      // rather than sitting a few px further out. Top is just a plain
-      // small gap now (no divider to leave room for anymore — it moved,
-      // see class doc).
-      padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+      color: AccordionTheme.sky,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          DashedDivider(color: AccordionTheme.skyDark.withValues(alpha: 0.3), strokeWidth: 1.5),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -340,11 +236,28 @@ class _TicketStub extends StatelessWidget {
                         : ExternalLink(
                             label: 'Convert',
                             url: _converterUrl(exchangeRate!.currencyCode),
-                            color: CountryTheme.onNavy,
+                            color: AccordionTheme.skyDark,
+                            fontFamily: AccordionTheme.dmMono,
                           ),
                   ),
                 ),
               ],
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: AccordionTheme.skyDark.withValues(alpha: 0.2))),
+            ),
+            child: InkWell(
+              onTap: onToggleAll,
+              child: Center(
+                child: Text(
+                  allExpanded ? 'Collapse all info ↑' : 'Expand all info ↓',
+                  style: AccordionTheme.tfLink,
+                ),
+              ),
             ),
           ),
         ],
@@ -357,12 +270,12 @@ class _TicketStub extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(label, style: CountryTheme.ticketStubLabel.copyWith(color: CountryTheme.onNavySoft)),
+        Text(label, style: AccordionTheme.tfLabel),
         const SizedBox(height: 3),
-        Text(value, style: CountryTheme.ticketStubValue.copyWith(color: CountryTheme.onNavy)),
+        Text(value, style: AccordionTheme.tfVal),
         if (subtitle.isNotEmpty) ...[
           const SizedBox(height: 2),
-          Text(subtitle, style: CountryTheme.ticketStubSub.copyWith(color: CountryTheme.onNavySoft)),
+          Text(subtitle, style: AccordionTheme.tfSub),
         ],
         if (trailing != null) ...[
           const SizedBox(height: 4),
@@ -418,10 +331,10 @@ class _TicketStub extends StatelessWidget {
 
   /// A live, interactive USD-to-[currencyCode] calculator on xe.com — a
   /// public webpage the user opens themselves, not an API call this app
-  /// makes. Distinct from the data architecture doc's "Currency
-  /// conversion: ExchangeRate-API, live, never bundled" guidance, which is
-  /// about this app *fetching* a rate server-side (not built yet) — this
-  /// is just an outbound link, so it doesn't need an Edge Function or key.
+  /// makes. See the data architecture doc's "Currency conversion:
+  /// ExchangeRate-API, live, never bundled" guidance — that's about this
+  /// app *fetching* a rate server-side (not built yet); this is just an
+  /// outbound link, so it doesn't need an Edge Function or key.
   String _converterUrl(String currencyCode) =>
       'https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To=$currencyCode';
 }

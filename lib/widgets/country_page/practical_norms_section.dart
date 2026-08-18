@@ -1,30 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../../models/country_guide.dart';
-import '../../theme/country_theme.dart';
-import 'divided_card.dart';
-import 'section_heading.dart';
+import '../../theme/accordion_theme.dart';
 
-/// The Overview tab's Practical notes section — every [NormItem] on
-/// [CountryGuide.practicalNorms] (tipping, punctuality, recommended
-/// transport app, ...; see the data architecture doc's `practical_norms`
-/// section), rendered generically by type.
+/// The "Practical Norms" [AccordionSection]'s expanded content — matches
+/// `trip-dashboard-v5.html`'s `.sec-norms` card (a peach-tinted list of
+/// icon + title + detail rows, `.norm-row`). Content-only, no card chrome
+/// or heading.
 ///
-/// New this pass. `trip-dashboard-v3.html` only shows one example —
-/// `transport_norm`, as a "Getting around" card — but `tipping_norm`/
-/// `punctuality_norm` already have real curated mock data with no UI
-/// anywhere before this (confirmed against the Costa Rica bundle). Rather
-/// than build only the one type the mockup happens to show, this renders
-/// every `NormItem` the same way, keyed off [NormItem.type] rather than a
-/// hardcoded case per type — a new norm type added later needs no widget
-/// change, same reasoning [NormItem.type] itself is free-text/open-ended
-/// for.
-///
-/// **No color-coding by [NormItem.severity]** — the mockup has no severity
-/// treatment on its one example to copy, and inventing a red/amber/green
-/// scheme here risks reading as an advisory-level warning, which this
-/// isn't. Severity is available on the model if a real design for it comes
-/// later; this pass just renders title + body.
+/// Every [NormItem] on [CountryGuide.practicalNorms] (tipping,
+/// punctuality, recommended transport app, ...) renders generically by
+/// [NormItem.type] rather than a hardcoded case per type — a new norm
+/// type added later needs no widget change beyond [_iconFor]'s fallback,
+/// same reasoning [NormItem.type] itself is free-text/open-ended for.
 class PracticalNormsSection extends StatelessWidget {
   final List<NormItem> norms;
 
@@ -34,51 +22,59 @@ class PracticalNormsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (norms.isEmpty) return const SizedBox.shrink();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionHeading('Practical notes'),
-        // aged — no dedicated mockup tone for this section (unlike
-        // Advisories/Visa's mint/cool), so it gets the theme's spare
-        // generic alternate rather than the page-matching default
-        // (2026-08-17, see CountryTheme.aged's doc comment).
-        DividedCard(
-          color: CountryTheme.aged,
-          children: [for (final norm in norms) _NormRow(norm: norm)],
-        ),
-      ],
+    return ColoredBox(
+      color: AccordionTheme.peach,
+      child: Column(
+        children: [
+          for (var i = 0; i < norms.length; i++)
+            _NormRow(norm: norms[i], showTopBorder: i != 0),
+        ],
+      ),
     );
   }
 }
 
+/// Best-effort icon from [NormItem.type]'s open-ended string — falls back
+/// to a generic info glyph for a type this doesn't recognize, rather than
+/// leaving the row iconless.
+IconData _iconFor(String type) => switch (type) {
+      'tipping_norm' => Icons.payments_outlined,
+      'punctuality_norm' => Icons.schedule_outlined,
+      'transport_norm' => Icons.directions_car_outlined,
+      _ => Icons.info_outline,
+    };
+
 class _NormRow extends StatelessWidget {
   final NormItem norm;
+  final bool showTopBorder;
 
-  const _NormRow({required this.norm});
-
-  /// "transport_norm" -> "TRANSPORT". Best-effort label from the
-  /// open-ended [NormItem.type] string — strips a trailing "_norm" if
-  /// present rather than assuming every type follows that suffix exactly,
-  /// since new types are free-text by design (see class doc).
-  String get _typeLabel {
-    final stripped = norm.type.endsWith('_norm')
-        ? norm.type.substring(0, norm.type.length - '_norm'.length)
-        : norm.type;
-    return stripped.replaceAll('_', ' ').toUpperCase();
-  }
+  const _NormRow({required this.norm, required this.showTopBorder});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 11, 15, 11),
-      child: Column(
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+      decoration: showTopBorder
+          ? BoxDecoration(border: Border(top: BorderSide(color: AccordionTheme.ink.withValues(alpha: 0.07))))
+          : null,
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(_typeLabel, style: CountryTheme.listRowIndex),
-          const SizedBox(height: 4),
-          Text(norm.title, style: CountryTheme.listRowTitle),
-          const SizedBox(height: 4),
-          Text(norm.body, style: CountryTheme.listRowDetail),
+          Padding(
+            padding: const EdgeInsets.only(top: 1),
+            child: Icon(_iconFor(norm.type), size: 18, color: AccordionTheme.ink2),
+          ),
+          const SizedBox(width: 13),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(norm.title, style: AccordionTheme.rowTitle.copyWith(fontSize: 13.5)),
+                const SizedBox(height: 2),
+                Text(norm.body, style: AccordionTheme.sBody.copyWith(fontSize: 12.5)),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -15,6 +15,24 @@ refactors/doc updates unless they're worth calling out.
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-08-18
+
+### Changed
+- Country page (Costa Rica preview) redesigned as a **collapsible-sections
+  accordion** — Visa & Entry, Cities, When to Visit, Travel Advisory,
+  Language, and Practical Norms each expand/collapse independently, with an
+  "Expand all / Collapse all" shortcut on the ticket header. Previously
+  everything rendered as one long, always-expanded stack.
+- A section with no curated content yet now expands to say "Coming soon"
+  instead of being left off the page — every section always shows, so it's
+  clear what's still being filled in versus what's simply collapsed.
+- New color palette and typeface for the country page specifically (ink,
+  lavender, sage, rose, butter, and sky tones; Fraunces/DM Sans/DM Mono),
+  replacing the navy-and-gold "boarding pass" look from the previous
+  release. Search and the About page are unchanged for now.
+- Visa & Entry and Travel Advisory are separate sections again, each citing
+  its own source, rather than one combined card.
+
 ## [0.1.0] — 2026-08-17
 
 ### Added

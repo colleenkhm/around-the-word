@@ -26,7 +26,25 @@ class SiteHeader extends StatelessWidget {
   final VoidCallback? onHomeTap;
   final VoidCallback? onAboutTap;
 
-  const SiteHeader({super.key, this.onHomeTap, this.onAboutTap});
+  /// Color overrides — all default to the navy scheme above, so
+  /// `DestinationScreen`'s call site (and any other unchanged consumer) is
+  /// unaffected. Added 2026-08-18 so `CountryHeaderPreviewScreen`'s
+  /// accordion restyle (built against `trip-dashboard-v5.html`, an ink
+  /// nav bar) can retheme its own instance without a site-wide repoint —
+  /// see `AccordionTheme`'s class doc on why this pass is scoped to the
+  /// country page rather than touching `CountryTheme` globally.
+  final Color backgroundColor;
+  final Color iconColor;
+  final TextStyle? aboutTextStyle;
+
+  const SiteHeader({
+    super.key,
+    this.onHomeTap,
+    this.onAboutTap,
+    this.backgroundColor = CountryTheme.navy,
+    this.iconColor = CountryTheme.onNavySoft,
+    this.aboutTextStyle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +58,11 @@ class SiteHeader extends StatelessWidget {
     // confirm the globe/About icons don't sit under the system clock/
     // battery, since nothing here can render that.
     final topInset = MediaQuery.paddingOf(context).top.clamp(0.0, 32.0);
+    final aboutStyle = aboutTextStyle ??
+        CountryTheme.pillLabel.copyWith(color: iconColor, fontWeight: FontWeight.w600);
 
     return Container(
-      color: CountryTheme.navy,
+      color: backgroundColor,
       padding: EdgeInsets.fromLTRB(16, topInset + 10, 16, 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,7 +72,7 @@ class SiteHeader extends StatelessWidget {
               onPressed: onHomeTap,
               icon: const Icon(Icons.public),
               iconSize: 20,
-              color: CountryTheme.onNavySoft,
+              color: iconColor,
               tooltip: 'Home',
               visualDensity: VisualDensity.compact,
               padding: EdgeInsets.zero,
@@ -68,13 +88,7 @@ class SiteHeader extends StatelessWidget {
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: Text(
-                'ABOUT',
-                style: CountryTheme.pillLabel.copyWith(
-                  color: CountryTheme.onNavySoft,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              child: Text('ABOUT', style: aboutStyle),
             )
           else
             const SizedBox.shrink(),

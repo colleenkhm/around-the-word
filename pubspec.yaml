@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.1.0+1
+version: 0.2.0+2
 
 environment:
   sdk: ^3.12.0
@@ -135,6 +135,36 @@ flutter:
           weight: 400
         - asset: assets/fonts/CourierPrime-Bold.ttf
           weight: 700
+    # Added 2026-08-18 for the accordion-style country-page restyle (built
+    # against trip-dashboard-v5.html) — scoped to that screen only (see
+    # AccordionTheme's class doc), so Cormorant Garamond/Libre Baskerville/
+    # Courier Prime above stay in place for the rest of the app rather than
+    # being replaced. Same offline-first reasoning as the fonts above:
+    # bundled locally, not fetched via a Google Fonts package at runtime.
+    - family: Fraunces
+      fonts:
+        - asset: assets/fonts/Fraunces-Variable.ttf
+          weight: 400
+        - asset: assets/fonts/Fraunces-Variable.ttf
+          weight: 700
+        - asset: assets/fonts/Fraunces-Variable.ttf
+          weight: 900
+    - family: DM Sans
+      fonts:
+        - asset: assets/fonts/DMSans-Variable.ttf
+          weight: 400
+        - asset: assets/fonts/DMSans-Variable.ttf
+          weight: 500
+        - asset: assets/fonts/DMSans-Variable.ttf
+          weight: 600
+        - asset: assets/fonts/DMSans-Variable.ttf
+          weight: 700
+    - family: DM Mono
+      fonts:
+        - asset: assets/fonts/DMMono-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/DMMono-Medium.ttf
+          weight: 500
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

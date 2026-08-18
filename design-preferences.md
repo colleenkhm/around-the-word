@@ -38,6 +38,17 @@ surfaces; don't remove entries unless she says they no longer apply.
   double-check rather than implement literally — the rest of the palette
   (paper/card/cardWarm/aged, gold, navy) is consistently warm or neutral,
   and a cool tone stands out as wrong even at low saturation.
+  - **Deliberate, flagged exception: 2026-08-18's accordion restyle**
+    (`trip-dashboard-v5.html`, `AccordionTheme`) is fully cool/pastel —
+    sky blue, lavender, sage — the exact family this note rejects.
+    Flagged as a direct reversal before building (per the Working Style
+    section below); Colleen's call was to override anyway. Scoped to the
+    country page only, as its own parallel token set — this note's
+    guidance still governs `CountryTheme`, untouched by that pass. If a
+    cool tone in the new accordion palette reads wrong once actually on
+    screen (the same failure mode this note describes for `.card-cool`),
+    that's worth a fast look, not a surprise — see HANDOFF.md's
+    2026-08-18 entry for the full reasoning.
 - **Gold-on-navy reads "corporate"/"AI-looking" when it's a CTA
   button/accent stripe — but the same gold as a literal star icon is
   fine.** Flagged 2026-08-17 against the Word of Day card's gold stripe +

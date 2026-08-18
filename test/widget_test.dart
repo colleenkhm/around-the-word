@@ -24,6 +24,17 @@ void main() {
       // not reachable from here until it's wired as the Language tab.
       expect(find.text('Where are you going?'), findsNothing);
       expect(find.text('What do you want to learn?'), findsNothing);
+
+      // 2026-08-18: the country page is now a collapsible accordion —
+      // every section always renders as a row (see
+      // CountryHeaderPreviewScreen's class doc), but a city name is only
+      // in the tree once its section is expanded.
+      expect(find.text('Cities'), findsOneWidget);
+      expect(find.text('4 destinations'), findsOneWidget);
+      expect(find.text('San José'), findsNothing); // collapsed by default
+
+      await tester.tap(find.text('Cities'));
+      await tester.pumpAndSettle();
       expect(find.text('San José'), findsOneWidget); // Costa Rica's capital
     },
   );

@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
 
 import '../../models/language_content.dart';
-import '../../theme/country_theme.dart';
-import 'section_heading.dart';
+import '../../theme/accordion_theme.dart';
 
-/// The Overview tab's Language pair — official languages spoken, side by
-/// side with a "Word of the day" card. New this pass, built against
-/// `trip-dashboard-v3.html`'s `.lang-pair` (`.lang-l` + `.lang-r`).
+/// The "Language" [AccordionSection]'s expanded content — official
+/// languages spoken, side by side with a "Word of the day" card. Matches
+/// `trip-dashboard-v5.html`'s `.lang-pair` (`.card-rose` + `.card-white`).
+/// Content-only, no card chrome or heading.
+///
+/// **Explicitly back in scope 2026-08-18** — Colleen: "I know I said to
+/// remove the language stuff but please add it back in." Still built the
+/// same way as before (see notes below); this pass is a recolor onto
+/// [AccordionTheme] (rose/white, Fraunces/DM Sans/DM Mono), not a content
+/// change.
 ///
 /// **No per-language prevalence bars** — the mockup shows "Greek 99% /
 /// English 51%" style bars, but nothing in [CountryFacts] tracks a
 /// per-language usage percentage (only the flat `officialLanguages` list),
 /// and no source for that number was identified. Rather than invent one,
-/// this renders official languages as a plain list. Flagged as a loose end
-/// in the scratch notes doc, not built around a guess.
+/// this renders official languages as a plain list. Flagged as a loose
+/// end in the scratch notes doc, not built around a guess.
 ///
 /// **Word of the day is static, not a real "pick for today"** — [featuredWord]
 /// is just whichever [Word] the caller passes in (CLAUDE.md lists word-of-
 /// day notifications as a don't-build-without-being-asked feature; this is
 /// the display half only, no rotation/selection logic). Its "Learn ___ →"
 /// button is deliberately non-interactive — the language flow isn't wired
-/// from the Overview tab yet, so a tappable button would promise a
-/// destination that doesn't exist (same reasoning [CitiesSection] already
-/// applies to its chevron).
+/// from this screen yet, so a tappable button would promise a destination
+/// that doesn't exist (same reasoning [CitiesSection] already applies to
+/// its chevron).
 class LanguagePairSection extends StatelessWidget {
   final List<String> officialLanguages;
   final Word? featuredWord;
@@ -47,33 +53,21 @@ class LanguagePairSection extends StatelessWidget {
           )
         : null;
 
-    final cards = showLanguages && showWord
-        ? IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(child: languagesCard!),
-                const SizedBox(width: 8),
-                Expanded(child: wordCard!),
-              ],
-            ),
-          )
-        : (languagesCard ?? wordCard!);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionHeading('Languages'),
-        cards,
-      ],
-    );
+    if (showLanguages && showWord) {
+      return IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: languagesCard!),
+            Container(width: 1, color: AccordionTheme.rule),
+            Expanded(child: wordCard!),
+          ],
+        ),
+      );
+    }
+    return languagesCard ?? wordCard!;
   }
 }
-
-/// The `.lang-badge` teal — a one-off content-type tag, not reused
-/// anywhere else on the page, so it lives here rather than in
-/// [CountryTheme] alongside tokens several widgets share.
-const _badgeTeal = Color(0xFF1A6060);
 
 class _LanguagesCard extends StatelessWidget {
   final List<String> languages;
@@ -82,32 +76,25 @@ class _LanguagesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(boxShadow: CountryTheme.cardShadow),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(CountryTheme.cardRadius),
-        // aged, not card — see CitiesSection's identical fix (2026-08-17,
-        // per Colleen); `_WordOfDayCard` alongside this one is unaffected,
-        // it's already navy.
-        child: ColoredBox(
-          color: CountryTheme.aged,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(13, 12, 13, 13),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (var i = 0; i < languages.length; i++) ...[
-                  if (i != 0)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: Container(height: 1, color: CountryTheme.rule),
-                    ),
-                  _LanguageRow(name: languages[i]),
-                ],
-              ],
-            ),
-          ),
+    return ColoredBox(
+      color: AccordionTheme.rose,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('LANGUAGES', style: AccordionTheme.sLabel),
+            const SizedBox(height: 8),
+            for (var i = 0; i < languages.length; i++) ...[
+              if (i != 0)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Container(height: 1, color: AccordionTheme.rule),
+                ),
+              _LanguageRow(name: languages[i]),
+            ],
+          ],
         ),
       ),
     );
@@ -125,31 +112,21 @@ class _LanguageRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          Expanded(
-            child: Text(
-              name,
-              style: const TextStyle(
-                fontFamily: 'Public Sans',
-                fontWeight: FontWeight.w600,
-                fontSize: 12.5,
-                color: CountryTheme.ink,
-              ),
-            ),
-          ),
+          Expanded(child: Text(name, style: AccordionTheme.rowTitle)),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
             decoration: BoxDecoration(
-              color: _badgeTeal.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(2),
+              color: AccordionTheme.roseDark.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(3),
             ),
             child: Text(
               'official',
               style: TextStyle(
-                fontFamily: 'Courier Prime',
+                fontFamily: AccordionTheme.dmMono,
                 fontSize: 8,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.3,
-                color: _badgeTeal,
+                color: AccordionTheme.roseDark,
               ),
             ),
           ),
@@ -171,93 +148,74 @@ class _WordOfDayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Matches the mockup's `.card-white` box-shadow: `inset 0 0 0 3px #fff,
+    // inset 0 0 0 5px rgba(196,80,112,.35)` — a thin rose ring set a few
+    // px in from the card's edge, not a top accent stripe (the previous
+    // version of this card). Recreated as two nested containers since
+    // Flutter has no direct inset-box-shadow-ring equivalent: an outer
+    // white fill supplies the 3px gap, an inner bordered box supplies the
+    // ring itself.
     return Container(
-      decoration: const BoxDecoration(boxShadow: CountryTheme.cardShadow),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(CountryTheme.cardRadius),
-        child: Stack(
-          children: [
-            const Positioned.fill(child: ColoredBox(color: CountryTheme.navy)),
-            // terracotta, not gold — see that token's doc comment
-            // (2026-08-17, gold-on-navy here read as "corporate").
-            const Positioned(top: 0, left: 0, right: 0, child: SizedBox(height: 3, child: ColoredBox(color: CountryTheme.terracotta))),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(13, 12, 13, 13),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'WORD OF THE DAY',
-                    style: CountryTheme.sectionLabel.copyWith(
-                      color: CountryTheme.onNavyMuted,
-                      fontSize: 8,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    word.lemma,
-                    style: CountryTheme.listRowTitle.copyWith(
-                      color: CountryTheme.onNavy,
-                      fontSize: 20,
-                    ),
-                  ),
-                  if (word.pronunciation != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      word.pronunciation!,
-                      style: CountryTheme.ticketStubSub.copyWith(color: CountryTheme.onNavyMuted),
-                    ),
-                  ],
-                  const SizedBox(height: 5),
-                  Text(
-                    word.translation,
-                    style: CountryTheme.listRowDetail.copyWith(
-                      color: CountryTheme.onNavySoft,
-                      fontSize: 12,
-                    ),
-                  ),
-                  if (word.usageNote != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      word.usageNote!,
-                      style: TextStyle(
-                        fontFamily: 'Public Sans',
-                        fontStyle: FontStyle.italic,
-                        fontSize: 10.5,
-                        color: CountryTheme.onNavyMuted,
-                        height: 1.4,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 10),
-                  // Static, not tappable — see class doc. terracotta, not
-                  // gold — see that token's doc comment (2026-08-17).
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-                    decoration: BoxDecoration(
-                      color: CountryTheme.terracotta,
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                    child: Text(
-                      languageName == null ? 'Learn more →' : 'Learn $languageName →',
-                      // onNavy (white), not navy — navy-on-gold had ~3.9:1
-                      // contrast; navy-on-terracotta (terracotta being the
-                      // darker tone) drops to ~3:1, noticeably harder to
-                      // read. White gets back to ~4:1.
-                      style: const TextStyle(
-                        fontFamily: 'Courier Prime',
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.4,
-                        color: CountryTheme.onNavy,
-                      ),
-                    ),
-                  ),
-                ],
+      color: AccordionTheme.white,
+      padding: const EdgeInsets.all(3),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AccordionTheme.white,
+          border: Border.all(color: AccordionTheme.roseDark.withValues(alpha: 0.35), width: 2),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('WORD OF THE DAY', style: AccordionTheme.sLabel.copyWith(color: AccordionTheme.roseDark)),
+              const SizedBox(height: 8),
+              Text(
+                word.lemma,
+                style: AccordionTheme.sHead.copyWith(fontSize: 22, fontWeight: FontWeight.w900),
               ),
-            ),
-          ],
+              if (word.pronunciation != null) ...[
+                const SizedBox(height: 4),
+                Text(word.pronunciation!, style: AccordionTheme.tfSub.copyWith(color: AccordionTheme.lavenderDark)),
+              ],
+              const SizedBox(height: 5),
+              Text(
+                word.translation,
+                style: AccordionTheme.sBody.copyWith(fontSize: 12.5, fontWeight: FontWeight.w600, color: AccordionTheme.ink2),
+              ),
+              if (word.usageNote != null) ...[
+                const SizedBox(height: 4),
+                Text(
+                  word.usageNote!,
+                  style: AccordionTheme.sBody.copyWith(
+                    fontSize: 11,
+                    fontStyle: FontStyle.italic,
+                    color: AccordionTheme.ink3,
+                  ),
+                ),
+              ],
+              const SizedBox(height: 10),
+              // Static, not tappable — see class doc.
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                decoration: BoxDecoration(
+                  color: AccordionTheme.ink,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  languageName == null ? 'Learn →' : 'Learn $languageName →',
+                  style: const TextStyle(
+                    fontFamily: AccordionTheme.dmMono,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.5,
+                    color: AccordionTheme.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

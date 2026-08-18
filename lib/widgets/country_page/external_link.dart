@@ -16,16 +16,23 @@ import '../../theme/country_theme.dart';
 /// color in the new palette). Overridable via [color] for the one call site
 /// that now sits on a navy surface itself (`_TicketStub`, 2026-08-17) —
 /// navy-on-navy would be invisible there.
+///
+/// [fontFamily] defaults to 'Public Sans' (unchanged) — overridable since
+/// the accordion-style restyle's call sites (`AccordionTheme`-based, DM
+/// Mono throughout) want their link text in DM Mono, not this file's
+/// original font.
 class ExternalLink extends StatelessWidget {
   final String label;
   final String url;
   final Color color;
+  final String fontFamily;
 
   const ExternalLink({
     super.key,
     required this.label,
     required this.url,
     this.color = CountryTheme.navy,
+    this.fontFamily = 'Public Sans',
   });
 
   @override
@@ -38,7 +45,7 @@ class ExternalLink extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              fontFamily: 'Public Sans',
+              fontFamily: fontFamily,
               fontWeight: FontWeight.w600,
               fontSize: 11.5,
               color: color,
