@@ -53,14 +53,34 @@ class VisaSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('For ${visa.nationalityIsoCode} passport holders', style: AccordionTheme.sHead),
+              Text(
+                'For ${visa.nationalityIsoCode} passport holders',
+                style: AccordionTheme.sHead,
+              ),
               const SizedBox(height: 6),
+              // Settled, 2026-08-19, per Colleen: full-width text, Apply
+              // right-aligned on its own line below rather than sharing a
+              // line with it — same pattern the source footer below now
+              // uses too, for consistency between the two.
               Text(visa.summary, style: AccordionTheme.sBody),
+              if (visa.applicationUrl != null) ...[
+                const SizedBox(height: 4),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ExternalLink(
+                    label: 'Apply',
+                    url: visa.applicationUrl!,
+                    color: accent,
+                    fontFamily: AccordionTheme.dmMono,
+                  ),
+                ),
+              ],
               if (regionalNote != null) ...[
                 const SizedBox(height: 10),
                 _RegionalNoteWarning(summary: regionalNote!.summary),
               ],
-              if (visa.prohibitedOnEntry != null || visa.prohibitedOnExit != null)
+              if (visa.prohibitedOnEntry != null ||
+                  visa.prohibitedOnExit != null)
                 Container(
                   margin: const EdgeInsets.only(top: 12),
                   padding: const EdgeInsets.only(top: 11),
@@ -71,11 +91,18 @@ class VisaSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (visa.prohibitedOnEntry != null)
-                        _ProhibitedNote(label: 'Declare on entry', body: visa.prohibitedOnEntry!),
-                      if (visa.prohibitedOnEntry != null && visa.prohibitedOnExit != null)
+                        _ProhibitedNote(
+                          label: 'Declare on entry',
+                          body: visa.prohibitedOnEntry!,
+                        ),
+                      if (visa.prohibitedOnEntry != null &&
+                          visa.prohibitedOnExit != null)
                         const SizedBox(height: 8),
                       if (visa.prohibitedOnExit != null)
-                        _ProhibitedNote(label: 'Declare on exit', body: visa.prohibitedOnExit!),
+                        _ProhibitedNote(
+                          label: 'Declare on exit',
+                          body: visa.prohibitedOnExit!,
+                        ),
                     ],
                   ),
                 ),
@@ -85,25 +112,34 @@ class VisaSection extends StatelessWidget {
                 decoration: const BoxDecoration(
                   border: Border(top: BorderSide(color: AccordionTheme.rule)),
                 ),
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: 12,
-                  runSpacing: 4,
+                // Column, not Row/Wrap — per Colleen, 2026-08-19: "move
+                // source down a row so it's still right aligned but not
+                // in line with the 'visa and entry info verified...' for
+                // styling consistency" (matching Apply's own text-above/
+                // link-below-right-aligned treatment, just above).
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('Verified ${formatShortDate(visa.lastVerifiedAt)}', style: AccordionTheme.srcRow),
-                    ExternalLink(
-                      label: 'Official source',
-                      url: visa.officialUrl,
-                      color: accent,
-                      fontFamily: AccordionTheme.dmMono,
+                    // "Verified" -> "Visa & entry info verified", 2026-08-19,
+                    // per Colleen — Apply moved out of this row (see
+                    // above), so this footer is citation-only now:
+                    // what's verified, then the source it's verified
+                    // against. "Official source" -> "Source" the same
+                    // day, per Colleen.
+                    Text(
+                      'Visa & entry info verified ${formatShortDate(visa.lastVerifiedAt)}',
+                      style: AccordionTheme.srcRow,
                     ),
-                    if (visa.applicationUrl != null)
-                      ExternalLink(
-                        label: 'Apply',
-                        url: visa.applicationUrl!,
+                    const SizedBox(height: 4),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: ExternalLink(
+                        label: 'Source',
+                        url: visa.officialUrl,
                         color: accent,
                         fontFamily: AccordionTheme.dmMono,
                       ),
+                    ),
                   ],
                 ),
               ),
@@ -114,7 +150,10 @@ class VisaSection extends StatelessWidget {
           Positioned(
             bottom: 14,
             right: 16,
-            child: _RegionalStamp(groupSlug: regionalNote!.groupSlug, accent: accent),
+            child: _RegionalStamp(
+              groupSlug: regionalNote!.groupSlug,
+              accent: accent,
+            ),
           ),
       ],
     );
@@ -138,7 +177,10 @@ class _RegionalNoteWarning extends StatelessWidget {
       ),
       child: Text(
         summary,
-        style: AccordionTheme.sBody.copyWith(fontSize: 12.5, color: AccordionTheme.warn),
+        style: AccordionTheme.sBody.copyWith(
+          fontSize: 12.5,
+          color: AccordionTheme.warn,
+        ),
       ),
     );
   }

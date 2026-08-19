@@ -45,50 +45,73 @@ void main() {
 
   Future<void> pump(WidgetTester tester, Widget child) async {
     await tester.pumpWidget(
-      MaterialApp(home: Scaffold(body: SingleChildScrollView(child: child))),
+      MaterialApp(
+        home: Scaffold(body: SingleChildScrollView(child: child)),
+      ),
     );
   }
 
-  testWidgets('VisaSection: renders summary, apply link, and its own source, no exception',
-      (tester) async {
-    await pump(tester, VisaSection(visa: visaWithApplyLink, accent: _accent));
+  testWidgets(
+    'VisaSection: renders summary, apply link, and its own source, no exception',
+    (tester) async {
+      await pump(tester, VisaSection(visa: visaWithApplyLink, accent: _accent));
 
-    expect(tester.takeException(), isNull);
-    expect(find.textContaining('90 days'), findsOneWidget);
-    expect(find.text('Apply'), findsOneWidget);
-    expect(find.text('Official source'), findsOneWidget);
-  });
+      expect(tester.takeException(), isNull);
+      expect(find.textContaining('90 days'), findsOneWidget);
+      expect(find.text('Apply'), findsOneWidget);
+      // 'Official source' -> 'Source', 2026-08-19, per Colleen (see
+      // VisaSection).
+      expect(find.text('Source'), findsOneWidget);
+    },
+  );
 
-  testWidgets('VisaSection: regional note renders a warning box and a corner stamp',
-      (tester) async {
-    await pump(
-      tester,
-      VisaSection(visa: visaWithApplyLink, regionalNote: regionalNote, accent: _accent),
-    );
+  testWidgets(
+    'VisaSection: regional note renders a warning box and a corner stamp',
+    (tester) async {
+      await pump(
+        tester,
+        VisaSection(
+          visa: visaWithApplyLink,
+          regionalNote: regionalNote,
+          accent: _accent,
+        ),
+      );
 
-    expect(tester.takeException(), isNull);
-    expect(find.textContaining('ETIAS'), findsOneWidget);
-    expect(find.text('SCHENGEN'), findsOneWidget);
-  });
+      expect(tester.takeException(), isNull);
+      expect(find.textContaining('ETIAS'), findsOneWidget);
+      expect(find.text('SCHENGEN'), findsOneWidget);
+    },
+  );
 
-  testWidgets('TravelAdvisorySection: renders level, summary, and full-advisory link, no exception',
-      (tester) async {
-    await pump(tester, TravelAdvisorySection(advisories: [advisory], accent: _accent));
+  testWidgets(
+    'TravelAdvisorySection: renders level, summary, and full-advisory link, no exception',
+    (tester) async {
+      await pump(
+        tester,
+        TravelAdvisorySection(advisories: [advisory], accent: _accent),
+      );
 
-    expect(tester.takeException(), isNull);
-    expect(find.textContaining('Level 1'), findsOneWidget);
-    expect(find.text('Full advisory'), findsOneWidget);
-  });
+      expect(tester.takeException(), isNull);
+      expect(find.textContaining('Level 1'), findsOneWidget);
+      expect(find.text('Full advisory'), findsOneWidget);
+    },
+  );
 
-  testWidgets('TravelAdvisorySection: emergency number renders as a stamp when known',
-      (tester) async {
-    await pump(
-      tester,
-      TravelAdvisorySection(advisories: [advisory], emergencyNumber: '911', accent: _accent),
-    );
+  testWidgets(
+    'TravelAdvisorySection: emergency number renders as a stamp when known',
+    (tester) async {
+      await pump(
+        tester,
+        TravelAdvisorySection(
+          advisories: [advisory],
+          emergencyNumber: '911',
+          accent: _accent,
+        ),
+      );
 
-    expect(tester.takeException(), isNull);
-    expect(find.text('911'), findsOneWidget);
-    expect(find.text('EMERGENCY'), findsOneWidget);
-  });
+      expect(tester.takeException(), isNull);
+      expect(find.text('911'), findsOneWidget);
+      expect(find.text('EMERGENCY'), findsOneWidget);
+    },
+  );
 }

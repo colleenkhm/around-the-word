@@ -45,7 +45,17 @@ class TravelAdvisorySection extends StatelessWidget {
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+          // Right padding widens to make room for the emergency stamp
+          // (`Positioned` at the same top-right corner) — per Colleen,
+          // 2026-08-19: it was bleeding into the first advisory's level
+          // text, which otherwise has no reason to know the stamp exists
+          // and just uses the full row width up to the base 20px.
+          padding: EdgeInsets.fromLTRB(
+            20,
+            16,
+            emergencyNumber != null ? 88 : 20,
+            16,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -55,13 +65,21 @@ class TravelAdvisorySection extends StatelessWidget {
                   Container(height: 1, color: AccordionTheme.rule),
                   const SizedBox(height: 14),
                 ],
-                _AdvisoryRow(advisory: advisories[i], level: _levelNumber(advisories[i]), accent: accent),
+                _AdvisoryRow(
+                  advisory: advisories[i],
+                  level: _levelNumber(advisories[i]),
+                  accent: accent,
+                ),
               ],
             ],
           ),
         ),
         if (emergencyNumber != null)
-          Positioned(top: 16, right: 20, child: _EmergencyStamp(number: emergencyNumber!)),
+          Positioned(
+            top: 16,
+            right: 20,
+            child: _EmergencyStamp(number: emergencyNumber!),
+          ),
       ],
     );
   }
@@ -72,7 +90,11 @@ class _AdvisoryRow extends StatelessWidget {
   final int? level;
   final Color accent;
 
-  const _AdvisoryRow({required this.advisory, required this.level, required this.accent});
+  const _AdvisoryRow({
+    required this.advisory,
+    required this.level,
+    required this.accent,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +108,9 @@ class _AdvisoryRow extends StatelessWidget {
           const SizedBox(height: 5),
           Text(
             [advisory.level, advisory.levelLabel].nonNulls.join(' — '),
-            style: AccordionTheme.sHead.copyWith(color: color ?? AccordionTheme.ink),
+            style: AccordionTheme.sHead.copyWith(
+              color: color ?? AccordionTheme.ink,
+            ),
           ),
         ],
         if (advisory.summary != null) ...[
@@ -94,21 +118,35 @@ class _AdvisoryRow extends StatelessWidget {
           Text(advisory.summary!, style: AccordionTheme.sBody),
         ],
         const SizedBox(height: 10),
+        // Dates on one line, "Full advisory" right-aligned on its own
+        // line below — same pattern [VisaSection]'s footer uses for
+        // "Source" now, per Colleen, 2026-08-19, for consistency between
+        // the two sections' source/citation rows.
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: 12,
           runSpacing: 4,
           children: [
             if (advisory.issuedAt != null)
-              Text('Issued ${formatShortDate(advisory.issuedAt!)}', style: AccordionTheme.srcRow),
-            Text('Checked ${formatShortDate(advisory.lastVerifiedAt)}', style: AccordionTheme.srcRow),
-            ExternalLink(
-              label: 'Full advisory',
-              url: advisory.officialUrl,
-              color: accent,
-              fontFamily: AccordionTheme.dmMono,
+              Text(
+                'Issued ${formatShortDate(advisory.issuedAt!)}',
+                style: AccordionTheme.srcRow,
+              ),
+            Text(
+              'Checked ${formatShortDate(advisory.lastVerifiedAt)}',
+              style: AccordionTheme.srcRow,
             ),
           ],
+        ),
+        const SizedBox(height: 4),
+        Align(
+          alignment: Alignment.centerRight,
+          child: ExternalLink(
+            label: 'Full advisory',
+            url: advisory.officialUrl,
+            color: accent,
+            fontFamily: AccordionTheme.dmMono,
+          ),
         ),
       ],
     );

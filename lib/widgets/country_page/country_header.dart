@@ -124,15 +124,21 @@ class _CountryHeaderState extends State<CountryHeader> {
         Container(
           width: double.infinity,
           color: header.tint,
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
+          // Top 18->10->6, 2026-08-19, per Colleen: the first cut still
+          // "looks like a lot of space between site nav and destination"
+          // — the rest of that gap was SiteHeader's own bottom padding
+          // (16->10, see that file), not just this one.
+          padding: const EdgeInsets.fromLTRB(20, 6, 20, 16),
           child: Stack(
             children: [
               Padding(
                 // Leaves room on the right for the flag, positioned
                 // absolutely — matches the mockup's `.tk-flag` overlay
                 // rather than sharing a Row (so the flag doesn't push the
-                // name to wrap early on a long country name).
-                padding: EdgeInsets.only(right: isDesktop ? 78 : 62),
+                // name to wrap early on a long country name). Widened
+                // alongside the flag's own bigger size, same ~24-26px
+                // margin as before.
+                padding: EdgeInsets.only(right: isDesktop ? 94 : 74),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -142,7 +148,9 @@ class _CountryHeaderState extends State<CountryHeader> {
                         color: onHeaderSoft,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    // 6->12, 2026-08-19, per Colleen: "increase space
+                    // between destination and destination name."
+                    const SizedBox(height: 12),
                     Text(
                       widget.bundle.country.nameCommon,
                       style: AccordionTheme.tkName(
@@ -150,7 +158,12 @@ class _CountryHeaderState extends State<CountryHeader> {
                       ).copyWith(color: header.textColor),
                     ),
                     if (widget.nativeName != null) ...[
-                      const SizedBox(height: 4),
+                      // Matches the 12px gap above the name (DESTINATION
+                      // -> name), 2026-08-19, per Colleen: "make sure the
+                      // gap between destination name and the secondary
+                      // name below is as big as the gap between
+                      // 'destination' and destination name."
+                      const SizedBox(height: 12),
                       Text.rich(
                         TextSpan(
                           style: AccordionTheme.tkNative.copyWith(
@@ -169,12 +182,20 @@ class _CountryHeaderState extends State<CountryHeader> {
                   ],
                 ),
               ),
+              // top/bottom: 0 (not just top: 0) + an inner Center — per
+              // Colleen, 2026-08-18: "vertically center it within its
+              // section" — stretches this Positioned across the full
+              // masthead height instead of pinning the flag to the top
+              // edge, so Center actually has room to center within.
               Positioned(
                 top: 0,
                 right: 0,
-                child: _Flag(
-                  isoCode: widget.bundle.country.isoCode,
-                  desktop: isDesktop,
+                bottom: 0,
+                child: Center(
+                  child: _Flag(
+                    isoCode: widget.bundle.country.isoCode,
+                    desktop: isDesktop,
+                  ),
                 ),
               ),
             ],
@@ -188,6 +209,7 @@ class _CountryHeaderState extends State<CountryHeader> {
           onToggleAll: widget.onToggleAll,
           accent: widget.accent,
           stub: widget.stub,
+          latitude: widget.bundle.facts.latitude,
         ),
       ],
     );
@@ -202,32 +224,117 @@ class _Flag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = desktop ? 52.0 : 38.0;
-    final height = desktop ? 36.0 : 26.0;
+    // Bumped from 52x36/38x26, then again from 60x41/44x30, 2026-08-18,
+    // per Colleen: "make the flag a bit bigger" (asked twice).
+    final imageWidth = desktop ? 68.0 : 50.0;
+    final imageHeight = desktop ? 46.0 : 34.0;
+    // A real white mat around the image, matching this app's existing
+    // passport/ticket-stamp motif (see HANDOFF.md's rotated-stamp corner
+    // mark on Visa/Advisory content).
+    const matPadding = 3.0;
+    // The perforated edge — per Colleen, 2026-08-19, clarifying what
+    // "stamp-like border" meant: "more like one of those borders with
+    // the tiny triangles like how stamps get perforated," not the plain
+    // rounded mat this had first. See [_StampEdgePainter].
+    const toothSize = 3.0;
+    final matWidth = imageWidth + matPadding * 2;
+    final matHeight = imageHeight + matPadding * 2;
+    final totalWidth = matWidth + toothSize * 2;
+    final totalHeight = matHeight + toothSize * 2;
     final placeholder = ColoredBox(color: Colors.white.withValues(alpha: 0.15));
 
-    return Container(
-      width: width,
-      height: height,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(3),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
-      ),
-      child: Image.network(
-        flagPngUrl(isoCode),
-        width: width,
-        height: height,
-        fit: BoxFit.cover,
-        loadingBuilder: (context, child, progress) =>
-            progress == null ? child : placeholder,
-        errorBuilder: (context, error, stackTrace) {
-          debugPrint('Flag fetch failed for $isoCode: $error');
-          return placeholder;
-        },
+    return SizedBox(
+      width: totalWidth,
+      height: totalHeight,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CustomPaint(
+            size: Size(totalWidth, totalHeight),
+            painter: _StampEdgePainter(
+              matRect: Rect.fromLTWH(toothSize, toothSize, matWidth, matHeight),
+              toothSize: toothSize,
+              color: Colors.white,
+            ),
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(1.5),
+            child: Image.network(
+              flagPngUrl(isoCode),
+              width: imageWidth,
+              height: imageHeight,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, progress) =>
+                  progress == null ? child : placeholder,
+              errorBuilder: (context, error, stackTrace) {
+                debugPrint('Flag fetch failed for $isoCode: $error');
+                return placeholder;
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
+}
+
+/// Paints a filled white shape tracing [matRect]'s perimeter but with a
+/// zigzag of small outward-pointing triangles instead of a straight edge
+/// on all four sides — a postage-stamp perforation, not a plain border.
+/// The flag image itself sits on top, sized to fit *inside* [matRect]'s
+/// straight-edged inset, so the zigzag only ever shows as a decorative
+/// margin around it, never clipping into the image.
+class _StampEdgePainter extends CustomPainter {
+  final Rect matRect;
+  final double toothSize;
+  final Color color;
+
+  const _StampEdgePainter({
+    required this.matRect,
+    required this.toothSize,
+    required this.color,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()..moveTo(matRect.left, matRect.top);
+    _zigzagTo(path, matRect.topLeft, matRect.topRight, const Offset(0, -1));
+    _zigzagTo(path, matRect.topRight, matRect.bottomRight, const Offset(1, 0));
+    _zigzagTo(
+      path,
+      matRect.bottomRight,
+      matRect.bottomLeft,
+      const Offset(0, 1),
+    );
+    _zigzagTo(path, matRect.bottomLeft, matRect.topLeft, const Offset(-1, 0));
+    path.close();
+
+    canvas.drawShadow(path, Colors.black.withValues(alpha: 0.35), 1.2, false);
+    canvas.drawPath(path, Paint()..color = color);
+  }
+
+  /// Walks [start] to [end] in [toothSize]-length steps, alternating each
+  /// step's endpoint between the straight baseline and a point pushed out
+  /// by [toothSize] along [outward] — the up/down alternation is what
+  /// forms the triangle teeth.
+  void _zigzagTo(Path path, Offset start, Offset end, Offset outward) {
+    final delta = end - start;
+    final length = delta.distance;
+    final steps = (length / toothSize).round().clamp(2, 200);
+    final dir = Offset(delta.dx / length, delta.dy / length);
+    final stepLength = length / steps;
+    for (var i = 1; i <= steps; i++) {
+      final base = start + dir * (stepLength * i);
+      final point = i.isOdd ? base + outward * toothSize : base;
+      path.lineTo(point.dx, point.dy);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _StampEdgePainter oldDelegate) =>
+      oldDelegate.matRect != matRect ||
+      oldDelegate.toothSize != toothSize ||
+      oldDelegate.color != color;
 }
 
 /// The ticket's stub — local time + a $1 USD conversion (`.tk-stub`), plus
@@ -249,6 +356,11 @@ class _TicketStub extends StatelessWidget {
   final SectionColors accent;
   final SectionColors stub;
 
+  /// Feeds the "LOCAL TIME" column's own trailing line — see
+  /// [_hemisphereLabel]. From [CountryFacts.latitude]; `null` renders
+  /// nothing rather than guessing.
+  final double? latitude;
+
   const _TicketStub({
     required this.utcOffsetMinutes,
     required this.exchangeRate,
@@ -257,6 +369,7 @@ class _TicketStub extends StatelessWidget {
     required this.onToggleAll,
     required this.accent,
     required this.stub,
+    required this.latitude,
   });
 
   @override
@@ -275,7 +388,10 @@ class _TicketStub extends StatelessWidget {
             strokeWidth: 1.5,
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
+            // Top/bottom evened up (14/12 -> 13/13), 2026-08-19, per
+            // Colleen: "the padding around the overall local time/
+            // currency section info" read top-heavy.
+            padding: const EdgeInsets.fromLTRB(20, 13, 20, 13),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -286,6 +402,21 @@ class _TicketStub extends StatelessWidget {
                     local == null
                         ? ''
                         : '${_dateLabel(local)} · ${_utcLabel()}',
+                    // Lines up with currency's own trailing "Convert"
+                    // link — per Colleen, 2026-08-19: "add the country's
+                    // hemisphere underneath the time/in line with the
+                    // bottom row of currency."
+                    trailing: _hemisphereLabel() == null
+                        ? null
+                        : Text(
+                            _hemisphereLabel()!,
+                            style: TextStyle(
+                              fontFamily: AccordionTheme.dmMono,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 11.5,
+                              color: stub.textColor.withValues(alpha: 0.75),
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -394,6 +525,17 @@ class _TicketStub extends StatelessWidget {
     final offset = utcOffsetMinutes;
     if (offset == null) return null;
     return DateTime.now().toUtc().add(Duration(minutes: offset));
+  }
+
+  /// North/South only — "hemisphere" on its own conventionally means this
+  /// axis, not the East/West split [longitude] would give. `null` for a
+  /// missing [latitude] rather than a guess; a country dead on the
+  /// equator gets its own label instead of forcing it into either side.
+  String? _hemisphereLabel() {
+    final lat = latitude;
+    if (lat == null) return null;
+    if (lat == 0) return 'On the Equator';
+    return lat > 0 ? 'Northern Hemisphere' : 'Southern Hemisphere';
   }
 
   String _timeLabel(DateTime local) {

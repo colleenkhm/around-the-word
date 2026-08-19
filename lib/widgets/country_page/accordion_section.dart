@@ -142,7 +142,22 @@ class _Row extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: AccordionTheme.secName.copyWith(color: textColor),
+                      // A thin underline, expanded-only — tried as an
+                      // inset line below the whole row first, per
+                      // Colleen, 2026-08-19: "let's try the section title
+                      // underline instead." `TextDecoration.underline`
+                      // hugs just the title text itself (whatever its
+                      // actual rendered width is), not a fixed-width line
+                      // guessed at separately. `decorationColor` matches
+                      // [textColor] itself now, not a fixed white — per
+                      // Colleen: "an underline that's the same color as
+                      // the text."
+                      style: AccordionTheme.secName.copyWith(
+                        color: textColor,
+                        decoration: expanded ? TextDecoration.underline : null,
+                        decorationColor: textColor,
+                        decorationThickness: 1.5,
+                      ),
                     ),
                     // Subheading is collapsed-only, and currently off
                     // altogether — see AccordionSection.showSubheading.
