@@ -14,6 +14,7 @@
     "currencyName": "Costa Rican Colón",
     "callingCode": "+506",
     "officialLanguages": ["Spanish"],
+    "borderingCountryCodes": ["PA", "NI"],
     "latitude": 9.7489,
     "longitude": -83.7534,
     "utcOffsetMinutes": -360,

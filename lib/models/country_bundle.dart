@@ -108,6 +108,21 @@ class CountryFacts {
   /// for a real imported country.
   final String? emergencyNumber;
 
+  /// ISO alpha-2 codes of every country this one shares a land border
+  /// with (e.g. `["PA", "NI"]` for Costa Rica) — matches [Country.countryCode]/
+  /// [Country.isoCode], so the Neighbors section can resolve each entry
+  /// against the already-loaded country list to link to that country's
+  /// own page. Added 2026-08-19 for the country page's new "Neighbors"
+  /// section (per Colleen). Empty, not nullable, same reasoning as
+  /// [officialLanguages] — an island nation genuinely has zero land
+  /// borders, that's a real answer, not a missing one.
+  ///
+  /// **Commodity, not curated** — REST Countries' `borders` field covers
+  /// this already (see the data architecture doc's External Data
+  /// Sources section); hand-set in mock bundles only until the importer
+  /// exists, same status [flagSvgUrl]/[capital]/etc. already have.
+  final List<String> borderingCountryCodes;
+
   const CountryFacts({
     this.flagSvgUrl,
     this.capital,
@@ -122,6 +137,7 @@ class CountryFacts {
     this.accentColorHex,
     this.lastImportedAt,
     this.emergencyNumber,
+    this.borderingCountryCodes = const [],
   });
 
   factory CountryFacts.fromJson(Map<String, dynamic> json) {
@@ -143,6 +159,10 @@ class CountryFacts {
           ? null
           : DateTime.parse(json['lastImportedAt'] as String),
       emergencyNumber: json['emergencyNumber'] as String?,
+      borderingCountryCodes:
+          (json['borderingCountryCodes'] as List<dynamic>? ?? [])
+              .map((e) => e as String)
+              .toList(),
     );
   }
 }
@@ -195,7 +215,9 @@ class Leader {
     return Leader(
       title: json['title'] as String,
       name: json['name'] as String,
-      since: json['since'] == null ? null : DateTime.parse(json['since'] as String),
+      since: json['since'] == null
+          ? null
+          : DateTime.parse(json['since'] as String),
       sourceUrl: json['sourceUrl'] as String?,
       lastVerifiedAt: json['lastVerifiedAt'] == null
           ? null
@@ -252,11 +274,11 @@ class CountryBundle {
   /// still the right thing to filter the real `TabBarView` on once
   /// CountryPageScreen exists and hosts all four tabs for real.
   List<CountryTab> get availableTabs => [
-        CountryTab.overview,
-        if (pointsOfInterest.isNotEmpty) CountryTab.explore,
-        if (guide.hasGuideTabContent) CountryTab.guide,
-        if (phrases.isNotEmpty || words.isNotEmpty) CountryTab.language,
-      ];
+    CountryTab.overview,
+    if (pointsOfInterest.isNotEmpty) CountryTab.explore,
+    if (guide.hasGuideTabContent) CountryTab.guide,
+    if (phrases.isNotEmpty || words.isNotEmpty) CountryTab.language,
+  ];
 
   factory CountryBundle.fromJson(Map<String, dynamic> json) {
     return CountryBundle(

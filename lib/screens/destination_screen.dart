@@ -5,6 +5,7 @@ import '../models/country.dart';
 import '../state/trip_selection.dart';
 import '../theme/accordion_theme.dart';
 import '../widgets/country_page/dashed_divider.dart';
+import '../widgets/country_page/site_footer.dart';
 import '../widgets/country_page/site_header.dart';
 import 'about_screen.dart';
 import 'country_header_preview_screen.dart';
@@ -75,7 +76,9 @@ class _DestinationScreenState extends State<DestinationScreen> {
   void _selectCountry(TripSelection trip, Country country) {
     trip.selectCountry(country);
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => CountryHeaderPreviewScreen(country: country)),
+      MaterialPageRoute(
+        builder: (context) => CountryHeaderPreviewScreen(country: country),
+      ),
     );
   }
 
@@ -93,8 +96,8 @@ class _DestinationScreenState extends State<DestinationScreen> {
     final results = _query.isEmpty
         ? const <Country>[]
         : trip.countries
-            .where((c) => c.name.toLowerCase().contains(_query.toLowerCase()))
-            .toList();
+              .where((c) => c.name.toLowerCase().contains(_query.toLowerCase()))
+              .toList();
 
     return Scaffold(
       backgroundColor: AccordionTheme.page,
@@ -121,11 +124,20 @@ class _DestinationScreenState extends State<DestinationScreen> {
                     const SizedBox(height: 24),
                     TextField(
                       controller: _searchController,
-                      style: const TextStyle(fontFamily: AccordionTheme.dmSans, color: AccordionTheme.ink),
+                      style: const TextStyle(
+                        fontFamily: AccordionTheme.dmSans,
+                        color: AccordionTheme.ink,
+                      ),
                       decoration: const InputDecoration(
                         labelText: 'Search countries',
-                        labelStyle: TextStyle(fontFamily: AccordionTheme.dmMono, color: AccordionTheme.ink3),
-                        prefixIcon: Icon(Icons.search, color: AccordionTheme.ink3),
+                        labelStyle: TextStyle(
+                          fontFamily: AccordionTheme.dmMono,
+                          color: AccordionTheme.ink3,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: AccordionTheme.ink3,
+                        ),
                         // white, not the app-wide theme's default fill
                         // (CountryTheme.card, a cream/tan left over from
                         // the navy/gold theme) — was bleeding through
@@ -145,7 +157,10 @@ class _DestinationScreenState extends State<DestinationScreen> {
                         // focus ring back to the header/heading/chevron
                         // color already used everywhere else on this page.
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AccordionTheme.ink, width: 1.5),
+                          borderSide: BorderSide(
+                            color: AccordionTheme.ink,
+                            width: 1.5,
+                          ),
                         ),
                       ),
                       onChanged: (value) => setState(() => _query = value),
@@ -161,15 +176,23 @@ class _DestinationScreenState extends State<DestinationScreen> {
                               padding: EdgeInsets.zero,
                               itemCount: results.length,
                               separatorBuilder: (context, index) =>
-                                  const DashedDivider(color: AccordionTheme.rule),
+                                  const DashedDivider(
+                                    color: AccordionTheme.rule,
+                                  ),
                               itemBuilder: (context, index) {
                                 final country = results[index];
                                 return ListTile(
                                   dense: true,
                                   visualDensity: VisualDensity.compact,
                                   contentPadding: EdgeInsets.zero,
-                                  title: Text(country.name, style: AccordionTheme.rowTitle),
-                                  trailing: const Icon(Icons.chevron_right, color: AccordionTheme.ruleDark),
+                                  title: Text(
+                                    country.name,
+                                    style: AccordionTheme.rowTitle,
+                                  ),
+                                  trailing: const Icon(
+                                    Icons.chevron_right,
+                                    color: AccordionTheme.ruleDark,
+                                  ),
                                   onTap: () => _selectCountry(trip, country),
                                 );
                               },
@@ -181,7 +204,9 @@ class _DestinationScreenState extends State<DestinationScreen> {
                               child: Icon(
                                 Icons.public,
                                 size: 160,
-                                color: AccordionTheme.ink.withValues(alpha: 0.08),
+                                color: AccordionTheme.ink.withValues(
+                                  alpha: 0.08,
+                                ),
                               ),
                             ),
                     ),
@@ -189,6 +214,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                 ),
               ),
             ),
+            const SiteFooter(),
           ],
         ),
       ),

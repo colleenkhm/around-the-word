@@ -29,10 +29,10 @@ class SectionColors {
   });
 }
 
-/// The seven section accents (Visa & Entry, Cities, When to Visit, Travel
-/// Advisory, Language, Practical Norms, Additional Resources) plus the
-/// ticket stub's own accent — generated from a country's actual flag
-/// colors rather than hand-picked per section.
+/// The eight section accents (Visa & Entry, Cities, Neighbors, When to
+/// Visit, Travel Advisory, Language, Practical Norms, Additional
+/// Resources) plus the ticket stub's own accent — generated from a
+/// country's actual flag colors rather than hand-picked per section.
 ///
 /// **2026-08-18: per-country recoloring**, per Colleen: "how difficult
 /// would it be to write code that pulls hex codes from each country's
@@ -86,6 +86,13 @@ class SectionColors {
 class SectionPalette {
   final SectionColors visa;
   final SectionColors cities;
+
+  /// Neighbors' accent — added 2026-08-19 alongside that new section (per
+  /// Colleen), cycling the same flag colors as every other section, same
+  /// reasoning [resources] already established for a section added after
+  /// the original six.
+  final SectionColors neighbors;
+
   final SectionColors times;
   final SectionColors advisory;
   final SectionColors language;
@@ -123,6 +130,7 @@ class SectionPalette {
   const SectionPalette({
     required this.visa,
     required this.cities,
+    required this.neighbors,
     required this.times,
     required this.advisory,
     required this.language,
@@ -133,25 +141,26 @@ class SectionPalette {
   });
 
   /// Maps [colors] (real flag colors, most-prominent first — see
-  /// [extractFlagBaseColors]) onto the accordion's seven sections in
+  /// [extractFlagBaseColors]) onto the accordion's eight sections in
   /// order, cycling (`i % colors.length`) rather than requiring exactly
-  /// seven — a three-color flag (most flags) repeats those three across
-  /// the seven slots, not seven distinct-but-invented colors.
+  /// eight — a three-color flag (most flags) repeats those three across
+  /// the eight slots, not eight distinct-but-invented colors.
   factory SectionPalette.fromFlagColors(List<Color> colors) {
     assert(
       colors.isNotEmpty,
       'SectionPalette.fromFlagColors needs at least one color',
     );
-    final ordered = List.generate(7, (i) => colors[i % colors.length]);
+    final ordered = List.generate(8, (i) => colors[i % colors.length]);
     final sectionColors = ordered.map(_colorsFor).toList();
     return SectionPalette(
       visa: sectionColors[0],
       cities: sectionColors[1],
-      times: sectionColors[2],
-      advisory: sectionColors[3],
-      language: sectionColors[4],
-      norms: sectionColors[5],
-      resources: sectionColors[6],
+      neighbors: sectionColors[2],
+      times: sectionColors[3],
+      advisory: sectionColors[4],
+      language: sectionColors[5],
+      norms: sectionColors[6],
+      resources: sectionColors[7],
       header: _colorsFor(_deepen(colors.first), toneDown: false),
       stub: _colorsFor(_midtone(colors.first), toneDown: false),
     );
@@ -208,17 +217,19 @@ class SectionPalette {
 
   /// The loading-state/extraction-failure fallback — the original
   /// hand-picked Costa-Rica-era hues (`AccordionTheme`'s old `sky`/
-  /// `lavender`/`butter`/`sage`/`rose`/`peach` constants, plus `sky`
-  /// reused for the seventh slot — Additional Resources didn't exist in
-  /// that original six-token palette, so there's no seventh hand-picked
-  /// hue to fall back to), run through the same [_colorsFor] derivation
-  /// every real country's colors use, so nothing visibly changes for the
-  /// loading flash or if flag-color extraction ever fails outright.
-  /// `static final`, not `const` — [readableTextColor]/
-  /// [accentReadableOnWhite] aren't const-evaluable.
+  /// `lavender`/`butter`/`sage`/`rose`/`peach` constants, plus `sky` and
+  /// `lavender` reused for the seventh/eighth slots — Additional
+  /// Resources and Neighbors didn't exist in that original six-token
+  /// palette, so there's no seventh/eighth hand-picked hue to fall back
+  /// to), run through the same [_colorsFor] derivation every real
+  /// country's colors use, so nothing visibly changes for the loading
+  /// flash or if flag-color extraction ever fails outright. `static
+  /// final`, not `const` — [readableTextColor]/[accentReadableOnWhite]
+  /// aren't const-evaluable.
   static final fallback = SectionPalette(
     visa: _colorsFor(const Color(0xFFD8EDF8)),
     cities: _colorsFor(const Color(0xFFE8E0F5)),
+    neighbors: _colorsFor(const Color(0xFFE8E0F5)),
     times: _colorsFor(const Color(0xFFFDF3D0)),
     advisory: _colorsFor(const Color(0xFFD8EDE0)),
     language: _colorsFor(const Color(0xFFFAE0E4)),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/accordion_theme.dart';
+import '../widgets/country_page/site_footer.dart';
 
 /// Placeholder destination for the country header's "About" link.
 /// Intentionally blank — content isn't written yet. Standard `AppBar` back
@@ -26,11 +27,22 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AccordionTheme.page,
       appBar: AppBar(title: const Text('About')),
-      body: const Center(
-        child: Text(
-          'Coming soon.',
-          style: TextStyle(fontFamily: AccordionTheme.dmSans, color: AccordionTheme.ink3, fontSize: 14),
-        ),
+      body: const Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Text(
+                'Coming soon.',
+                style: TextStyle(
+                  fontFamily: AccordionTheme.dmSans,
+                  color: AccordionTheme.ink3,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+          SiteFooter(),
+        ],
       ),
     );
   }

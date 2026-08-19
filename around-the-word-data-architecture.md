@@ -44,7 +44,7 @@ Everything below runs **server-side in a Supabase Edge Function**, never from th
 
 | Data | Source | Notes |
 |---|---|---|
-| Country facts (capital, currency, calling code, languages, coords, flag) | **REST Countries** (`api.restcountries.com/countries/v5/codes.alpha_2/{iso2}`, `Authorization: Bearer {key}`) | **⚠️ Confirmed 2026-08-09: v3.1 is deprecated, no-key access no longer works.** v5 requires a free API key (sign up at restcountries.com/sign-up) — the `rc_live_demo` key runs but always echoes one fixed sample record regardless of the country requested, so it's only useful for verifying a script doesn't crash, not for real data. Response shape changed too: `capital`→`capitals[0].name`, `currencies`/`languages` are now lists not dicts, `latlng`→`coordinates.{lat,lng}`, `flags.svg`→`flag.url_svg`, native name lives at `names.native`. `tools/commodity_importer/fetch_country_facts.py` implements the current shape. |
+| Country facts (capital, currency, calling code, languages, coords, flag, bordering countries) | **REST Countries** (`api.restcountries.com/countries/v5/codes.alpha_2/{iso2}`, `Authorization: Bearer {key}`) | **⚠️ Confirmed 2026-08-09: v3.1 is deprecated, no-key access no longer works.** v5 requires a free API key (sign up at restcountries.com/sign-up) — the `rc_live_demo` key runs but always echoes one fixed sample record regardless of the country requested, so it's only useful for verifying a script doesn't crash, not for real data. Response shape changed too: `capital`→`capitals[0].name`, `currencies`/`languages` are now lists not dicts, `latlng`→`coordinates.{lat,lng}`, `flags.svg`→`flag.url_svg`, native name lives at `names.native`. `tools/commodity_importer/fetch_country_facts.py` implements the current shape. **Bordering countries (`borderingCountryCodes`, added 2026-08-19)**: REST Countries' `borders` field returns CCA3 codes ("PAN", "NIC"), not the alpha-2 codes this schema's `iso_code`/`country_id` joins use everywhere else — the importer needs a CCA3→alpha-2 conversion step, not a field-to-field copy. Hand-set in mock bundles only until then, same as every other commodity field before the importer exists. |
 | Cities (name, population, coordinates) | **GeoNames** (`api.geonames.org`, free username registration) | Populates `is_major` only; must never touch `is_featured` |
 | Travel advisories | **State Dept CA API** + **Global Affairs Canada** | See "Automated refresh" below. Two of three issuing authorities automatable |
 | Visa / entry-exit requirements | **State Dept CA API** (`entry_exit_requirements` field) | US-nationality-scoped, which matches V1 exactly |
@@ -158,6 +158,7 @@ country_facts
   currency_name     text
   calling_code      text
   official_languages jsonb           -- from source dataset
+  bordering_country_codes jsonb      -- alpha-2 codes, converted from REST Countries' CCA3 `borders` field
   latitude          numeric
   longitude         numeric
   region            text
@@ -606,6 +607,7 @@ class CountryFacts {
   final String? currencyName;
   final String? callingCode;
   final List<String> officialLanguages;
+  final List<String> borderingCountryCodes;  // alpha-2, e.g. ["PA", "NI"] — added 2026-08-19
   final double? latitude;
   final double? longitude;
   final DateTime? lastImportedAt;
@@ -909,7 +911,7 @@ Same pattern as weather, same reasoning: a cached rate is a rate that's quietly 
 - Practical basics (tipping, punctuality), dress expectations
 - Activity-specific phrases and vocabulary
 - Points of interest (landmarks, restaurants, neighborhoods), cuisine notes, prep advice
-- Commodity facts (flag, capital, currency, cities, languages)
+- Commodity facts (flag, capital, currency, cities, languages, bordering countries)
 
 **What waits:** accounts, trip dashboards, checklists, pinning, word-of-the-day notifications, and anything social. All have schema defined already so they don't require redesign — they just aren't built.
 

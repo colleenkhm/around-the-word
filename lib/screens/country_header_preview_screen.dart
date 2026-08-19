@@ -22,62 +22,16 @@ import '../widgets/country_page/best_times_section.dart';
 import '../widgets/country_page/cities_section.dart';
 import '../widgets/country_page/country_header.dart';
 import '../widgets/country_page/language_pair_section.dart';
+import '../widgets/country_page/neighbors_section.dart';
 import '../widgets/country_page/paper_texture.dart';
 import '../widgets/country_page/practical_norms_section.dart';
+import '../widgets/country_page/site_footer.dart';
 import '../widgets/country_page/site_header.dart';
 import '../widgets/country_page/travel_advisory_section.dart';
 import '../widgets/country_page/visa_section.dart';
 
-/// The country page — reached directly from `DestinationScreen` for
-/// **every** tapped country now, not just `active` ones (see below) —
-/// standing in for the real multi-tab `CountryPageScreen`
-/// (Overview/Explore/Guide/Travel Info/Language) until that's built. Only
-/// `assets/data/bundles/cr.json` actually exists today, so Costa Rica is
-/// the only country with real content — every other country renders this
-/// same shell with every section in its "coming soon" state (see below).
-///
-/// **2026-08-18: rebuilt as a collapsible-sections accordion**, matching
-/// `trip-dashboard-v5.html`'s two frames (default-collapsed vs. every
-/// section expanded). Replaces the always-expanded flat stack the
-/// 2026-08-15 pass built — see [AccordionTheme]'s class doc for the full
-/// list of what this reverses and why it's scoped to just this screen.
-///
-/// **Section order** (2026-08-18, matching the v5 mockup exactly): ticket
-/// header → Visa & Entry → Cities → When to Visit → Travel Advisory →
-/// Language → Practical Norms. Visa and Travel Advisory are two
-/// independent sections now, not one combined unit — see [VisaSection]'s
-/// class doc.
-///
-/// **Every section always renders as a row, regardless of data** — per
-/// Colleen: "all of these things should display if we have data for
-/// them, otherwise the section should say 'coming soon' when expanded."
-/// See [AccordionSection]'s class doc on how this differs from the rest
-/// of the app's "omit an empty tab" rule.
-///
-/// **2026-08-18 (later): `ComingSoonScreen` retired from this flow** — per
-/// Colleen: "instead of the coming soon page we should just have a
-/// country page showing any available data where the expanded categories
-/// say 'coming soon'." `DestinationScreen` now sends every tapped
-/// country here regardless of `Country.active`; when no bundle file
-/// exists for it, `_load` builds an empty in-memory [CountryBundle]
-/// shell (see `_emptyBundle`) instead of falling into a dead-end error
-/// state — every [AccordionSection] below already renders a "Coming
-/// soon" body when its `hasData` is false, so an all-empty bundle just
-/// means every section shows that. `ComingSoonScreen` itself, and the
-/// generic `coming_soon_resources` it read, are unreferenced now but
-/// left in place — same "kept as history, not deleted, until something
-/// else needs the space" pattern the rest of this codebase's superseded
-/// code follows.
-///
-/// **2026-08-18 (later still): section colors are per-country now**, not
-/// six fixed `AccordionTheme` constants — [SectionPalette.fromFlagColors] is
-/// built from the real colors [extractFlagBaseColors] pulls from this country's
-/// own flag PNG. See [SectionPalette]'s class doc for why this reopens the
-/// 2026-08-11 "one cohesive theme, not per-country" call on purpose.
-/// Extraction is async and best-effort — [_palette] starts (and stays,
-/// on any failure) at [SectionPalette.fallback], the original hand-picked
-/// Costa-Rica-era values, so the page never blocks on it and never shows
-/// a broken/blank palette.
+/// The country page — a collapsible accordion of sections. See
+/// HANDOFF.md for the full decision history.
 class CountryHeaderPreviewScreen extends StatefulWidget {
   final country_model.Country country;
 
@@ -88,19 +42,26 @@ class CountryHeaderPreviewScreen extends StatefulWidget {
       _CountryHeaderPreviewScreenState();
 }
 
-/// One entry per accordion row, in display order — used as the source of
-/// truth for both the section list and the "expand/collapse all" state.
-enum _Section { visa, cities, times, advisory, language, norms, resources }
+/// Accordion row order.
+enum _Section {
+  visa,
+  cities,
+  neighbors,
+  times,
+  advisory,
+  language,
+  norms,
+  resources,
+}
 
 class _CountryHeaderPreviewScreenState
     extends State<CountryHeaderPreviewScreen> {
   CountryBundle? _bundle;
 
-  /// Starts (and, on extraction failure, stays) at the original hand-
-  /// picked palette — see class doc.
+  // Falls back to hand-picked defaults until flag colors load.
   SectionPalette _palette = SectionPalette.fallback;
 
-  /// Every section starts collapsed — matches the mockup's default frame.
+  // Starts fully collapsed.
   final Map<_Section, bool> _expanded = {
     for (final s in _Section.values) s: false,
   };
@@ -112,12 +73,6 @@ class _CountryHeaderPreviewScreenState
     _loadPalette();
   }
 
-  /// Independent of [_load] — flag colors only need [country_model.Country.countryCode]
-  /// (for the flag image URL), not the bundle, so this runs in parallel
-  /// rather than waiting on it. A no-op `setState` (assigning the same
-  /// [SectionPalette.fallback] already in place) on failure would be
-  /// harmless but pointless, so the `null`/empty case just leaves
-  /// `_palette` as it started.
   Future<void> _loadPalette() async {
     final colors = await extractFlagBaseColors(widget.country.countryCode);
     if (colors == null || colors.isEmpty || !mounted) return;
@@ -134,20 +89,13 @@ class _CountryHeaderPreviewScreenState
         );
       });
     } catch (error) {
-      // No curated bundle yet for this country — not an error state
-      // anymore (see class doc, 2026-08-18): render the same page shell
-      // with every section in its "coming soon" state, rather than a
-      // dead end. Expected for every country besides Costa Rica today.
+      // No curated bundle yet — render an empty shell.
       debugPrint('No bundle for $code — showing an empty shell: $error');
       setState(() => _bundle = _emptyBundle(widget.country));
     }
   }
 
-  /// A [CountryBundle] with every list/optional field empty — every
-  /// [AccordionSection] below reads `hasData: false` off of it and shows
-  /// "Coming soon" accordingly. `country`/`fetchedAt` are the only real
-  /// values; everything else is the type's natural empty value, not a
-  /// guess at real content.
+  // Empty shell so every section shows "Coming soon."
   CountryBundle _emptyBundle(country_model.Country country) {
     return CountryBundle(
       country: Country(
@@ -180,10 +128,7 @@ class _CountryHeaderPreviewScreenState
     );
   }
 
-  /// US State Department only, for now (per Colleen, 2026-08-11) — the
-  /// only advisory source actually wired up in `tools/commodity_importer`;
-  /// UK FCDO and Global Affairs Canada are real sources per the data
-  /// architecture doc but nothing fetches them yet.
+  // US State Dept only for now.
   List<TravelAdvisory> _usAdvisories(CountryBundle bundle) => bundle.advisories
       .where((a) => a.issuingAuthority == 'US State Department')
       .toList();
@@ -206,16 +151,12 @@ class _CountryHeaderPreviewScreenState
   @override
   Widget build(BuildContext context) {
     final bundle = _bundle;
-    // Generic, non-country-specific — same list `ComingSoonScreen` used
-    // to read, already loaded app-wide by `main.dart`'s `TripSelection`.
-    final resources = context.watch<TripSelection>().resources;
+    final trip = context.watch<TripSelection>();
+    final resources = trip.resources;
     return Scaffold(
       backgroundColor: AccordionTheme.page,
       body: bundle == null
           ? const Center(child: CircularProgressIndicator())
-          // Faint paper grain behind the whole page — see PaperTexture's
-          // class doc on why this was reintroduced 2026-08-18. ink, not
-          // CountryTheme's default, to match this screen's own theme.
           : PaperTexture(
               color: AccordionTheme.ink,
               child: SafeArea(
@@ -223,9 +164,7 @@ class _CountryHeaderPreviewScreenState
                 child: Column(
                   children: [
                     SiteHeader(
-                      // Clears the nav stack rather than a plain push — "back
-                      // to home" should hold regardless of how deep the user
-                      // is in the flow, not just undo the last screen.
+                      // Clears the nav stack.
                       onHomeTap: () => Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (context) => const DestinationScreen(),
@@ -237,9 +176,7 @@ class _CountryHeaderPreviewScreenState
                           builder: (context) => const AboutScreen(),
                         ),
                       ),
-                      // Matches the masthead directly below it — see
-                      // SiteHeader's class doc on this specific, stated
-                      // exception to its otherwise-fixed look.
+                      // Matches the masthead below.
                       backgroundColor: _palette.header.tint,
                     ),
                     Expanded(
@@ -249,22 +186,12 @@ class _CountryHeaderPreviewScreenState
                           children: [
                             CountryHeader(
                               bundle: bundle,
-                              // No country has curated native-name data yet
-                              // except this one hardcoded Costa Rica value.
                               nativeName: widget.country.countryCode == 'CR'
                                   ? 'Costa Rica'
                                   : null,
                               nativeNameRomanized: null,
                               utcOffsetMinutes: bundle.facts.utcOffsetMinutes,
-                              // Mock instance, not bundle data — currency
-                              // conversion is explicitly never bundled (see
-                              // the data architecture doc). Only built when
-                              // there's a real currency to mock a rate for —
-                              // `null` otherwise (renders an em dash), so an
-                              // empty-shell country (see `_emptyBundle`)
-                              // doesn't show a fabricated rate for whatever
-                              // currency this hardcoded mock happened to
-                              // default to.
+                              // Never bundled — mock rate only.
                               exchangeRate: bundle.facts.currencyCode == null
                                   ? null
                                   : ExchangeRate(
@@ -275,24 +202,19 @@ class _CountryHeaderPreviewScreenState
                               currencyName: bundle.facts.currencyName,
                               allExpanded: _allExpanded,
                               onToggleAll: _toggleAll,
-                              // accent: this country's "primary" color
-                              // (the seed hue, unrotated) — shared with
-                              // Visa & Entry, the section right below.
-                              // header/stub are two separate, distinct
-                              // tones of that same hue — see
-                              // SectionPalette's header/stub doc comments.
                               accent: _palette.visa,
                               header: _palette.header,
                               stub: _palette.stub,
                             ),
                             _visaSection(bundle),
                             _citiesSection(bundle),
+                            _neighborsSection(bundle, trip.countries),
                             _timesSection(bundle),
                             _advisorySection(bundle),
                             _languageSection(bundle),
                             _normsSection(bundle),
                             _resourcesSection(resources),
-                            const SizedBox(height: 8),
+                            const SiteFooter(),
                           ],
                         ),
                       ),
@@ -305,12 +227,6 @@ class _CountryHeaderPreviewScreenState
   }
 
   // --- Sections -----------------------------------------------------------
-  // Each returns an AccordionSection wired with this section's tint, meta
-  // summary (collapsed subheading), hasData flag, and content. Colors come
-  // from `_palette` now, not fixed `AccordionTheme` constants — see class
-  // doc. Meta text is derived from real bundle fields only — never
-  // invented (see e.g. VisaSection's class doc on the "No visa required"
-  // headline it deliberately doesn't fabricate).
 
   Widget _visaSection(CountryBundle bundle) {
     final visa = bundle.visa;
@@ -349,6 +265,40 @@ class _CountryHeaderPreviewScreenState
         capital: bundle.facts.capital,
         tint: colors.tint,
         textColor: colors.textColor,
+      ),
+    );
+  }
+
+  Widget _neighborsSection(
+    CountryBundle bundle,
+    List<country_model.Country> allCountries,
+  ) {
+    final codes = bundle.facts.borderingCountryCodes;
+    final colors = _palette.neighbors;
+    return AccordionSection(
+      title: 'Neighbors',
+      tint: colors.tint,
+      textColor: colors.textColor,
+      hasData: codes.isNotEmpty,
+      meta: codes.isEmpty
+          ? null
+          : '${codes.length} bordering ${codes.length == 1 ? 'country' : 'countries'}',
+      expanded: _expanded[_Section.neighbors]!,
+      onToggle: () => _toggle(_Section.neighbors),
+      contentBuilder: (_) => NeighborsSection(
+        borderingCountryCodes: codes,
+        allCountries: allCountries,
+        tint: colors.tint,
+        textColor: colors.textColor,
+        onTapNeighbor: (country) {
+          context.read<TripSelection>().selectCountry(country);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  CountryHeaderPreviewScreen(country: country),
+            ),
+          );
+        },
       ),
     );
   }
@@ -458,10 +408,7 @@ class _CountryHeaderPreviewScreenState
     );
   }
 
-  /// First sentence-ish clause of a free-text summary, for a collapsed
-  /// row's meta line — truncated to keep the row a single line. Doesn't
-  /// invent structured facts (e.g. a "visa required: yes/no" boolean)
-  /// that aren't in [VisaInfo]; just teases the real summary text.
+  // First clause of the summary, truncated, for a collapsed row's meta.
   String _firstClause(String summary) {
     final period = summary.indexOf('.');
     final clause = period == -1 ? summary : summary.substring(0, period);
