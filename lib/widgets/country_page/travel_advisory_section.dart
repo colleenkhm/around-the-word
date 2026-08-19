@@ -5,23 +5,15 @@ import '../../theme/accordion_theme.dart';
 import '../../utils/format_date.dart';
 import 'external_link.dart';
 
-/// The "Travel Advisory" [AccordionSection]'s expanded content — matches
-/// `trip-dashboard-v5.html`'s `.sec-advisory` card, including the
-/// top-right "Emergency / 112" stamp. See [VisaSection]'s class doc for
-/// why this is now a standalone section rather than sharing a card (and a
-/// source line) with visa/entry.
+/// The "Travel Advisory" [AccordionSection]'s expanded content, including
+/// the top-right "Emergency" stamp.
 class TravelAdvisorySection extends StatelessWidget {
   final List<TravelAdvisory> advisories;
 
-  /// From `CountryFacts.emergencyNumber` — top-right stamp, omitted when
-  /// unknown.
+  /// Top-right stamp, omitted when unknown.
   final String? emergencyNumber;
 
-  /// This section's dark accent — 2026-08-18, colors the "Full advisory"
-  /// link instead of the fixed `AccordionTheme.skyDark` (a leftover from
-  /// before the Visa/Advisory split — this section's own link had no
-  /// reason to be sky-blue in the first place). See [SectionPalette]'s
-  /// class doc.
+  /// This section's dark accent.
   final Color accent;
 
   const TravelAdvisorySection({
@@ -31,10 +23,7 @@ class TravelAdvisorySection extends StatelessWidget {
     this.emergencyNumber,
   });
 
-  /// Pulls the leading digit out of a level string like "Level 2" so it
-  /// can be matched against [AccordionTheme.advisoryColor]. Not every
-  /// government publishes a numbered level — the colored heading is
-  /// simply omitted (falls back to plain ink) rather than guessed at.
+  // Leading digit from a level string like "Level 2", or null.
   int? _levelNumber(TravelAdvisory a) {
     final match = RegExp(r'(\d+)').firstMatch(a.level ?? '');
     return match == null ? null : int.parse(match.group(1)!);
@@ -45,11 +34,7 @@ class TravelAdvisorySection extends StatelessWidget {
     return Stack(
       children: [
         Padding(
-          // Right padding widens to make room for the emergency stamp
-          // (`Positioned` at the same top-right corner) — per Colleen,
-          // 2026-08-19: it was bleeding into the first advisory's level
-          // text, which otherwise has no reason to know the stamp exists
-          // and just uses the full row width up to the base 20px.
+          // Widens to make room for the emergency stamp.
           padding: EdgeInsets.fromLTRB(
             20,
             16,
@@ -118,10 +103,7 @@ class _AdvisoryRow extends StatelessWidget {
           Text(advisory.summary!, style: AccordionTheme.sBody),
         ],
         const SizedBox(height: 10),
-        // Dates on one line, "Full advisory" right-aligned on its own
-        // line below — same pattern [VisaSection]'s footer uses for
-        // "Source" now, per Colleen, 2026-08-19, for consistency between
-        // the two sections' source/citation rows.
+        // Dates on one line, "Full advisory" right-aligned below.
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: 12,

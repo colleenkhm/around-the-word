@@ -5,11 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../models/country.dart';
 import '../state/trip_selection.dart';
 
-/// Dead end by design (language-app-system-design.md section 2, step 2):
-/// shown instead of the category-selection flow for any country whose
-/// `active` flag is false. Links are a shared, generic set
-/// (`assets/data/resources.json`), not curated per country — see the doc's
-/// Data Model section for why.
+/// Retired dead end, kept for history — see HANDOFF.md.
 class ComingSoonScreen extends StatelessWidget {
   const ComingSoonScreen({super.key, required this.country});
 

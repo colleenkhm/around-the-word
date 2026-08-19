@@ -3,15 +3,8 @@ import 'package:flutter/material.dart';
 import '../../theme/country_theme.dart';
 import 'dashed_divider.dart';
 
-/// A section label with a trailing perforated "tear line" rule — shared by
-/// every Overview-tab section ("Advisories", "Cities", ...), not just this
-/// one. The dashed line itself is [DashedDivider].
-///
-/// [trailing], if given, renders after the dashed rule — added 2026-08-15
-/// for the Travel Info restyle's emergency-number badge (mockup's advisory
-/// card header has "Travel advisory" on the left, an emergency number on
-/// the right). `null` by default, so every existing call site is
-/// unaffected.
+/// A section label with a trailing dashed "tear line" rule. [trailing],
+/// if given, renders after the rule.
 class SectionHeading extends StatelessWidget {
   final String label;
   final Widget? trailing;

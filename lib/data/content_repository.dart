@@ -7,8 +7,7 @@ import '../models/resource.dart';
 import '../models/subject.dart';
 import '../models/vocab_entry.dart';
 
-/// Loads the static JSON bundled as Flutter assets. No backend, no
-/// database — see language-app-system-design.md section 5 for why.
+/// Loads static JSON bundled as Flutter assets. No backend, no database.
 class ContentRepository {
   Future<List<Country>> loadCountries() async {
     final raw = await rootBundle.loadString('assets/data/countries.json');
@@ -26,9 +25,7 @@ class ContentRepository {
         .toList();
   }
 
-  /// The shared, generic links shown on the coming-soon screen for
-  /// countries without content yet (language-app-system-design.md section
-  /// 3) — one set reused everywhere, not curated per country.
+  /// Generic links, one set reused everywhere, not curated per country.
   Future<List<Resource>> loadResources() async {
     final raw = await rootBundle.loadString('assets/data/resources.json');
     final list = jsonDecode(raw) as List<dynamic>;
@@ -37,12 +34,8 @@ class ContentRepository {
         .toList();
   }
 
-  /// All vocab for [countryCode], keyed by subject id, straight from
-  /// assets/data/content/{countryCode}.json. Only `active` countries reach
-  /// this in the normal flow (inactive ones dead-end at the coming-soon
-  /// screen before content is ever loaded), so a missing file here means
-  /// `active` was flipped without the content file existing yet — resolves
-  /// to an empty map rather than throwing, as a safety net for that case.
+  /// All vocab for [countryCode], keyed by subject id. Missing file
+  /// resolves to an empty map rather than throwing.
   Future<Map<String, List<VocabEntry>>> loadContent(String countryCode) async {
     final path =
         'assets/data/content/${countryCode.toLowerCase()}.json';
@@ -63,8 +56,7 @@ class ContentRepository {
     );
   }
 
-  /// The "personalized dictionary" — not new data, just [selectedTopLevelIds]
-  /// (and their sub-subjects) filtered out of the country's full content map.
+  /// [selectedTopLevelIds] (and sub-subjects) filtered from the full content map.
   Future<Map<String, List<VocabEntry>>> personalize({
     required String countryCode,
     required List<Subject> allSubjects,

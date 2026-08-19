@@ -2,46 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../../theme/accordion_theme.dart';
 
-/// One collapsible row of the accordion-style country page — matches
-/// `trip-dashboard-v5.html`'s `.sec-row` (+ `.card-group` once open).
-///
-/// **Collapsed**: tinted row showing [title] and, when [hasData] is true,
-/// a one-line [meta] subheading ("No visa required · 90 days"). When
-/// [hasData] is false the row shows "Coming soon" in place of [meta]
-/// instead of leaving the row looking identical to a populated one.
-///
-/// **Subheading rendering is off for now** (2026-08-18, per Colleen:
-/// "maybe we remove the subheaders or at least hide them for now") — see
-/// [showSubheading]. `meta` itself is untouched: every `_xSection()`
-/// builder in `CountryHeaderPreviewScreen` still computes and passes it,
-/// so flipping [showSubheading] back on needs no other change.
-///
-/// **Expanded**: the [meta] subheading disappears — per Colleen's mockup,
-/// the subheading is collapsed-only — and [contentBuilder] renders below
-/// the row. If [hasData] is false, [contentBuilder] is never called;
-/// [_ComingSoon] renders instead. **Every section always renders as a
-/// row**, regardless of [hasData] — a deliberate difference from the rest
-/// of the app's "omit an empty tab rather than show it empty" rule (see
-/// client design doc's Screen Flows), which is about whole *tabs*, not
-/// sub-sections inside one already-shown page. Confirmed directly by
-/// Colleen for this screen: sections should always display if there's
-/// data, "coming soon" otherwise — never omitted.
+/// One collapsible row of the accordion-style country page. Collapsed:
+/// tinted row, title + optional meta. Expanded: [contentBuilder] renders
+/// below, or "Coming soon" if [hasData] is false. Every section always
+/// renders as a row, regardless of data.
 class AccordionSection extends StatelessWidget {
-  /// Whether the collapsed-row subheading (the [meta] summary, or
-  /// "Coming soon") renders at all. **Off for now**, per Colleen — kept
-  /// as a named flag rather than deleting the underlying plumbing, the
-  /// same pattern `CountryHeaderPreviewScreen._useAccentPageBackground`
-  /// already used for a capability kept-but-disabled. See this class's
-  /// doc comment.
+  /// Whether the collapsed-row subheading renders at all. Off for now.
   static const bool showSubheading = false;
 
   final String title;
   final String? meta;
   final Color tint;
 
-  /// Black or white, whichever reads on [tint] — see
-  /// [SectionColors.textColor]. Colors the title/meta text and the
-  /// collapsed-state chevron.
+  /// Black or white, whichever reads on [tint].
   final Color textColor;
 
   final bool expanded;
@@ -75,11 +48,7 @@ class AccordionSection extends StatelessWidget {
           onTap: onToggle,
         ),
         if (expanded)
-          // The perforated tear-line that used to sit here (2026-08-18,
-          // three corrections' worth — see HANDOFF.md) is gone again,
-          // per Colleen: "remove the perforated lines." The header/body
-          // color change itself is the seam now — no divider element at
-          // all between a [tint] row and its white content below.
+          // Color change is the seam; no divider between row and body.
           Container(
             width: double.infinity,
             decoration: const BoxDecoration(
@@ -118,12 +87,7 @@ class _Row extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-          // This hairline is collapsed-only now (2026-08-18) — it used
-          // to always render, which meant an expanded row showed it
-          // stacked directly above the perforated tear-line below,
-          // reading as two redundant dividers ("funky," per Colleen)
-          // rather than one clear seam. Collapsed rows still want it:
-          // it's what separates one collapsed row from the next.
+          // Hairline is collapsed-only.
           decoration: expanded
               ? null
               : BoxDecoration(
@@ -142,16 +106,7 @@ class _Row extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      // A thin underline, expanded-only — tried as an
-                      // inset line below the whole row first, per
-                      // Colleen, 2026-08-19: "let's try the section title
-                      // underline instead." `TextDecoration.underline`
-                      // hugs just the title text itself (whatever its
-                      // actual rendered width is), not a fixed-width line
-                      // guessed at separately. `decorationColor` matches
-                      // [textColor] itself now, not a fixed white — per
-                      // Colleen: "an underline that's the same color as
-                      // the text."
+                      // Thin underline, expanded-only, matching textColor.
                       style: AccordionTheme.secName.copyWith(
                         color: textColor,
                         decoration: expanded ? TextDecoration.underline : null,
@@ -159,8 +114,6 @@ class _Row extends StatelessWidget {
                         decorationThickness: 1.5,
                       ),
                     ),
-                    // Subheading is collapsed-only, and currently off
-                    // altogether — see AccordionSection.showSubheading.
                     if (AccordionSection.showSubheading &&
                         !expanded &&
                         meta != null &&
@@ -194,11 +147,7 @@ class _Chevron extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Same outline-only treatment whether expanded or not — per Colleen,
-    // 2026-08-18: the solid ink-filled "active" circle this used to
-    // switch to on expand was redundant (the open body and the chevron's
-    // own up/down direction already say that), so it's dropped rather
-    // than kept as a third, competing signal.
+    // Same outline whether expanded or not; only direction changes.
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       width: 31,
@@ -219,7 +168,7 @@ class _Chevron extends StatelessWidget {
   }
 }
 
-/// The expanded-but-no-data state — see [AccordionSection]'s class doc.
+/// Expanded-but-no-data state.
 class _ComingSoon extends StatelessWidget {
   const _ComingSoon();
 

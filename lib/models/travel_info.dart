@@ -1,8 +1,5 @@
-/// Travel Info tab content: advisories (multiple governments, always
-/// attributed and dated), visa/entry requirements, and shared regional
-/// notes (e.g. Schengen). See the data architecture doc's "Legally
-/// sensitive" sections — these fields carry a required verification date
-/// and source link by design, never restated as the app's own assessment.
+/// Travel Info content: advisories, visa/entry requirements, regional
+/// notes. Always carries a verification date and source link.
 library;
 
 class TravelAdvisory {

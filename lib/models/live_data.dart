@@ -1,16 +1,6 @@
-/// Live-fetched data — see the data architecture doc's "Weather (fetched
-/// live, never bundled)" and "Currency conversion (fetched live, never
-/// bundled)" sections. Deliberately outside [CountryBundle]: caching
-/// either of these would mean showing something that's quietly wrong
-/// within hours, which breaks the "bundle is good offline for weeks"
-/// property everything else depends on.
-///
-/// No live fetch exists yet (weather/currency API integration is on
-/// CLAUDE.md's don't-build-without-being-asked list until a Supabase Edge
-/// Function exists to proxy them — key security). Until then, instances
-/// of these are constructed directly with mock values wherever they're
-/// needed for review, e.g. CountryHeaderPreviewScreen — never read from
-/// bundle JSON.
+/// Live-fetched data — weather, currency. Deliberately outside
+/// [CountryBundle], since caching either would go stale within hours. No
+/// live fetch exists yet; instances are mock values for now.
 library;
 
 class WeatherOutlook {

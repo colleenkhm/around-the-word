@@ -1,13 +1,6 @@
-/// The pivot's core client data shapes — see around-the-word-data-architecture.md's
-/// "Client Data Objects (Flutter/Dart)" section, which these are modeled
-/// directly on. [CountryBundle] is the single fetch/cache/offline unit: one
-/// JSON bundle per country (in V1, a mock file under assets/data/bundles/;
-/// later, a real Supabase-backed fetch — the model shapes don't change
-/// either way).
-///
-/// Deliberately separate from the old lib/models/country.dart (pre-pivot
-/// shape, still used by the not-yet-migrated search/language flow) rather
-/// than overwriting it — see HANDOFF.md for why the migration is staged.
+/// Core client data shapes — see the data architecture doc's "Client Data
+/// Objects" section. Separate from the pre-pivot lib/models/country.dart;
+/// see HANDOFF.md.
 library;
 
 import 'country_guide.dart';
@@ -17,11 +10,7 @@ import 'travel_info.dart';
 
 enum ContentStatus { none, partial, complete }
 
-/// The four country-page tabs — **not** five. Confirmed 2026-08-10 against
-/// the country-page-mockups.html spec: the client design doc's original
-/// fifth tab, Travel Info (advisories + visa), folds into Overview instead
-/// of staying separate. That doc still describes five as of this comment
-/// and needs updating to match.
+/// The four country-page tabs.
 enum CountryTab { overview, explore, guide, language }
 
 ContentStatus _contentStatusFromJson(String value) =>
@@ -54,8 +43,7 @@ class Country {
 }
 
 /// Nearly every field here is nullable — imports fail, small countries have
-/// gaps, and the UI needs to render gracefully around missing fields rather
-/// than assuming completeness.
+/// gaps.
 class CountryFacts {
   final String? flagSvgUrl;
   final String? capital;
@@ -67,60 +55,20 @@ class CountryFacts {
   final double? latitude;
   final double? longitude;
 
-  /// Fixed offset from UTC, in minutes (e.g. -360 for UTC-6). Added
-  /// 2026-08-10 for the Overview tab's "Right now" local-time display —
-  /// flagged but not yet added in the data architecture doc's External
-  /// Data Sources table ("Timezone / current local time... needed for the
-  /// MVP's 'current time' widget"). **Deliberately a fixed offset, not a
-  /// DST-aware IANA timezone name** — good enough for "what time is it
-  /// there right now" at a glance; a country that observes DST will show
-  /// an hour off part of the year. Revisit with a real timezone package
-  /// if that turns out to matter more than the simplicity is worth.
+  /// Fixed offset from UTC, in minutes. Not DST-aware.
   final int? utcOffsetMinutes;
 
-  /// A representative color from the country's flag, as "#RRGGBB" — kept
-  /// as a raw hex string here rather than a `Color`, same reasoning as
-  /// `flagSvgUrl` being a `String` and not an `Image`: models stay
-  /// Flutter-free (no `dart:ui`/`package:flutter` import), rendering
-  /// widgets do the interpreting. Added 2026-08-11 for the Travel Info
-  /// section's alternating row tint (see [CountryTheme.lightTint]).
-  /// **Hand-picked for now, not derived automatically** — real dominant-
-  /// color extraction from a flag image is a small vision problem of its
-  /// own and would need real tuning (a flag's most common pixel isn't
-  /// always its most *representative* color); one considered swatch per
-  /// country fits the project's existing curated-over-automated bias
-  /// better than an extraction pipeline for a single accent color. Revisit
-  /// if/when this needs to scale past hand-picking.
+  /// A representative flag color, as "#RRGGBB". Hand-picked, not derived.
   final String? accentColorHex;
 
   final DateTime? lastImportedAt;
 
-  /// The country's general emergency services number (e.g. "911", "112") —
-  /// added 2026-08-15 for the Travel Info restyle's emergency-number badge
-  /// (`trip-dashboard-v3.html`'s corner "112" stamp). **Hand-curated, no
-  /// importer wired yet** — same status as [accentColorHex] was when it
-  /// was added: flagged in the data architecture doc's External Data
-  /// Sources table (next to the existing "embassy/consulate contacts...
-  /// no field yet" line) rather than silently assumed solved. A free-text
-  /// `String`, not parsed/typed further — some countries have separate
-  /// police/fire/ambulance numbers rather than one unified number, which
-  /// this field can't yet distinguish; revisit if that turns out to matter
-  /// for a real imported country.
+  /// General emergency services number. Hand-curated, no importer yet.
   final String? emergencyNumber;
 
-  /// ISO alpha-2 codes of every country this one shares a land border
-  /// with (e.g. `["PA", "NI"]` for Costa Rica) — matches [Country.countryCode]/
-  /// [Country.isoCode], so the Neighbors section can resolve each entry
-  /// against the already-loaded country list to link to that country's
-  /// own page. Added 2026-08-19 for the country page's new "Neighbors"
-  /// section (per Colleen). Empty, not nullable, same reasoning as
-  /// [officialLanguages] — an island nation genuinely has zero land
-  /// borders, that's a real answer, not a missing one.
-  ///
-  /// **Commodity, not curated** — REST Countries' `borders` field covers
-  /// this already (see the data architecture doc's External Data
-  /// Sources section); hand-set in mock bundles only until the importer
-  /// exists, same status [flagSvgUrl]/[capital]/etc. already have.
+  /// ISO alpha-2 codes of every bordering country (e.g. `["PA", "NI"]`).
+  /// Empty, not nullable — an island nation genuinely has none. Commodity
+  /// field (REST Countries' `borders`), hand-set until the importer exists.
   final List<String> borderingCountryCodes;
 
   const CountryFacts({
@@ -226,8 +174,7 @@ class Leader {
   }
 }
 
-/// One fetch, one cache entry, one offline unit — see the data architecture
-/// doc's "The core unit: a country bundle."
+/// One fetch, one cache entry, one offline unit.
 class CountryBundle {
   final Country country;
   final CountryFacts facts;
@@ -263,16 +210,7 @@ class CountryBundle {
     required this.fetchedAt,
   });
 
-  /// Which tabs actually have something to show — Overview is trivially
-  /// always included once a bundle exists at all. Implements the client
-  /// design doc's "empty tabs are omitted, not shown empty" rule.
-  ///
-  /// **Not currently wired to [CountryHeader]'s pill row** (corrected
-  /// 2026-08-10 — see that widget's doc comment): the pill row shows
-  /// whichever tabs have actually been *built* so far, independent of
-  /// whether their content exists yet. This getter is still correct and
-  /// still the right thing to filter the real `TabBarView` on once
-  /// CountryPageScreen exists and hosts all four tabs for real.
+  /// Which tabs have content — Overview is always included.
   List<CountryTab> get availableTabs => [
     CountryTab.overview,
     if (pointsOfInterest.isNotEmpty) CountryTab.explore,

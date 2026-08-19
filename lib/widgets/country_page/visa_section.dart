@@ -7,34 +7,13 @@ import '../../theme/accordion_theme.dart';
 import '../../utils/format_date.dart';
 import 'external_link.dart';
 
-/// The "Visa & Entry" [AccordionSection]'s expanded content — matches
-/// `trip-dashboard-v5.html`'s `.sec-visa` card. Content-only (no heading,
-/// no card chrome): [AccordionSection] already renders the section title
-/// in its own row, so this just returns the white card body.
-///
-/// **Split out of the old combined `TravelInfoSection` 2026-08-18**, per
-/// the v5 mockup treating Visa & Entry and Travel Advisory as two
-/// independent, independently-collapsible sections rather than one shared
-/// unit. See [AccordionTheme]'s class doc: this reverses the 2026-08-11
-/// "one shared source, not two" call — each section now cites its own
-/// source line even when (as for Costa Rica) it's really the same
-/// State-Dept page as [TravelAdvisorySection]'s. Simpler than trying to
-/// visually connect a shared footer across two cards a reader might
-/// collapse independently.
-///
-/// **No invented "No visa required" headline** — the mockup shows one
-/// (`.visa-ok`, bold green), but [VisaInfo] only has a free-text
-/// [VisaInfo.summary], no boolean/enum "required or not" field to render
-/// that headline from truthfully. Same restraint the pre-split version
-/// used; flagged as an open idea in the data architecture doc, not
-/// fabricated here.
+/// The "Visa & Entry" [AccordionSection]'s expanded content. No invented
+/// "No visa required" headline — [VisaInfo.summary] is free text only.
 class VisaSection extends StatelessWidget {
   final VisaInfo visa;
   final RegionalNote? regionalNote;
 
-  /// This section's dark accent — 2026-08-18, colors the source/apply
-  /// links and the regional stamp instead of the fixed
-  /// `AccordionTheme.skyDark`. See [SectionPalette]'s class doc.
+  /// This section's dark accent.
   final Color accent;
 
   const VisaSection({
@@ -58,10 +37,6 @@ class VisaSection extends StatelessWidget {
                 style: AccordionTheme.sHead,
               ),
               const SizedBox(height: 6),
-              // Settled, 2026-08-19, per Colleen: full-width text, Apply
-              // right-aligned on its own line below rather than sharing a
-              // line with it — same pattern the source footer below now
-              // uses too, for consistency between the two.
               Text(visa.summary, style: AccordionTheme.sBody),
               if (visa.applicationUrl != null) ...[
                 const SizedBox(height: 4),
@@ -112,20 +87,9 @@ class VisaSection extends StatelessWidget {
                 decoration: const BoxDecoration(
                   border: Border(top: BorderSide(color: AccordionTheme.rule)),
                 ),
-                // Column, not Row/Wrap — per Colleen, 2026-08-19: "move
-                // source down a row so it's still right aligned but not
-                // in line with the 'visa and entry info verified...' for
-                // styling consistency" (matching Apply's own text-above/
-                // link-below-right-aligned treatment, just above).
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // "Verified" -> "Visa & entry info verified", 2026-08-19,
-                    // per Colleen — Apply moved out of this row (see
-                    // above), so this footer is citation-only now:
-                    // what's verified, then the source it's verified
-                    // against. "Official source" -> "Source" the same
-                    // day, per Colleen.
                     Text(
                       'Visa & entry info verified ${formatShortDate(visa.lastVerifiedAt)}',
                       style: AccordionTheme.srcRow,

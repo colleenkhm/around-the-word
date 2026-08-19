@@ -6,9 +6,8 @@ import '../models/resource.dart';
 import '../models/subject.dart';
 import '../models/vocab_entry.dart';
 
-/// Holds the selection state threaded across the destination -> categories
-/// -> personalizing -> learn/use flow (language-app-system-design.md
-/// section 2).
+/// Selection state threaded across destination -> categories ->
+/// personalizing -> learn/use.
 class TripSelection extends ChangeNotifier {
   TripSelection({ContentRepository? repository})
       : _repository = repository ?? ContentRepository();
@@ -48,9 +47,7 @@ class TripSelection extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Cosmetic in V1 — the delay is artificial, but this is written as a real
-  /// async step so a future backend call can replace the body without a UI
-  /// rework (language-app-system-design.md section 5).
+  /// Cosmetic in V1 (artificial delay), written as a real async step.
   Future<void> personalize() async {
     final country = selectedCountry;
     if (country == null || selectedCategoryIds.isEmpty) return;

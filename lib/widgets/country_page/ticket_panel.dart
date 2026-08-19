@@ -3,41 +3,13 @@ import 'package:flutter/material.dart';
 import '../../theme/country_theme.dart';
 
 /// A bordered panel shaped like a physical ticket stub — rounded corners
-/// plus a semicircular "notch" bitten out of the left and right edges at
-/// vertical center, where a real ticket would be perforated for tearing.
-/// Added 2026-08-11 (per Colleen: plain rounded-rect cards with a border
-/// and no shadow read as generic/AI-default UI, not an actual ticket) —
-/// replaces [DividedCard]/[RightNowStrip]'s plain `Container` decoration.
-///
-/// Two layers, not one `BoxDecoration` — `Container`'s border always
-/// follows the box's own rect/rrect, never an arbitrary clip path, so the
-/// notched outline needs its own stroke. [_TicketEdgePainter] traces the
-/// exact same [Path] the [ClipPath] uses to clip the fill, so the two
-/// stay pixel-consistent by construction, not by two numbers kept in
-/// sync by hand.
-///
-/// **Dashed, not solid** (changed 2026-08-11, alongside the notches
-/// themselves being pushed further per Colleen: the theme still read as
-/// "half leaning in") — a solid 1px border around a rounded rect is the
-/// one shape every plain card component defaults to; a perforated outline
-/// reads as the same tear-line language as [DashedDivider] and the
-/// notches, not a generic border.
-///
-/// Deliberately **not** applied to [CountryHeader] — its shape (rounded
-/// bottom, full-bleed MRZ panel) is already distinct, and a notch at
-/// vertical center would land somewhere in the middle of the flag/name
-/// row rather than a clean edge.
+/// plus a semicircular notch bitten out of the left/right edges at
+/// vertical center. Dashed outline, not solid.
 class TicketPanel extends StatelessWidget {
   final Widget child;
 
-  /// Fill color. Defaults to [CountryTheme.card] — which, notably, is the
-  /// *same hex as [CountryTheme.paper]* (see that token's doc comment), so
-  /// the default alone doesn't visually separate a panel from the page
-  /// behind it. Override with one of the alternate tones
-  /// ([CountryTheme.cardWarm]/[cardCool]/[cardMint]/[aged]) for a panel
-  /// that should read as sitting on the page, not flush with it — per
-  /// Colleen, 2026-08-17: an exact color match with "no texture" reads as
-  /// generic/AI-esque. See `DividedCard` callers for the actual mapping.
+  /// Fill color. Defaults to [CountryTheme.card]; override with an
+  /// alternate tone for a panel that should read as sitting on the page.
   final Color color;
 
   const TicketPanel({super.key, required this.child, this.color = CountryTheme.card});
@@ -103,10 +75,7 @@ class _TicketEdgePainter extends CustomPainter {
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2;
-    // Walk each contour of the (already-notched) outline and stroke it in
-    // dash/gap segments, rather than the whole path at once — dashing a
-    // `Path` isn't a builtin, but `PathMetrics` gives exact-length
-    // sub-paths to alternate between drawing and skipping.
+    // Walk each contour, stroking in dash/gap segments via PathMetrics.
     for (final metric in clipper.path(size).computeMetrics()) {
       var distance = 0.0;
       var drawing = true;

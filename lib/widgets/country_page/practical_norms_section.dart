@@ -3,27 +3,16 @@ import 'package:flutter/material.dart';
 import '../../models/country_guide.dart';
 import '../../theme/accordion_theme.dart';
 
-/// The "Practical Norms" [AccordionSection]'s expanded content — matches
-/// `trip-dashboard-v5.html`'s `.sec-norms` card (a peach-tinted list of
-/// icon + title + detail rows, `.norm-row`). Content-only, no card chrome
-/// or heading.
-///
-/// Every [NormItem] on [CountryGuide.practicalNorms] (tipping,
-/// punctuality, recommended transport app, ...) renders generically by
-/// [NormItem.type] rather than a hardcoded case per type — a new norm
-/// type added later needs no widget change beyond [_iconFor]'s fallback,
-/// same reasoning [NormItem.type] itself is free-text/open-ended for.
+/// The "Practical Norms" [AccordionSection]'s expanded content — icon +
+/// title + detail rows, one per [NormItem]. Icon is generic by
+/// [NormItem.type], so a new type needs no widget change.
 class PracticalNormsSection extends StatelessWidget {
   final List<NormItem> norms;
 
-  /// This section's flag color — 2026-08-18, replaces the fixed
-  /// `AccordionTheme.peach`. See [SectionPalette]'s class doc.
+  /// This section's flag color.
   final Color tint;
 
-  /// Black or white, whichever reads on [tint] — see
-  /// [SectionColors.textColor]. This section's body is a full-bleed
-  /// [tint] fill, so every row's text/icon needs this, not a fixed ink
-  /// color.
+  /// Black or white, whichever reads on [tint].
   final Color textColor;
 
   const PracticalNormsSection({
@@ -49,9 +38,7 @@ class PracticalNormsSection extends StatelessWidget {
   }
 }
 
-/// Best-effort icon from [NormItem.type]'s open-ended string — falls back
-/// to a generic info glyph for a type this doesn't recognize, rather than
-/// leaving the row iconless.
+// Falls back to a generic info glyph for an unrecognized type.
 IconData _iconFor(String type) => switch (type) {
       'tipping_norm' => Icons.payments_outlined,
       'punctuality_norm' => Icons.schedule_outlined,

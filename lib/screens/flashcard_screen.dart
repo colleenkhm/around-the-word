@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../models/vocab_entry.dart';
 
-/// Flip-card flashcards. Takes any phrase list, so it serves both the
-/// mixed-categories Learn deck and a single-category deck launched from a
-/// vocab list — one widget, two entry points. Order is shuffled once per
-/// session; nothing is persisted between opens (no spaced repetition in V1).
+/// Flip-card flashcards, shuffled once per session. Takes any phrase
+/// list, serving both Learn and single-category decks.
 class FlashcardScreen extends StatefulWidget {
   const FlashcardScreen({super.key, required this.title, required this.deck});
 

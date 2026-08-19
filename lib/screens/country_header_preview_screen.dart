@@ -269,40 +269,6 @@ class _CountryHeaderPreviewScreenState
     );
   }
 
-  Widget _neighborsSection(
-    CountryBundle bundle,
-    List<country_model.Country> allCountries,
-  ) {
-    final codes = bundle.facts.borderingCountryCodes;
-    final colors = _palette.neighbors;
-    return AccordionSection(
-      title: 'Neighbors',
-      tint: colors.tint,
-      textColor: colors.textColor,
-      hasData: codes.isNotEmpty,
-      meta: codes.isEmpty
-          ? null
-          : '${codes.length} bordering ${codes.length == 1 ? 'country' : 'countries'}',
-      expanded: _expanded[_Section.neighbors]!,
-      onToggle: () => _toggle(_Section.neighbors),
-      contentBuilder: (_) => NeighborsSection(
-        borderingCountryCodes: codes,
-        allCountries: allCountries,
-        tint: colors.tint,
-        textColor: colors.textColor,
-        onTapNeighbor: (country) {
-          context.read<TripSelection>().selectCountry(country);
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) =>
-                  CountryHeaderPreviewScreen(country: country),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
   Widget _timesSection(CountryBundle bundle) {
     final bestTimes = bundle.guide.bestTimes;
     final colors = _palette.times;
@@ -366,6 +332,40 @@ class _CountryHeaderPreviewScreenState
         tint: colors.tint,
         textColor: colors.textColor,
         accentOnWhite: colors.accentOnWhite,
+      ),
+    );
+  }
+  
+    Widget _neighborsSection(
+    CountryBundle bundle,
+    List<country_model.Country> allCountries,
+  ) {
+    final codes = bundle.facts.borderingCountryCodes;
+    final colors = _palette.neighbors;
+    return AccordionSection(
+      title: 'Neighbors',
+      tint: colors.tint,
+      textColor: colors.textColor,
+      hasData: codes.isNotEmpty,
+      meta: codes.isEmpty
+          ? null
+          : '${codes.length} bordering ${codes.length == 1 ? 'country' : 'countries'}',
+      expanded: _expanded[_Section.neighbors]!,
+      onToggle: () => _toggle(_Section.neighbors),
+      contentBuilder: (_) => NeighborsSection(
+        borderingCountryCodes: codes,
+        allCountries: allCountries,
+        tint: colors.tint,
+        textColor: colors.textColor,
+        onTapNeighbor: (country) {
+          context.read<TripSelection>().selectCountry(country);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  CountryHeaderPreviewScreen(country: country),
+            ),
+          );
+        },
       ),
     );
   }

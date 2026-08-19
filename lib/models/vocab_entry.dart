@@ -1,9 +1,5 @@
-/// A single tagged vocab entry, as produced by tools/vocab_tagger and stored
-/// in assets/data/content/{countryCode}.json.
-///
-/// V1's UI only reads [phrase]/[translation]; the grammar tags are carried
-/// through now so they don't need to be backfilled once exercises that rely
-/// on them (fill-in-blank, matching) come back into scope.
+/// A single tagged vocab entry. V1's UI only reads [phrase]/[translation];
+/// grammar tags are carried through for future exercises.
 class VocabEntry {
   final String phrase;
   final String translation;

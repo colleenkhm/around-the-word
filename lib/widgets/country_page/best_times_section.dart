@@ -3,27 +3,16 @@ import 'package:flutter/material.dart';
 import '../../models/country_guide.dart';
 import '../../theme/accordion_theme.dart';
 
-/// The "When to Visit" [AccordionSection]'s expanded content — matches
-/// `trip-dashboard-v5.html`'s `.sec-times` card (`.bt-cols`: a butter-
-/// tinted row of month columns divided by vertical rules). Content-only,
-/// no card chrome or heading — [AccordionSection] owns those now.
-///
-/// **Never renders a bare month** — every [BestTime.months] is always
-/// paired with its [BestTime.whyShort] right below it, per the client
-/// design doc: without the reason, this section is indistinguishable from
-/// a weather average anyone could look up. The `why_short`/`why` split
-/// exists specifically so that reason is always there to show.
+/// The "When to Visit" [AccordionSection]'s expanded content — month
+/// columns, each always paired with its `whyShort` reason (never a bare
+/// month).
 class BestTimesSection extends StatelessWidget {
   final List<BestTime> bestTimes;
 
-  /// This section's flag color — 2026-08-18, replaces the fixed
-  /// `AccordionTheme.butter`. See [SectionPalette]'s class doc.
+  /// This section's flag color.
   final Color tint;
 
-  /// Black or white, whichever reads on [tint] — see
-  /// [SectionColors.textColor]. This section's body is a full-bleed
-  /// [tint] fill, so every column's text needs this, not a fixed ink
-  /// color.
+  /// Black or white, whichever reads on [tint].
   final Color textColor;
 
   const BestTimesSection({

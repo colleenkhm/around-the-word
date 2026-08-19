@@ -4,41 +4,19 @@ import '../../models/country_bundle.dart';
 import '../../theme/accordion_theme.dart';
 import '../../utils/format_population.dart';
 
-/// The "Cities" [AccordionSection]'s expanded content — matches
-/// `trip-dashboard-v5.html`'s `.sec-cities` card-group (a lavender-tinted
-/// list of numbered rows). Content-only, no card chrome: the count
-/// ("4 destinations") lives in the accordion row's own meta line now, not
-/// a repeated header bar inside this card — see
-/// `CountryHeaderPreviewScreen`'s `_citiesMeta`.
-///
-/// **2026-08-18**: dropped the navy `CITIES · N destinations` header bar
-/// the 2026-08-15 restyle added — redundant now that
-/// [AccordionSection]'s own row already shows the section name and that
-/// count while collapsed.
-///
-/// The chevron on each row is a visual affordance for a future dedicated
-/// city page (client design doc); tapping does nothing right now
-/// (confirmed 2026-08-10), so rows are deliberately plain, not wrapped in
-/// an `InkWell` — no ripple feedback that would suggest a tap does
-/// something it doesn't.
+/// The "Cities" [AccordionSection]'s expanded content — a numbered list
+/// of cities. Chevron is a visual affordance for a future dedicated city
+/// page; tapping does nothing yet, so rows aren't wrapped in `InkWell`.
 class CitiesSection extends StatelessWidget {
   final List<City> cities;
 
-  /// From `CountryFacts.capital` — matched against [City.name] to render
-  /// the "Capital" meta label. The client `City` model has no `isCapital`
-  /// flag of its own; this is the only signal available to derive it.
+  /// Matched against [City.name] to render the "Capital" meta label.
   final String? capital;
 
-  /// This section's flag color — 2026-08-18, replaces the fixed
-  /// `AccordionTheme.lavender`. See [SectionPalette]'s class doc. The
-  /// featured-city star stays a fixed gold (`AccordionTheme.butterDark`)
-  /// regardless — a "gold star" is its own recognizable motif, not this
-  /// section's color family (see design-preferences.md).
+  /// This section's flag color. Featured-city star stays fixed gold.
   final Color tint;
 
-  /// Black or white, whichever reads on [tint] — see
-  /// [SectionColors.textColor]. This section's body is a full-bleed
-  /// [tint] fill, so every row's text needs this, not a fixed ink color.
+  /// Black or white, whichever reads on [tint].
   final Color textColor;
 
   const CitiesSection({
@@ -53,9 +31,7 @@ class CitiesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (cities.isEmpty) return const SizedBox.shrink();
 
-    // Featured first — the star already carries this signal too, but the
-    // ordering itself is part of it (client design doc: "featured/major
-    // cities", featured named first).
+    // Featured cities first.
     final sorted = [...cities]
       ..sort((a, b) => a.isFeatured == b.isFeatured ? 0 : (a.isFeatured ? -1 : 1));
 

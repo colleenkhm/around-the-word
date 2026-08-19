@@ -1,7 +1,5 @@
-/// The Language tab's dictionary layer: categories (prebuilt tree, never
-/// assembled client-side), words, and phrases built from ordered tokens.
-/// See around-the-word-data-architecture.md's "Curated: language content"
-/// and "Client Data Objects" sections.
+/// Language tab's dictionary layer: categories, words, phrases (ordered
+/// tokens). See the data architecture doc's "Curated: language content."
 library;
 
 enum TokenType { word, punctuation, particle }
@@ -55,9 +53,7 @@ extension CategoryNodeListX on List<CategoryNode> {
     return null;
   }
 
-  /// A category's own id plus every descendant id (recursively) — used to
-  /// pull all content for a selected top-level category, sub-subjects
-  /// included, out of a country bundle.
+  /// A category's own id plus every descendant id, recursively.
   List<String> idAndDescendantIds(String id) {
     final node = findById(id);
     if (node == null) return [id];
@@ -140,8 +136,7 @@ class Phrase {
     required this.tokens,
   });
 
-  /// Convenience for exercise generation (fill-in-blank, etc.) — not used
-  /// by V1's flashcard-only UI yet, kept for when those exercises land.
+  /// For future exercise generation (fill-in-blank), unused today.
   List<PhraseToken> get maskable => tokens.where((t) => t.isMaskable).toList();
 
   factory Phrase.fromJson(Map<String, dynamic> json) {

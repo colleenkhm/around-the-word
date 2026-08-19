@@ -10,64 +10,32 @@ import '../../utils/flag_url.dart';
 import 'dashed_divider.dart';
 import 'external_link.dart';
 
-/// The country-page ticket header: flag, name, native name, and a "ticket
-/// stub" with local time + a $1 USD conversion, plus an "Expand all info" /
-/// "Collapse all info" link controlling every [AccordionSection] below it.
-///
-/// **2026-08-18 rewrite**, built against `trip-dashboard-v5.html`'s two
-/// frames (collapsed vs. expanded) — replaces the 2026-08-15 navy/gold
-/// "boarding pass" version (see [AccordionTheme]'s class doc on why this
-/// repoints to a parallel token set instead of [CountryTheme]). Structure
-/// carries over (`_TicketStub`'s two-column local-time/currency layout,
-/// the live-updating [Timer]) since the mockup keeps that part
-/// unchanged; what's new is the dark surface recoloring to
-/// [AccordionTheme.ink] (from navy), the "DESTINATION" eyebrow label
-/// (`.tk-eyebrow`, wasn't rendered before), and the expand/collapse-all
-/// link row — the top gold/navyMid stripe is dropped, since the v5
-/// mockup doesn't have one.
+/// Country-page ticket header: flag, name, native name, ticket stub, and
+/// expand/collapse-all link.
 class CountryHeader extends StatefulWidget {
   final CountryBundle bundle;
   final String? nativeName;
   final String? nativeNameRomanized;
 
-  /// Feeds the stub's "Local time" column — see [CountryFacts.utcOffsetMinutes]'s
-  /// doc comment on the fixed-offset/no-DST simplification this inherits
-  /// unchanged from the prior version.
+  /// Feeds the stub's local-time column.
   final int? utcOffsetMinutes;
 
-  /// Feeds the stub's "$1 USD" column. **Not live** — see [ExchangeRate]'s
-  /// doc comment; `null` renders an em dash rather than inventing a value.
+  /// Feeds the stub's currency column. Not live.
   final ExchangeRate? exchangeRate;
 
-  /// From `CountryFacts.currencyName` — shown as the currency column's
-  /// subtitle in place of a generic label.
   final String? currencyName;
 
-  /// True when every [AccordionSection] below is currently open — drives
-  /// the link row's label ("Expand all info ↓" vs. "Collapse all info ↑").
+  /// True when every section below is open.
   final bool allExpanded;
   final VoidCallback onToggleAll;
 
-  /// This country's "primary" section colors (shared with Visa & Entry,
-  /// the first section) — 2026-08-18, colors the stub's background/links
-  /// instead of the fixed `AccordionTheme.sky`/`skyDark`. See
-  /// [SectionPalette]'s class doc.
+  /// This country's primary section colors.
   final SectionColors accent;
 
-  /// The dark masthead block's own colors — `SectionPalette.header`, a
-  /// **deepened** version of [accent]'s color, not the same value.
-  /// Deliberately a second, separate field rather than reusing [accent]
-  /// for both — the masthead (name/flag) wants a dark, weighty surface
-  /// for hierarchy/contrast at the top of the page, while the stub right
-  /// below it wants the section's actual (toned-down but still light)
-  /// color; collapsing them into one field would force one or the other
-  /// to compromise. See [SectionPalette.header]'s doc comment.
+  /// Masthead's own colors — deepened version of [accent].
   final SectionColors header;
 
-  /// The ticket stub's own background — `SectionPalette.stub`, a
-  /// **midtone** distinct from both [header] and [accent] so the stub
-  /// doesn't visually merge into the Visa & Entry row directly below it
-  /// (which uses [accent]'s exact tint). See [SectionPalette.stub].
+  /// Ticket stub's own background — midtone, distinct from [header]/[accent].
   final SectionColors stub;
 
   const CountryHeader({
@@ -95,8 +63,6 @@ class _CountryHeaderState extends State<CountryHeader> {
   @override
   void initState() {
     super.initState();
-    // Minute-granularity display, so a timer tick once every 30s is
-    // plenty — carried over unchanged from the prior version.
     _ticker = Timer.periodic(
       const Duration(seconds: 30),
       (_) => setState(() {}),
@@ -113,9 +79,6 @@ class _CountryHeaderState extends State<CountryHeader> {
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.sizeOf(context).width >= 900;
     final header = widget.header;
-    // A translucent version of the header's own text color, not a fixed
-    // white — see [SectionPalette.header]'s doc comment on why this
-    // block is no longer flat `AccordionTheme.ink`.
     final onHeaderSoft = header.textColor.withValues(alpha: 0.55);
 
     return Column(
@@ -124,20 +87,11 @@ class _CountryHeaderState extends State<CountryHeader> {
         Container(
           width: double.infinity,
           color: header.tint,
-          // Top 18->10->6, 2026-08-19, per Colleen: the first cut still
-          // "looks like a lot of space between site nav and destination"
-          // — the rest of that gap was SiteHeader's own bottom padding
-          // (16->10, see that file), not just this one.
           padding: const EdgeInsets.fromLTRB(20, 6, 20, 16),
           child: Stack(
             children: [
               Padding(
-                // Leaves room on the right for the flag, positioned
-                // absolutely — matches the mockup's `.tk-flag` overlay
-                // rather than sharing a Row (so the flag doesn't push the
-                // name to wrap early on a long country name). Widened
-                // alongside the flag's own bigger size, same ~24-26px
-                // margin as before.
+                // Room for the flag, positioned absolutely.
                 padding: EdgeInsets.only(right: isDesktop ? 94 : 74),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,8 +102,6 @@ class _CountryHeaderState extends State<CountryHeader> {
                         color: onHeaderSoft,
                       ),
                     ),
-                    // 6->12, 2026-08-19, per Colleen: "increase space
-                    // between destination and destination name."
                     const SizedBox(height: 12),
                     Text(
                       widget.bundle.country.nameCommon,
@@ -158,11 +110,6 @@ class _CountryHeaderState extends State<CountryHeader> {
                       ).copyWith(color: header.textColor),
                     ),
                     if (widget.nativeName != null) ...[
-                      // Matches the 12px gap above the name (DESTINATION
-                      // -> name), 2026-08-19, per Colleen: "make sure the
-                      // gap between destination name and the secondary
-                      // name below is as big as the gap between
-                      // 'destination' and destination name."
                       const SizedBox(height: 12),
                       Text.rich(
                         TextSpan(
@@ -182,11 +129,7 @@ class _CountryHeaderState extends State<CountryHeader> {
                   ],
                 ),
               ),
-              // top/bottom: 0 (not just top: 0) + an inner Center — per
-              // Colleen, 2026-08-18: "vertically center it within its
-              // section" — stretches this Positioned across the full
-              // masthead height instead of pinning the flag to the top
-              // edge, so Center actually has room to center within.
+              // Stretched top/bottom so Center has room to work with.
               Positioned(
                 top: 0,
                 right: 0,
@@ -224,18 +167,11 @@ class _Flag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Bumped from 52x36/38x26, then again from 60x41/44x30, 2026-08-18,
-    // per Colleen: "make the flag a bit bigger" (asked twice).
     final imageWidth = desktop ? 68.0 : 50.0;
     final imageHeight = desktop ? 46.0 : 34.0;
-    // A real white mat around the image, matching this app's existing
-    // passport/ticket-stamp motif (see HANDOFF.md's rotated-stamp corner
-    // mark on Visa/Advisory content).
+    // White mat around the image (postage-stamp motif).
     const matPadding = 3.0;
-    // The perforated edge — per Colleen, 2026-08-19, clarifying what
-    // "stamp-like border" meant: "more like one of those borders with
-    // the tiny triangles like how stamps get perforated," not the plain
-    // rounded mat this had first. See [_StampEdgePainter].
+    // Perforated-edge tooth size.
     const toothSize = 3.0;
     final matWidth = imageWidth + matPadding * 2;
     final matHeight = imageHeight + matPadding * 2;
@@ -278,12 +214,7 @@ class _Flag extends StatelessWidget {
   }
 }
 
-/// Paints a filled white shape tracing [matRect]'s perimeter but with a
-/// zigzag of small outward-pointing triangles instead of a straight edge
-/// on all four sides — a postage-stamp perforation, not a plain border.
-/// The flag image itself sits on top, sized to fit *inside* [matRect]'s
-/// straight-edged inset, so the zigzag only ever shows as a decorative
-/// margin around it, never clipping into the image.
+/// Paints a white postage-stamp perforated edge around [matRect].
 class _StampEdgePainter extends CustomPainter {
   final Rect matRect;
   final double toothSize;
@@ -313,10 +244,7 @@ class _StampEdgePainter extends CustomPainter {
     canvas.drawPath(path, Paint()..color = color);
   }
 
-  /// Walks [start] to [end] in [toothSize]-length steps, alternating each
-  /// step's endpoint between the straight baseline and a point pushed out
-  /// by [toothSize] along [outward] — the up/down alternation is what
-  /// forms the triangle teeth.
+  // Alternates baseline/outward points to form triangle teeth.
   void _zigzagTo(Path path, Offset start, Offset end, Offset outward) {
     final delta = end - start;
     final length = delta.distance;
@@ -337,16 +265,7 @@ class _StampEdgePainter extends CustomPainter {
       oldDelegate.color != color;
 }
 
-/// The ticket's stub — local time + a $1 USD conversion (`.tk-stub`), plus
-/// the expand/collapse-all pill. Dashed top border simulated via
-/// [DashedDivider] since Flutter has no native dashed-border support.
-///
-/// **2026-08-18: background is [stub], not [accent]'s tint** — per
-/// Colleen, the stub sitting directly above the Visa & Entry row in the
-/// identical color made the seam between them disappear. [accent] is
-/// still used for the expand/collapse pill's text (readable-on-white,
-/// ties it to the page's primary hue) since the pill itself is white now,
-/// not colored by whatever background sits behind it.
+/// Ticket stub — local time + currency + expand/collapse-all link.
 class _TicketStub extends StatelessWidget {
   final int? utcOffsetMinutes;
   final ExchangeRate? exchangeRate;
@@ -356,9 +275,7 @@ class _TicketStub extends StatelessWidget {
   final SectionColors accent;
   final SectionColors stub;
 
-  /// Feeds the "LOCAL TIME" column's own trailing line — see
-  /// [_hemisphereLabel]. From [CountryFacts.latitude]; `null` renders
-  /// nothing rather than guessing.
+  /// Feeds the local-time column's trailing hemisphere line.
   final double? latitude;
 
   const _TicketStub({
@@ -388,9 +305,6 @@ class _TicketStub extends StatelessWidget {
             strokeWidth: 1.5,
           ),
           Padding(
-            // Top/bottom evened up (14/12 -> 13/13), 2026-08-19, per
-            // Colleen: "the padding around the overall local time/
-            // currency section info" read top-heavy.
             padding: const EdgeInsets.fromLTRB(20, 13, 20, 13),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -402,10 +316,6 @@ class _TicketStub extends StatelessWidget {
                     local == null
                         ? ''
                         : '${_dateLabel(local)} · ${_utcLabel()}',
-                    // Lines up with currency's own trailing "Convert"
-                    // link — per Colleen, 2026-08-19: "add the country's
-                    // hemisphere underneath the time/in line with the
-                    // bottom row of currency."
                     trailing: _hemisphereLabel() == null
                         ? null
                         : Text(
@@ -438,18 +348,7 @@ class _TicketStub extends StatelessWidget {
               ],
             ),
           ),
-          // A flush, square-cornered white strip — not a centered pill —
-          // per Colleen, 2026-08-18: a floating rounded pill read like it
-          // belonged to the stub it sat inside, when what it actually
-          // controls is every section *below* it. Two cues now point at
-          // that instead: no bottom padding/border, so this touches the
-          // Visa & Entry row directly (the same "color change is the
-          // seam, no divider" language every accordion row already uses
-          // — see AccordionSection's doc comment); and the label sits
-          // right-aligned with a chevron-style arrow, landing in the same
-          // horizontal spot as every section row's own chevron circle
-          // below it, so the two read as one repeated column of controls
-          // rather than two unrelated pieces.
+          // Flush white strip, right-aligned to match the chevrons below.
           Material(
             color: AccordionTheme.white,
             child: InkWell(
@@ -527,10 +426,7 @@ class _TicketStub extends StatelessWidget {
     return DateTime.now().toUtc().add(Duration(minutes: offset));
   }
 
-  /// North/South only — "hemisphere" on its own conventionally means this
-  /// axis, not the East/West split [longitude] would give. `null` for a
-  /// missing [latitude] rather than a guess; a country dead on the
-  /// equator gets its own label instead of forcing it into either side.
+  // North/South only; null for missing latitude, distinct label at 0.
   String? _hemisphereLabel() {
     final lat = latitude;
     if (lat == null) return null;
@@ -574,9 +470,7 @@ class _TicketStub extends StatelessWidget {
   ];
 
   String _rateLabel(ExchangeRate r) {
-    // Costa Rica-style four-figure rates read better with no decimal;
-    // sub-10 rates (EUR-style) want two. A single significant-figures
-    // rule rather than hardcoding per currency.
+    // Four-figure rates read better with no decimal; sub-10 want two.
     final rate = r.rateFromUsd;
     final formatted = rate >= 100
         ? rate.round().toString()
@@ -591,12 +485,7 @@ class _TicketStub extends StatelessWidget {
     _ => '$code ',
   };
 
-  /// A live, interactive USD-to-[currencyCode] calculator on xe.com — a
-  /// public webpage the user opens themselves, not an API call this app
-  /// makes. See the data architecture doc's "Currency conversion:
-  /// ExchangeRate-API, live, never bundled" guidance — that's about this
-  /// app *fetching* a rate server-side (not built yet); this is just an
-  /// outbound link, so it doesn't need an Edge Function or key.
+  // Outbound link to a public converter, not an API call.
   String _converterUrl(String currencyCode) =>
       'https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To=$currencyCode';
 }

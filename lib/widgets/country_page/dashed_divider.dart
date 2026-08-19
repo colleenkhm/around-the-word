@@ -2,29 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../theme/country_theme.dart';
 
-/// A thin horizontal dashed line — the perforated "tear line" motif used
-/// across the page ([SectionHeading]'s trailing rule, the MRZ strip's top
-/// edge). Extracted 2026-08-11 once a second call site needed the exact
-/// same painter [SectionHeading] already had privately.
-///
-/// **Painted, not built with `LayoutBuilder`** — using `LayoutBuilder` to
-/// space the dashes across the available width broke `SectionHeading`
-/// once already: it sits inside `TravelInfoSection`'s `IntrinsicHeight`
-/// on desktop, and `LayoutBuilder` explicitly does not support being
-/// asked for intrinsic dimensions — it throws rather than answering.
-/// `CustomPaint` has no such restriction; it just paints within whatever
-/// size layout gives it at paint time.
+/// A thin horizontal dashed line — the perforated "tear line" motif.
+/// `CustomPaint`, not `LayoutBuilder`, since some call sites need
+/// intrinsic dimensions.
 class DashedDivider extends StatelessWidget {
   final double height;
 
-  /// Defaults to [CountryTheme.rule] (the light-surface tan tone). Override
-  /// for a call site on a dark surface — `_TicketStub` (2026-08-17) passes
-  /// [CountryTheme.onNavyMuted] now that it sits on navy, not [card].
+  /// Defaults to [CountryTheme.rule].
   final Color color;
 
-  /// Line thickness. Defaults to 1.5, matching every existing call site;
-  /// `_TicketStub` (2026-08-17, per Colleen: "thinner divider please")
-  /// passes 1.0.
   final double strokeWidth;
 
   const DashedDivider({
