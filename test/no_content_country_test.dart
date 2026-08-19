@@ -10,27 +10,35 @@ import 'package:around_the_word/main.dart';
 // anything specific to this scenario.
 void main() {
   testWidgets(
-    'selecting an inactive country dead-ends at the coming-soon screen, not the category flow',
+    'selecting a country with no curated bundle opens the country page, every section "coming soon"',
     (WidgetTester tester) async {
       await tester.pumpWidget(const AroundTheWordApp());
       await tester.pumpAndSettle();
 
       // Mexico is a real, selectable country in countries.json, but it's
-      // not active — every country shows up in search, only active ones
-      // lead to the real flow (see DestinationScreen._selectCountry).
-      // Search text deliberately doesn't equal the full country name, so it
-      // doesn't also match the search field's own current text below.
+      // not `active` and has no `assets/data/bundles/mx.json` — 2026-08-18:
+      // every country now opens the country page (see
+      // CountryHeaderPreviewScreen's class doc), not a coming-soon dead
+      // end, `active` or not. Search text deliberately doesn't equal the
+      // full country name, so it doesn't also match the search field's own
+      // current text below.
       await tester.enterText(find.byType(TextField), 'Mex');
       await tester.pumpAndSettle();
       await tester.tap(find.text('Mexico'));
       await tester.pumpAndSettle();
 
-      expect(
-        find.text("We're working on content for Mexico — here in the meantime:"),
-        findsOneWidget,
-      );
-      expect(find.text('Google Translate'), findsOneWidget);
+      // The country name renders (ticket header), and every accordion
+      // section is present as a row, but collapsed by default — its
+      // "Coming soon" body only shows once expanded (see
+      // AccordionSection's class doc).
+      expect(find.text('Mexico'), findsWidgets);
       expect(find.text('What do you want to learn?'), findsNothing);
+      expect(find.text('Cities'), findsOneWidget);
+      expect(find.text('Coming soon'), findsWidgets); // one per collapsed section's meta line
+
+      await tester.tap(find.text('Cities'));
+      await tester.pumpAndSettle();
+      expect(find.text("Coming soon — we haven't curated this yet."), findsOneWidget);
     },
   );
 }

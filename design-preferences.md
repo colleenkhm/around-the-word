@@ -4,9 +4,33 @@
 [CLAUDE.md](CLAUDE.md) (product scope) and [HANDOFF.md](HANDOFF.md)
 (implementation decisions) because it's neither — it's aesthetic
 judgment that should carry into *new* design work, not just explain past
-changes. Read this before making UI/visual decisions on request, the same
-way CLAUDE.md gets read for product-scope ones. Add to it as new taste
-surfaces; don't remove entries unless she says they no longer apply.
+changes. Add to it as new taste surfaces; don't remove entries unless she
+says they no longer apply.
+
+**Check this doc *before* proposing or building a redesign, not just when
+making an isolated UI tweak** — its whole point is to stop a new redesign
+from quietly reintroducing a component/pattern/color she's already said
+doesn't work (established 2026-08-18, after that happened). If a new
+request (a mockup, a "redesign this screen" ask) conflicts with something
+logged here, flag the specific conflict before building — same as any
+other conflicting-doc situation (see CLAUDE.md's Working Style) — rather
+than silently complying with the new request or silently defaulting to
+the old preference.
+
+**Quick reference — don't reintroduce these without flagging it first:**
+- A panel/card the exact same flat color as the page behind it, with no
+  shadow/tone-shift/texture to separate them.
+- Cool or blue-leaning tones as a *primary* palette choice (a specific,
+  scoped, flagged exception exists for the accordion country-page restyle
+  — see below — but that doesn't reopen the general rule).
+- Gold (or any single accent color) used as a generic, everywhere accent
+  rather than reserved for one specific, recognizable motif.
+- Undersized functional/at-a-glance text (values a user actually needs to
+  read quickly).
+- Thick (1.5px+) dividers by default, or a large gap left "just because a
+  container has padding."
+
+See the sections below for the full reasoning behind each.
 
 ## Color & surfaces
 

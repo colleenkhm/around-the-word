@@ -63,7 +63,24 @@ class AccordionSection extends StatelessWidget {
           expanded: expanded,
           onTap: onToggle,
         ),
-        if (expanded)
+        if (expanded) ...[
+          // A deliberate white seam, not the row's own hairline border —
+          // added 2026-08-18, per Colleen: the header was "bleeding in"
+          // to same-tint body content below it (Cities' lavender header
+          // over a lavender city list, e.g.) and the thin gray line
+          // wasn't reading as a real separator. A few px of solid white
+          // plus a soft shadow gives the header a visible edge to sit
+          // above, working even when header and body share a color
+          // family — unlike a 1px line at that low a contrast.
+          Container(
+            height: 5,
+            decoration: const BoxDecoration(
+              color: AccordionTheme.white,
+              boxShadow: [
+                BoxShadow(color: Color(0x14000000), blurRadius: 4, offset: Offset(0, 1)),
+              ],
+            ),
+          ),
           Container(
             width: double.infinity,
             decoration: const BoxDecoration(
@@ -72,6 +89,7 @@ class AccordionSection extends StatelessWidget {
             ),
             child: hasData ? contentBuilder(context) : const _ComingSoon(),
           ),
+        ],
       ],
     );
   }

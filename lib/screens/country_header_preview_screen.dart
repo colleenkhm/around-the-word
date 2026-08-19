@@ -5,6 +5,7 @@ import 'package:flutter/services.dart' show rootBundle;
 
 import '../models/country.dart' as country_model;
 import '../models/country_bundle.dart';
+import '../models/country_guide.dart';
 import '../models/live_data.dart';
 import '../models/travel_info.dart';
 import '../theme/accordion_theme.dart';
@@ -20,13 +21,13 @@ import '../widgets/country_page/site_header.dart';
 import '../widgets/country_page/travel_advisory_section.dart';
 import '../widgets/country_page/visa_section.dart';
 
-/// The country page — reached directly from `DestinationScreen` when an
-/// `active` country is tapped, standing in for the real multi-tab
-/// `CountryPageScreen` (Overview/Explore/Guide/Travel Info/Language) until
-/// that's built. Only `assets/data/bundles/cr.json` actually exists today,
-/// so Costa Rica is the only country this can render — but the only other
-/// `active: true` country would need is a matching bundle file, no code
-/// change.
+/// The country page — reached directly from `DestinationScreen` for
+/// **every** tapped country now, not just `active` ones (see below) —
+/// standing in for the real multi-tab `CountryPageScreen`
+/// (Overview/Explore/Guide/Travel Info/Language) until that's built. Only
+/// `assets/data/bundles/cr.json` actually exists today, so Costa Rica is
+/// the only country with real content — every other country renders this
+/// same shell with every section in its "coming soon" state (see below).
 ///
 /// **2026-08-18: rebuilt as a collapsible-sections accordion**, matching
 /// `trip-dashboard-v5.html`'s two frames (default-collapsed vs. every
@@ -45,6 +46,21 @@ import '../widgets/country_page/visa_section.dart';
 /// them, otherwise the section should say 'coming soon' when expanded."
 /// See [AccordionSection]'s class doc on how this differs from the rest
 /// of the app's "omit an empty tab" rule.
+///
+/// **2026-08-18 (later): `ComingSoonScreen` retired from this flow** — per
+/// Colleen: "instead of the coming soon page we should just have a
+/// country page showing any available data where the expanded categories
+/// say 'coming soon'." `DestinationScreen` now sends every tapped
+/// country here regardless of `Country.active`; when no bundle file
+/// exists for it, `_load` builds an empty in-memory [CountryBundle]
+/// shell (see `_emptyBundle`) instead of falling into a dead-end error
+/// state — every [AccordionSection] below already renders a "Coming
+/// soon" body when its `hasData` is false, so an all-empty bundle just
+/// means every section shows that. `ComingSoonScreen` itself, and the
+/// generic `coming_soon_resources` it read, are unreferenced now but
+/// left in place — same "kept as history, not deleted, until something
+/// else needs the space" pattern the rest of this codebase's superseded
+/// code follows.
 class CountryHeaderPreviewScreen extends StatefulWidget {
   final country_model.Country country;
 
@@ -62,7 +78,6 @@ enum _Section { visa, cities, times, advisory, language, norms }
 class _CountryHeaderPreviewScreenState
     extends State<CountryHeaderPreviewScreen> {
   CountryBundle? _bundle;
-  bool _loadFailed = false;
 
   /// Every section starts collapsed — matches the mockup's default frame.
   final Map<_Section, bool> _expanded = {for (final s in _Section.values) s: false};
@@ -81,13 +96,50 @@ class _CountryHeaderPreviewScreenState
         _bundle = CountryBundle.fromJson(jsonDecode(raw) as Map<String, dynamic>);
       });
     } catch (error) {
-      // Shouldn't happen in practice — DestinationScreen only routes here
-      // for `active` countries, and today that's Costa Rica alone — but
-      // this screen now takes an arbitrary Country, so a missing bundle
-      // file (rather than an infinite spinner) needs somewhere to go.
-      debugPrint('No bundle for $code: $error');
-      setState(() => _loadFailed = true);
+      // No curated bundle yet for this country — not an error state
+      // anymore (see class doc, 2026-08-18): render the same page shell
+      // with every section in its "coming soon" state, rather than a
+      // dead end. Expected for every country besides Costa Rica today.
+      debugPrint('No bundle for $code — showing an empty shell: $error');
+      setState(() => _bundle = _emptyBundle(widget.country));
     }
+  }
+
+  /// A [CountryBundle] with every list/optional field empty — every
+  /// [AccordionSection] below reads `hasData: false` off of it and shows
+  /// "Coming soon" accordingly. `country`/`fetchedAt` are the only real
+  /// values; everything else is the type's natural empty value, not a
+  /// guess at real content.
+  CountryBundle _emptyBundle(country_model.Country country) {
+    return CountryBundle(
+      country: Country(
+        id: country.countryCode.toLowerCase(),
+        isoCode: country.countryCode,
+        nameCommon: country.name,
+        nameOfficial: country.name,
+        contentStatus: ContentStatus.none,
+      ),
+      facts: const CountryFacts(officialLanguages: []),
+      cities: const [],
+      guide: const CountryGuide(
+        bestTimes: [],
+        seasons: [],
+        practicalNorms: [],
+        dressExpectations: [],
+        cuisine: [],
+        historicalEvents: [],
+        festivals: [],
+        prepNotes: [],
+      ),
+      pointsOfInterest: const [],
+      tips: const [],
+      phrases: const [],
+      words: const [],
+      categories: const [],
+      advisories: const [],
+      contributorNames: const [],
+      fetchedAt: DateTime.now(),
+    );
   }
 
   /// US State Department only, for now (per Colleen, 2026-08-11) — the
@@ -118,9 +170,7 @@ class _CountryHeaderPreviewScreenState
     final bundle = _bundle;
     return Scaffold(
       backgroundColor: AccordionTheme.page,
-      body: _loadFailed
-          ? _LoadFailedView(country: widget.country)
-          : bundle == null
+      body: bundle == null
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
               top: false,
@@ -137,15 +187,6 @@ class _CountryHeaderPreviewScreenState
                     onAboutTap: () => Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => const AboutScreen()),
                     ),
-                    backgroundColor: AccordionTheme.ink,
-                    iconColor: Colors.white.withValues(alpha: 0.85),
-                    aboutTextStyle: const TextStyle(
-                      fontFamily: AccordionTheme.dmMono,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 1.0,
-                      color: Colors.white,
-                    ),
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -161,12 +202,20 @@ class _CountryHeaderPreviewScreenState
                             utcOffsetMinutes: bundle.facts.utcOffsetMinutes,
                             // Mock instance, not bundle data — currency
                             // conversion is explicitly never bundled (see
-                            // the data architecture doc).
-                            exchangeRate: ExchangeRate(
-                              currencyCode: bundle.facts.currencyCode ?? 'CRC',
-                              rateFromUsd: 519.8,
-                              fetchedAt: DateTime.now(),
-                            ),
+                            // the data architecture doc). Only built when
+                            // there's a real currency to mock a rate for —
+                            // `null` otherwise (renders an em dash), so an
+                            // empty-shell country (see `_emptyBundle`)
+                            // doesn't show a fabricated rate for whatever
+                            // currency this hardcoded mock happened to
+                            // default to.
+                            exchangeRate: bundle.facts.currencyCode == null
+                                ? null
+                                : ExchangeRate(
+                                    currencyCode: bundle.facts.currencyCode!,
+                                    rateFromUsd: 519.8,
+                                    fetchedAt: DateTime.now(),
+                                  ),
                             currencyName: bundle.facts.currencyName,
                             allExpanded: _allExpanded,
                             onToggleAll: _toggleAll,
@@ -200,9 +249,8 @@ class _CountryHeaderPreviewScreenState
     return AccordionSection(
       title: 'Visa & Entry',
       tint: AccordionTheme.sky,
-      // Gradient, not the flat tint above — see AccordionTheme.visaRowGradient's
-      // doc comment: distinguishes this row from the sky-colored ticket
-      // stub directly above it.
+      // Gradient, not the flat tint above — every section row uses one
+      // now (see AccordionTheme.visaRowGradient's doc comment).
       gradient: AccordionTheme.visaRowGradient,
       hasData: visa != null,
       meta: visa == null ? null : _firstClause(visa.summary),
@@ -217,6 +265,7 @@ class _CountryHeaderPreviewScreenState
     return AccordionSection(
       title: 'Cities',
       tint: AccordionTheme.lavender,
+      gradient: AccordionTheme.citiesRowGradient,
       hasData: cities.isNotEmpty,
       meta: cities.isEmpty ? null : '${cities.length} destination${cities.length == 1 ? '' : 's'}',
       expanded: _expanded[_Section.cities]!,
@@ -230,6 +279,7 @@ class _CountryHeaderPreviewScreenState
     return AccordionSection(
       title: 'When to Visit',
       tint: AccordionTheme.butter,
+      gradient: AccordionTheme.timesRowGradient,
       hasData: bestTimes.isNotEmpty,
       meta: bestTimes.isEmpty ? null : bestTimes.map((b) => b.months).join(' · '),
       expanded: _expanded[_Section.times]!,
@@ -247,6 +297,7 @@ class _CountryHeaderPreviewScreenState
     return AccordionSection(
       title: 'Travel Advisory',
       tint: AccordionTheme.sage,
+      gradient: AccordionTheme.advisoryRowGradient,
       hasData: advisories.isNotEmpty,
       meta: metaLabel,
       expanded: _expanded[_Section.advisory]!,
@@ -265,6 +316,7 @@ class _CountryHeaderPreviewScreenState
     return AccordionSection(
       title: 'Language',
       tint: AccordionTheme.rose,
+      gradient: AccordionTheme.languageRowGradient,
       hasData: hasData,
       meta: languages.isEmpty ? null : languages.join(' · '),
       expanded: _expanded[_Section.language]!,
@@ -281,6 +333,7 @@ class _CountryHeaderPreviewScreenState
     return AccordionSection(
       title: 'Practical Norms',
       tint: AccordionTheme.peach,
+      gradient: AccordionTheme.normsRowGradient,
       hasData: norms.isNotEmpty,
       meta: norms.isEmpty ? null : norms.map((n) => n.title).join(' · '),
       expanded: _expanded[_Section.norms]!,
@@ -297,44 +350,5 @@ class _CountryHeaderPreviewScreenState
     final period = summary.indexOf('.');
     final clause = period == -1 ? summary : summary.substring(0, period);
     return clause.length > 60 ? '${clause.substring(0, 60)}…' : clause;
-  }
-}
-
-/// Shown in place of the page when no bundle file exists for the tapped
-/// country — see `_load`'s catch clause. Not styled to match the
-/// accordion theme; this is a "shouldn't happen" fallback, not a designed
-/// state.
-class _LoadFailedView extends StatelessWidget {
-  final country_model.Country country;
-
-  const _LoadFailedView({required this.country});
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Couldn't load content for ${country.name}.",
-                style: Theme.of(context).textTheme.titleMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              TextButton(
-                onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const DestinationScreen()),
-                  (route) => false,
-                ),
-                child: const Text('Back to search'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

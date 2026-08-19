@@ -15,6 +15,26 @@ refactors/doc updates unless they're worth calling out.
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-08-18
+
+### Changed
+- **Every searchable country now opens a real country page — no more
+  dead-end "coming soon" screen.** A country with no curated content yet
+  shows the same page as any other, with each section (Visa & Entry,
+  Cities, When to Visit, Travel Advisory, Language, Practical Norms)
+  reading "Coming soon" once expanded, instead of a separate page with a
+  short message and generic links.
+- The rest of the app — category checkboxes, "Personalizing your
+  dictionary," Learn/Use, vocab lists, flashcards, and the About page —
+  now matches the country page's fonts and colors. Previously only the
+  country page and search screen had been restyled.
+- Search screen: fixed a leftover cream-colored search field and an
+  off-palette blue focus ring, tightened the gap between the search field
+  and results, added breathing room around the header text, and turned
+  off the debug-mode ribbon.
+- A "Whereabout" wordmark now appears next to the globe icon in the header
+  on every screen, not just search.
+
 ## [0.2.0] — 2026-08-18
 
 ### Changed

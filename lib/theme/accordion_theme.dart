@@ -62,18 +62,64 @@ class AccordionTheme {
 
   static const peach = Color(0xFFFDECD8);
 
-  /// Visa & Entry's collapsed-row background — matches the mockup's
-  /// `.sec-visa` (`linear-gradient(285deg, rgba(200,225,245,.5) 0%, var(--white) 55%)`),
-  /// a pale-blue-to-white diagonal. **Deliberately not the flat [sky]** —
-  /// added 2026-08-18, per Colleen: Visa & Entry read as the same solid
-  /// blue as the ticket stub directly above it. Every other section keeps
-  /// its plain pastel [tint]; only this one mockup class defines a
-  /// gradient distinct from its own section color (the rest gradient from
-  /// a faint tint *to* their own pastel, not to white).
+  /// Every section row's collapsed/header background — the mockup's
+  /// `.sec-*` classes are each a diagonal gradient (`linear-gradient` from
+  /// a low-alpha dark accent to the section's pastel at 55%, Visa uniquely
+  /// to white instead of its own pastel), **not** a flat fill. First built
+  /// (2026-08-18) as one Visa-only exception — see the old doc comment
+  /// this replaced — because a flat `sky` fill read as the same solid
+  /// blue as the ticket stub above it. Generalized to all six the same
+  /// day once Colleen flagged the *other* five sections had the opposite
+  /// problem: a flat-tint header sitting directly above same-tint body
+  /// content (Cities' lavender header over a lavender city list, e.g.)
+  /// "bled in" with no visible seam. The gradient's own diagonal
+  /// highlight is what the mockup uses to keep a header legible as its
+  /// own row even when the content below shares its color family — this
+  /// was simply missing for five of the six until now, not a new idea.
+  ///
+  /// Each gradient's start color is hand-blended (not a literal
+  /// translucent `rgba`) against [page] — same reasoning as the original
+  /// Visa token: a predictable flat color, not alpha-compositing that
+  /// shifts if something behind the row ever changes.
   static const visaRowGradient = LinearGradient(
     begin: Alignment(0.6, -1),
     end: Alignment(-0.6, 1),
     colors: [Color(0xFFDCE9F5), white],
+    stops: [0.0, 0.55],
+  );
+
+  static const citiesRowGradient = LinearGradient(
+    begin: Alignment(0.6, -1),
+    end: Alignment(-0.6, 1),
+    colors: [Color(0xFFDED4EE), lavender],
+    stops: [0.0, 0.55],
+  );
+
+  static const timesRowGradient = LinearGradient(
+    begin: Alignment(0.6, -1),
+    end: Alignment(-0.6, 1),
+    colors: [Color(0xFFE8DECC), butter],
+    stops: [0.0, 0.55],
+  );
+
+  static const advisoryRowGradient = LinearGradient(
+    begin: Alignment(0.6, -1),
+    end: Alignment(-0.6, 1),
+    colors: [Color(0xFFD0DED8), sage],
+    stops: [0.0, 0.55],
+  );
+
+  static const languageRowGradient = LinearGradient(
+    begin: Alignment(0.6, -1),
+    end: Alignment(-0.6, 1),
+    colors: [Color(0xFFE8CEDA), rose],
+    stops: [0.0, 0.55],
+  );
+
+  static const normsRowGradient = LinearGradient(
+    begin: Alignment(0.6, -1),
+    end: Alignment(-0.6, 1),
+    colors: [Color(0xFFE8D8D0), peach],
     stops: [0.0, 0.55],
   );
 
@@ -130,6 +176,19 @@ class AccordionTheme {
         height: 1.0,
         letterSpacing: fontSize * -0.02,
         color: white,
+      );
+
+  /// A large serif heading on the light page background (not the dark
+  /// ticket) — [ink], not [white]. Added 2026-08-18 for
+  /// `DestinationScreen`'s "Where are you going?" heading, bringing it
+  /// onto this palette/type system alongside the country page.
+  static TextStyle pageHeading(double fontSize) => TextStyle(
+        fontFamily: fraunces,
+        fontWeight: FontWeight.w700,
+        fontSize: fontSize,
+        height: 1.1,
+        letterSpacing: fontSize * -0.01,
+        color: ink,
       );
 
   /// `.tk-eyebrow` / `.tk-native`-style small mono label on the dark

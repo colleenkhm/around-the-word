@@ -173,3 +173,26 @@ default (`1.0.0+1`).
   existing app-design-doc.md got a fast, decisive resolution ("default to the
   new doc, update anything else accordingly") rather than friction — she
   wants the flag, then to make the call herself.
+- **Don't duplicate a shared widget's styling across its call sites.** If a
+  widget (e.g. `SiteHeader`) is used in more than one place and every real
+  consumer wants the same look, that look belongs hardcoded inside the
+  widget once — not passed in as constructor params that every call site
+  then repeats identically. Flagged 2026-08-18: `SiteHeader` took
+  `backgroundColor`/`iconColor`/`aboutTextStyle`/`homeLabel`/`homeLabelStyle`
+  as params, both of its two consumers passed the exact same values for all
+  five, and that duplication was *why* a visual bug (an inconsistent
+  icon-to-wordmark gap) shipped unnoticed — nothing forced the two copies to
+  stay in sync when one was touched without the other. Per Colleen: "if we
+  are using a widget that is used in other places we should not be
+  duplicating code." Only add a real param (or a `variant` enum) back if a
+  consumer has an actual, stated reason to look different — not by default
+  "just in case."
+- **Check [design-preferences.md](design-preferences.md) *before* proposing
+  or building a redesign, not after.** It exists specifically so a redesign
+  doesn't reintroduce a component/pattern/color she's already said doesn't
+  work — treat it as a gate-check on new visual work, the same way a
+  conflicting doc gets flagged before proceeding (see above), not just
+  background reading. If a request conflicts with something logged there
+  (like 2026-08-18's mockup calling for cool tones against the "stay warm"
+  entry), flag it explicitly rather than silently complying or silently
+  refusing — same pattern as any other doc conflict.

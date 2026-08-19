@@ -28,11 +28,11 @@
 
 **V1 is country pages, read-only, no accounts.** A user searches for a country and gets a single page pulling together what they'd otherwise assemble themselves.
 
-**In scope:** country search, country page (facts, guide content, points of interest, advisories, visas, weather), language content with learn/use modes, flashcards, coming-soon state for uncovered countries.
+**In scope:** country search, country page (facts, guide content, points of interest, advisories, visas, weather), language content with learn/use modes, flashcards, a coming-soon *state* for uncovered countries (see below — no longer a separate screen).
 
 **Out of scope for V1:** accounts, trip dashboards, checklists, pinning, word-of-the-day notifications, anything social. All have schema defined in the data architecture doc so they don't require redesign — they just aren't built.
 
-**Country coverage at launch:** countries with real content are fully browsable; everything else is searchable and routes to a coming-soon screen. No country is hidden or blocked.
+**Country coverage at launch:** countries with real content are fully browsable; everything else is searchable and routes to the same country page, every section reading "coming soon" — see step 2 below. No country is hidden or blocked.
 
 ---
 
@@ -65,9 +65,11 @@
 1. **Home — "Where are you going?"**
    A search field over the country list, filtered as the user types. Scrollable list when not typing. Every country is tappable; nothing is hidden or greyed out.
 
-2. **Branch on content availability**
-   - **Content exists →** Country page (below)
-   - **No content yet →** Coming-soon screen: short message plus resource links (generic by default, per-country override possible any time — see data architecture doc). A deliberate dead end — honest rather than empty.
+2. **Every country opens the same country page** (revised 2026-08-18 — see below; previously branched on content availability into a separate coming-soon dead end)
+   - **Content exists →** every section shows real content.
+   - **No content yet →** the same country page, with every section expanded to "Coming soon" instead of being omitted or dead-ending. Honest rather than empty, same reasoning the old coming-soon screen had — just folded into the page itself instead of a separate screen, so a partially-covered country (some sections real, some "coming soon") isn't an awkward middle case between two different screen types.
+
+   **2026-08-18, per Colleen: "instead of the coming soon page we should just have a country page showing any available data where the expanded categories say 'coming soon.'"** The old dedicated coming-soon screen (short message + generic resource links, `coming_soon_resources` table) is retired from this flow — see HANDOFF.md for the implementation. The generic-resources mechanism itself isn't deleted from the data architecture doc; it's just unused for now. Worth revisiting whether those resource links resurface *inside* an empty section (e.g. a "Coming soon" Language section linking out to Google Translate) rather than being dropped entirely — not decided yet, see Open Questions.
 
 3. **Country page**
    The core V1 screen, organized as **five tabs**, grouped along the trust-tier split that's the spine of the data architecture (commodity / curated / legally-sensitive), rather than as a long scroll:
@@ -117,7 +119,7 @@ These are UX-facing consequences of decisions documented fully in the data archi
 
 ## Roadmap
 
-**V1 — country pages.** Search → country page → language flow with learn/use and flashcards. Read-only, no accounts. Countries with content are fully browsable; everything else shows coming-soon. Shipped to a small group of real travelers, not an app store launch. **Build starts once every personally-visited country is fully collected** (see data architecture doc's Sequencing section) — a content trigger, not a calendar date.
+**V1 — country pages.** Search → country page → language flow with learn/use and flashcards. Read-only, no accounts. Countries with content are fully browsable; everything else opens the same page with every section reading "coming soon" (see Screen Flows, step 2). Shipped to a small group of real travelers, not an app store launch. **Build starts once every personally-visited country is fully collected** (see data architecture doc's Sequencing section) — a content trigger, not a calendar date.
 
 **V1.1 — second country.** The test of whether the country-organized model holds up: add content for a new country, confirm it appears fully with no other changes needed.
 
@@ -143,4 +145,6 @@ These are UX-facing consequences of decisions documented fully in the data archi
 - **Cache staleness UI** — how prominently to surface "this was verified in March" without making the app feel unreliable. Matters most for advisories and visas.
 - ~~**Local storage package**~~ — **resolved:** key-value/object store (Hive or a Hive-alternative like `hive_ce`/`sembast`), not sqflite. `CountryBundle` is cached and read as a single denormalized whole with no on-device relational queries in V1, so a key–blob store matches the access pattern without redundant re-normalization. Would flip only if a later phase (spaced repetition progress, checklist queries, pinned-content filtering) needs on-device relational queries — sqflite/`drift` becomes the better fit then.
 - ~~**Coming-soon resource links**~~ — **resolved:** shared generic set by default, with a `coming_soon_resources` table (see data architecture doc) supporting per-country override at any time — no usage threshold required. Adding a couple of good links for an uncovered country (e.g. Sweden) the moment they surface is enough to override the generic set for that country alone; the fallback stays generic for everything else.
+- **Reopened 2026-08-18: do coming-soon resource links resurface, and where?** Now that there's no dedicated coming-soon screen (see Screen Flows, step 2), the `coming_soon_resources` mechanism above is built but unused. Options: drop it (a "Coming soon" section is enough on its own), or surface those links *inside* an empty section's expanded state (e.g. Language's "Coming soon" body linking out to Google Translate) — which would need per-*section*, not just per-*country*, resource sets, a step further than what's built. Not decided; not blocking, since the plain "Coming soon" text is a reasonable state on its own.
+- **The "four tabs" line above is stale** — the actual `CountryHeaderPreviewScreen` build (2026-08-18) is a single-page accordion of sections spanning what were meant to be Overview/Travel-Info/Language tab content, with no tab bar at all. Worth a real resolution once Explore/Guide's remaining content (POI landmarks, cuisine, dress, festivals, history) needs a home — until then this doc's tab language and the code have quietly diverged. See HANDOFF.md's 2026-08-18 entries for the accordion decisions themselves.
 - **Trip diary / photo feed** (added 2026-08-17) — Colleen wants, in a later iteration, a trip diary where users post photos and notes from the different activities they did on a trip, possibly calendar-style. Anything an entry's author marks public would show up in a photo feed scoped to that country/city/activity, for other users to scroll while deciding where to go. Open before this is buildable: whether the diary is calendar-first or list-first UI, what "activity" ties an entry to (a `trip_pin`? a `points_of_interest` row? freeform?), how the feed is scoped/paginated per country vs. city vs. activity, and moderation/privacy (review before feed-eligible, report/takedown, who can see whose public photos). See data architecture doc's Open Decisions for the schema-side version of this note.
