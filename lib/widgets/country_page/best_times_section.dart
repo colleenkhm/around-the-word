@@ -16,14 +16,29 @@ import '../../theme/accordion_theme.dart';
 class BestTimesSection extends StatelessWidget {
   final List<BestTime> bestTimes;
 
-  const BestTimesSection({super.key, required this.bestTimes});
+  /// This section's flag color — 2026-08-18, replaces the fixed
+  /// `AccordionTheme.butter`. See [SectionPalette]'s class doc.
+  final Color tint;
+
+  /// Black or white, whichever reads on [tint] — see
+  /// [SectionColors.textColor]. This section's body is a full-bleed
+  /// [tint] fill, so every column's text needs this, not a fixed ink
+  /// color.
+  final Color textColor;
+
+  const BestTimesSection({
+    super.key,
+    required this.bestTimes,
+    required this.tint,
+    required this.textColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     if (bestTimes.isEmpty) return const SizedBox.shrink();
 
     return ColoredBox(
-      color: AccordionTheme.butter,
+      color: tint,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,10 +48,10 @@ class BestTimesSection extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                 decoration: i == bestTimes.length - 1
                     ? null
-                    : const BoxDecoration(
-                        border: Border(right: BorderSide(color: AccordionTheme.rule)),
+                    : BoxDecoration(
+                        border: Border(right: BorderSide(color: textColor.withValues(alpha: 0.15))),
                       ),
-                child: _BestTimeItem(bestTime: bestTimes[i]),
+                child: _BestTimeItem(bestTime: bestTimes[i], textColor: textColor),
               ),
             ),
         ],
@@ -47,8 +62,9 @@ class BestTimesSection extends StatelessWidget {
 
 class _BestTimeItem extends StatelessWidget {
   final BestTime bestTime;
+  final Color textColor;
 
-  const _BestTimeItem({required this.bestTime});
+  const _BestTimeItem({required this.bestTime, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +72,12 @@ class _BestTimeItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(bestTime.months, style: AccordionTheme.sHead.copyWith(fontSize: 15)),
+        Text(bestTime.months, style: AccordionTheme.sHead.copyWith(fontSize: 15, color: textColor)),
         const SizedBox(height: 3),
-        Text(bestTime.whyShort, style: AccordionTheme.sBody.copyWith(fontSize: 12.5)),
+        Text(
+          bestTime.whyShort,
+          style: AccordionTheme.sBody.copyWith(fontSize: 12.5, color: textColor.withValues(alpha: 0.85)),
+        ),
       ],
     );
   }

@@ -115,7 +115,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                     const SizedBox(height: 32),
                     Text(
                       'Where are you going?',
-                      style: AccordionTheme.pageHeading(28),
+                      style: AccordionTheme.pageHeading(31),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),

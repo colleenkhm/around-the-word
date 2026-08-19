@@ -30,11 +30,12 @@ void main() {
       // The country name renders (ticket header), and every accordion
       // section is present as a row, but collapsed by default — its
       // "Coming soon" body only shows once expanded (see
-      // AccordionSection's class doc).
+      // AccordionSection's class doc). (Collapsed-row subheadings, which
+      // would otherwise read "Coming soon" too, are hidden for now — see
+      // AccordionSection.showSubheading — so not asserted here.)
       expect(find.text('Mexico'), findsWidgets);
       expect(find.text('What do you want to learn?'), findsNothing);
       expect(find.text('Cities'), findsOneWidget);
-      expect(find.text('Coming soon'), findsWidgets); // one per collapsed section's meta line
 
       await tester.tap(find.text('Cities'));
       await tester.pumpAndSettle();

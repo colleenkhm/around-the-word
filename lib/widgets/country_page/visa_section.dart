@@ -32,7 +32,17 @@ class VisaSection extends StatelessWidget {
   final VisaInfo visa;
   final RegionalNote? regionalNote;
 
-  const VisaSection({super.key, required this.visa, this.regionalNote});
+  /// This section's dark accent — 2026-08-18, colors the source/apply
+  /// links and the regional stamp instead of the fixed
+  /// `AccordionTheme.skyDark`. See [SectionPalette]'s class doc.
+  final Color accent;
+
+  const VisaSection({
+    super.key,
+    required this.visa,
+    required this.accent,
+    this.regionalNote,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -84,14 +94,14 @@ class VisaSection extends StatelessWidget {
                     ExternalLink(
                       label: 'Official source',
                       url: visa.officialUrl,
-                      color: AccordionTheme.skyDark,
+                      color: accent,
                       fontFamily: AccordionTheme.dmMono,
                     ),
                     if (visa.applicationUrl != null)
                       ExternalLink(
                         label: 'Apply',
                         url: visa.applicationUrl!,
-                        color: AccordionTheme.skyDark,
+                        color: accent,
                         fontFamily: AccordionTheme.dmMono,
                       ),
                   ],
@@ -104,7 +114,7 @@ class VisaSection extends StatelessWidget {
           Positioned(
             bottom: 14,
             right: 16,
-            child: _RegionalStamp(groupSlug: regionalNote!.groupSlug),
+            child: _RegionalStamp(groupSlug: regionalNote!.groupSlug, accent: accent),
           ),
       ],
     );
@@ -138,8 +148,9 @@ class _RegionalNoteWarning extends StatelessWidget {
 /// (e.g. "Schengen").
 class _RegionalStamp extends StatelessWidget {
   final String groupSlug;
+  final Color accent;
 
-  const _RegionalStamp({required this.groupSlug});
+  const _RegionalStamp({required this.groupSlug, required this.accent});
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +160,7 @@ class _RegionalStamp extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: AccordionTheme.skyDark.withValues(alpha: 0.25), width: 1.5),
+          border: Border.all(color: accent.withValues(alpha: 0.25), width: 1.5),
         ),
         child: Text(
           groupSlug.toUpperCase(),
@@ -158,7 +169,7 @@ class _RegionalStamp extends StatelessWidget {
             fontSize: 9,
             fontWeight: FontWeight.w500,
             letterSpacing: 1.0,
-            color: AccordionTheme.skyDark.withValues(alpha: 0.6),
+            color: accent.withValues(alpha: 0.6),
           ),
         ),
       ),

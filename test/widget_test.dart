@@ -28,9 +28,10 @@ void main() {
       // 2026-08-18: the country page is now a collapsible accordion —
       // every section always renders as a row (see
       // CountryHeaderPreviewScreen's class doc), but a city name is only
-      // in the tree once its section is expanded.
+      // in the tree once its section is expanded. (Collapsed-row
+      // subheadings, e.g. "4 destinations", are hidden for now — see
+      // AccordionSection.showSubheading — so not asserted here.)
       expect(find.text('Cities'), findsOneWidget);
-      expect(find.text('4 destinations'), findsOneWidget);
       expect(find.text('San José'), findsNothing); // collapsed by default
 
       await tester.tap(find.text('Cities'));

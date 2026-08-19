@@ -2,20 +2,27 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:provider/provider.dart';
 
 import '../models/country.dart' as country_model;
 import '../models/country_bundle.dart';
 import '../models/country_guide.dart';
 import '../models/live_data.dart';
+import '../models/resource.dart';
 import '../models/travel_info.dart';
+import '../state/trip_selection.dart';
 import '../theme/accordion_theme.dart';
+import '../theme/section_palette.dart';
+import '../utils/flag_palette.dart' show extractFlagBaseColors;
 import 'about_screen.dart';
 import 'destination_screen.dart';
 import '../widgets/country_page/accordion_section.dart';
+import '../widgets/country_page/additional_resources_section.dart';
 import '../widgets/country_page/best_times_section.dart';
 import '../widgets/country_page/cities_section.dart';
 import '../widgets/country_page/country_header.dart';
 import '../widgets/country_page/language_pair_section.dart';
+import '../widgets/country_page/paper_texture.dart';
 import '../widgets/country_page/practical_norms_section.dart';
 import '../widgets/country_page/site_header.dart';
 import '../widgets/country_page/travel_advisory_section.dart';
@@ -61,6 +68,16 @@ import '../widgets/country_page/visa_section.dart';
 /// left in place — same "kept as history, not deleted, until something
 /// else needs the space" pattern the rest of this codebase's superseded
 /// code follows.
+///
+/// **2026-08-18 (later still): section colors are per-country now**, not
+/// six fixed `AccordionTheme` constants — [SectionPalette.fromFlagColors] is
+/// built from the real colors [extractFlagBaseColors] pulls from this country's
+/// own flag PNG. See [SectionPalette]'s class doc for why this reopens the
+/// 2026-08-11 "one cohesive theme, not per-country" call on purpose.
+/// Extraction is async and best-effort — [_palette] starts (and stays,
+/// on any failure) at [SectionPalette.fallback], the original hand-picked
+/// Costa-Rica-era values, so the page never blocks on it and never shows
+/// a broken/blank palette.
 class CountryHeaderPreviewScreen extends StatefulWidget {
   final country_model.Country country;
 
@@ -73,19 +90,38 @@ class CountryHeaderPreviewScreen extends StatefulWidget {
 
 /// One entry per accordion row, in display order — used as the source of
 /// truth for both the section list and the "expand/collapse all" state.
-enum _Section { visa, cities, times, advisory, language, norms }
+enum _Section { visa, cities, times, advisory, language, norms, resources }
 
 class _CountryHeaderPreviewScreenState
     extends State<CountryHeaderPreviewScreen> {
   CountryBundle? _bundle;
 
+  /// Starts (and, on extraction failure, stays) at the original hand-
+  /// picked palette — see class doc.
+  SectionPalette _palette = SectionPalette.fallback;
+
   /// Every section starts collapsed — matches the mockup's default frame.
-  final Map<_Section, bool> _expanded = {for (final s in _Section.values) s: false};
+  final Map<_Section, bool> _expanded = {
+    for (final s in _Section.values) s: false,
+  };
 
   @override
   void initState() {
     super.initState();
     _load();
+    _loadPalette();
+  }
+
+  /// Independent of [_load] — flag colors only need [country_model.Country.countryCode]
+  /// (for the flag image URL), not the bundle, so this runs in parallel
+  /// rather than waiting on it. A no-op `setState` (assigning the same
+  /// [SectionPalette.fallback] already in place) on failure would be
+  /// harmless but pointless, so the `null`/empty case just leaves
+  /// `_palette` as it started.
+  Future<void> _loadPalette() async {
+    final colors = await extractFlagBaseColors(widget.country.countryCode);
+    if (colors == null || colors.isEmpty || !mounted) return;
+    setState(() => _palette = SectionPalette.fromFlagColors(colors));
   }
 
   Future<void> _load() async {
@@ -93,7 +129,9 @@ class _CountryHeaderPreviewScreenState
     try {
       final raw = await rootBundle.loadString('assets/data/bundles/$code.json');
       setState(() {
-        _bundle = CountryBundle.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+        _bundle = CountryBundle.fromJson(
+          jsonDecode(raw) as Map<String, dynamic>,
+        );
       });
     } catch (error) {
       // No curated bundle yet for this country — not an error state
@@ -168,70 +206,99 @@ class _CountryHeaderPreviewScreenState
   @override
   Widget build(BuildContext context) {
     final bundle = _bundle;
+    // Generic, non-country-specific — same list `ComingSoonScreen` used
+    // to read, already loaded app-wide by `main.dart`'s `TripSelection`.
+    final resources = context.watch<TripSelection>().resources;
     return Scaffold(
       backgroundColor: AccordionTheme.page,
       body: bundle == null
           ? const Center(child: CircularProgressIndicator())
-          : SafeArea(
-              top: false,
-              child: Column(
-                children: [
-                  SiteHeader(
-                    // Clears the nav stack rather than a plain push — "back
-                    // to home" should hold regardless of how deep the user
-                    // is in the flow, not just undo the last screen.
-                    onHomeTap: () => Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => const DestinationScreen()),
-                      (route) => false,
+          // Faint paper grain behind the whole page — see PaperTexture's
+          // class doc on why this was reintroduced 2026-08-18. ink, not
+          // CountryTheme's default, to match this screen's own theme.
+          : PaperTexture(
+              color: AccordionTheme.ink,
+              child: SafeArea(
+                top: false,
+                child: Column(
+                  children: [
+                    SiteHeader(
+                      // Clears the nav stack rather than a plain push — "back
+                      // to home" should hold regardless of how deep the user
+                      // is in the flow, not just undo the last screen.
+                      onHomeTap: () => Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => const DestinationScreen(),
+                        ),
+                        (route) => false,
+                      ),
+                      onAboutTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AboutScreen(),
+                        ),
+                      ),
+                      // Matches the masthead directly below it — see
+                      // SiteHeader's class doc on this specific, stated
+                      // exception to its otherwise-fixed look.
+                      backgroundColor: _palette.header.tint,
                     ),
-                    onAboutTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const AboutScreen()),
-                    ),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CountryHeader(
-                            bundle: bundle,
-                            // No country has curated native-name data yet
-                            // except this one hardcoded Costa Rica value.
-                            nativeName: widget.country.countryCode == 'CR' ? 'Costa Rica' : null,
-                            nativeNameRomanized: null,
-                            utcOffsetMinutes: bundle.facts.utcOffsetMinutes,
-                            // Mock instance, not bundle data — currency
-                            // conversion is explicitly never bundled (see
-                            // the data architecture doc). Only built when
-                            // there's a real currency to mock a rate for —
-                            // `null` otherwise (renders an em dash), so an
-                            // empty-shell country (see `_emptyBundle`)
-                            // doesn't show a fabricated rate for whatever
-                            // currency this hardcoded mock happened to
-                            // default to.
-                            exchangeRate: bundle.facts.currencyCode == null
-                                ? null
-                                : ExchangeRate(
-                                    currencyCode: bundle.facts.currencyCode!,
-                                    rateFromUsd: 519.8,
-                                    fetchedAt: DateTime.now(),
-                                  ),
-                            currencyName: bundle.facts.currencyName,
-                            allExpanded: _allExpanded,
-                            onToggleAll: _toggleAll,
-                          ),
-                          _visaSection(bundle),
-                          _citiesSection(bundle),
-                          _timesSection(bundle),
-                          _advisorySection(bundle),
-                          _languageSection(bundle),
-                          _normsSection(bundle),
-                          const SizedBox(height: 8),
-                        ],
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CountryHeader(
+                              bundle: bundle,
+                              // No country has curated native-name data yet
+                              // except this one hardcoded Costa Rica value.
+                              nativeName: widget.country.countryCode == 'CR'
+                                  ? 'Costa Rica'
+                                  : null,
+                              nativeNameRomanized: null,
+                              utcOffsetMinutes: bundle.facts.utcOffsetMinutes,
+                              // Mock instance, not bundle data — currency
+                              // conversion is explicitly never bundled (see
+                              // the data architecture doc). Only built when
+                              // there's a real currency to mock a rate for —
+                              // `null` otherwise (renders an em dash), so an
+                              // empty-shell country (see `_emptyBundle`)
+                              // doesn't show a fabricated rate for whatever
+                              // currency this hardcoded mock happened to
+                              // default to.
+                              exchangeRate: bundle.facts.currencyCode == null
+                                  ? null
+                                  : ExchangeRate(
+                                      currencyCode: bundle.facts.currencyCode!,
+                                      rateFromUsd: 519.8,
+                                      fetchedAt: DateTime.now(),
+                                    ),
+                              currencyName: bundle.facts.currencyName,
+                              allExpanded: _allExpanded,
+                              onToggleAll: _toggleAll,
+                              // accent: this country's "primary" color
+                              // (the seed hue, unrotated) — shared with
+                              // Visa & Entry, the section right below.
+                              // header/stub are two separate, distinct
+                              // tones of that same hue — see
+                              // SectionPalette's header/stub doc comments.
+                              accent: _palette.visa,
+                              header: _palette.header,
+                              stub: _palette.stub,
+                            ),
+                            _visaSection(bundle),
+                            _citiesSection(bundle),
+                            _timesSection(bundle),
+                            _advisorySection(bundle),
+                            _languageSection(bundle),
+                            _normsSection(bundle),
+                            _resourcesSection(resources),
+                            const SizedBox(height: 8),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
     );
@@ -239,52 +306,71 @@ class _CountryHeaderPreviewScreenState
 
   // --- Sections -----------------------------------------------------------
   // Each returns an AccordionSection wired with this section's tint, meta
-  // summary (collapsed subheading), hasData flag, and content. Meta text
-  // is derived from real bundle fields only — never invented (see e.g.
-  // VisaSection's class doc on the "No visa required" headline it
-  // deliberately doesn't fabricate).
+  // summary (collapsed subheading), hasData flag, and content. Colors come
+  // from `_palette` now, not fixed `AccordionTheme` constants — see class
+  // doc. Meta text is derived from real bundle fields only — never
+  // invented (see e.g. VisaSection's class doc on the "No visa required"
+  // headline it deliberately doesn't fabricate).
 
   Widget _visaSection(CountryBundle bundle) {
     final visa = bundle.visa;
+    final colors = _palette.visa;
     return AccordionSection(
       title: 'Visa & Entry',
-      tint: AccordionTheme.sky,
-      // Gradient, not the flat tint above — every section row uses one
-      // now (see AccordionTheme.visaRowGradient's doc comment).
-      gradient: AccordionTheme.visaRowGradient,
+      tint: colors.tint,
+      textColor: colors.textColor,
       hasData: visa != null,
       meta: visa == null ? null : _firstClause(visa.summary),
       expanded: _expanded[_Section.visa]!,
       onToggle: () => _toggle(_Section.visa),
-      contentBuilder: (_) => VisaSection(visa: visa!, regionalNote: bundle.regionalNote),
+      contentBuilder: (_) => VisaSection(
+        visa: visa!,
+        regionalNote: bundle.regionalNote,
+        accent: colors.accentOnWhite,
+      ),
     );
   }
 
   Widget _citiesSection(CountryBundle bundle) {
     final cities = bundle.cities;
+    final colors = _palette.cities;
     return AccordionSection(
       title: 'Cities',
-      tint: AccordionTheme.lavender,
-      gradient: AccordionTheme.citiesRowGradient,
+      tint: colors.tint,
+      textColor: colors.textColor,
       hasData: cities.isNotEmpty,
-      meta: cities.isEmpty ? null : '${cities.length} destination${cities.length == 1 ? '' : 's'}',
+      meta: cities.isEmpty
+          ? null
+          : '${cities.length} destination${cities.length == 1 ? '' : 's'}',
       expanded: _expanded[_Section.cities]!,
       onToggle: () => _toggle(_Section.cities),
-      contentBuilder: (_) => CitiesSection(cities: cities, capital: bundle.facts.capital),
+      contentBuilder: (_) => CitiesSection(
+        cities: cities,
+        capital: bundle.facts.capital,
+        tint: colors.tint,
+        textColor: colors.textColor,
+      ),
     );
   }
 
   Widget _timesSection(CountryBundle bundle) {
     final bestTimes = bundle.guide.bestTimes;
+    final colors = _palette.times;
     return AccordionSection(
       title: 'When to Visit',
-      tint: AccordionTheme.butter,
-      gradient: AccordionTheme.timesRowGradient,
+      tint: colors.tint,
+      textColor: colors.textColor,
       hasData: bestTimes.isNotEmpty,
-      meta: bestTimes.isEmpty ? null : bestTimes.map((b) => b.months).join(' · '),
+      meta: bestTimes.isEmpty
+          ? null
+          : bestTimes.map((b) => b.months).join(' · '),
       expanded: _expanded[_Section.times]!,
       onToggle: () => _toggle(_Section.times),
-      contentBuilder: (_) => BestTimesSection(bestTimes: bestTimes),
+      contentBuilder: (_) => BestTimesSection(
+        bestTimes: bestTimes,
+        tint: colors.tint,
+        textColor: colors.textColor,
+      ),
     );
   }
 
@@ -294,10 +380,11 @@ class _CountryHeaderPreviewScreenState
     final metaLabel = first == null
         ? null
         : [first.level, first.issuingAuthority].nonNulls.join(' · ');
+    final colors = _palette.advisory;
     return AccordionSection(
       title: 'Travel Advisory',
-      tint: AccordionTheme.sage,
-      gradient: AccordionTheme.advisoryRowGradient,
+      tint: colors.tint,
+      textColor: colors.textColor,
       hasData: advisories.isNotEmpty,
       meta: metaLabel,
       expanded: _expanded[_Section.advisory]!,
@@ -305,6 +392,7 @@ class _CountryHeaderPreviewScreenState
       contentBuilder: (_) => TravelAdvisorySection(
         advisories: advisories,
         emergencyNumber: bundle.facts.emergencyNumber,
+        accent: colors.accentOnWhite,
       ),
     );
   }
@@ -313,10 +401,11 @@ class _CountryHeaderPreviewScreenState
     final languages = bundle.facts.officialLanguages;
     final featuredWord = bundle.words.isEmpty ? null : bundle.words.first;
     final hasData = languages.isNotEmpty || featuredWord != null;
+    final colors = _palette.language;
     return AccordionSection(
       title: 'Language',
-      tint: AccordionTheme.rose,
-      gradient: AccordionTheme.languageRowGradient,
+      tint: colors.tint,
+      textColor: colors.textColor,
       hasData: hasData,
       meta: languages.isEmpty ? null : languages.join(' · '),
       expanded: _expanded[_Section.language]!,
@@ -324,21 +413,48 @@ class _CountryHeaderPreviewScreenState
       contentBuilder: (_) => LanguagePairSection(
         officialLanguages: languages,
         featuredWord: featuredWord,
+        tint: colors.tint,
+        textColor: colors.textColor,
+        accentOnWhite: colors.accentOnWhite,
       ),
     );
   }
 
   Widget _normsSection(CountryBundle bundle) {
     final norms = bundle.guide.practicalNorms;
+    final colors = _palette.norms;
     return AccordionSection(
       title: 'Practical Norms',
-      tint: AccordionTheme.peach,
-      gradient: AccordionTheme.normsRowGradient,
+      tint: colors.tint,
+      textColor: colors.textColor,
       hasData: norms.isNotEmpty,
       meta: norms.isEmpty ? null : norms.map((n) => n.title).join(' · '),
       expanded: _expanded[_Section.norms]!,
       onToggle: () => _toggle(_Section.norms),
-      contentBuilder: (_) => PracticalNormsSection(norms: norms),
+      contentBuilder: (_) => PracticalNormsSection(
+        norms: norms,
+        tint: colors.tint,
+        textColor: colors.textColor,
+      ),
+    );
+  }
+
+  Widget _resourcesSection(List<Resource> resources) {
+    final colors = _palette.resources;
+    return AccordionSection(
+      title: 'Additional Resources',
+      tint: colors.tint,
+      textColor: colors.textColor,
+      hasData: resources.isNotEmpty,
+      meta: resources.isEmpty
+          ? null
+          : resources.map((r) => r.label).join(' · '),
+      expanded: _expanded[_Section.resources]!,
+      onToggle: () => _toggle(_Section.resources),
+      contentBuilder: (_) => AdditionalResourcesSection(
+        resources: resources,
+        accent: colors.accentOnWhite,
+      ),
     );
   }
 

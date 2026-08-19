@@ -5,6 +5,11 @@ import 'package:around_the_word/models/travel_info.dart';
 import 'package:around_the_word/widgets/country_page/travel_advisory_section.dart';
 import 'package:around_the_word/widgets/country_page/visa_section.dart';
 
+// Arbitrary — these tests aren't about color, just exercising `accent` as
+// a required param since both widgets took it on 2026-08-18 (see
+// SectionPalette's class doc).
+const _accent = Color(0xFF3A78AA);
+
 /// [VisaSection] and [TravelAdvisorySection] replaced the combined
 /// `TravelInfoSection` 2026-08-18 (see `VisaSection`'s class doc) — each
 /// now cites its own source independently rather than sharing one footer,
@@ -46,7 +51,7 @@ void main() {
 
   testWidgets('VisaSection: renders summary, apply link, and its own source, no exception',
       (tester) async {
-    await pump(tester, VisaSection(visa: visaWithApplyLink));
+    await pump(tester, VisaSection(visa: visaWithApplyLink, accent: _accent));
 
     expect(tester.takeException(), isNull);
     expect(find.textContaining('90 days'), findsOneWidget);
@@ -56,7 +61,10 @@ void main() {
 
   testWidgets('VisaSection: regional note renders a warning box and a corner stamp',
       (tester) async {
-    await pump(tester, VisaSection(visa: visaWithApplyLink, regionalNote: regionalNote));
+    await pump(
+      tester,
+      VisaSection(visa: visaWithApplyLink, regionalNote: regionalNote, accent: _accent),
+    );
 
     expect(tester.takeException(), isNull);
     expect(find.textContaining('ETIAS'), findsOneWidget);
@@ -65,7 +73,7 @@ void main() {
 
   testWidgets('TravelAdvisorySection: renders level, summary, and full-advisory link, no exception',
       (tester) async {
-    await pump(tester, TravelAdvisorySection(advisories: [advisory]));
+    await pump(tester, TravelAdvisorySection(advisories: [advisory], accent: _accent));
 
     expect(tester.takeException(), isNull);
     expect(find.textContaining('Level 1'), findsOneWidget);
@@ -74,7 +82,10 @@ void main() {
 
   testWidgets('TravelAdvisorySection: emergency number renders as a stamp when known',
       (tester) async {
-    await pump(tester, TravelAdvisorySection(advisories: [advisory], emergencyNumber: '911'));
+    await pump(
+      tester,
+      TravelAdvisorySection(advisories: [advisory], emergencyNumber: '911', accent: _accent),
+    );
 
     expect(tester.takeException(), isNull);
     expect(find.text('911'), findsOneWidget);

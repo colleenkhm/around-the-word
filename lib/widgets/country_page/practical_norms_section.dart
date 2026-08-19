@@ -16,18 +16,33 @@ import '../../theme/accordion_theme.dart';
 class PracticalNormsSection extends StatelessWidget {
   final List<NormItem> norms;
 
-  const PracticalNormsSection({super.key, required this.norms});
+  /// This section's flag color — 2026-08-18, replaces the fixed
+  /// `AccordionTheme.peach`. See [SectionPalette]'s class doc.
+  final Color tint;
+
+  /// Black or white, whichever reads on [tint] — see
+  /// [SectionColors.textColor]. This section's body is a full-bleed
+  /// [tint] fill, so every row's text/icon needs this, not a fixed ink
+  /// color.
+  final Color textColor;
+
+  const PracticalNormsSection({
+    super.key,
+    required this.norms,
+    required this.tint,
+    required this.textColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     if (norms.isEmpty) return const SizedBox.shrink();
 
     return ColoredBox(
-      color: AccordionTheme.peach,
+      color: tint,
       child: Column(
         children: [
           for (var i = 0; i < norms.length; i++)
-            _NormRow(norm: norms[i], showTopBorder: i != 0),
+            _NormRow(norm: norms[i], showTopBorder: i != 0, textColor: textColor),
         ],
       ),
     );
@@ -47,31 +62,35 @@ IconData _iconFor(String type) => switch (type) {
 class _NormRow extends StatelessWidget {
   final NormItem norm;
   final bool showTopBorder;
+  final Color textColor;
 
-  const _NormRow({required this.norm, required this.showTopBorder});
+  const _NormRow({required this.norm, required this.showTopBorder, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
       decoration: showTopBorder
-          ? BoxDecoration(border: Border(top: BorderSide(color: AccordionTheme.ink.withValues(alpha: 0.07))))
+          ? BoxDecoration(border: Border(top: BorderSide(color: textColor.withValues(alpha: 0.12))))
           : null,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 1),
-            child: Icon(_iconFor(norm.type), size: 18, color: AccordionTheme.ink2),
+            child: Icon(_iconFor(norm.type), size: 18, color: textColor.withValues(alpha: 0.85)),
           ),
           const SizedBox(width: 13),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(norm.title, style: AccordionTheme.rowTitle.copyWith(fontSize: 13.5)),
+                Text(norm.title, style: AccordionTheme.rowTitle.copyWith(fontSize: 13.5, color: textColor)),
                 const SizedBox(height: 2),
-                Text(norm.body, style: AccordionTheme.sBody.copyWith(fontSize: 12.5)),
+                Text(
+                  norm.body,
+                  style: AccordionTheme.sBody.copyWith(fontSize: 12.5, color: textColor.withValues(alpha: 0.85)),
+                ),
               ],
             ),
           ),

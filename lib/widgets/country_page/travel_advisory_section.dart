@@ -17,7 +17,19 @@ class TravelAdvisorySection extends StatelessWidget {
   /// unknown.
   final String? emergencyNumber;
 
-  const TravelAdvisorySection({super.key, required this.advisories, this.emergencyNumber});
+  /// This section's dark accent — 2026-08-18, colors the "Full advisory"
+  /// link instead of the fixed `AccordionTheme.skyDark` (a leftover from
+  /// before the Visa/Advisory split — this section's own link had no
+  /// reason to be sky-blue in the first place). See [SectionPalette]'s
+  /// class doc.
+  final Color accent;
+
+  const TravelAdvisorySection({
+    super.key,
+    required this.advisories,
+    required this.accent,
+    this.emergencyNumber,
+  });
 
   /// Pulls the leading digit out of a level string like "Level 2" so it
   /// can be matched against [AccordionTheme.advisoryColor]. Not every
@@ -43,7 +55,7 @@ class TravelAdvisorySection extends StatelessWidget {
                   Container(height: 1, color: AccordionTheme.rule),
                   const SizedBox(height: 14),
                 ],
-                _AdvisoryRow(advisory: advisories[i], level: _levelNumber(advisories[i])),
+                _AdvisoryRow(advisory: advisories[i], level: _levelNumber(advisories[i]), accent: accent),
               ],
             ],
           ),
@@ -58,8 +70,9 @@ class TravelAdvisorySection extends StatelessWidget {
 class _AdvisoryRow extends StatelessWidget {
   final TravelAdvisory advisory;
   final int? level;
+  final Color accent;
 
-  const _AdvisoryRow({required this.advisory, required this.level});
+  const _AdvisoryRow({required this.advisory, required this.level, required this.accent});
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +105,7 @@ class _AdvisoryRow extends StatelessWidget {
             ExternalLink(
               label: 'Full advisory',
               url: advisory.officialUrl,
-              color: AccordionTheme.skyDark,
+              color: accent,
               fontFamily: AccordionTheme.dmMono,
             ),
           ],

@@ -19,8 +19,8 @@ import 'package:flutter/material.dart';
 /// decisions** — flagged before building, per Colleen's own working-style
 /// note in CLAUDE.md, then overridden per her instruction:
 /// - `design-preferences.md` (2026-08-17): "stay in the warm/cream family
-///   — cool or blue-leaning tones don't fit this page." This palette's
-///   core section tints ([sky], [lavender], [sage]) are exactly the cool
+///   — cool or blue-leaning tones don't fit this page." The mockup's
+///   section tints (sky blue, lavender, sage green) are exactly the cool
 ///   family that note rejected. If a cool tone reads wrong again once it's
 ///   actually on screen, that's the same signal the note describes — worth
 ///   a fast look, not a surprise.
@@ -30,6 +30,16 @@ import 'package:flutter/material.dart';
 ///   own source line even when (as for Costa Rica) it's really the same
 ///   URL/date twice. Simpler than trying to visually connect a shared
 ///   footer across two now-independently-collapsible cards.
+///
+/// **2026-08-18, later: the six fixed section pastels
+/// (`sky`/`lavender`/`sage`/`rose`/`butter`/`peach`) and their gradients
+/// were removed from here** once section colors became per-country,
+/// derived from each flag's own colors instead — see
+/// `SectionPalette.fromFlagColors`. `skyDark`/`butterDark`/`roseDark`
+/// stay: `skyDark` is still this file's own text-style default,
+/// `butterDark`/`roseDark` are still genuinely reused elsewhere
+/// (the featured-city gold star, [advisoryColor]'s level scale) for
+/// reasons unrelated to section identity.
 class AccordionTheme {
   AccordionTheme._();
 
@@ -41,87 +51,15 @@ class AccordionTheme {
   static const white = Color(0xFFFFFFFF);
   static const offWhite = Color(0xFFFAFAF8);
 
-  // --- Section tints (collapsed row + expanded card background) -------
-  // One pastel + one "dark" (text-on-pastel / accent) per section, per
-  // the mockup's --lavender/--sage/--rose/--butter/--sky/--peach pairs.
+  // --- Colors still genuinely reused outside per-country section theming --
+  // See this class's doc comment on why these three specifically survived
+  // the fixed-pastel cleanup: `skyDark` is this file's own text-style
+  // default below, `butterDark`/`roseDark` back the featured-city gold
+  // star and [advisoryColor]'s level scale.
 
-  static const lavender = Color(0xFFE8E0F5);
-  static const lavenderDark = Color(0xFF7C5CBF);
-
-  static const sage = Color(0xFFD8EDE0);
-  static const sageDark = Color(0xFF3A7A58);
-
-  static const rose = Color(0xFFFAE0E4);
-  static const roseDark = Color(0xFFC45070);
-
-  static const butter = Color(0xFFFDF3D0);
-  static const butterDark = Color(0xFFB08020);
-
-  static const sky = Color(0xFFD8EDF8);
   static const skyDark = Color(0xFF3A78AA);
-
-  static const peach = Color(0xFFFDECD8);
-
-  /// Every section row's collapsed/header background — the mockup's
-  /// `.sec-*` classes are each a diagonal gradient (`linear-gradient` from
-  /// a low-alpha dark accent to the section's pastel at 55%, Visa uniquely
-  /// to white instead of its own pastel), **not** a flat fill. First built
-  /// (2026-08-18) as one Visa-only exception — see the old doc comment
-  /// this replaced — because a flat `sky` fill read as the same solid
-  /// blue as the ticket stub above it. Generalized to all six the same
-  /// day once Colleen flagged the *other* five sections had the opposite
-  /// problem: a flat-tint header sitting directly above same-tint body
-  /// content (Cities' lavender header over a lavender city list, e.g.)
-  /// "bled in" with no visible seam. The gradient's own diagonal
-  /// highlight is what the mockup uses to keep a header legible as its
-  /// own row even when the content below shares its color family — this
-  /// was simply missing for five of the six until now, not a new idea.
-  ///
-  /// Each gradient's start color is hand-blended (not a literal
-  /// translucent `rgba`) against [page] — same reasoning as the original
-  /// Visa token: a predictable flat color, not alpha-compositing that
-  /// shifts if something behind the row ever changes.
-  static const visaRowGradient = LinearGradient(
-    begin: Alignment(0.6, -1),
-    end: Alignment(-0.6, 1),
-    colors: [Color(0xFFDCE9F5), white],
-    stops: [0.0, 0.55],
-  );
-
-  static const citiesRowGradient = LinearGradient(
-    begin: Alignment(0.6, -1),
-    end: Alignment(-0.6, 1),
-    colors: [Color(0xFFDED4EE), lavender],
-    stops: [0.0, 0.55],
-  );
-
-  static const timesRowGradient = LinearGradient(
-    begin: Alignment(0.6, -1),
-    end: Alignment(-0.6, 1),
-    colors: [Color(0xFFE8DECC), butter],
-    stops: [0.0, 0.55],
-  );
-
-  static const advisoryRowGradient = LinearGradient(
-    begin: Alignment(0.6, -1),
-    end: Alignment(-0.6, 1),
-    colors: [Color(0xFFD0DED8), sage],
-    stops: [0.0, 0.55],
-  );
-
-  static const languageRowGradient = LinearGradient(
-    begin: Alignment(0.6, -1),
-    end: Alignment(-0.6, 1),
-    colors: [Color(0xFFE8CEDA), rose],
-    stops: [0.0, 0.55],
-  );
-
-  static const normsRowGradient = LinearGradient(
-    begin: Alignment(0.6, -1),
-    end: Alignment(-0.6, 1),
-    colors: [Color(0xFFE8D8D0), peach],
-    stops: [0.0, 0.55],
-  );
+  static const butterDark = Color(0xFFB08020);
+  static const roseDark = Color(0xFFC45070);
 
   // --- Ink --------------------------------------------------------------
 
@@ -193,9 +131,16 @@ class AccordionTheme {
 
   /// `.tk-eyebrow` / `.tk-native`-style small mono label on the dark
   /// ticket surface.
+  ///
+  /// **All sizes in this file bumped up a bit** (2026-08-18, per Colleen:
+  /// "let's make all the text at least a bit bigger") — same "size up,
+  /// not down, for anything a user actually needs to read" instinct
+  /// design-preferences.md already recorded from 2026-08-17's ticket-stub
+  /// pass, just applied a second time across the whole file rather than
+  /// one section.
   static const tkEyebrow = TextStyle(
     fontFamily: dmMono,
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: FontWeight.w500,
     letterSpacing: 1.8,
     color: Color(0x59FFFFFF), // ~35% white
@@ -203,7 +148,7 @@ class AccordionTheme {
 
   static const tkNative = TextStyle(
     fontFamily: dmMono,
-    fontSize: 11,
+    fontSize: 12.5,
     letterSpacing: 0.4,
     color: Color(0x59FFFFFF),
   );
@@ -211,7 +156,7 @@ class AccordionTheme {
   /// `.tf-label` — the ticket stub's field label.
   static const tfLabel = TextStyle(
     fontFamily: dmMono,
-    fontSize: 8.5,
+    fontSize: 10,
     fontWeight: FontWeight.w500,
     letterSpacing: 1.2,
     color: skyDark,
@@ -221,7 +166,7 @@ class AccordionTheme {
   static const tfVal = TextStyle(
     fontFamily: fraunces,
     fontWeight: FontWeight.w700,
-    fontSize: 24,
+    fontSize: 27,
     letterSpacing: -0.2,
     color: ink,
   );
@@ -229,14 +174,14 @@ class AccordionTheme {
   /// `.tf-sub`.
   static const tfSub = TextStyle(
     fontFamily: dmMono,
-    fontSize: 10.5,
+    fontSize: 12,
     color: ink3,
   );
 
   /// `.tf-link` / the "Expand all" / "Collapse all" links.
   static const tfLink = TextStyle(
     fontFamily: dmMono,
-    fontSize: 9.5,
+    fontSize: 11,
     fontWeight: FontWeight.w500,
     letterSpacing: 1.0,
     color: skyDark,
@@ -246,17 +191,18 @@ class AccordionTheme {
   static const secName = TextStyle(
     fontFamily: fraunces,
     fontWeight: FontWeight.w700,
-    fontSize: 17,
+    fontSize: 19,
     height: 1.1,
     letterSpacing: -0.1,
     color: ink,
   );
 
-  /// `.sec-meta` — the collapsed-only subheading. Hidden once a section is
-  /// expanded (see [AccordionSection]'s doc comment).
+  /// `.sec-meta` — the collapsed-only subheading (currently not rendered
+  /// at all — see [AccordionSection.showSubheading] — but kept in step
+  /// with everything else here in case that flips back on).
   static const secMeta = TextStyle(
     fontFamily: dmMono,
-    fontSize: 10,
+    fontSize: 11.5,
     color: ink3,
     letterSpacing: 0.2,
   );
@@ -264,7 +210,7 @@ class AccordionTheme {
   /// `.s-label` — small caps mono field label inside an expanded card.
   static const sLabel = TextStyle(
     fontFamily: dmMono,
-    fontSize: 9,
+    fontSize: 10.5,
     fontWeight: FontWeight.w500,
     letterSpacing: 1.4,
     color: ink3,
@@ -274,14 +220,14 @@ class AccordionTheme {
   static const sHead = TextStyle(
     fontFamily: fraunces,
     fontWeight: FontWeight.w700,
-    fontSize: 16,
+    fontSize: 18,
     color: ink,
   );
 
   /// `.s-body` — paragraph copy inside an expanded card.
   static const sBody = TextStyle(
     fontFamily: dmSans,
-    fontSize: 13.5,
+    fontSize: 15,
     color: ink2,
     height: 1.55,
   );
@@ -290,21 +236,21 @@ class AccordionTheme {
   static const rowTitle = TextStyle(
     fontFamily: dmSans,
     fontWeight: FontWeight.w600,
-    fontSize: 14,
+    fontSize: 15.5,
     color: ink,
   );
 
   /// Row meta (population, index numbers, verified dates).
   static const rowMeta = TextStyle(
     fontFamily: dmMono,
-    fontSize: 11,
+    fontSize: 12.5,
     color: ink3,
   );
 
   /// Source-row mono footer text.
   static const srcRow = TextStyle(
     fontFamily: dmMono,
-    fontSize: 10,
+    fontSize: 11.5,
     color: ink3,
   );
 }

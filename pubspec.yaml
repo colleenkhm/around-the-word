@@ -40,6 +40,12 @@ dependencies:
   provider: ^6.1.2
   url_launcher: ^6.3.2
 
+  # Extracts a dominant/vibrant color from an image — 2026-08-18, for
+  # deriving each country page's accent palette from its own flag PNG
+  # (already fetched from flagcdn.com for display). Official Flutter-team
+  # package (flutter/packages monorepo), not a third-party dependency.
+  palette_generator: ^0.3.3+7
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

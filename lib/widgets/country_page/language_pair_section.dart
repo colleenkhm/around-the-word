@@ -33,9 +33,27 @@ class LanguagePairSection extends StatelessWidget {
   final List<String> officialLanguages;
   final Word? featuredWord;
 
+  /// This section's flag color — 2026-08-18, replaces the fixed
+  /// `AccordionTheme.rose`. See [SectionPalette]'s class doc.
+  final Color tint;
+
+  /// Black or white, whichever reads on [tint] — see
+  /// [SectionColors.textColor]. Colors the languages card's text (a
+  /// full-bleed [tint] fill).
+  final Color textColor;
+
+  /// A version of [tint] guaranteed to read on white — see
+  /// [SectionColors.accentOnWhite]. Colors the Word of the Day card's
+  /// border/badge/pronunciation text (that card's body is white, not
+  /// [tint]).
+  final Color accentOnWhite;
+
   const LanguagePairSection({
     super.key,
     required this.officialLanguages,
+    required this.tint,
+    required this.textColor,
+    required this.accentOnWhite,
     this.featuredWord,
   });
 
@@ -45,11 +63,14 @@ class LanguagePairSection extends StatelessWidget {
     final showWord = featuredWord != null;
     if (!showLanguages && !showWord) return const SizedBox.shrink();
 
-    final languagesCard = showLanguages ? _LanguagesCard(languages: officialLanguages) : null;
+    final languagesCard = showLanguages
+        ? _LanguagesCard(languages: officialLanguages, tint: tint, textColor: textColor)
+        : null;
     final wordCard = showWord
         ? _WordOfDayCard(
             word: featuredWord!,
             languageName: showLanguages ? officialLanguages.first : null,
+            accent: accentOnWhite,
           )
         : null;
 
@@ -71,28 +92,30 @@ class LanguagePairSection extends StatelessWidget {
 
 class _LanguagesCard extends StatelessWidget {
   final List<String> languages;
+  final Color tint;
+  final Color textColor;
 
-  const _LanguagesCard({required this.languages});
+  const _LanguagesCard({required this.languages, required this.tint, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: AccordionTheme.rose,
+      color: tint,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('LANGUAGES', style: AccordionTheme.sLabel),
+            Text('LANGUAGES', style: AccordionTheme.sLabel.copyWith(color: textColor.withValues(alpha: 0.75))),
             const SizedBox(height: 8),
             for (var i = 0; i < languages.length; i++) ...[
               if (i != 0)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Container(height: 1, color: AccordionTheme.rule),
+                  child: Container(height: 1, color: textColor.withValues(alpha: 0.15)),
                 ),
-              _LanguageRow(name: languages[i]),
+              _LanguageRow(name: languages[i], textColor: textColor),
             ],
           ],
         ),
@@ -103,8 +126,9 @@ class _LanguagesCard extends StatelessWidget {
 
 class _LanguageRow extends StatelessWidget {
   final String name;
+  final Color textColor;
 
-  const _LanguageRow({required this.name});
+  const _LanguageRow({required this.name, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -112,11 +136,11 @@ class _LanguageRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          Expanded(child: Text(name, style: AccordionTheme.rowTitle)),
+          Expanded(child: Text(name, style: AccordionTheme.rowTitle.copyWith(color: textColor))),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
             decoration: BoxDecoration(
-              color: AccordionTheme.roseDark.withValues(alpha: 0.1),
+              color: textColor.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(3),
             ),
             child: Text(
@@ -126,7 +150,7 @@ class _LanguageRow extends StatelessWidget {
                 fontSize: 8,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.3,
-                color: AccordionTheme.roseDark,
+                color: textColor,
               ),
             ),
           ),
@@ -144,7 +168,9 @@ class _WordOfDayCard extends StatelessWidget {
   /// unknown rather than guessing.
   final String? languageName;
 
-  const _WordOfDayCard({required this.word, this.languageName});
+  final Color accent;
+
+  const _WordOfDayCard({required this.word, required this.accent, this.languageName});
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +187,7 @@ class _WordOfDayCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: AccordionTheme.white,
-          border: Border.all(color: AccordionTheme.roseDark.withValues(alpha: 0.35), width: 2),
+          border: Border.all(color: accent.withValues(alpha: 0.35), width: 2),
         ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
@@ -169,7 +195,7 @@ class _WordOfDayCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('WORD OF THE DAY', style: AccordionTheme.sLabel.copyWith(color: AccordionTheme.roseDark)),
+              Text('WORD OF THE DAY', style: AccordionTheme.sLabel.copyWith(color: accent)),
               const SizedBox(height: 8),
               Text(
                 word.lemma,
@@ -177,7 +203,7 @@ class _WordOfDayCard extends StatelessWidget {
               ),
               if (word.pronunciation != null) ...[
                 const SizedBox(height: 4),
-                Text(word.pronunciation!, style: AccordionTheme.tfSub.copyWith(color: AccordionTheme.lavenderDark)),
+                Text(word.pronunciation!, style: AccordionTheme.tfSub.copyWith(color: accent)),
               ],
               const SizedBox(height: 5),
               Text(

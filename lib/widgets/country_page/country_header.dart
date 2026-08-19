@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../models/country_bundle.dart';
 import '../../models/live_data.dart';
 import '../../theme/accordion_theme.dart';
+import '../../theme/section_palette.dart';
 import '../../utils/flag_url.dart';
 import 'dashed_divider.dart';
 import 'external_link.dart';
@@ -47,11 +48,36 @@ class CountryHeader extends StatefulWidget {
   final bool allExpanded;
   final VoidCallback onToggleAll;
 
+  /// This country's "primary" section colors (shared with Visa & Entry,
+  /// the first section) — 2026-08-18, colors the stub's background/links
+  /// instead of the fixed `AccordionTheme.sky`/`skyDark`. See
+  /// [SectionPalette]'s class doc.
+  final SectionColors accent;
+
+  /// The dark masthead block's own colors — `SectionPalette.header`, a
+  /// **deepened** version of [accent]'s color, not the same value.
+  /// Deliberately a second, separate field rather than reusing [accent]
+  /// for both — the masthead (name/flag) wants a dark, weighty surface
+  /// for hierarchy/contrast at the top of the page, while the stub right
+  /// below it wants the section's actual (toned-down but still light)
+  /// color; collapsing them into one field would force one or the other
+  /// to compromise. See [SectionPalette.header]'s doc comment.
+  final SectionColors header;
+
+  /// The ticket stub's own background — `SectionPalette.stub`, a
+  /// **midtone** distinct from both [header] and [accent] so the stub
+  /// doesn't visually merge into the Visa & Entry row directly below it
+  /// (which uses [accent]'s exact tint). See [SectionPalette.stub].
+  final SectionColors stub;
+
   const CountryHeader({
     super.key,
     required this.bundle,
     required this.allExpanded,
     required this.onToggleAll,
+    required this.accent,
+    required this.header,
+    required this.stub,
     this.nativeName,
     this.nativeNameRomanized,
     this.utcOffsetMinutes,
@@ -71,7 +97,10 @@ class _CountryHeaderState extends State<CountryHeader> {
     super.initState();
     // Minute-granularity display, so a timer tick once every 30s is
     // plenty — carried over unchanged from the prior version.
-    _ticker = Timer.periodic(const Duration(seconds: 30), (_) => setState(() {}));
+    _ticker = Timer.periodic(
+      const Duration(seconds: 30),
+      (_) => setState(() {}),
+    );
   }
 
   @override
@@ -83,13 +112,18 @@ class _CountryHeaderState extends State<CountryHeader> {
   @override
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.sizeOf(context).width >= 900;
+    final header = widget.header;
+    // A translucent version of the header's own text color, not a fixed
+    // white — see [SectionPalette.header]'s doc comment on why this
+    // block is no longer flat `AccordionTheme.ink`.
+    final onHeaderSoft = header.textColor.withValues(alpha: 0.55);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           width: double.infinity,
-          color: AccordionTheme.ink,
+          color: header.tint,
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
           child: Stack(
             children: [
@@ -102,17 +136,26 @@ class _CountryHeaderState extends State<CountryHeader> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('DESTINATION', style: AccordionTheme.tkEyebrow),
+                    Text(
+                      'DESTINATION',
+                      style: AccordionTheme.tkEyebrow.copyWith(
+                        color: onHeaderSoft,
+                      ),
+                    ),
                     const SizedBox(height: 6),
                     Text(
                       widget.bundle.country.nameCommon,
-                      style: AccordionTheme.tkName(isDesktop ? 48 : 34),
+                      style: AccordionTheme.tkName(
+                        isDesktop ? 50 : 36,
+                      ).copyWith(color: header.textColor),
                     ),
                     if (widget.nativeName != null) ...[
                       const SizedBox(height: 4),
                       Text.rich(
                         TextSpan(
-                          style: AccordionTheme.tkNative,
+                          style: AccordionTheme.tkNative.copyWith(
+                            color: onHeaderSoft,
+                          ),
                           children: [
                             TextSpan(text: widget.nativeName),
                             if (widget.nativeNameRomanized != null) ...[
@@ -129,7 +172,10 @@ class _CountryHeaderState extends State<CountryHeader> {
               Positioned(
                 top: 0,
                 right: 0,
-                child: _Flag(isoCode: widget.bundle.country.isoCode, desktop: isDesktop),
+                child: _Flag(
+                  isoCode: widget.bundle.country.isoCode,
+                  desktop: isDesktop,
+                ),
               ),
             ],
           ),
@@ -140,6 +186,8 @@ class _CountryHeaderState extends State<CountryHeader> {
           currencyName: widget.currencyName,
           allExpanded: widget.allExpanded,
           onToggleAll: widget.onToggleAll,
+          accent: widget.accent,
+          stub: widget.stub,
         ),
       ],
     );
@@ -183,15 +231,23 @@ class _Flag extends StatelessWidget {
 }
 
 /// The ticket's stub — local time + a $1 USD conversion (`.tk-stub`), plus
-/// the expand/collapse-all link (`.tk-stub`'s bottom row in the mockup).
-/// Sky background, dashed top border simulated via [DashedDivider] since
-/// Flutter has no native dashed-border support.
+/// the expand/collapse-all pill. Dashed top border simulated via
+/// [DashedDivider] since Flutter has no native dashed-border support.
+///
+/// **2026-08-18: background is [stub], not [accent]'s tint** — per
+/// Colleen, the stub sitting directly above the Visa & Entry row in the
+/// identical color made the seam between them disappear. [accent] is
+/// still used for the expand/collapse pill's text (readable-on-white,
+/// ties it to the page's primary hue) since the pill itself is white now,
+/// not colored by whatever background sits behind it.
 class _TicketStub extends StatelessWidget {
   final int? utcOffsetMinutes;
   final ExchangeRate? exchangeRate;
   final String? currencyName;
   final bool allExpanded;
   final VoidCallback onToggleAll;
+  final SectionColors accent;
+  final SectionColors stub;
 
   const _TicketStub({
     required this.utcOffsetMinutes,
@@ -199,6 +255,8 @@ class _TicketStub extends StatelessWidget {
     required this.currencyName,
     required this.allExpanded,
     required this.onToggleAll,
+    required this.accent,
+    required this.stub,
   });
 
   @override
@@ -207,12 +265,15 @@ class _TicketStub extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      color: AccordionTheme.sky,
+      color: stub.tint,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          DashedDivider(color: AccordionTheme.skyDark.withValues(alpha: 0.3), strokeWidth: 1.5),
+          DashedDivider(
+            color: stub.textColor.withValues(alpha: 0.3),
+            strokeWidth: 1.5,
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
             child: Row(
@@ -222,7 +283,9 @@ class _TicketStub extends StatelessWidget {
                   child: _field(
                     'LOCAL TIME',
                     local == null ? '—' : _timeLabel(local),
-                    local == null ? '' : '${_dateLabel(local)} · ${_utcLabel()}',
+                    local == null
+                        ? ''
+                        : '${_dateLabel(local)} · ${_utcLabel()}',
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -236,7 +299,7 @@ class _TicketStub extends StatelessWidget {
                         : ExternalLink(
                             label: 'Convert',
                             url: _converterUrl(exchangeRate!.currencyCode),
-                            color: AccordionTheme.skyDark,
+                            color: stub.textColor,
                             fontFamily: AccordionTheme.dmMono,
                           ),
                   ),
@@ -244,18 +307,45 @@ class _TicketStub extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: AccordionTheme.skyDark.withValues(alpha: 0.2))),
-            ),
+          // A flush, square-cornered white strip — not a centered pill —
+          // per Colleen, 2026-08-18: a floating rounded pill read like it
+          // belonged to the stub it sat inside, when what it actually
+          // controls is every section *below* it. Two cues now point at
+          // that instead: no bottom padding/border, so this touches the
+          // Visa & Entry row directly (the same "color change is the
+          // seam, no divider" language every accordion row already uses
+          // — see AccordionSection's doc comment); and the label sits
+          // right-aligned with a chevron-style arrow, landing in the same
+          // horizontal spot as every section row's own chevron circle
+          // below it, so the two read as one repeated column of controls
+          // rather than two unrelated pieces.
+          Material(
+            color: AccordionTheme.white,
             child: InkWell(
               onTap: onToggleAll,
-              child: Center(
-                child: Text(
-                  allExpanded ? 'Collapse all info ↑' : 'Expand all info ↓',
-                  style: AccordionTheme.tfLink,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      allExpanded ? 'Collapse all info' : 'Expand all info',
+                      style: AccordionTheme.tfLink.copyWith(
+                        color: accent.accentOnWhite,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Icon(
+                      allExpanded
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      size: 18,
+                      color: accent.accentOnWhite,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -265,22 +355,37 @@ class _TicketStub extends StatelessWidget {
     );
   }
 
-  Widget _field(String label, String value, String subtitle, {Widget? trailing}) {
+  Widget _field(
+    String label,
+    String value,
+    String subtitle, {
+    Widget? trailing,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(label, style: AccordionTheme.tfLabel),
+        Text(
+          label,
+          style: AccordionTheme.tfLabel.copyWith(
+            color: stub.textColor.withValues(alpha: 0.75),
+          ),
+        ),
         const SizedBox(height: 3),
-        Text(value, style: AccordionTheme.tfVal),
+        Text(
+          value,
+          style: AccordionTheme.tfVal.copyWith(color: stub.textColor),
+        ),
         if (subtitle.isNotEmpty) ...[
           const SizedBox(height: 2),
-          Text(subtitle, style: AccordionTheme.tfSub),
+          Text(
+            subtitle,
+            style: AccordionTheme.tfSub.copyWith(
+              color: stub.textColor.withValues(alpha: 0.75),
+            ),
+          ),
         ],
-        if (trailing != null) ...[
-          const SizedBox(height: 4),
-          trailing,
-        ],
+        if (trailing != null) ...[const SizedBox(height: 4), trailing],
       ],
     );
   }
@@ -297,7 +402,8 @@ class _TicketStub extends StatelessWidget {
     return '$h:$m';
   }
 
-  String _dateLabel(DateTime local) => '${_monthAbbrev[local.month - 1]} ${local.day}';
+  String _dateLabel(DateTime local) =>
+      '${_monthAbbrev[local.month - 1]} ${local.day}';
 
   String _utcLabel() {
     final offset = utcOffsetMinutes;
@@ -305,12 +411,24 @@ class _TicketStub extends StatelessWidget {
     final sign = offset >= 0 ? '+' : '-';
     final hours = (offset.abs() / 60).floor();
     final minutes = offset.abs() % 60;
-    return minutes == 0 ? 'UTC$sign$hours' : 'UTC$sign$hours:${minutes.toString().padLeft(2, '0')}';
+    return minutes == 0
+        ? 'UTC$sign$hours'
+        : 'UTC$sign$hours:${minutes.toString().padLeft(2, '0')}';
   }
 
   static const _monthAbbrev = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   String _rateLabel(ExchangeRate r) {
@@ -318,16 +436,18 @@ class _TicketStub extends StatelessWidget {
     // sub-10 rates (EUR-style) want two. A single significant-figures
     // rule rather than hardcoding per currency.
     final rate = r.rateFromUsd;
-    final formatted = rate >= 100 ? rate.round().toString() : rate.toStringAsFixed(2);
+    final formatted = rate >= 100
+        ? rate.round().toString()
+        : rate.toStringAsFixed(2);
     return _currencySymbol(r.currencyCode) + formatted;
   }
 
   String _currencySymbol(String code) => switch (code) {
-        'EUR' => '€',
-        'GBP' => '£',
-        'CRC' => '₡',
-        _ => '$code ',
-      };
+    'EUR' => '€',
+    'GBP' => '£',
+    'CRC' => '₡',
+    _ => '$code ',
+  };
 
   /// A live, interactive USD-to-[currencyCode] calculator on xe.com — a
   /// public webpage the user opens themselves, not an API call this app

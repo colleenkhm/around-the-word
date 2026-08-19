@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/accordion_theme.dart';
+import '../../utils/contrast_color.dart';
 
 /// The app's persistent site-wide nav bar — a "Whereabout" wordmark next to
 /// the globe icon on the left, an "About" link on the right. **One fixed
-/// look, not a per-screen configurable one** — every screen that shows
-/// this shows the exact same thing.
+/// look by default** — every screen that shows this shows the same thing,
+/// unless it has a real, stated reason not to (see [backgroundColor]).
 ///
 /// **2026-08-18: collapsed back down to just `onHomeTap`/`onAboutTap`.**
 /// Colors, fonts, and the "Whereabout" label used to be constructor
@@ -20,10 +21,20 @@ import '../../theme/accordion_theme.dart';
 /// this on different pages regardless." Since every real consumer wants
 /// the identical visual treatment now — confirmed, not assumed, this is a
 /// site-wide nav bar — that treatment belongs in this file once, not
-/// passed in twice. If a screen ever needs to genuinely look different
-/// here, that's a real design decision to make explicitly (a `variant`
-/// enum, say), not something to leave open "just in case" the way the
-/// removed color params did.
+/// passed in twice.
+///
+/// **[backgroundColor] reopened that, later the same day, for a real
+/// reason** — `CountryHeaderPreviewScreen`'s masthead became a per-country
+/// deepened flag color (`SectionPalette.header`) instead of flat
+/// `AccordionTheme.ink`, and the site nav directly above it needs to
+/// match for the two to read as one continuous surface (see
+/// design-preferences.md's "structural chrome" note on that seam).
+/// Deliberately **one color in, not the five separate style params this
+/// file had before** — text/icon color derives automatically via
+/// [readableTextColor], so there's exactly one thing a caller can get out
+/// of sync, and it's data (a `Color`), not a second hand-copied block of
+/// styling code. `null` (every non-country-page caller) keeps the fixed
+/// ink look.
 ///
 /// Deliberately a separate widget from [CountryHeader], not a row inside
 /// it — split out 2026-08-17 so *site* chrome (globe/About, same on every
@@ -32,24 +43,14 @@ import '../../theme/accordion_theme.dart';
 class SiteHeader extends StatelessWidget {
   final VoidCallback? onHomeTap;
   final VoidCallback? onAboutTap;
+  final Color? backgroundColor;
 
-  const SiteHeader({super.key, this.onHomeTap, this.onAboutTap});
-
-  static const _iconColor = Color(0xD9FFFFFF); // ~85% white
-  static const _aboutStyle = TextStyle(
-    fontFamily: AccordionTheme.dmMono,
-    fontSize: 10,
-    fontWeight: FontWeight.w500,
-    letterSpacing: 1.0,
-    color: Colors.white,
-  );
-  static const _labelStyle = TextStyle(
-    fontFamily: AccordionTheme.fraunces,
-    fontWeight: FontWeight.w700,
-    fontSize: 15,
-    letterSpacing: -0.1,
-    color: Colors.white,
-  );
+  const SiteHeader({
+    super.key,
+    this.onHomeTap,
+    this.onAboutTap,
+    this.backgroundColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +63,31 @@ class SiteHeader extends StatelessWidget {
     // look to confirm the globe/About icons don't sit under the system
     // clock/battery, since nothing here can render that.
     final topInset = MediaQuery.paddingOf(context).top.clamp(0.0, 32.0);
+    final background = backgroundColor ?? AccordionTheme.ink;
+    final foreground = readableTextColor(background);
+    final iconColor = foreground.withValues(alpha: 0.85);
+    final aboutStyle = TextStyle(
+      fontFamily: AccordionTheme.dmMono,
+      fontSize: 11,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 1.0,
+      color: foreground,
+    );
+    final labelStyle = TextStyle(
+      fontFamily: AccordionTheme.fraunces,
+      fontWeight: FontWeight.w700,
+      fontSize: 17,
+      letterSpacing: -0.1,
+      color: foreground,
+    );
 
     return Container(
-      color: AccordionTheme.ink,
+      color: background,
       // Vertical 10->16 and horizontal 16->20 (2026-08-18, per Colleen:
       // "add some more padding around any of the text in the header").
-      padding: EdgeInsets.fromLTRB(20, topInset + 16, 20, 16),
+      // Top bumped again the same day, 16->24 above topInset (bottom left
+      // at 16) — per Colleen: "add more top padding for the header."
+      padding: EdgeInsets.fromLTRB(20, topInset + 24, 20, 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -84,13 +104,13 @@ class SiteHeader extends StatelessWidget {
                   child: InkWell(
                     onTap: onHomeTap,
                     customBorder: const CircleBorder(),
-                    child: const Icon(Icons.public, size: 20, color: _iconColor),
+                    child: Icon(Icons.public, size: 22, color: iconColor),
                   ),
                 )
               else
-                const Icon(Icons.public, size: 20, color: _iconColor),
+                Icon(Icons.public, size: 22, color: iconColor),
               const SizedBox(width: 8),
-              const Text('Whereabout', style: _labelStyle),
+              Text('Whereabout', style: labelStyle),
             ],
           ),
           if (onAboutTap != null)
@@ -101,7 +121,7 @@ class SiteHeader extends StatelessWidget {
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: const Text('ABOUT', style: _aboutStyle),
+              child: Text('ABOUT', style: aboutStyle),
             )
           else
             const SizedBox.shrink(),
