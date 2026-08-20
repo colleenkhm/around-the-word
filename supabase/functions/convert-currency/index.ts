@@ -29,7 +29,25 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const CACHE_TTL_HOURS = 6;
 const API_KEY = Deno.env.get("EXCHANGERATE_API_KEY");
 
+// Edge Functions don't get CORS headers for free the way the main
+// Supabase REST/PostgREST gateway does — without these, a browser client
+// (e.g. `flutter run -d chrome`) blocks the request at the preflight and
+// this function never even runs. Every response below must carry these.
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  // x-client-info: the Supabase client SDK stamps this on every request
+  // (its own version string) — omitting it here is what actually broke
+  // this on web (confirmed 2026-08-20): the preflight rejects the real
+  // request before it's ever sent, whole browser call fails as CORS.
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Content-Type": "application/json",
+};
+
 Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
@@ -41,14 +59,14 @@ Deno.serve(async (req) => {
   if (!currencyCode) {
     return new Response(
       JSON.stringify({ error: "Missing required query param: to (e.g. ?to=EUR)" }),
-      { status: 400, headers: { "Content-Type": "application/json" } }
+      { status: 400, headers: corsHeaders }
     );
   }
 
   if (!API_KEY) {
     return new Response(
       JSON.stringify({ error: "EXCHANGERATE_API_KEY not configured — run `supabase secrets set EXCHANGERATE_API_KEY=...`" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+      { status: 500, headers: corsHeaders }
     );
   }
 
@@ -69,7 +87,7 @@ Deno.serve(async (req) => {
           fetchedAt: cached.fetched_at,
           source: "cache",
         }),
-        { headers: { "Content-Type": "application/json" } }
+        { headers: corsHeaders }
       );
     }
   }
@@ -88,7 +106,7 @@ Deno.serve(async (req) => {
     if (rate == null) {
       return new Response(
         JSON.stringify({ error: `Unknown currency code: ${currencyCode}` }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -106,7 +124,7 @@ Deno.serve(async (req) => {
 
     return new Response(
       JSON.stringify({ currencyCode, rateFromUsd: rate, fetchedAt, source: "live" }),
-      { headers: { "Content-Type": "application/json" } }
+      { headers: corsHeaders }
     );
   } catch (err) {
     // If the live fetch fails but we have ANY cached value (even stale),
@@ -120,12 +138,12 @@ Deno.serve(async (req) => {
           fetchedAt: cached.fetched_at,
           source: "stale_cache_fallback",
         }),
-        { headers: { "Content-Type": "application/json" } }
+        { headers: corsHeaders }
       );
     }
     return new Response(
       JSON.stringify({ error: (err as Error).message }),
-      { status: 502, headers: { "Content-Type": "application/json" } }
+      { status: 502, headers: corsHeaders }
     );
   }
 });

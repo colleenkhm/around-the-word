@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/live_data.dart';
@@ -24,6 +25,7 @@ class CurrencyService {
             : DateTime.parse(data['fetchedAt'] as String),
       );
     } catch (error) {
+      debugPrint('Currency rate fetch failed for $currencyCode: $error');
       return null;
     }
   }
