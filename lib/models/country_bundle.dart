@@ -55,8 +55,13 @@ class CountryFacts {
   final double? latitude;
   final double? longitude;
 
-  /// Fixed offset from UTC, in minutes. Not DST-aware.
+  /// Fixed offset from UTC, in minutes. Not DST-aware — a fallback for
+  /// when [timezone] isn't known.
   final int? utcOffsetMinutes;
+
+  /// IANA timezone name (e.g. "Europe/Athens") — DST-aware, preferred over
+  /// [utcOffsetMinutes] when present.
+  final String? timezone;
 
   /// A representative flag color, as "#RRGGBB". Hand-picked, not derived.
   final String? accentColorHex;
@@ -82,6 +87,7 @@ class CountryFacts {
     this.latitude,
     this.longitude,
     this.utcOffsetMinutes,
+    this.timezone,
     this.accentColorHex,
     this.lastImportedAt,
     this.emergencyNumber,
@@ -100,6 +106,7 @@ class CountryFacts {
           .map((e) => e as String)
           .toList(),
       utcOffsetMinutes: json['utcOffsetMinutes'] as int?,
+      timezone: json['timezone'] as String?,
       accentColorHex: json['accentColorHex'] as String?,
       latitude: (json['latitude'] as num?)?.toDouble(),
       longitude: (json['longitude'] as num?)?.toDouble(),

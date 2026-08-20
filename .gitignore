@@ -49,3 +49,8 @@ tools/vocab_tagger/.venv/
 
 # Commodity importer (dev-only, not part of the Flutter app)
 tools/commodity_importer/.venv/
+.env
+.env.scripts
+
+# Node (import scripts use Supabase/xlsx packages)
+node_modules/

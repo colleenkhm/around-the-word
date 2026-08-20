@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
 
+import '../data/currency_service.dart';
+import '../data/supabase_country_repository.dart';
 import '../models/country.dart' as country_model;
 import '../models/country_bundle.dart';
 import '../models/country_guide.dart';
@@ -58,6 +60,10 @@ class _CountryHeaderPreviewScreenState
     extends State<CountryHeaderPreviewScreen> {
   CountryBundle? _bundle;
 
+  // Live USD rate, fetched once the bundle's currency is known. Null
+  // renders an em dash — never a mock/stale value.
+  ExchangeRate? _exchangeRate;
+
   // Falls back to hand-picked defaults until flag colors load.
   SectionPalette _palette = SectionPalette.fallback;
 
@@ -81,6 +87,30 @@ class _CountryHeaderPreviewScreenState
 
   Future<void> _load() async {
     final code = widget.country.countryCode.toLowerCase();
+
+    CountryBundle? supabaseBundle;
+    try {
+      supabaseBundle = await SupabaseCountryRepository()
+          .fetchCountryBundle(widget.country.countryCode);
+    } catch (error) {
+      debugPrint('Supabase fetch failed for $code: $error');
+    }
+
+    // Supabase's own curated content wins outright when it has any. Else,
+    // prefer a local mock bundle if one actually exists (today, only
+    // Costa Rica). Else, still show whatever Supabase has — even
+    // commodity-only facts (timezone, currency, capital, cities,
+    // neighbors) are real and available, and every country's page is
+    // reachable from search regardless of curation status, so per
+    // Colleen: "I would like them to see any information that is
+    // available to them" rather than an empty shell just because nothing
+    // curated exists yet.
+    if (supabaseBundle != null && _hasCuratedContent(supabaseBundle)) {
+      setState(() => _bundle = supabaseBundle);
+      _loadExchangeRate();
+      return;
+    }
+
     try {
       final raw = await rootBundle.loadString('assets/data/bundles/$code.json');
       setState(() {
@@ -88,11 +118,35 @@ class _CountryHeaderPreviewScreenState
           jsonDecode(raw) as Map<String, dynamic>,
         );
       });
-    } catch (error) {
-      // No curated bundle yet — render an empty shell.
-      debugPrint('No bundle for $code — showing an empty shell: $error');
-      setState(() => _bundle = _emptyBundle(widget.country));
+      _loadExchangeRate();
+      return;
+    } catch (_) {
+      // No local mock bundle for this country — fall through.
     }
+
+    if (supabaseBundle != null) {
+      setState(() => _bundle = supabaseBundle);
+      _loadExchangeRate();
+      return;
+    }
+
+    debugPrint('No data anywhere for $code — showing an empty shell.');
+    setState(() => _bundle = _emptyBundle(widget.country));
+    _loadExchangeRate();
+  }
+
+  bool _hasCuratedContent(CountryBundle bundle) =>
+      !bundle.guide.isEmpty ||
+      bundle.advisories.isNotEmpty ||
+      bundle.visa != null ||
+      bundle.words.isNotEmpty;
+
+  Future<void> _loadExchangeRate() async {
+    final currencyCode = _bundle?.facts.currencyCode;
+    if (currencyCode == null) return;
+    final rate = await CurrencyService().fetchRate(currencyCode);
+    if (!mounted) return;
+    setState(() => _exchangeRate = rate);
   }
 
   // Empty shell so every section shows "Coming soon."
@@ -191,14 +245,10 @@ class _CountryHeaderPreviewScreenState
                                   : null,
                               nativeNameRomanized: null,
                               utcOffsetMinutes: bundle.facts.utcOffsetMinutes,
-                              // Never bundled — mock rate only.
-                              exchangeRate: bundle.facts.currencyCode == null
-                                  ? null
-                                  : ExchangeRate(
-                                      currencyCode: bundle.facts.currencyCode!,
-                                      rateFromUsd: 519.8,
-                                      fetchedAt: DateTime.now(),
-                                    ),
+                              timezone: bundle.facts.timezone,
+                              // Live via CurrencyService/_loadExchangeRate —
+                              // null until it resolves, never a mock value.
+                              exchangeRate: _exchangeRate,
                               currencyName: bundle.facts.currencyName,
                               allExpanded: _allExpanded,
                               onToggleAll: _toggleAll,

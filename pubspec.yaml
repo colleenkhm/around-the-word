@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  supabase_flutter: ^2.6.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -45,6 +46,12 @@ dependencies:
   # (already fetched from flagcdn.com for display). Official Flutter-team
   # package (flutter/packages monorepo), not a third-party dependency.
   palette_generator: ^0.3.3+7
+  flutter_dotenv: ^6.0.1
+
+  # IANA-timezone-aware local time — 2026-08-19, once country_facts.timezone
+  # (e.g. "Europe/Athens") was wired in server-side. DST-aware on-device,
+  # no live call needed.
+  timezone: ^0.10.1
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +81,7 @@ flutter:
     - assets/data/resources.json
     - assets/data/content/
     - assets/data/bundles/
+    - .env
 
   # Bundled locally rather than fetched at runtime (e.g. via a Google
   # Fonts package) so the country-page visual identity holds up under this

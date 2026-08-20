@@ -196,3 +196,14 @@ default (`1.0.0+1`).
   (like 2026-08-18's mockup calling for cool tones against the "stay warm"
   entry), flag it explicitly rather than silently complying or silently
   refusing — same pattern as any other doc conflict.
+- **If the conversation drifts onto a clearly different topic than what the
+  session started with, suggest `/clear` (or starting a fresh session)
+  rather than just continuing.** Added 2026-08-19, after an 8+ hour session
+  that ran country-page design work, then a full Supabase backend
+  standup, then State Dept data-import debugging, all in one thread —
+  every background-task check-in during that session resent the *entire*
+  accumulated context, and once a gap exceeded the prompt-cache TTL
+  (5 minutes on API-key/usage-credit billing), the next call reprocessed
+  all of it at full, uncached price. A topic change is the natural point
+  to flag this — she may still want to continue in the same thread, but
+  the choice should be hers, made knowingly, not a default nobody chose.

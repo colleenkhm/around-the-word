@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 import '../../models/country_bundle.dart';
 import '../../models/live_data.dart';
@@ -17,8 +18,12 @@ class CountryHeader extends StatefulWidget {
   final String? nativeName;
   final String? nativeNameRomanized;
 
-  /// Feeds the stub's local-time column.
+  /// Feeds the stub's local-time column. Fallback when [timezone] is null.
   final int? utcOffsetMinutes;
+
+  /// IANA timezone name — preferred, DST-aware source for the stub's
+  /// local-time column.
+  final String? timezone;
 
   /// Feeds the stub's currency column. Not live.
   final ExchangeRate? exchangeRate;
@@ -49,6 +54,7 @@ class CountryHeader extends StatefulWidget {
     this.nativeName,
     this.nativeNameRomanized,
     this.utcOffsetMinutes,
+    this.timezone,
     this.exchangeRate,
     this.currencyName,
   });
@@ -146,6 +152,7 @@ class _CountryHeaderState extends State<CountryHeader> {
         ),
         _TicketStub(
           utcOffsetMinutes: widget.utcOffsetMinutes,
+          timezone: widget.timezone,
           exchangeRate: widget.exchangeRate,
           currencyName: widget.currencyName,
           allExpanded: widget.allExpanded,
@@ -268,6 +275,7 @@ class _StampEdgePainter extends CustomPainter {
 /// Ticket stub — local time + currency + expand/collapse-all link.
 class _TicketStub extends StatelessWidget {
   final int? utcOffsetMinutes;
+  final String? timezone;
   final ExchangeRate? exchangeRate;
   final String? currencyName;
   final bool allExpanded;
@@ -280,6 +288,7 @@ class _TicketStub extends StatelessWidget {
 
   const _TicketStub({
     required this.utcOffsetMinutes,
+    required this.timezone,
     required this.exchangeRate,
     required this.currencyName,
     required this.allExpanded,
@@ -291,7 +300,7 @@ class _TicketStub extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final local = _localDateTime();
+    final local = _localTime();
 
     return Container(
       width: double.infinity,
@@ -312,10 +321,10 @@ class _TicketStub extends StatelessWidget {
                 Expanded(
                   child: _field(
                     'LOCAL TIME',
-                    local == null ? '—' : _timeLabel(local),
+                    local == null ? '—' : _timeLabel(local.wallClock),
                     local == null
                         ? ''
-                        : '${_dateLabel(local)} · ${_utcLabel()}',
+                        : '${_dateLabel(local.wallClock)} · ${_utcLabel(local.utcOffset)}',
                     trailing: _hemisphereLabel() == null
                         ? null
                         : Text(
@@ -420,10 +429,21 @@ class _TicketStub extends StatelessWidget {
     );
   }
 
-  DateTime? _localDateTime() {
+  // Prefers the IANA timezone (DST-aware) over the fixed-offset fallback.
+  ({DateTime wallClock, Duration utcOffset})? _localTime() {
+    final tzName = timezone;
+    if (tzName != null) {
+      try {
+        final now = tz.TZDateTime.now(tz.getLocation(tzName));
+        return (wallClock: now, utcOffset: now.timeZoneOffset);
+      } catch (_) {
+        // Unrecognized IANA name — fall through to the fixed offset.
+      }
+    }
     final offset = utcOffsetMinutes;
     if (offset == null) return null;
-    return DateTime.now().toUtc().add(Duration(minutes: offset));
+    final duration = Duration(minutes: offset);
+    return (wallClock: DateTime.now().toUtc().add(duration), utcOffset: duration);
   }
 
   // North/South only; null for missing latitude, distinct label at 0.
@@ -443,12 +463,11 @@ class _TicketStub extends StatelessWidget {
   String _dateLabel(DateTime local) =>
       '${_monthAbbrev[local.month - 1]} ${local.day}';
 
-  String _utcLabel() {
-    final offset = utcOffsetMinutes;
-    if (offset == null) return '';
-    final sign = offset >= 0 ? '+' : '-';
-    final hours = (offset.abs() / 60).floor();
-    final minutes = offset.abs() % 60;
+  String _utcLabel(Duration offset) {
+    final totalMinutes = offset.inMinutes;
+    final sign = totalMinutes >= 0 ? '+' : '-';
+    final hours = (totalMinutes.abs() / 60).floor();
+    final minutes = totalMinutes.abs() % 60;
     return minutes == 0
         ? 'UTC$sign$hours'
         : 'UTC$sign$hours:${minutes.toString().padLeft(2, '0')}';
