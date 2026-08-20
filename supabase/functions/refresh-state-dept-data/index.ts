@@ -220,6 +220,7 @@ Deno.serve(async (req) => {
   }
   const countryRows = (countries ?? []) as CountryRow[];
   const countryIsoToId = new Map<string, string>(countryRows.map((c) => [c.iso_code, c.id]));
+  const countryIdToName = new Map<string, string>(countryRows.map((c) => [c.id, c.name_common]));
   const countryNameToRow = new Map<string, CountryRow>(
     countryRows.map((c) => [normalizeName(c.name_common), c])
   );
@@ -233,6 +234,7 @@ Deno.serve(async (req) => {
   let advisoriesOk = 0, advisoriesSkipped = 0;
   let visasOk = 0, visasSkipped = 0;
   const unmatchedAdvisoryNames = new Set<string>();
+  const misroutedVisaCountries = new Set<string>();
 
   // --- Advisories ---
   // Only on the first visa batch (or an explicit ?skipAdvisories=false) —
@@ -344,6 +346,22 @@ Deno.serve(async (req) => {
         // cite — skip rather than fabricate a URL (see file header).
         if (!stripped || !officialUrl) { visasSkipped++; continue; }
 
+        // This endpoint has been observed returning a *different*
+        // country's content for the requested code — reproducibly, not a
+        // one-off (confirmed 2026-08-19: BA returned Bahrain's content, BH
+        // returned Belize's, ~40% of a 127-country sample was affected).
+        // Cheap guard: the response should at least mention the country it
+        // claims to be about. Not foolproof (a genuinely correct summary
+        // could avoid naming the country; a wrong one could coincidentally
+        // name it) but catches the bulk of what the 2026-08-19 audit found
+        // by hand. Skip and log rather than store data we can't trust.
+        const expectedName = countryIdToName.get(countryId);
+        if (expectedName && !stripped.toLowerCase().includes(expectedName.toLowerCase())) {
+          misroutedVisaCountries.add(`${expectedName} (${code})`);
+          visasSkipped++;
+          continue;
+        }
+
         const summary = excerpt(stripped, VISA_SUMMARY_MAX_CHARS);
 
         // Upsert, not delete-then-insert — one round-trip, needs
@@ -364,6 +382,9 @@ Deno.serve(async (req) => {
     }
   } else {
     log.push("No US country row found — required for the pairwise visa table.");
+  }
+  if (misroutedVisaCountries.size > 0) {
+    log.push(`Misrouted entry_exit_requirements, skipped (${misroutedVisaCountries.size}): ${[...misroutedVisaCountries].join(", ")}`);
   }
 
   const summary = {
