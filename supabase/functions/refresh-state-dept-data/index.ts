@@ -366,6 +366,11 @@ Deno.serve(async (req) => {
 
         // Upsert, not delete-then-insert — one round-trip, needs
         // migration 006's unique index for the onConflict target.
+        // application_url deliberately omitted — hand-filled only, the
+        // State Dept feed has no equivalent. ON CONFLICT DO UPDATE only
+        // touches listed columns, so leaving it out here is what keeps a
+        // manually-added value from being wiped on the next refresh. Don't
+        // add it "for completeness."
         const { error } = await supabase.from("visa_requirements").upsert({
           destination_country_id: countryId,
           nationality_country_id: usId,
