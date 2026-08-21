@@ -1,7 +1,7 @@
 // Whereabout: State Department advisory/visa refresh — Edge Function version
 // (field mapping corrected 2026-08-19)
 //
-// CADENCE NOTE (Colleen's decision): scheduled MONTHLY via pg_cron while
+// CADENCE NOTE (decided): scheduled MONTHLY via pg_cron while
 // pre-release. Switch to DAILY once the app ships — that's a one-line
 // change to the cron expression in the migration file, nothing here.
 //
@@ -132,9 +132,9 @@ function stripHtml(value: unknown): string | null {
 // Advisory Summary fields often lead with a revision/changelog note about
 // what changed since the last version ("There were no changes to the
 // advisory level...", "Reissued after periodic review without changes.",
-// "Updated to reflect...") rather than actual advisory content — per
-// Colleen, spotted live: "I feel like that is not meant to be written in
-// the actual travel advisory." Confirmed against real data: present on
+// "Updated to reflect...") rather than actual advisory content — spotted
+// live: "I feel like that is not meant to be written in the actual travel
+// advisory." Confirmed against real data: present on
 // roughly 3/4 of advisories, absent on the rest (those start directly
 // with real content, e.g. "Exercise normal precaution in Australia."), so
 // this only strips the first paragraph when it actually matches known

@@ -48,7 +48,7 @@ python fetch_country_facts.py CR PT GR > country_facts.csv
 
 # Cities — top N by population per country. is_major is set on every row;
 # is_featured is always left blank (see script docstring — that column is
-# Colleen's editorial call, never auto-filled).
+# an editorial call, never auto-filled).
 python fetch_cities.py CR PT GR --top 8 > cities.csv
 ```
 

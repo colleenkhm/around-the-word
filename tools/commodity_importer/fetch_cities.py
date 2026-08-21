@@ -6,7 +6,7 @@ sheet of the collection spreadsheet.
 
 This only ever populates `is_major` (every row here is "top N by
 population" for the country) and never `is_featured` — that column is
-Colleen's editorial judgment and this script leaves it blank on purpose.
+left to editorial judgment and this script leaves it blank on purpose.
 Fill it in by hand for the cities actually worth surfacing on the country
 page. See the doc: "An importer may only touch is_major."
 

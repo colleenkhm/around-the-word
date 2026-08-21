@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/accordion_theme.dart';
+import '../theme/accordion_theme.dart';
 
 /// Small copyright line at the bottom of page content. Placeholder text
 /// until the real notice is settled — see HANDOFF.md.

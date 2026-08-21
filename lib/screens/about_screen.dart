@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/accordion_theme.dart';
-import '../widgets/country_page/site_footer.dart';
+import '../widgets/site_footer.dart';
 
 /// Placeholder destination for the "About" link. Content not written yet.
 class AboutScreen extends StatelessWidget {

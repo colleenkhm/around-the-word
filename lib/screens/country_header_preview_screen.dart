@@ -27,10 +27,10 @@ import '../widgets/country_page/language_pair_section.dart';
 import '../widgets/country_page/neighbors_section.dart';
 import '../widgets/country_page/paper_texture.dart';
 import '../widgets/country_page/practical_norms_section.dart';
-import '../widgets/country_page/site_footer.dart';
-import '../widgets/country_page/site_header.dart';
 import '../widgets/country_page/travel_advisory_section.dart';
 import '../widgets/country_page/visa_section.dart';
+import '../widgets/site_footer.dart';
+import '../widgets/site_header.dart';
 
 /// The country page — a collapsible accordion of sections. See
 /// HANDOFF.md for the full decision history.
@@ -102,9 +102,9 @@ class _CountryHeaderPreviewScreenState
     // commodity-only facts (timezone, currency, capital, cities,
     // neighbors) are real and available, and every country's page is
     // reachable from search regardless of curation status, so per
-    // Colleen: "I would like them to see any information that is
-    // available to them" rather than an empty shell just because nothing
-    // curated exists yet.
+    // direction received: "I would like them to see any information that
+    // is available to them" rather than an empty shell just because
+    // nothing curated exists yet.
     if (supabaseBundle != null && _hasCuratedContent(supabaseBundle)) {
       setState(() => _bundle = supabaseBundle);
       _loadExchangeRate();

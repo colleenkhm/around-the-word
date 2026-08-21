@@ -5,8 +5,8 @@ import '../models/country.dart';
 import '../state/trip_selection.dart';
 import '../theme/accordion_theme.dart';
 import '../widgets/country_page/dashed_divider.dart';
-import '../widgets/country_page/site_footer.dart';
-import '../widgets/country_page/site_header.dart';
+import '../widgets/site_footer.dart';
+import '../widgets/site_header.dart';
 import 'about_screen.dart';
 import 'country_header_preview_screen.dart';
 

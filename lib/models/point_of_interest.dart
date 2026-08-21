@@ -1,6 +1,6 @@
 /// Explore-tab content: landmarks, restaurants, neighborhoods (one table,
 /// `poi_type` discriminator — see the data architecture doc's
-/// `points_of_interest`), plus short Colleen-written tips.
+/// `points_of_interest`), plus short hand-written tips.
 library;
 
 enum PoiType { landmark, restaurant, neighborhood }

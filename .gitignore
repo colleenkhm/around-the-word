@@ -54,3 +54,14 @@ tools/commodity_importer/.venv/
 
 # Node (import scripts use Supabase/xlsx packages)
 node_modules/
+
+# Planning/working-notes docs — personal notes, kept local only, not in git.
+# See CLAUDE.md's own note on this for why and what that means for a fresh clone.
+/CLAUDE.md
+/HANDOFF.md
+/design-preferences.md
+/whereabout-client-design.md
+/whereabout-data-architecture.md
+/whereabout-scratch-notes.md
+/language-app-system-design.md
+/app-design-doc.md
