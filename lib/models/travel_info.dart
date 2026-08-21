@@ -37,6 +37,7 @@ class TravelAdvisory {
 }
 
 class VisaInfo {
+  final String issuingAuthority; // required — same discipline as TravelAdvisory
   final String summary;
   final String officialUrl; // required, never null — informational source
   final String? applicationUrl;
@@ -46,6 +47,7 @@ class VisaInfo {
   final String? prohibitedOnExit;
 
   const VisaInfo({
+    required this.issuingAuthority,
     required this.summary,
     required this.officialUrl,
     this.applicationUrl,
@@ -57,6 +59,7 @@ class VisaInfo {
 
   factory VisaInfo.fromJson(Map<String, dynamic> json) {
     return VisaInfo(
+      issuingAuthority: json['issuingAuthority'] as String,
       summary: json['summary'] as String,
       officialUrl: json['officialUrl'] as String,
       applicationUrl: json['applicationUrl'] as String?,

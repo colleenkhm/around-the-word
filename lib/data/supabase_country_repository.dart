@@ -110,6 +110,13 @@ class SupabaseCountryRepository {
     final row = rows.first;
 
     return VisaInfo.fromJson({
+      // `visa_requirements.issuing_authority` isn't migrated into the live
+      // DB yet (added to the schema doc 2026-08-21, not backfilled) — fall
+      // back to the one source V1 visa data actually comes from (see
+      // CLAUDE.md's External Data Sources) rather than crashing the whole
+      // country fetch on a missing column. Drop the fallback once the
+      // migration + backfill lands and every row has a real value.
+      'issuingAuthority': row['issuing_authority'] ?? 'US State Department',
       'summary': row['summary'],
       'officialUrl': row['official_url'],
       'applicationUrl': row['application_url'],

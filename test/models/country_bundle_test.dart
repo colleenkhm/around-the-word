@@ -106,6 +106,7 @@ void main() {
 
   test('visa info is present and nationality-scoped', () {
     expect(bundle.visa, isNotNull);
+    expect(bundle.visa!.issuingAuthority, isNotEmpty);
     expect(bundle.visa!.nationalityIsoCode, 'US');
     expect(bundle.visa!.prohibitedOnExit, isNull);
   });

@@ -32,6 +32,8 @@ class VisaSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(visa.issuingAuthority, style: AccordionTheme.sLabel),
+              const SizedBox(height: 5),
               Text(
                 'For ${visa.nationalityIsoCode} passport holders',
                 style: AccordionTheme.sHead,

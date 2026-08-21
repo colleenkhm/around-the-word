@@ -365,6 +365,7 @@ visa_requirements
   id                uuid pk
   destination_country_id uuid fk
   nationality_country_id uuid fk     -- requirements are pairwise, not per-country
+  issuing_authority text NOT NULL    -- same field as travel_advisories, same reason: never show a requirement unattributed
   summary           text             -- brief, non-authoritative
   official_url      text NOT NULL    -- the authoritative government source (informational)
   application_url    text nullable    -- where to actually apply, if a visa is required and this differs from official_url
@@ -378,6 +379,8 @@ visa_requirements
 **`prohibited_on_entry`/`prohibited_on_exit` live here, not on `advisories`.** Customs restrictions aren't a safety-risk rating (which is what `advisories.level` is built around) — they're a legal requirement, the same category of fact as visa rules, and in practice they come from the same government source page (Germany's State Department advisory page lists currency declaration thresholds and prohibited items under "Travel requirements," right next to the visa section, not folded into the advisory summary). One caveat worth naming honestly: unlike the visa summary, customs restrictions generally aren't nationality-dependent — a currency declaration threshold applies to what's being carried, not who's carrying it — so storing them on a nationality-paired table is a minor structural mismatch. It's dormant and harmless in V1 (US-only nationality scope means there's no duplication happening yet), but would be worth revisiting if the nationality scope ever expands past one.
 
 **Design decision, deliberate:** visa and entry requirements are legally consequential and change often. Someone acting on stale information here can be denied boarding — a real harm. This table stores a *brief summary plus a required link to the authoritative source*, and the app must display `last_verified_at` and drive users to `official_url` rather than presenting the summary as sufficient. `official_url` and `last_verified_at` are `NOT NULL` to make the safe pattern structurally enforced rather than a matter of discipline.
+
+**`issuing_authority` added 2026-08-21, matching `travel_advisories`.** Originally omitted here since a visa row is already pairwise-scoped to one destination/nationality combination, unlike advisories where several governments can rate the same country differently — so there wasn't the same disambiguation need. In practice, though, V1's visa data comes from the same State Dept `entry_exit_requirements` endpoint as the advisories (see CLAUDE.md's External Data Sources), so showing the source is just as accurate and useful here, and keeps the two sections visually consistent.
 
 Note the pairwise structure: requirements depend on the traveler's nationality, not just the destination. Modeling this as a per-country field would be wrong and would need a painful migration once anyone outside one nationality uses the app.
 

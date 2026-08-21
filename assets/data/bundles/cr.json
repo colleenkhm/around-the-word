@@ -239,6 +239,7 @@
   ],
   "contributorNames": ["Sarah M.", "the Whitfield family"],
   "visa": {
+    "issuingAuthority": "US State Department",
     "summary": "US citizens may enter Costa Rica visa-free for stays up to 90 days with a passport valid for the duration of the stay.",
     "officialUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/costa-rica-travel-advisory.html",
     "applicationUrl": "https://costarica-embassy.org/visas/",

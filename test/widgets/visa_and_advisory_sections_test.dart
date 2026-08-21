@@ -28,6 +28,7 @@ void main() {
   );
 
   final visaWithApplyLink = VisaInfo(
+    issuingAuthority: 'US State Department',
     summary: 'US citizens may enter visa-free for up to 90 days.',
     officialUrl: 'https://travel.state.gov/costa-rica',
     applicationUrl: 'https://costarica-embassy.org/visas/',
@@ -57,6 +58,7 @@ void main() {
       await pump(tester, VisaSection(visa: visaWithApplyLink, accent: _accent));
 
       expect(tester.takeException(), isNull);
+      expect(find.text('US State Department'), findsOneWidget);
       expect(find.textContaining('90 days'), findsOneWidget);
       expect(find.text('Apply'), findsOneWidget);
       // 'Official source' -> 'Source', 2026-08-19, per Colleen (see
