@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:around_the_word/utils/hex_color.dart';
+import 'package:whereabout/utils/hex_color.dart';
 
 void main() {
   test('parses a "#RRGGBB" string', () {

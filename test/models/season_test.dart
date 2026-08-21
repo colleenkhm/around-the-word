@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:around_the_word/models/country_guide.dart';
+import 'package:whereabout/models/country_guide.dart';
 
 void main() {
   group('Season.covers', () {

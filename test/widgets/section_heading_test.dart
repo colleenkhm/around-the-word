@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:around_the_word/widgets/country_page/section_heading.dart';
+import 'package:whereabout/widgets/country_page/section_heading.dart';
 
 /// Regression test for a real breakage (2026-08-11): an earlier
 /// [SectionHeading] used `LayoutBuilder` to space its dashed trailing

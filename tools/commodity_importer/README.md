@@ -71,5 +71,5 @@ the country-page header's small-type native name, not itself a
 
 `fetch_cities.py` → `cities` table columns exactly.
 
-See around-the-word-data-architecture.md's "Schema" section for what each
+See whereabout-data-architecture.md's "Schema" section for what each
 column means.

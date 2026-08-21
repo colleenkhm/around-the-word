@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
-import 'package:around_the_word/screens/category_selection_screen.dart';
-import 'package:around_the_word/state/trip_selection.dart';
+import 'package:whereabout/screens/category_selection_screen.dart';
+import 'package:whereabout/state/trip_selection.dart';
 
 // Split out of widget_test.dart 2026-08-17 when DestinationScreen stopped
 // leading here directly (an active country now opens the country page

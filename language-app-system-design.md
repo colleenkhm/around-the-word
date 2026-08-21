@@ -1,9 +1,9 @@
 # Around the Word: System Design & Roadmap
 
 > **⚠️ Superseded as of 2026-08-06.** The no-backend, static-bundled-JSON premise this whole doc is built on is gone — the app pivoted to a Supabase/Postgres backend with a curated travel database as the actual product, per Colleen's explicit instruction to override this doc's direction "even if it means rearchitecture." The three current docs are:
-> - [around-the-word-client-design.md](around-the-word-client-design.md) — screens, flows, client state, offline caching (supersedes this doc's sections 1, 2, and most of 4)
-> - [around-the-word-data-architecture.md](around-the-word-data-architecture.md) — schema, backend, client data objects (supersedes this doc's section 3, most of 5)
-> - [around-the-word-scratch-notes.md](around-the-word-scratch-notes.md) — loose ends, not decisions
+> - [whereabout-client-design.md](whereabout-client-design.md) — screens, flows, client state, offline caching (supersedes this doc's sections 1, 2, and most of 4)
+> - [whereabout-data-architecture.md](whereabout-data-architecture.md) — schema, backend, client data objects (supersedes this doc's section 3, most of 5)
+> - [whereabout-scratch-notes.md](whereabout-scratch-notes.md) — loose ends, not decisions
 >
 > Kept below as history, same as [app-design-doc.md](app-design-doc.md) and the pre-pivot parts of [HANDOFF.md](HANDOFF.md) it itself superseded. Nothing below this notice is current.
 

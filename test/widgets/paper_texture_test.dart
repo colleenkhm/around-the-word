@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:around_the_word/widgets/country_page/paper_texture.dart';
+import 'package:whereabout/widgets/country_page/paper_texture.dart';
 
 void main() {
   testWidgets('renders its child without throwing, at a realistic screen size',

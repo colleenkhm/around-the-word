@@ -1,4 +1,4 @@
-# Around the Word: Scratch Notes
+# whereabout: Scratch Notes
 
 *Loose ends from the planning conversation that didn't fit into the three main docs. Not decisions — just useful things worth not losing.*
 

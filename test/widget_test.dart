@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:around_the_word/main.dart';
+import 'package:whereabout/main.dart';
 
 void main() {
   testWidgets(
     'Destination search -> country page',
     (WidgetTester tester) async {
-      await tester.pumpWidget(const AroundTheWordApp());
+      await tester.pumpWidget(const WhereaboutApp());
       await tester.pumpAndSettle(); // reference data loads async
 
       // Destination screen: search field filters the full country list.

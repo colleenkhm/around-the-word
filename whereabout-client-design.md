@@ -1,4 +1,4 @@
-# Around the Word: Client & UX Design
+# whereabout: Client & UX Design
 
 *Living doc. Covers the Flutter app — screens, flows, navigation, state, and client-side behavior.*
 
@@ -8,7 +8,7 @@
 
 ## Product Vision (End State)
 
-**Around the Word** — a country-prep dashboard for travelers, opened by selecting a destination. Not all of this is MVP:
+**whereabout** — a country-prep dashboard for travelers, opened by selecting a destination. Not all of this is MVP:
 
 - **Language** — vocabulary and phrases organized by travel activity, with learn/use modes
 - **Weather** — expected conditions around the time of the trip

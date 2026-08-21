@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Around the Word are logged here, one entry per version
+All notable changes to whereabout are logged here, one entry per version
 bump in [pubspec.yaml](pubspec.yaml). Loosely follows
 [Keep a Changelog](https://keepachangelog.com/) and
 [Semantic Versioning](https://semver.org/) — while the app is pre-1.0
@@ -14,6 +14,14 @@ would a tester/traveler notice," one entry per release. Skip pure internal
 refactors/doc updates unless they're worth calling out.
 
 ## [Unreleased]
+
+## [0.4.0] — 2026-08-21
+
+### Changed
+- **App renamed from "Around the Word" to "whereabout."** App title, iOS/
+  Android bundle identifiers, and web app name all updated; no functional
+  change. The header wordmark ("Where" + "about" next to the globe icon,
+  added in 0.3.0) already anticipated this.
 
 ## [0.3.0] — 2026-08-18
 

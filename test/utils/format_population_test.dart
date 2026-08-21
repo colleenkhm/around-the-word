@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:around_the_word/utils/format_population.dart';
+import 'package:whereabout/utils/format_population.dart';
 
 void main() {
   test('groups by thousands', () {

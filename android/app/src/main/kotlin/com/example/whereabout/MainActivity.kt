@@ -1,4 +1,4 @@
-package com.example.around_the_word
+package com.example.whereabout
 
 import io.flutter.embedding.android.FlutterActivity
 

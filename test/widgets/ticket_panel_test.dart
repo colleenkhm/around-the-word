@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:around_the_word/widgets/country_page/ticket_panel.dart';
+import 'package:whereabout/widgets/country_page/ticket_panel.dart';
 
 void main() {
   testWidgets('renders its child without throwing', (tester) async {

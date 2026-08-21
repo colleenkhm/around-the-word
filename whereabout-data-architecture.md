@@ -1,4 +1,4 @@
-# Around the Word: Data Architecture & Schema
+# whereabout: Data Architecture & Schema
 
 *Living doc. Companion to the system design doc — which describes the Flutter client and its screen flows. That doc's "V1 has no backend" premise is superseded by this one: the curated travel database is now the core product, and the app is a client onto it.*
 

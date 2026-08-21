@@ -1,4 +1,4 @@
-# Working notes for Claude — Around the Word
+# Working notes for Claude — whereabout
 
 Directions Colleen has given while building this project, kept here so future
 sessions don't need to be re-told. Add to this as new direction comes in;
@@ -9,13 +9,13 @@ don't remove entries unless she says they no longer apply.
 **Read these three docs first in any new session** — together they're the
 authoritative plan, as of the 2026-08-06 pivot:
 
-- [around-the-word-client-design.md](around-the-word-client-design.md) —
+- [whereabout-client-design.md](whereabout-client-design.md) —
   screens, flows, client state, offline caching
-- [around-the-word-data-architecture.md](around-the-word-data-architecture.md)
+- [whereabout-data-architecture.md](whereabout-data-architecture.md)
   — schema, backend, client data objects. **This is the one to check first
   for any data-shape question** — the client doc explicitly defers to it if
   they ever disagree.
-- [around-the-word-scratch-notes.md](around-the-word-scratch-notes.md) —
+- [whereabout-scratch-notes.md](whereabout-scratch-notes.md) —
   loose ends, not decisions
 
 All three were refined 2026-08-09: a `why_short`/`why` split for best-times
@@ -141,12 +141,12 @@ default (`1.0.0+1`).
 
 ## Docs to keep current
 
-- [around-the-word-client-design.md](around-the-word-client-design.md) and
-  [around-the-word-data-architecture.md](around-the-word-data-architecture.md)
+- [whereabout-client-design.md](whereabout-client-design.md) and
+  [whereabout-data-architecture.md](whereabout-data-architecture.md)
   — the two living docs. Update these when scope, architecture, schema, or
   roadmap decisions change; each has its own Open Questions/Open Decisions
   section to append to.
-- [around-the-word-scratch-notes.md](around-the-word-scratch-notes.md) —
+- [whereabout-scratch-notes.md](whereabout-scratch-notes.md) —
   loose ends and useful context that don't belong in the two docs above.
 - [HANDOFF.md](HANDOFF.md) — implementation-level decisions made while
   building, and why. Update this when a non-obvious technical call gets made

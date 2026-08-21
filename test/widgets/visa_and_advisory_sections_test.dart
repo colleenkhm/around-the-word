@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:around_the_word/models/travel_info.dart';
-import 'package:around_the_word/widgets/country_page/travel_advisory_section.dart';
-import 'package:around_the_word/widgets/country_page/visa_section.dart';
+import 'package:whereabout/models/travel_info.dart';
+import 'package:whereabout/widgets/country_page/travel_advisory_section.dart';
+import 'package:whereabout/widgets/country_page/visa_section.dart';
 
 // Arbitrary — these tests aren't about color, just exercising `accent` as
 // a required param since both widgets took it on 2026-08-18 (see
