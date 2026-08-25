@@ -29,6 +29,7 @@ interface CountryRow {
   id: string;
   iso_code: string;
   name_common: string;
+  state_dept_entry_exit_code: string | null;
 }
 
 const BASE_URL = "https://cadataapi.state.gov/api";
@@ -214,7 +215,7 @@ Deno.serve(async (req) => {
   // ---------------------------------------------------------------
   const { data: countries, error: countriesError } = await supabase
     .from("countries")
-    .select("id, iso_code, name_common");
+    .select("id, iso_code, name_common, state_dept_entry_exit_code");
   if (countriesError) {
     return new Response(JSON.stringify({ error: countriesError.message }), { status: 500 });
   }
@@ -328,17 +329,22 @@ Deno.serve(async (req) => {
   // single invocation. ?visaBatchStart=N&visaBatchSize=M processes just
   // that slice (visaBatchStart declared above, alongside skipAdvisories).
   const visaBatchSize = Number(url.searchParams.get("visaBatchSize") ?? 9999);
-  const visaCountryEntries = [...countryIsoToId.entries()]
-    .filter(([code]) => code !== "US")
-    .sort(([a], [b]) => a.localeCompare(b))
+  // requestCode is what actually gets sent to the endpoint — iso_code
+  // unless state_dept_entry_exit_code overrides it (2026-08-21, see
+  // HANDOFF.md). countryId/code below still mean the real destination
+  // throughout — only the outbound request URL uses the override.
+  const visaCountryEntries = countryRows
+    .filter((c) => c.iso_code !== "US")
+    .map((c) => ({ code: c.iso_code, countryId: c.id, requestCode: c.state_dept_entry_exit_code ?? c.iso_code }))
+    .sort((a, b) => a.code.localeCompare(b.code))
     .slice(visaBatchStart, visaBatchStart + visaBatchSize);
   log.push(`Visa batch: ${visaBatchStart}-${visaBatchStart + visaCountryEntries.length} of ${countryIsoToId.size - 1}.`);
 
   const usId = countryIsoToId.get("US");
   if (usId) {
-    for (const [code, countryId] of visaCountryEntries) {
+    for (const { code, countryId, requestCode } of visaCountryEntries) {
       try {
-        const data = await fetchJson(`${BASE_URL}/CountryTravelInformation/${code}/entry_exit_requirements`);
+        const data = await fetchJson(`${BASE_URL}/CountryTravelInformation/${requestCode}/entry_exit_requirements`);
         const stripped = stripHtml(data);
         const officialUrl = advisoryLinkByCountryId.get(countryId);
 
@@ -371,9 +377,17 @@ Deno.serve(async (req) => {
         // touches listed columns, so leaving it out here is what keeps a
         // manually-added value from being wiped on the next refresh. Don't
         // add it "for completeness."
+        //
+        // issuing_authority IS required, unlike application_url — it's
+        // NOT NULL with no default, and Postgres validates NOT NULL
+        // against the proposed INSERT row before it ever resolves ON
+        // CONFLICT, even when the existing row already satisfies it.
+        // Omitting it here (found 2026-08-21) silently failed every
+        // upsert this function had ever attempted, new or existing row.
         const { error } = await supabase.from("visa_requirements").upsert({
           destination_country_id: countryId,
           nationality_country_id: usId,
+          issuing_authority: "US State Department",
           summary,
           official_url: officialUrl,
           last_verified_at: new Date().toISOString(),

@@ -27,8 +27,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 import XLSX from 'xlsx';
-   import { config } from 'dotenv';
-   config({ path: '.env.scripts' });
+import { config } from 'dotenv';
+config({ path: '.env.scripts', quiet: true });
 
 const SUPABASE_URL = (process.env.SUPABASE_URL ?? '').replace(/\/+$/, '');
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;

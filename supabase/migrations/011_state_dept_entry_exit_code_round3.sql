@@ -1,0 +1,12 @@
+-- Third round of state_dept_entry_exit_code discovery (2026-08-24).
+--
+-- The 2026-08-21 discovery pass only probed the 249 real ISO alpha-2
+-- codes as candidate inputs to entry_exit_requirements — on the
+-- assumption the endpoint is keyed by *some* country's own ISO code.
+-- That assumption undercounts: Japan's real working code is "JA", its
+-- FIPS 10-4 code, which is not a valid ISO alpha-2 code for any country
+-- and so was structurally invisible to a probe limited to the 249 ISO
+-- codes. Verified live 2026-08-24 (see HANDOFF.md) — confirmed by
+-- reading actual fetched content, not just a name-match log, same bar
+-- as prior rounds.
+update countries set state_dept_entry_exit_code = 'JA' where id = 'JP';
