@@ -1,0 +1,12 @@
+-- Found 2026-08-25 via discover-state-dept-codes?mode=diagnose: while
+-- diagnosing Switzerland (own code CH returns China's content — see
+-- migration 013's neighboring finding for the same session), Suriname's
+-- own code (SR) turned up in the same diagnose batch and its live
+-- content is unambiguously Switzerland's: "Visit the website of the
+-- Embassy of Switzerland in Washington, D.C. for the most current visa
+-- information..." — no competing country named, same confidence bar as
+-- every prior verified override. Suriname itself remains unresolved (its
+-- own code is "stolen" by Switzerland here, same pattern as every other
+-- FIPS-style collision found this session) — still needs its own
+-- discovery pass.
+update countries set state_dept_entry_exit_code = 'SR' where id = 'CH';

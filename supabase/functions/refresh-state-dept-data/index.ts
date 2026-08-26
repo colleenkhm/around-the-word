@@ -22,8 +22,16 @@
 //
 // SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are injected automatically
 // into every Edge Function's environment — no secrets to configure here.
+//
+// 2026-08-25: fetch/parse helpers (stripHtml, normalizeName, NAME_ALIASES,
+// fetchJson, ...) moved into ../_shared/state-dept.ts so this function and
+// discover-state-dept-codes (which finds new state_dept_entry_exit_code
+// overrides — run that one when a common country like Japan turns up with
+// no visa data; see its own file header) can't drift apart on how a
+// response gets cleaned or a country name gets matched.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { BASE_URL, DEFAULT_REQUEST_DELAY_MS, NAME_ALIASES, normalizeName, sleep, stripHtml, fetchJson, textMentionsCountry } from "../_shared/state-dept.ts";
 
 interface CountryRow {
   id: string;
@@ -32,12 +40,7 @@ interface CountryRow {
   state_dept_entry_exit_code: string | null;
 }
 
-const BASE_URL = "https://cadataapi.state.gov/api";
-const REQUEST_DELAY_MS = 1500;
-// Lowered from 15s — a handful of slow/hanging per-country requests
-// eating close to the old timeout each was enough, across a batch, to
-// blow past Supabase's own 150s Edge Function idle limit.
-const FETCH_TIMEOUT_MS = 6_000;
+const REQUEST_DELAY_MS = DEFAULT_REQUEST_DELAY_MS;
 
 // Mechanical HTML-strip truncation cap for entry_exit_requirements — that
 // endpoint returns several paragraphs covering many unrelated topics
@@ -47,88 +50,6 @@ const FETCH_TIMEOUT_MS = 6_000;
 // mechanical excerpt, same "hand-check before fully trusting" status
 // import-curated-data.mjs's auto-tokenized phrases already have.
 const VISA_SUMMARY_MAX_CHARS = 600;
-
-const HEADERS = {
-  "User-Agent": "Mozilla/5.0 (compatible; WhereaboutApp/1.0; personal travel app data refresh)",
-  "Accept": "application/json",
-};
-
-// Lowercases, strips accents (Côte -> Cote), and drops punctuation and
-// lone single-letter tokens (handles French elision either written as
-// "d'Ivoire" or, as the State Dept's own feed inconsistently does,
-// "d Ivoire" with the apostrophe just gone) — added 2026-08-19 after
-// "Côte d'Ivoire" and "Cote d Ivoire" showed up as two different
-// unmatched names across two separate real API calls, minutes apart, for
-// the same country. Reduces (doesn't eliminate) the need for literal
-// aliases below — genuinely different names (Burma/Myanmar) still need one.
-const COMBINING_DIACRITICS = new RegExp("[\\u0300-\\u036f]", "g");
-
-function normalizeName(name: string): string {
-  return name
-    .normalize("NFD").replace(COMBINING_DIACRITICS, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, " ")
-    .replace(/\b[a-z]\b/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-// A handful of known Title-vs-name_common mismatches that normalizeName
-// alone can't bridge (genuinely different names, not just accents/
-// punctuation). Not exhaustive — anything not listed here just gets
-// skipped and logged, same as any other unresolvable row, rather than
-// guessed at. Keys and values are both pre-normalized.
-const NAME_ALIASES: Record<string, string> = {
-  "czech republic": normalizeName("Czechia"),
-  "burma": normalizeName("Myanmar"),
-  "the bahamas": normalizeName("Bahamas"),
-  "the gambia": normalizeName("Gambia"),
-  "cabo verde": normalizeName("Cape Verde"),
-  "korea south": normalizeName("South Korea"),
-  "korea north": normalizeName("North Korea"),
-  // Corrected 2026-08-19 — these previously pointed at guessed
-  // name_common values ("Micronesia (Federated States of)", ...) that
-  // don't actually exist in the countries table; fixed against real
-  // query results instead of a second guess. normalizeName makes
-  // "Côte d'Ivoire" and "Cote d Ivoire" equal *to each other*, but that
-  // shared normalized form still isn't "Ivory Coast"'s — still a
-  // genuinely different name, still needs an entry here.
-  "cote ivoire": normalizeName("Ivory Coast"),
-  "federated states of micronesia": normalizeName("Micronesia"),
-  "the kyrgyz republic": normalizeName("Kyrgyzstan"),
-  "kingdom of denmark": normalizeName("Denmark"),
-  "democratic republic of the congo": normalizeName("DR Congo"),
-  "republic of the congo": normalizeName("Congo"),
-};
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-async function fetchJson(url: string) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-  try {
-    const res = await fetch(url, { headers: HEADERS, signal: controller.signal });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
-function stripHtml(value: unknown): string | null {
-  if (typeof value !== "string") return null;
-  const text = value
-    .replace(/<[^>]*>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&(?:#39|apos);/g, "'")
-    // Decoded, not blanked — this used to turn "Paraná" into "Paran ".
-    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
-    .replace(/\s+/g, " ")
-    .trim();
-  return text.length > 0 ? text : null;
-}
 
 // Advisory Summary fields often lead with a revision/changelog note about
 // what changed since the last version ("There were no changes to the
@@ -172,7 +93,14 @@ function parseAdvisoryTitle(title: string) {
   const match = title.match(/^(.+?)\s*-\s*Level\s*(\d+)\s*:\s*(.+)$/i);
   if (!match) return null;
   return {
-    countryName: match[1].trim(),
+    // Found 2026-08-25 while chasing why Mexico had no advisory row: its
+    // real Title is "Mexico Travel Advisory - Level 2: ...", not the
+    // usual "Mexico - Level 2: ...", so the plain country-name capture
+    // above included a redundant "Travel Advisory" suffix that then
+    // failed to resolve against name_common. Stripped generally, not as
+    // a one-off Mexico alias, since nothing rules out another country's
+    // Title using the same redundant phrasing later.
+    countryName: match[1].trim().replace(/\s+travel advisory$/i, ""),
     level: `Level ${match[2]}`,
     levelLabel: match[3].trim(),
   };
@@ -235,7 +163,9 @@ Deno.serve(async (req) => {
   let advisoriesOk = 0, advisoriesSkipped = 0;
   let visasOk = 0, visasSkipped = 0;
   const unmatchedAdvisoryNames = new Set<string>();
+  const advisoryRecordsMissingLink = new Set<string>();
   const misroutedVisaCountries = new Set<string>();
+  const noAdvisoryLinkCountries = new Set<string>();
 
   // --- Advisories ---
   // Only on the first visa batch (or an explicit ?skipAdvisories=false) —
@@ -276,7 +206,16 @@ Deno.serve(async (req) => {
         }
 
         const officialUrl = row.Link;
-        if (!officialUrl) { advisoriesSkipped++; continue; }
+        // Found 2026-08-25 while chasing why Mexico had no advisory row
+        // at all: this skip previously had no per-country log, same blind
+        // spot the visa-side noAdvisoryLinkCountries fix above closes —
+        // a record with a real name match but no Link used to vanish
+        // with no trace of which country it was.
+        if (!officialUrl) {
+          advisoryRecordsMissingLink.add(parsed.countryName);
+          advisoriesSkipped++;
+          continue;
+        }
 
         toUpsert.set(countryRow.id, {
           country_id: countryRow.id,
@@ -303,6 +242,9 @@ Deno.serve(async (req) => {
       }
       if (unmatchedAdvisoryNames.size > 0) {
         log.push(`Unmatched advisory country names (${unmatchedAdvisoryNames.size}): ${[...unmatchedAdvisoryNames].join(", ")}`);
+      }
+      if (advisoryRecordsMissingLink.size > 0) {
+        log.push(`Advisory records matched but missing Link (${advisoryRecordsMissingLink.size}): ${[...advisoryRecordsMissingLink].join(", ")}`);
       }
     } catch (err) {
       log.push(`Advisories fetch failed: ${(err as Error).message}`);
@@ -347,22 +289,39 @@ Deno.serve(async (req) => {
         const data = await fetchJson(`${BASE_URL}/CountryTravelInformation/${requestCode}/entry_exit_requirements`);
         const stripped = stripHtml(data);
         const officialUrl = advisoryLinkByCountryId.get(countryId);
+        const expectedName = countryIdToName.get(countryId) ?? code;
 
         // No advisory Link for this country means no official source to
         // cite — skip rather than fabricate a URL (see file header).
-        if (!stripped || !officialUrl) { visasSkipped++; continue; }
+        // Logged separately from a fetch/mismatch skip (below) — found
+        // 2026-08-25 this was silently blocking real, correctly-fetched
+        // content (Mexico: entry_exit_requirements returns good content
+        // via its own ISO code, but has zero travel_advisories row at
+        // all) in a way that looked identical to "the fetch itself
+        // failed" until logged distinctly.
+        if (!stripped) { visasSkipped++; continue; }
+        if (!officialUrl) {
+          noAdvisoryLinkCountries.add(`${expectedName} (${code})`);
+          visasSkipped++;
+          continue;
+        }
 
         // This endpoint has been observed returning a *different*
         // country's content for the requested code — reproducibly, not a
         // one-off (confirmed 2026-08-19: BA returned Bahrain's content, BH
         // returned Belize's, ~40% of a 127-country sample was affected).
         // Cheap guard: the response should at least mention the country it
-        // claims to be about. Not foolproof (a genuinely correct summary
-        // could avoid naming the country; a wrong one could coincidentally
-        // name it) but catches the bulk of what the 2026-08-19 audit found
-        // by hand. Skip and log rather than store data we can't trust.
-        const expectedName = countryIdToName.get(countryId);
-        if (expectedName && !stripped.toLowerCase().includes(expectedName.toLowerCase())) {
+        // claims to be about — via textMentionsCountry, which also checks
+        // known alternate names (Kyrgyz Republic, etc.), not just the
+        // literal name_common string. A plain-substring version of this
+        // guard was found 2026-08-25 to be silently discarding genuinely
+        // correct content whenever the State Dept's own text uses an
+        // official name name_common doesn't match. Not foolproof either
+        // way (a genuinely correct summary could avoid naming the country;
+        // a wrong one could coincidentally name it) but catches the bulk
+        // of what the 2026-08-19 audit found by hand. Skip and log rather
+        // than store data we can't trust.
+        if (!textMentionsCountry(stripped, expectedName, countryRows)) {
           misroutedVisaCountries.add(`${expectedName} (${code})`);
           visasSkipped++;
           continue;
@@ -404,6 +363,9 @@ Deno.serve(async (req) => {
   }
   if (misroutedVisaCountries.size > 0) {
     log.push(`Misrouted entry_exit_requirements, skipped (${misroutedVisaCountries.size}): ${[...misroutedVisaCountries].join(", ")}`);
+  }
+  if (noAdvisoryLinkCountries.size > 0) {
+    log.push(`No travel_advisories official_url to cite, skipped (${noAdvisoryLinkCountries.size}): ${[...noAdvisoryLinkCountries].join(", ")}`);
   }
 
   const summary = {

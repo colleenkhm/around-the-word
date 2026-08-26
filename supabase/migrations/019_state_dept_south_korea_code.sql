@@ -1,0 +1,17 @@
+-- South Korea's own ISO code (KR) is claimed by Kiribati (migration 009:
+-- ('KI','KR')). Its real code, KS, was tried earlier today but rejected
+-- by the automated matcher — the content only ever says bare "Korea"
+-- (K-ETA, "Mission Korea", "Embassy of Korea"), never "South Korea", so
+-- it scored zero against the exact name and a stray single "China"
+-- mention (in "Do not transit other countries such as China...") won by
+-- default. Verified by reading the FULL text, not just the preview:
+-- unambiguously South Korea (K-ETA is specifically South Korea's travel
+-- authorization program; no DPRK/travel-ban content, which is what
+-- North Korea's real content actually reads like per the 2026-08-21
+-- investigation). The production guard rejected the real fetch for the
+-- same "bare Korea" reason, so the fix needed a matching-rule change too,
+-- not just this override — see NAME_ALIASES' "korea" entry in
+-- _shared/state-dept.ts (added one-directional, South Korea only, so
+-- North Korea's own content — which already names itself explicitly —
+-- doesn't inherit the same ambiguity this entry exists to resolve).
+update countries set state_dept_entry_exit_code = 'KS' where id = 'KR';
