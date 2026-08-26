@@ -29,9 +29,16 @@ class CitiesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (cities.isEmpty) return const SizedBox.shrink();
 
-    // Featured cities first.
+    // Featured cities first, then by population descending. Unknown
+    // population sorts last within its featured/non-featured group.
     final sorted = [...cities]
-      ..sort((a, b) => a.isFeatured == b.isFeatured ? 0 : (a.isFeatured ? -1 : 1));
+      ..sort((a, b) {
+        if (a.isFeatured != b.isFeatured) return a.isFeatured ? -1 : 1;
+        if (a.population == null && b.population == null) return 0;
+        if (a.population == null) return 1;
+        if (b.population == null) return -1;
+        return b.population!.compareTo(a.population!);
+      });
 
     return Column(
       mainAxisSize: MainAxisSize.min,

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../../models/country.dart';
 import '../../theme/accordion_theme.dart';
 
-/// The "Neighbors" [AccordionSection]'s expanded content — every country
-/// this one shares a land border with, on the section's plain white
-/// background, each row linking to that country's own page.
+/// The "Border Countries" [AccordionSection]'s expanded content — every
+/// country this one shares a land border with, on the section's plain
+/// white background, each row linking to that country's own page.
 class NeighborsSection extends StatelessWidget {
   final List<String> borderingCountryCodes;
 
@@ -14,7 +14,7 @@ class NeighborsSection extends StatelessWidget {
   final List<Country> allCountries;
 
   /// A version of this section's flag color guaranteed to read on white —
-  /// marks which rows are actual links, same as [AdditionalResourcesSection].
+  /// used only on the chevron. Row text stays plain black ink.
   final Color accent;
 
   /// Called with the matched [Country] when a resolvable row is tapped.
@@ -74,9 +74,6 @@ class _NeighborRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final country = this.country;
-    // Unresolved codes aren't links, so they stay muted ink3 rather than
-    // taking the accent color.
-    final textColor = country == null ? AccordionTheme.ink3 : accent;
     final content = Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
       decoration: isLast
@@ -87,10 +84,12 @@ class _NeighborRow extends StatelessWidget {
           Expanded(
             child: Text(
               country?.name ?? code,
-              style: AccordionTheme.rowTitle.copyWith(color: textColor),
+              style: AccordionTheme.rowTitle,
               overflow: TextOverflow.ellipsis,
             ),
           ),
+          // Chevron is the only tappable-link affordance now; absent
+          // entirely for an unresolved code.
           if (country != null) Icon(Icons.chevron_right, size: 16, color: accent),
         ],
       ),

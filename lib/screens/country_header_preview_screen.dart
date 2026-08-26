@@ -388,7 +388,7 @@ class _CountryHeaderPreviewScreenState
     final codes = bundle.facts.borderingCountryCodes;
     final colors = _palette.neighbors;
     return AccordionSection(
-      title: 'Neighbors',
+      title: 'Border Countries',
       tint: colors.tint,
       textColor: colors.textColor,
       hasData: codes.isNotEmpty,
