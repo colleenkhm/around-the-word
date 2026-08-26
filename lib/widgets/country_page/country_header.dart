@@ -157,7 +157,6 @@ class _CountryHeaderState extends State<CountryHeader> {
           currencyName: widget.currencyName,
           allExpanded: widget.allExpanded,
           onToggleAll: widget.onToggleAll,
-          accent: widget.accent,
           stub: widget.stub,
           latitude: widget.bundle.facts.latitude,
         ),
@@ -280,7 +279,6 @@ class _TicketStub extends StatelessWidget {
   final String? currencyName;
   final bool allExpanded;
   final VoidCallback onToggleAll;
-  final SectionColors accent;
   final SectionColors stub;
 
   /// Feeds the local-time column's trailing hemisphere line.
@@ -293,7 +291,6 @@ class _TicketStub extends StatelessWidget {
     required this.currencyName,
     required this.allExpanded,
     required this.onToggleAll,
-    required this.accent,
     required this.stub,
     required this.latitude,
   });
@@ -315,78 +312,74 @@ class _TicketStub extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 13, 20, 13),
-            child: Row(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: _field(
-                    'LOCAL TIME',
-                    local == null ? '—' : _timeLabel(local.wallClock),
-                    local == null
-                        ? ''
-                        : '${_dateLabel(local.wallClock)} · ${_utcLabel(local.utcOffset)}',
-                    trailing: _hemisphereLabel() == null
-                        ? null
-                        : Text(
-                            _hemisphereLabel()!,
-                            style: TextStyle(
-                              fontFamily: AccordionTheme.dmMono,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 11.5,
-                              color: stub.textColor.withValues(alpha: 0.75),
-                            ),
-                          ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _field(
-                    r'$1 USD',
-                    exchangeRate == null ? '—' : _rateLabel(exchangeRate!),
-                    currencyName ?? 'Daily rate',
-                    trailing: exchangeRate == null
-                        ? null
-                        : ExternalLink(
-                            label: 'Convert',
-                            url: _converterUrl(exchangeRate!.currencyCode),
-                            color: stub.textColor,
-                            fontFamily: AccordionTheme.dmMono,
-                          ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Flush white strip, right-aligned to match the chevrons below.
-          Material(
-            color: AccordionTheme.white,
-            child: InkWell(
-              onTap: onToggleAll,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      allExpanded ? 'Collapse all info' : 'Expand all info',
-                      style: AccordionTheme.tfLink.copyWith(
-                        color: accent.accentOnWhite,
+                    Expanded(
+                      child: _field(
+                        'LOCAL TIME',
+                        local == null ? '—' : _timeLabel(local.wallClock),
+                        local == null
+                            ? ''
+                            : '${_dateLabel(local.wallClock)} · ${_utcLabel(local.utcOffset)}',
+                        trailing: _hemisphereLabel() == null
+                            ? null
+                            : Text(
+                                _hemisphereLabel()!,
+                                style: TextStyle(
+                                  fontFamily: AccordionTheme.dmMono,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 11.5,
+                                  color: stub.textColor.withValues(alpha: 0.75),
+                                ),
+                              ),
                       ),
                     ),
-                    const SizedBox(width: 6),
-                    Icon(
-                      allExpanded
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down,
-                      size: 18,
-                      color: accent.accentOnWhite,
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _field(
+                        r'$1 USD',
+                        exchangeRate == null ? '—' : _rateLabel(exchangeRate!),
+                        currencyName ?? 'Daily rate',
+                        trailing: exchangeRate == null
+                            ? null
+                            : ExternalLink(
+                                label: 'Convert',
+                                url: _converterUrl(exchangeRate!.currencyCode),
+                                color: stub.textColor,
+                                fontFamily: AccordionTheme.dmMono,
+                              ),
+                      ),
                     ),
                   ],
                 ),
-              ),
+                const SizedBox(height: 14),
+                InkWell(
+                  onTap: onToggleAll,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        allExpanded ? 'Collapse all info' : 'Expand all info',
+                        style: AccordionTheme.tfLink.copyWith(
+                          color: stub.textColor,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Icon(
+                        allExpanded
+                            ? Icons.keyboard_arrow_up
+                            : Icons.keyboard_arrow_down,
+                        size: 18,
+                        color: stub.textColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],
