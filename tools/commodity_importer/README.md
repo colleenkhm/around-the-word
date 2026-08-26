@@ -6,16 +6,25 @@ Content-authoring tools, not part of the Flutter app. Fetches the "free
 section, or `CLAUDE.md`'s condensed version) — and outputs CSV shaped to
 paste straight into the collection spreadsheet.
 
-**Only covers REST Countries (country facts) and GeoNames (cities) for
-now.** The State Dept Consular Affairs API (advisories/visas) is left for
+**Covers REST Countries (country facts, languages) and GeoNames (cities).**
+The State Dept Consular Affairs API (advisories/visas) is left for
 later — the doc designs that one around a weekly live cron against
-Postgres, not a one-time spreadsheet fill, so it makes more sense once
-Supabase actually exists.
+Postgres, not a one-time spreadsheet fill.
 
-**No Supabase involved yet.** These write CSV to stdout, not a database.
-Once Supabase stands up, this fetch/normalize logic is what becomes the
-Edge Function the data architecture doc describes — the API calls and
-field mapping carry over directly, only the output target changes.
+**`fetch_country_facts.py` and `fetch_cities.py` write CSV to stdout, not a
+database** — they predate Supabase and still feed the collection
+spreadsheet. Once every field on the Edge Function's plate needs a live
+cron, this fetch/normalize logic carries over directly, only the output
+target changes.
+
+**`seed_country_languages.py` is the exception: it writes to the live
+Supabase project directly**, since `languages`/`country_languages` already
+exist there today with real FKs (`words.language_id`, `phrases.language_id`)
+pointing at hand-entered rows — round-tripping through the spreadsheet
+would risk a human creating a duplicate language row for one that already
+has content. See its docstring for the full rationale (also noted in
+CLAUDE.md's External Data Sources section and the data architecture doc's
+"Curated: language content" section).
 
 ## Setup (one-time)
 
@@ -50,6 +59,12 @@ python fetch_country_facts.py CR PT GR > country_facts.csv
 # is_featured is always left blank (see script docstring — that column is
 # an editorial call, never auto-filled).
 python fetch_cities.py CR PT GR --top 8 > cities.csv
+
+# Languages — writes directly to Supabase (needs SUPABASE_URL +
+# SUPABASE_SERVICE_ROLE_KEY, see .env.scripts), covers every country in
+# country_facts in one run, re-runnable without duplicating rows.
+python seed_country_languages.py --dry-run   # preview first
+python seed_country_languages.py
 ```
 
 Both accept as many ISO codes as you want in one run — pass whatever
