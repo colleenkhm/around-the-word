@@ -95,16 +95,19 @@ class SectionPalette {
         .toColor();
   }
 
-  // Dark, fixed-saturation version for the masthead.
+  // Dark, fixed-saturation version for the masthead. Saturation kept high
+  // even though it's dark — a dark *and* desaturated red reads as brown,
+  // not red. See design-preferences.md.
   static Color _deepen(Color color) {
     final hue = HSLColor.fromColor(color).hue;
-    return HSLColor.fromAHSL(1.0, hue, 0.42, 0.15).toColor();
+    return HSLColor.fromAHSL(1.0, hue, 0.65, 0.16).toColor();
   }
 
-  // Medium-dark version for the ticket stub.
+  // Medium-dark version for the ticket stub. Same brown-vs-hue reasoning
+  // as _deepen, one step lighter.
   static Color _midtone(Color color) {
     final hue = HSLColor.fromColor(color).hue;
-    return HSLColor.fromAHSL(1.0, hue, 0.38, 0.30).toColor();
+    return HSLColor.fromAHSL(1.0, hue, 0.55, 0.32).toColor();
   }
 
   /// Loading-state/extraction-failure fallback.

@@ -15,7 +15,15 @@ Future<List<Color>?> extractFlagBaseColors(String isoCode) async {
   try {
     final image = await _loadUiImage(flagPngUrl(isoCode));
     if (image == null) return null;
-    final palette = await PaletteGenerator.fromImage(image, maximumColorCount: 24);
+    final palette = await PaletteGenerator.fromImage(
+      image,
+      maximumColorCount: 24,
+      // Package default (avoidRedBlackWhitePaletteFilter) drops black and
+      // white outright — wrong for flags like Germany's that use them as a
+      // real field color. Keeps its near-red-line exclusion, drops the
+      // black/white one.
+      filters: const [_avoidNearRedLine],
+    );
 
     final swatches = [...palette.paletteColors]
       ..sort((a, b) => b.population.compareTo(a.population));
@@ -36,6 +44,17 @@ Future<List<Color>?> extractFlagBaseColors(String isoCode) async {
     debugPrint('Flag palette extraction failed for $isoCode: $error');
     return null;
   }
+}
+
+// Package's avoidRedBlackWhitePaletteFilter minus its black/white exclusion.
+bool _avoidNearRedLine(HSLColor color) {
+  const redLineMinHue = 10.0;
+  const redLineMaxHue = 37.0;
+  const redLineMaxSaturation = 0.82;
+  final isNearRedILine = color.hue >= redLineMinHue &&
+      color.hue <= redLineMaxHue &&
+      color.saturation <= redLineMaxSaturation;
+  return !isNearRedILine;
 }
 
 // Euclidean RGB distance — "basically the same color," not perceptual.
