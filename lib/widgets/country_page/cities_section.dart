@@ -5,9 +5,8 @@ import '../../theme/accordion_theme.dart';
 import '../../utils/format_population.dart';
 
 /// The "Cities" [AccordionSection]'s expanded content — a numbered list
-/// of cities on the section's plain white background. Chevron is a visual
-/// affordance for a future dedicated city page; tapping does nothing yet,
-/// so rows aren't wrapped in `InkWell`.
+/// of cities on the section's plain white background. No chevron/tap
+/// affordance — there's no dedicated city page to link to yet.
 class CitiesSection extends StatelessWidget {
   final List<City> cities;
 
@@ -104,11 +103,8 @@ class _CityRow extends StatelessWidget {
               ],
             ),
           ),
-          if (metaParts.isNotEmpty) ...[
+          if (metaParts.isNotEmpty)
             Text(metaParts.join(' · '), style: AccordionTheme.rowMeta),
-            const SizedBox(width: 8),
-          ],
-          Icon(Icons.chevron_right, size: 16, color: AccordionTheme.ink3.withValues(alpha: 0.5)),
         ],
       ),
     );
