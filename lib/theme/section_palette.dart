@@ -55,6 +55,12 @@ class SectionPalette {
     required this.stub,
   });
 
+  /// All eight section accents in a fixed order, for widgets that want a
+  /// color cycle rather than one fixed section color — e.g. each month
+  /// square in [BestTimesSection] gets the next one, wrapping around.
+  List<SectionColors> get cycle =>
+      [visa, cities, neighbors, times, advisory, language, norms, resources];
+
   /// Maps [colors] (most-prominent first) onto the eight sections,
   /// cycling if fewer than eight.
   factory SectionPalette.fromFlagColors(List<Color> colors) {

@@ -5,25 +5,24 @@ import '../../theme/accordion_theme.dart';
 import '../../utils/format_population.dart';
 
 /// The "Cities" [AccordionSection]'s expanded content — a numbered list
-/// of cities. Chevron is a visual affordance for a future dedicated city
-/// page; tapping does nothing yet, so rows aren't wrapped in `InkWell`.
+/// of cities on the section's plain white background. Chevron is a visual
+/// affordance for a future dedicated city page; tapping does nothing yet,
+/// so rows aren't wrapped in `InkWell`.
 class CitiesSection extends StatelessWidget {
   final List<City> cities;
 
   /// Matched against [City.name] to render the "Capital" meta label.
   final String? capital;
 
-  /// This section's flag color. Featured-city star stays fixed gold.
-  final Color tint;
-
-  /// Black or white, whichever reads on [tint].
-  final Color textColor;
+  /// A version of this section's flag color guaranteed to read on white —
+  /// the only place that color shows up here, on the index numbers.
+  /// Featured-city star stays fixed gold.
+  final Color accent;
 
   const CitiesSection({
     super.key,
     required this.cities,
-    required this.tint,
-    required this.textColor,
+    required this.accent,
     this.capital,
   });
 
@@ -35,21 +34,18 @@ class CitiesSection extends StatelessWidget {
     final sorted = [...cities]
       ..sort((a, b) => a.isFeatured == b.isFeatured ? 0 : (a.isFeatured ? -1 : 1));
 
-    return ColoredBox(
-      color: tint,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (var i = 0; i < sorted.length; i++)
-            _CityRow(
-              index: i + 1,
-              city: sorted[i],
-              isCapital: sorted[i].name == capital,
-              isLast: i == sorted.length - 1,
-              textColor: textColor,
-            ),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var i = 0; i < sorted.length; i++)
+          _CityRow(
+            index: i + 1,
+            city: sorted[i],
+            isCapital: sorted[i].name == capital,
+            isLast: i == sorted.length - 1,
+            accent: accent,
+          ),
+      ],
     );
   }
 }
@@ -59,14 +55,14 @@ class _CityRow extends StatelessWidget {
   final City city;
   final bool isCapital;
   final bool isLast;
-  final Color textColor;
+  final Color accent;
 
   const _CityRow({
     required this.index,
     required this.city,
     required this.isCapital,
     required this.isLast,
-    required this.textColor,
+    required this.accent,
   });
 
   @override
@@ -80,16 +76,14 @@ class _CityRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
       decoration: isLast
           ? null
-          : BoxDecoration(
-              border: Border(bottom: BorderSide(color: textColor.withValues(alpha: 0.15))),
-            ),
+          : const BoxDecoration(border: Border(bottom: BorderSide(color: AccordionTheme.rule))),
       child: Row(
         children: [
           SizedBox(
             width: 18,
             child: Text(
               index.toString().padLeft(2, '0'),
-              style: AccordionTheme.rowMeta.copyWith(color: textColor.withValues(alpha: 0.7)),
+              style: AccordionTheme.rowMeta.copyWith(color: accent, fontWeight: FontWeight.w600),
             ),
           ),
           const SizedBox(width: 10),
@@ -99,7 +93,7 @@ class _CityRow extends StatelessWidget {
                 Flexible(
                   child: Text(
                     city.name,
-                    style: AccordionTheme.rowTitle.copyWith(color: textColor),
+                    style: AccordionTheme.rowTitle,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -111,13 +105,10 @@ class _CityRow extends StatelessWidget {
             ),
           ),
           if (metaParts.isNotEmpty) ...[
-            Text(
-              metaParts.join(' · '),
-              style: AccordionTheme.rowMeta.copyWith(color: textColor.withValues(alpha: 0.7)),
-            ),
+            Text(metaParts.join(' · '), style: AccordionTheme.rowMeta),
             const SizedBox(width: 8),
           ],
-          Icon(Icons.chevron_right, size: 16, color: textColor.withValues(alpha: 0.5)),
+          Icon(Icons.chevron_right, size: 16, color: AccordionTheme.ink3.withValues(alpha: 0.5)),
         ],
       ),
     );

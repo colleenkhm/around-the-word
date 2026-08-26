@@ -313,8 +313,7 @@ class _CountryHeaderPreviewScreenState
       contentBuilder: (_) => CitiesSection(
         cities: cities,
         capital: bundle.facts.capital,
-        tint: colors.tint,
-        textColor: colors.textColor,
+        accent: colors.accentOnWhite,
       ),
     );
   }
@@ -332,11 +331,7 @@ class _CountryHeaderPreviewScreenState
           : bestTimes.map((b) => b.months).join(' · '),
       expanded: _expanded[_Section.times]!,
       onToggle: () => _toggle(_Section.times),
-      contentBuilder: (_) => BestTimesSection(
-        bestTimes: bestTimes,
-        tint: colors.tint,
-        textColor: colors.textColor,
-      ),
+      contentBuilder: (_) => BestTimesSection(bestTimes: bestTimes, palette: _palette.cycle),
     );
   }
 
@@ -405,8 +400,7 @@ class _CountryHeaderPreviewScreenState
       contentBuilder: (_) => NeighborsSection(
         borderingCountryCodes: codes,
         allCountries: allCountries,
-        tint: colors.tint,
-        textColor: colors.textColor,
+        accent: colors.accentOnWhite,
         onTapNeighbor: (country) {
           context.read<TripSelection>().selectCountry(country);
           Navigator.of(context).push(
