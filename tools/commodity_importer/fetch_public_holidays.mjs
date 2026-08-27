@@ -71,7 +71,16 @@ async function main() {
   const notInOurs = available.map((c) => c.countryCode).filter((c) => !knownIsoCodes.has(c));
   if (notInOurs.length) console.error(`  (covered by Nager but not in our countries table: ${notInOurs.join(', ')})`);
 
-  const rowsToUpsert = [];
+  // Keyed by the same (country_id, date, name) tuple as the table's unique
+  // constraint, not pushed to a plain array. Confirmed necessary
+  // 2026-08-26: Nager.Date sometimes lists the same holiday name/date twice
+  // for one country (regional variants that differ only in `counties`),
+  // which made a single upsert() call fail with Postgres's "ON CONFLICT DO
+  // UPDATE command cannot affect row a second time" — the exact bug
+  // refresh-state-dept-data/index.ts's comments already document hitting
+  // and fixing the same way. Last one in wins; not a meaningful ordering
+  // guarantee, just a tie-break, same as that function's.
+  const toUpsert = new Map();
   const failedCodes = [];
   for (const code of codesToFetch) {
     for (const year of YEARS) {
@@ -81,7 +90,8 @@ async function main() {
         if (!res.ok) { failedCodes.push(`${code} ${year} (HTTP ${res.status})`); continue; }
         const holidays = await res.json();
         for (const h of holidays) {
-          rowsToUpsert.push({
+          const key = `${code}|${h.date}|${h.name}`;
+          toUpsert.set(key, {
             country_id: code,
             date: h.date,
             local_name: h.localName,
@@ -98,6 +108,7 @@ async function main() {
       await sleep(REQUEST_DELAY_MS);
     }
   }
+  const rowsToUpsert = [...toUpsert.values()];
 
   console.error(`\n--- Summary ---`);
   console.error(`Countries fetched: ${codesToFetch.length}, years: ${YEARS.join(', ')}`);
