@@ -72,7 +72,21 @@ const MAX_RETRIES = 4;
 async function mwApi(params) {
   const url = `${API_BASE}?${new URLSearchParams({ format: 'json', ...params })}`;
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
+    let res;
+    try {
+      res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
+    } catch (e) {
+      // Transient network-level failures (ECONNRESET, socket closed, ...)
+      // confirmed live 2026-08-27 on a long multi-request run — not rate
+      // limiting, just an occasional dropped connection. Same retry
+      // treatment as a 429 rather than letting the whole run die on one
+      // flaky request.
+      if (attempt === MAX_RETRIES) throw new Error(`Network error, retries exhausted: ${e.message}`);
+      const waitMs = 2000 * (attempt + 1);
+      console.error(`  network error (${e.message}), retrying in ${waitMs}ms...`);
+      await sleep(waitMs);
+      continue;
+    }
     if (res.status === 429) {
       if (attempt === MAX_RETRIES) throw new Error('HTTP 429 (rate limited, retries exhausted)');
       const retryAfter = Number(res.headers.get('retry-after'));
