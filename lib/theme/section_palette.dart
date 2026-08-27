@@ -26,7 +26,7 @@ class SectionColors {
 class SectionPalette {
   final SectionColors visa;
   final SectionColors cities;
-  final SectionColors neighbors;
+  final SectionColors borderCountries;
   final SectionColors times;
   final SectionColors advisory;
   final SectionColors language;
@@ -45,7 +45,7 @@ class SectionPalette {
   const SectionPalette({
     required this.visa,
     required this.cities,
-    required this.neighbors,
+    required this.borderCountries,
     required this.times,
     required this.advisory,
     required this.language,
@@ -59,7 +59,7 @@ class SectionPalette {
   /// color cycle rather than one fixed section color — e.g. each month
   /// square in [BestTimesSection] gets the next one, wrapping around.
   List<SectionColors> get cycle =>
-      [visa, cities, neighbors, times, advisory, language, norms, resources];
+      [visa, cities, borderCountries, times, advisory, language, norms, resources];
 
   /// Maps [colors] (most-prominent first) onto the eight sections,
   /// cycling if fewer than eight.
@@ -73,7 +73,7 @@ class SectionPalette {
     return SectionPalette(
       visa: sectionColors[0],
       cities: sectionColors[1],
-      neighbors: sectionColors[2],
+      borderCountries: sectionColors[2],
       times: sectionColors[3],
       advisory: sectionColors[4],
       language: sectionColors[5],
@@ -120,7 +120,7 @@ class SectionPalette {
   static final fallback = SectionPalette(
     visa: _colorsFor(const Color(0xFFD8EDF8)),
     cities: _colorsFor(const Color(0xFFE8E0F5)),
-    neighbors: _colorsFor(const Color(0xFFE8E0F5)),
+    borderCountries: _colorsFor(const Color(0xFFE8E0F5)),
     times: _colorsFor(const Color(0xFFFDF3D0)),
     advisory: _colorsFor(const Color(0xFFD8EDE0)),
     language: _colorsFor(const Color(0xFFFAE0E4)),
