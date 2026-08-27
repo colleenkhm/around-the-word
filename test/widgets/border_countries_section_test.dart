@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:whereabout/models/country.dart';
-import 'package:whereabout/widgets/country_page/neighbors_section.dart';
+import 'package:whereabout/widgets/country_page/border_countries_section.dart';
 
 const _accent = Color(0xFF3A78AA);
 
-/// [NeighborsSection] resolves codes against a plain passed-in country
-/// list (see that class's doc) rather than watching `TripSelection`
-/// itself, so it's testable without a `Provider`/full app boot.
+/// [BorderCountriesSection] resolves codes against a plain passed-in
+/// country list (see that class's doc) rather than watching
+/// `TripSelection` itself, so it's testable without a `Provider`/full app
+/// boot.
 void main() {
   final allCountries = [
     const Country(
@@ -35,17 +36,16 @@ void main() {
     );
   }
 
-  testWidgets('renders each resolved neighbor by name, no exception', (
+  testWidgets('renders each resolved border country by name, no exception', (
     tester,
   ) async {
     await pump(
       tester,
-      NeighborsSection(
+      BorderCountriesSection(
         borderingCountryCodes: const ['PA', 'NI'],
         allCountries: allCountries,
-        tint: _accent,
-        textColor: Colors.white,
-        onTapNeighbor: (_) {},
+        accent: _accent,
+        onTapBorderCountry: (_) {},
       ),
     );
 
@@ -59,12 +59,11 @@ void main() {
   ) async {
     await pump(
       tester,
-      NeighborsSection(
+      BorderCountriesSection(
         borderingCountryCodes: const ['PA', 'ZZ'],
         allCountries: allCountries,
-        tint: _accent,
-        textColor: Colors.white,
-        onTapNeighbor: (_) {},
+        accent: _accent,
+        onTapBorderCountry: (_) {},
       ),
     );
 
@@ -73,18 +72,17 @@ void main() {
     expect(find.text('ZZ'), findsOneWidget);
   });
 
-  testWidgets('tapping a resolved neighbor calls onTapNeighbor with it', (
+  testWidgets('tapping a resolved border country calls onTapBorderCountry with it', (
     tester,
   ) async {
     Country? tapped;
     await pump(
       tester,
-      NeighborsSection(
+      BorderCountriesSection(
         borderingCountryCodes: const ['PA'],
         allCountries: allCountries,
-        tint: _accent,
-        textColor: Colors.white,
-        onTapNeighbor: (country) => tapped = country,
+        accent: _accent,
+        onTapBorderCountry: (country) => tapped = country,
       ),
     );
 
@@ -97,16 +95,15 @@ void main() {
   testWidgets('empty list renders nothing', (tester) async {
     await pump(
       tester,
-      NeighborsSection(
+      BorderCountriesSection(
         borderingCountryCodes: const [],
         allCountries: allCountries,
-        tint: _accent,
-        textColor: Colors.white,
-        onTapNeighbor: (_) {},
+        accent: _accent,
+        onTapBorderCountry: (_) {},
       ),
     );
 
     expect(tester.takeException(), isNull);
-    expect(find.byType(NeighborsSection), findsOneWidget);
+    expect(find.byType(BorderCountriesSection), findsOneWidget);
   });
 }
