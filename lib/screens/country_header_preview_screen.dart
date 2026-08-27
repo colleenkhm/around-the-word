@@ -24,7 +24,7 @@ import '../widgets/country_page/best_times_section.dart';
 import '../widgets/country_page/cities_section.dart';
 import '../widgets/country_page/country_header.dart';
 import '../widgets/country_page/language_pair_section.dart';
-import '../widgets/country_page/neighbors_section.dart';
+import '../widgets/country_page/border_countries_section.dart';
 import '../widgets/country_page/paper_texture.dart';
 import '../widgets/country_page/practical_norms_section.dart';
 import '../widgets/country_page/travel_advisory_section.dart';
@@ -48,7 +48,7 @@ class CountryHeaderPreviewScreen extends StatefulWidget {
 enum _Section {
   visa,
   cities,
-  neighbors,
+  borderCountries,
   times,
   advisory,
   language,
@@ -258,7 +258,7 @@ class _CountryHeaderPreviewScreenState
                             ),
                             _visaSection(bundle),
                             _citiesSection(bundle),
-                            _neighborsSection(bundle, trip.countries),
+                            _borderCountriesSection(bundle, trip.countries),
                             _timesSection(bundle),
                             _advisorySection(bundle),
                             _languageSection(bundle),
@@ -381,12 +381,12 @@ class _CountryHeaderPreviewScreenState
     );
   }
   
-    Widget _neighborsSection(
+    Widget _borderCountriesSection(
     CountryBundle bundle,
     List<country_model.Country> allCountries,
   ) {
     final codes = bundle.facts.borderingCountryCodes;
-    final colors = _palette.neighbors;
+    final colors = _palette.borderCountries;
     return AccordionSection(
       title: 'Border Countries',
       tint: colors.tint,
@@ -395,13 +395,13 @@ class _CountryHeaderPreviewScreenState
       meta: codes.isEmpty
           ? null
           : '${codes.length} bordering ${codes.length == 1 ? 'country' : 'countries'}',
-      expanded: _expanded[_Section.neighbors]!,
-      onToggle: () => _toggle(_Section.neighbors),
-      contentBuilder: (_) => NeighborsSection(
+      expanded: _expanded[_Section.borderCountries]!,
+      onToggle: () => _toggle(_Section.borderCountries),
+      contentBuilder: (_) => BorderCountriesSection(
         borderingCountryCodes: codes,
         allCountries: allCountries,
         accent: colors.accentOnWhite,
-        onTapNeighbor: (country) {
+        onTapBorderCountry: (country) {
           context.read<TripSelection>().selectCountry(country);
           Navigator.of(context).push(
             MaterialPageRoute(
