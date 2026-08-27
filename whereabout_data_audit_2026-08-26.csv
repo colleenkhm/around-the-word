@@ -1,0 +1,251 @@
+iso,name,is_published,content_status,language_scope_na,capital,population,region,cities_total,cities_major,cities_featured,languages_total,leader_present,guide_item_count,poi_total,poi_landmarks,poi_restaurants,tips_total,words_total,phrases_total,advisories_total,advisory_authorities,visa_row_present,visa_summary_present,visa_official_url_present
+AF,Afghanistan,false,none,false,Kabul,43844111,Asia,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AX,Åland Islands,false,none,false,Mariehamn,,Europe,8,8,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+AL,Albania,false,none,false,Tirana,2349580,Europe,9,9,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+DZ,Algeria,false,none,false,Algiers,47435312,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AS,American Samoa,false,none,false,Pago Pago,46029,Oceania,8,8,0,2,false,0,0,0,0,0,0,0,0,,true,true,true
+AD,Andorra,false,none,false,Andorra la Vella,82904,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AO,Angola,false,none,false,Luanda,39040039,Africa,12,12,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AI,Anguilla,false,none,false,The Valley,,Americas,5,5,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AQ,Antarctica,false,none,false,,,Antarctic,8,8,0,0,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AG,Antigua and Barbuda,false,none,false,Saint John's,94209,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AR,Argentina,false,none,false,Buenos Aires,45851378,Americas,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AM,Armenia,false,none,false,Yerevan,3086700,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AW,Aruba,false,none,false,Oranjestad,108785,Americas,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AU,Australia,false,none,false,Canberra,27614411,Oceania,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AT,Austria,false,none,false,Vienna,9208163,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AZ,Azerbaijan,false,none,false,Baku,10246996,Asia,9,9,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BS,Bahamas,false,none,false,Nassau,403033,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BH,Bahrain,false,none,false,Manama,1600366,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BD,Bangladesh,false,none,false,Dhaka,175686899,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BB,Barbados,false,none,false,Bridgetown,282623,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BY,Belarus,false,none,false,Minsk,9085991,Europe,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BE,Belgium,false,none,false,Brussels,11941781,Europe,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BZ,Belize,false,none,false,Belmopan,422924,Americas,9,9,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BJ,Benin,false,none,false,Porto-Novo,14814460,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BM,Bermuda,false,none,false,Hamilton,64555,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BT,Bhutan,false,none,false,Thimphu,796682,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BO,Bolivia,false,none,false,Sucre,12581843,Americas,8,8,0,4,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BA,Bosnia and Herzegovina,false,none,false,Sarajevo,3140095,Europe,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BW,Botswana,false,none,false,Gaborone,2562122,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BV,Bouvet Island,false,none,false,,,Antarctic,0,0,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+BR,Brazil,false,none,false,Brasília,212812405,Americas,8,8,0,1,false,9,32,12,14,0,10,22,1,US State Department,true,true,true
+IO,British Indian Ocean Territory,false,none,false,Diego Garcia,,Africa,2,2,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+VG,British Virgin Islands,false,none,false,Road Town,39732,Americas,2,2,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BN,Brunei,false,none,false,Bandar Seri Begawan,466330,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BG,Bulgaria,false,none,false,Sofia,6433302,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BF,Burkina Faso,false,none,false,Ouagadougou,24074580,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BI,Burundi,false,none,false,Gitega,14390003,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+KH,Cambodia,false,none,false,Phnom Penh,17847982,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CM,Cameroon,false,none,false,Yaoundé,29879337,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CA,Canada,false,none,false,Ottawa,41651653,Americas,9,9,1,2,false,8,4,4,0,0,4,8,1,US State Department,true,true,true
+CV,Cape Verde,false,none,false,Praia,527326,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BQ,Caribbean Netherlands,false,none,false,Kralendijk,,Americas,8,8,0,3,false,0,0,0,0,0,0,0,0,,false,false,false
+KY,Cayman Islands,false,none,false,George Town,75844,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CF,Central African Republic,false,none,false,Bangui,5513282,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TD,Chad,false,none,false,N'Djamena,21003705,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CL,Chile,false,none,false,Santiago,19859921,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CN,China,false,none,false,Beijing,1406585000,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CX,Christmas Island,false,none,false,Flying Fish Cove,,Oceania,1,1,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+CC,Cocos (Keeling) Islands,false,none,false,West Island,,Oceania,2,2,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+CO,Colombia,false,none,false,Bogotá,53425635,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+KM,Comoros,false,none,false,Moroni,882847,Africa,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CG,Congo,false,none,false,Brazzaville,6484437,Africa,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CK,Cook Islands,false,none,false,Avarua,,Oceania,8,8,0,2,false,0,0,0,0,0,0,0,0,,false,false,false
+CR,Costa Rica,false,none,false,San José,5152950,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+HR,Croatia,false,none,false,Zagreb,3876200,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CU,Cuba,false,none,false,Havana,10937203,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CW,Curaçao,false,none,false,Willemstad,156263,Americas,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,false,false,false
+CY,Cyprus,false,none,false,Nicosia,1370754,Europe,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CZ,Czechia,false,none,false,Prague,10886878,Europe,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+DK,Denmark,false,none,false,Copenhagen,6009169,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+DJ,Djibouti,false,none,false,Djibouti,1184076,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+DM,Dominica,false,none,false,Roseau,65871,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+DO,Dominican Republic,false,none,false,Santo Domingo,11520487,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CD,DR Congo,false,none,false,Kinshasa,112832473,Africa,8,8,0,5,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+EC,Ecuador,false,none,false,Quito,18289896,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+EG,Egypt,false,none,false,Cairo,118365995,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SV,El Salvador,false,none,false,San Salvador,6365503,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+GQ,Equatorial Guinea,false,none,false,Malabo,1938431,Africa,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+ER,Eritrea,false,none,false,Asmara,3607003,Africa,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+EE,Estonia,false,none,false,Tallinn,1366475,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SZ,Eswatini,false,none,false,Lobamba,1256174,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+ET,Ethiopia,false,none,false,Addis Ababa,135472051,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+FK,Falkland Islands,false,none,false,Stanley,,Americas,8,8,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+FO,Faroe Islands,false,none,false,Tórshavn,54900,Europe,8,8,0,2,false,0,0,0,0,0,0,0,0,,false,false,false
+FJ,Fiji,false,none,false,Suva,933154,Oceania,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+FI,Finland,false,none,false,Helsinki,5646436,Europe,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+FR,France,false,none,false,Paris,68720337,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+GF,French Guiana,false,none,false,Cayenne,,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,false,false,false
+PF,French Polynesia,false,none,false,Papeetē,282465,Oceania,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,false,false,false
+TF,French Southern and Antarctic Lands,false,none,false,Port-aux-Français,,Antarctic,4,4,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+GA,Gabon,false,none,false,Libreville,2593130,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+GM,Gambia,false,none,false,Banjul,2822093,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+GE,Georgia,false,none,false,Tbilisi,3935766,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+DE,Germany,false,none,false,Berlin,83491249,Europe,8,8,0,1,false,4,24,24,0,0,10,22,1,US State Department,true,true,true
+GH,Ghana,false,none,false,Accra,35064272,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+GI,Gibraltar,false,none,false,Gibraltar,40126,Europe,7,7,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+GR,Greece,false,none,false,Athens,10413962,Europe,8,8,1,1,false,5,42,30,12,0,4,8,1,US State Department,true,true,true
+GL,Greenland,false,none,false,Nuuk,56831,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,false,false,false
+GD,Grenada,false,none,false,St. George's,117303,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+GP,Guadeloupe,false,none,false,Basse-Terre,,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,false,false,false
+GU,Guam,false,none,false,Hagåtña,168999,Oceania,8,8,0,3,false,0,0,0,0,0,0,0,0,,true,true,true
+GT,Guatemala,false,none,false,Guatemala City,18687881,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+GG,Guernsey,false,none,false,St. Peter Port,,Europe,7,7,0,3,false,0,0,0,0,0,0,0,0,,false,false,false
+GN,Guinea,false,none,false,Conakry,15099727,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+GW,Guinea-Bissau,false,none,false,Bissau,2249515,Africa,7,7,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+GY,Guyana,false,none,false,Georgetown,835986,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+HT,Haiti,false,none,false,Port-au-Prince,11906095,Americas,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+HM,Heard Island and McDonald Islands,false,none,false,,,Antarctic,0,0,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+HN,Honduras,false,none,false,Tegucigalpa,11005850,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+HK,Hong Kong,false,none,false,City of Victoria,7498900,Asia,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+HU,Hungary,false,none,false,Budapest,9514251,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+IS,Iceland,false,none,false,Reykjavik,392404,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+IN,India,false,none,false,New Delhi,1463865525,Asia,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+ID,Indonesia,false,none,false,Jakarta,285721236,Asia,8,8,0,1,false,1,0,0,0,0,0,0,1,US State Department,true,true,true
+IR,Iran,false,none,false,Tehran,92417681,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+IQ,Iraq,false,none,false,Baghdad,47020774,Asia,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+IE,Ireland,false,none,false,Dublin,5484367,Europe,10,8,1,2,false,7,14,10,2,0,0,8,1,US State Department,true,true,true
+IM,Isle of Man,false,none,false,Douglas,84118,Europe,7,7,0,2,false,0,0,0,0,0,0,0,0,,false,false,false
+IL,Israel,false,none,false,Jerusalem,10122800,Asia,8,8,0,2,false,0,0,0,0,0,0,0,0,,true,false,false
+IT,Italy,false,none,false,Rome,58915656,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CI,Ivory Coast,false,none,false,Yamoussoukro,32711547,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+JM,Jamaica,false,none,false,Kingston,2837077,Americas,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+JP,Japan,false,none,false,Tokyo,123366734,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+JE,Jersey,false,none,false,Saint Helier,,Europe,3,3,0,3,false,0,0,0,0,0,0,0,0,,false,false,false
+JO,Jordan,false,none,false,Amman,11520684,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+KZ,Kazakhstan,false,none,false,Astana,20843754,Asia,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+KE,Kenya,false,none,false,Nairobi,57532493,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+KI,Kiribati,false,none,false,South Tarawa,136488,Oceania,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+XK,Kosovo,false,none,false,Pristina,,Europe,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+KW,Kuwait,false,none,false,Kuwait City,4865298,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+KG,Kyrgyzstan,false,none,false,Bishkek,7343064,Asia,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+LA,Laos,false,none,false,Vientiane,7873046,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+LV,Latvia,false,none,false,Riga,1847785,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+LB,Lebanon,false,none,false,Beirut,5849421,Asia,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+LS,Lesotho,false,none,false,Maseru,2363325,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+LR,Liberia,false,none,false,Monrovia,5731206,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+LY,Libya,false,none,false,Tripoli,7458555,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+LI,Liechtenstein,false,none,false,Vaduz,41024,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+LT,Lithuania,false,none,false,Vilnius,2888774,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+LU,Luxembourg,false,none,false,Luxembourg,686970,Europe,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MO,Macau,false,none,false,,685900,Asia,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MG,Madagascar,false,none,false,Antananarivo,32740678,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MW,Malawi,false,none,false,Lilongwe,22216120,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MY,Malaysia,false,none,false,Kuala Lumpur,35977838,Asia,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MV,Maldives,false,none,false,Malé,529676,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+ML,Mali,false,none,false,Bamako,25198821,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MT,Malta,false,none,false,Valletta,579704,Europe,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MH,Marshall Islands,false,none,false,Majuro,36282,Oceania,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MQ,Martinique,false,none,false,Fort-de-France,,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,false,false,false
+MR,Mauritania,false,none,false,Nouakchott,5315065,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MU,Mauritius,false,none,false,Port Louis,1243741,Africa,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+YT,Mayotte,false,none,false,Mamoudzou,,Africa,8,8,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+MX,Mexico,false,none,false,Mexico City,131946900,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+FM,Micronesia,false,none,false,Palikir,113683,Oceania,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MD,Moldova,false,none,false,Chișinău,2360527,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MC,Monaco,false,none,false,Monaco,38341,Europe,8,8,0,1,false,0,0,0,0,0,0,0,0,,true,false,false
+MN,Mongolia,false,none,false,Ulan Bator,3568978,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+ME,Montenegro,false,none,false,Podgorica,623129,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MS,Montserrat,false,none,false,Plymouth,,Americas,6,6,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MA,Morocco,false,none,false,Rabat,38430770,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MZ,Mozambique,false,none,false,Maputo,35631653,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MM,Myanmar,false,none,false,Naypyidaw,54850648,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+NA,Namibia,false,none,false,Windhoek,3092816,Africa,8,8,0,9,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+NR,Nauru,false,none,false,Yaren,12025,Oceania,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+NP,Nepal,false,none,false,Kathmandu,29618118,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+NL,Netherlands,false,none,false,Amsterdam,18087633,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+NC,New Caledonia,false,none,false,Nouméa,295333,Oceania,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+NZ,New Zealand,false,none,false,Wellington,5324700,Oceania,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+NI,Nicaragua,false,none,false,Managua,7007502,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+NE,Niger,false,none,false,Niamey,27917831,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+NG,Nigeria,false,none,false,Abuja,237527782,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+NU,Niue,false,none,false,Alofi,,Oceania,8,8,0,2,false,0,0,0,0,0,0,0,0,,false,false,false
+NF,Norfolk Island,false,none,false,Kingston,,Oceania,2,2,0,2,false,0,0,0,0,0,0,0,0,,false,false,false
+KP,North Korea,false,none,false,Pyongyang,26571036,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MK,North Macedonia,false,none,false,Skopje,1820909,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MP,Northern Mariana Islands,false,none,false,Saipan,43541,Oceania,8,8,0,3,false,0,0,0,0,0,0,0,0,,true,true,true
+NO,Norway,false,none,false,Oslo,5610870,Europe,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+OM,Oman,false,none,false,Muscat,5494691,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+PK,Pakistan,false,none,false,Islamabad,255219554,Asia,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+PW,Palau,false,none,false,Ngerulmud,17663,Oceania,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+PS,Palestine,false,none,false,Ramallah,5413596,Asia,8,8,0,1,false,0,0,0,0,0,0,0,0,,true,false,false
+PA,Panama,false,none,false,Panama City,4571189,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+PG,Papua New Guinea,false,none,false,Port Moresby,10762817,Oceania,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+PY,Paraguay,false,none,false,Asunción,7013078,Americas,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+PE,Peru,false,none,false,Lima,34576665,Americas,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+PH,Philippines,false,none,false,Manila,116786962,Asia,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+PN,Pitcairn Islands,false,none,false,Adamstown,,Oceania,1,1,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+PL,Poland,false,none,false,Warsaw,36435861,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+PT,Portugal,false,none,false,Lisbon,10804871,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+PR,Puerto Rico,false,none,false,San Juan,3184835,Americas,8,8,0,2,false,0,0,0,0,0,0,0,0,,true,true,true
+QA,Qatar,false,none,false,Doha,2972215,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+RE,Réunion,false,none,false,Saint-Denis,,Africa,8,8,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+RO,Romania,false,none,false,Bucharest,19020271,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+RU,Russia,false,none,false,Moscow,143513328,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+RW,Rwanda,false,none,false,Kigali,14569341,Africa,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+BL,Saint Barthélemy,false,none,false,Gustavia,,Americas,1,1,0,1,false,0,0,0,0,0,0,0,1,US State Department,false,false,false
+SH,"Saint Helena, Ascension and Tristan da Cunha",false,none,false,Jamestown,,Africa,8,8,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+KN,Saint Kitts and Nevis,false,none,false,Basseterre,46922,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+LC,Saint Lucia,false,none,false,Castries,180149,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+MF,Saint Martin,false,none,false,Marigot,24941,Americas,8,8,0,1,false,0,0,0,0,0,0,0,0,,true,true,true
+PM,Saint Pierre and Miquelon,false,none,false,Saint-Pierre,,Americas,8,8,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+VC,Saint Vincent and the Grenadines,false,none,false,Kingstown,99924,Americas,5,5,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+WS,Samoa,false,none,false,Apia,219306,Oceania,5,5,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SM,San Marino,false,none,false,City of San Marino,34109,Europe,8,8,0,1,false,0,0,0,0,0,0,0,0,,true,false,false
+ST,São Tomé and Príncipe,false,none,false,São Tomé,240254,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SA,Saudi Arabia,false,none,false,Riyadh,36973555,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SN,Senegal,false,none,false,Dakar,18931966,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+RS,Serbia,false,none,false,Belgrade,6549143,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SC,Seychelles,false,none,false,Victoria,122730,Africa,8,8,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SL,Sierra Leone,false,none,false,Freetown,8819794,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SG,Singapore,false,none,false,Singapore,6111175,Asia,8,8,0,4,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SX,Sint Maarten,false,none,false,Philipsburg,43923,Americas,7,7,0,3,false,0,0,0,0,0,0,0,1,US State Department,false,false,false
+SK,Slovakia,false,none,false,Bratislava,5413813,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SI,Slovenia,false,none,false,Ljubljana,2130986,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SB,Solomon Islands,false,none,false,Honiara,838645,Oceania,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SO,Somalia,false,none,false,Mogadishu,19654739,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+ZA,South Africa,false,none,false,Pretoria,64747319,Africa,5,5,0,11,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+GS,South Georgia,false,none,false,King Edward Point,,Antarctic,3,3,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+KR,South Korea,false,none,false,Seoul,51684564,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SS,South Sudan,false,none,false,Juba,12188788,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+ES,Spain,false,none,false,Madrid,49355143,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+LK,Sri Lanka,false,none,false,Colombo,21756000,Asia,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SD,Sudan,false,none,false,Khartoum,51662147,Africa,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SR,Suriname,false,none,false,Paramaribo,639850,Americas,10,10,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SJ,Svalbard and Jan Mayen,false,none,false,Longyearbyen,,Europe,7,7,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+SE,Sweden,false,none,false,Stockholm,10596620,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+CH,Switzerland,false,none,false,Bern,9092436,Europe,8,8,0,4,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+SY,Syria,false,none,false,Damascus,25620427,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TW,Taiwan,false,none,false,Taipei,,Asia,5,5,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TJ,Tajikistan,false,none,false,Dushanbe,10786734,Asia,8,8,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TZ,Tanzania,false,none,false,Dodoma,70545865,Africa,5,5,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TH,Thailand,false,none,false,Bangkok,71619863,Asia,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TL,Timor-Leste,false,none,false,Dili,1418517,Asia,5,5,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TG,Togo,false,none,false,Lomé,8591626,Africa,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TK,Tokelau,false,none,false,Fakaofo,,Oceania,3,3,0,3,false,0,0,0,0,0,0,0,0,,false,false,false
+TO,Tonga,false,none,false,Nuku'alofa,103742,Oceania,5,5,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TT,Trinidad and Tobago,false,none,false,Port of Spain,1367764,Americas,5,5,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TN,Tunisia,false,none,false,Tunis,12348573,Africa,5,5,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TR,Türkiye,false,none,false,Ankara,85878556,Asia,5,5,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TM,Turkmenistan,false,none,false,Ashgabat,7618847,Asia,5,5,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TC,Turks and Caicos Islands,false,none,false,Cockburn Town,46855,Americas,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+TV,Tuvalu,false,none,false,Funafuti,9492,Oceania,5,5,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+UG,Uganda,false,none,false,Kampala,51384894,Africa,5,5,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+UA,Ukraine,false,none,false,Kyiv,38980376,Europe,5,5,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+AE,United Arab Emirates,false,none,false,Abu Dhabi,11513149,Asia,9,9,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+GB,United Kingdom,false,none,false,London,69487000,Europe,8,8,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+US,United States,false,none,false,Washington D.C.,341784857,Americas,5,5,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+UM,United States Minor Outlying Islands,false,none,false,,,Americas,2,2,0,1,false,0,0,0,0,0,0,0,0,,true,true,true
+VI,United States Virgin Islands,false,none,false,Charlotte Amalie,103792,Americas,5,5,0,1,false,0,0,0,0,0,0,0,0,,true,true,true
+UY,Uruguay,false,none,false,Montevideo,3384688,Americas,5,5,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+UZ,Uzbekistan,false,none,false,Tashkent,37053428,Asia,5,5,0,2,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+VU,Vanuatu,false,none,false,Port Vila,335169,Oceania,5,5,0,3,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+VA,Vatican City,false,none,false,Vatican City,,Europe,1,1,0,2,false,0,0,0,0,0,0,0,0,,false,false,false
+VE,Venezuela,false,none,false,Caracas,28516896,Americas,5,5,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+VN,Vietnam,false,none,false,Hanoi,101598527,Asia,5,5,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+WF,Wallis and Futuna,false,none,false,Mata-Utu,,Oceania,5,5,0,1,false,0,0,0,0,0,0,0,0,,false,false,false
+EH,Western Sahara,false,none,false,El Aaiún,,Africa,8,8,0,3,false,0,0,0,0,0,0,0,0,,true,false,false
+YE,Yemen,false,none,false,Sana'a,41773878,Asia,5,5,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+ZM,Zambia,false,none,false,Lusaka,21913874,Africa,5,5,0,1,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
+ZW,Zimbabwe,false,none,false,Harare,16950795,Africa,5,5,0,15,false,0,0,0,0,0,0,0,1,US State Department,true,true,true
