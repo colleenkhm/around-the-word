@@ -31,6 +31,7 @@ class SectionPalette {
   final SectionColors advisory;
   final SectionColors language;
   final SectionColors norms;
+  final SectionColors holidays;
 
   /// Additional Resources' accent.
   final SectionColors resources;
@@ -50,25 +51,26 @@ class SectionPalette {
     required this.advisory,
     required this.language,
     required this.norms,
+    required this.holidays,
     required this.resources,
     required this.header,
     required this.stub,
   });
 
-  /// All eight section accents in a fixed order, for widgets that want a
+  /// All nine section accents in a fixed order, for widgets that want a
   /// color cycle rather than one fixed section color — e.g. each month
   /// square in [BestTimesSection] gets the next one, wrapping around.
   List<SectionColors> get cycle =>
-      [visa, cities, borderCountries, times, advisory, language, norms, resources];
+      [visa, cities, borderCountries, times, advisory, language, norms, holidays, resources];
 
-  /// Maps [colors] (most-prominent first) onto the eight sections,
-  /// cycling if fewer than eight.
+  /// Maps [colors] (most-prominent first) onto the nine sections,
+  /// cycling if fewer than nine.
   factory SectionPalette.fromFlagColors(List<Color> colors) {
     assert(
       colors.isNotEmpty,
       'SectionPalette.fromFlagColors needs at least one color',
     );
-    final ordered = List.generate(8, (i) => colors[i % colors.length]);
+    final ordered = List.generate(9, (i) => colors[i % colors.length]);
     final sectionColors = ordered.map(_colorsFor).toList();
     return SectionPalette(
       visa: sectionColors[0],
@@ -78,7 +80,8 @@ class SectionPalette {
       advisory: sectionColors[4],
       language: sectionColors[5],
       norms: sectionColors[6],
-      resources: sectionColors[7],
+      holidays: sectionColors[7],
+      resources: sectionColors[8],
       header: _colorsFor(_deepen(_headerSource(colors)), toneDown: false),
       stub: _colorsFor(_midtone(_headerSource(colors)), toneDown: false),
     );
@@ -162,6 +165,7 @@ class SectionPalette {
     advisory: _colorsFor(const Color(0xFFD8EDE0)),
     language: _colorsFor(const Color(0xFFFAE0E4)),
     norms: _colorsFor(const Color(0xFFFDECD8)),
+    holidays: _colorsFor(const Color(0xFFFDF3D0)),
     resources: _colorsFor(const Color(0xFFD8EDF8)),
     header: _colorsFor(_deepen(const Color(0xFFD8EDF8)), toneDown: false),
     stub: _colorsFor(_midtone(const Color(0xFFD8EDF8)), toneDown: false),

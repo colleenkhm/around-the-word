@@ -23,6 +23,7 @@ import '../widgets/country_page/additional_resources_section.dart';
 import '../widgets/country_page/best_times_section.dart';
 import '../widgets/country_page/cities_section.dart';
 import '../widgets/country_page/country_header.dart';
+import '../widgets/country_page/holidays_section.dart';
 import '../widgets/country_page/language_pair_section.dart';
 import '../widgets/country_page/border_countries_section.dart';
 import '../widgets/country_page/paper_texture.dart';
@@ -50,6 +51,7 @@ enum _Section {
   cities,
   borderCountries,
   times,
+  holidays,
   advisory,
   language,
   norms,
@@ -260,6 +262,7 @@ class _CountryHeaderPreviewScreenState
                             _citiesSection(bundle),
                             _borderCountriesSection(bundle, trip.countries),
                             _timesSection(bundle),
+                            _holidaysSection(bundle),
                             _advisorySection(bundle),
                             _languageSection(bundle),
                             _normsSection(bundle),
@@ -332,6 +335,26 @@ class _CountryHeaderPreviewScreenState
       expanded: _expanded[_Section.times]!,
       onToggle: () => _toggle(_Section.times),
       contentBuilder: (_) => BestTimesSection(bestTimes: bestTimes, palette: _palette.cycle),
+    );
+  }
+
+  Widget _holidaysSection(CountryBundle bundle) {
+    final holidays = bundle.holidays;
+    final colors = _palette.holidays;
+    return AccordionSection(
+      title: 'Holidays',
+      tint: colors.tint,
+      textColor: colors.textColor,
+      hasData: holidays.isNotEmpty,
+      meta: holidays.isEmpty
+          ? null
+          : '${holidays.length} holiday${holidays.length == 1 ? '' : 's'}',
+      expanded: _expanded[_Section.holidays]!,
+      onToggle: () => _toggle(_Section.holidays),
+      contentBuilder: (_) => HolidaysSection(
+        holidays: holidays,
+        accent: colors.accentOnWhite,
+      ),
     );
   }
 

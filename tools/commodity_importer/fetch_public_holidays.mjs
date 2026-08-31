@@ -13,9 +13,19 @@
 // Fetches the current calendar year plus the next one (so a holiday late
 // in the year doesn't look stale for the first ~11 months of the next),
 // for every country Nager.Date covers that also exists in our `countries`
-// table (204/250 at last check — mostly independent UN member states;
-// most non-covered rows are territories/dependencies Nager.Date doesn't
-// track, a real source-coverage gap, not a bug).
+// table.
+//
+// Coverage verified 2026-08-31: 204/250 of our countries have data, an
+// exact 1:1 match against Nager.Date's own `AvailableCountries` response
+// (every country it lists, we have rows for; nothing we have that it
+// doesn't list) — a confirmed real source-coverage gap, not a matching
+// bug. The 46 missing are a mix of small/uninhabited territories (thin
+// coverage, expected) and real populated countries Nager.Date just
+// doesn't track (India, Israel, Iran, Pakistan, Saudi Arabia, most of the
+// Gulf, several Central/South Asian and Southeast Asian countries, Taiwan,
+// Kosovo, Palestine — a genuine content gap, not fixable by re-running
+// this script). Full breakdown in whereabout-data-architecture.md's
+// External Data Sources section.
 //
 // `is_national`: Nager's `global` field (true = whole country, false =
 // specific subdivisions only, listed in `counties`). Deliberately NOT a

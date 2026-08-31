@@ -122,6 +122,35 @@ class CountryFacts {
   }
 }
 
+/// A single "most businesses closed" date — commodity, Tier A (Nager.Date).
+/// Distinct from [CountryGuide.festivals], which stays hand-curated named
+/// events — see CLAUDE.md's External Data Sources note. Displayed as
+/// "Holidays," never "Events" or "Festivals."
+class PublicHoliday {
+  final DateTime date;
+  final String name;
+  final String localName;
+
+  /// False = regional/subdivision-specific, not observed nationwide.
+  final bool isNational;
+
+  const PublicHoliday({
+    required this.date,
+    required this.name,
+    required this.localName,
+    required this.isNational,
+  });
+
+  factory PublicHoliday.fromJson(Map<String, dynamic> json) {
+    return PublicHoliday(
+      date: DateTime.parse(json['date'] as String),
+      name: json['name'] as String,
+      localName: json['localName'] as String,
+      isNational: json['isNational'] as bool,
+    );
+  }
+}
+
 class City {
   final String id;
   final String name;
@@ -186,6 +215,7 @@ class CountryBundle {
   final Country country;
   final CountryFacts facts;
   final List<City> cities;
+  final List<PublicHoliday> holidays;
   final Leader? leader;
   final CountryGuide guide;
   final List<PointOfInterest> pointsOfInterest;
@@ -203,6 +233,7 @@ class CountryBundle {
     required this.country,
     required this.facts,
     required this.cities,
+    this.holidays = const [],
     this.leader,
     required this.guide,
     required this.pointsOfInterest,
@@ -231,6 +262,9 @@ class CountryBundle {
       facts: CountryFacts.fromJson(json['facts'] as Map<String, dynamic>),
       cities: (json['cities'] as List<dynamic>? ?? [])
           .map((e) => City.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      holidays: (json['holidays'] as List<dynamic>? ?? [])
+          .map((e) => PublicHoliday.fromJson(e as Map<String, dynamic>))
           .toList(),
       leader: json['leader'] == null
           ? null
