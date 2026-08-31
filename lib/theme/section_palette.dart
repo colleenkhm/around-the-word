@@ -20,9 +20,12 @@ class SectionColors {
   });
 }
 
-/// The eight section accents plus the ticket stub's own accent —
-/// generated from a country's actual flag colors. See HANDOFF.md for the
-/// full decision history (why per-country, why not pastel, why toned).
+/// The nine accordion row accents plus the ticket header/stub's own
+/// accent — generated from a country's actual flag colors, two tones
+/// alternating down the real row order (see [fromFlagColors]). See
+/// HANDOFF.md for the full decision history (why per-country, why not
+/// pastel, why toned, why two alternating tones rather than one per
+/// section).
 class SectionPalette {
   final SectionColors visa;
   final SectionColors cities;
@@ -57,34 +60,82 @@ class SectionPalette {
     required this.stub,
   });
 
-  /// All nine section accents in a fixed order, for widgets that want a
-  /// color cycle rather than one fixed section color — e.g. each month
-  /// square in [BestTimesSection] gets the next one, wrapping around.
-  List<SectionColors> get cycle =>
-      [visa, cities, borderCountries, times, advisory, language, norms, holidays, resources];
+  /// The accordion's real row order top-to-bottom (see
+  /// `CountryHeaderPreviewScreen.build`'s section list) — the order that
+  /// actually matters for "do adjacent rows alternate," which is *not*
+  /// the constructor's param order above (holidays sits right after times
+  /// on screen, not near the end). [fromFlagColors] assigns by this order
+  /// specifically so alternation is correct on screen, not just in the
+  /// param list.
+  List<SectionColors> get _rowOrder =>
+      [visa, cities, borderCountries, times, holidays, advisory, language, norms, resources];
 
-  /// Maps [colors] (most-prominent first) onto the nine sections,
-  /// cycling if fewer than nine.
+  /// All nine section accents in real on-screen row order, for widgets
+  /// that want a color cycle rather than one fixed section color — e.g.
+  /// each month square in [BestTimesSection] gets the next one, wrapping
+  /// around.
+  List<SectionColors> get cycle => _rowOrder;
+
+  /// Two tones only, alternating strictly down the real row order — not
+  /// one color per section. A country's flag can have very few genuinely
+  /// distinct hues (or several near-duplicate swatches at different
+  /// lightness bands from the same hue), and assigning a fixed slot per
+  /// *section* rather than per *row position* let two adjacent rows land
+  /// on near-identical colors (e.g. "When to Visit" and "Holidays" both
+  /// maroon back to back) — flagged directly against a real screenshot.
+  /// Picking just two colors and alternating by row-order parity makes
+  /// that structurally impossible instead of merely unlikely.
   factory SectionPalette.fromFlagColors(List<Color> colors) {
     assert(
       colors.isNotEmpty,
       'SectionPalette.fromFlagColors needs at least one color',
     );
-    final ordered = List.generate(9, (i) => colors[i % colors.length]);
-    final sectionColors = ordered.map(_colorsFor).toList();
+    final (colorA, colorB) = _alternatingPair(colors);
+    final tintA = _colorsFor(colorA);
+    final tintB = _colorsFor(colorB);
+    // Real row order: visa, cities, borderCountries, times, holidays,
+    // advisory, language, norms, resources — even/odd position in *that*
+    // order, then mapped back onto the named fields below.
     return SectionPalette(
-      visa: sectionColors[0],
-      cities: sectionColors[1],
-      borderCountries: sectionColors[2],
-      times: sectionColors[3],
-      advisory: sectionColors[4],
-      language: sectionColors[5],
-      norms: sectionColors[6],
-      holidays: sectionColors[7],
-      resources: sectionColors[8],
+      visa: tintA,
+      cities: tintB,
+      borderCountries: tintA,
+      times: tintB,
+      holidays: tintA,
+      advisory: tintB,
+      language: tintA,
+      norms: tintB,
+      resources: tintA,
       header: _colorsFor(_deepen(_headerSource(colors)), toneDown: false),
       stub: _colorsFor(_midtone(_headerSource(colors)), toneDown: false),
     );
+  }
+
+  // Picks two colors from `colors` (most-prominent first) that read as
+  // genuinely different — different enough in hue or lightness that
+  // alternating between them is visible, not just technically two
+  // different Color values. Falls back to a lightened variant of the
+  // first color if every extracted swatch is too close to it (a flag
+  // that's functionally monochrome plus white/black), so alternation
+  // still has something to alternate between.
+  static (Color, Color) _alternatingPair(List<Color> colors) {
+    final first = colors.first;
+    for (final candidate in colors.skip(1)) {
+      if (_readsDistinct(first, candidate)) return (first, candidate);
+    }
+    final hsl = HSLColor.fromColor(first);
+    final lightened = hsl.withLightness((hsl.lightness + 0.35).clamp(0.0, 1.0)).toColor();
+    return (first, lightened);
+  }
+
+  static bool _readsDistinct(Color a, Color b) {
+    final ha = HSLColor.fromColor(a);
+    final hb = HSLColor.fromColor(b);
+    final hueDiff = (ha.hue - hb.hue).abs();
+    final hueDistance = hueDiff > 180 ? 360 - hueDiff : hueDiff;
+    // Hue comparison alone misses white-vs-color (hue is meaningless at
+    // zero saturation) — a lightness gap catches that case too.
+    return hueDistance > 40 || (ha.lightness - hb.lightness).abs() > 0.25;
   }
 
   // The masthead/stub want a real hue to deepen, not just the single most
@@ -156,16 +207,19 @@ class SectionPalette {
     return HSLColor.fromAHSL(1.0, hsl.hue, 0.55, 0.32).toColor();
   }
 
-  /// Loading-state/extraction-failure fallback.
+  /// Loading-state/extraction-failure fallback — same two-tone, real-row-
+  /// order alternation as [fromFlagColors], not nine independent picks
+  /// (the old fixed set had this same adjacent-duplicate problem: cities/
+  /// borderCountries and times/holidays each repeated the same hex).
   static final fallback = SectionPalette(
     visa: _colorsFor(const Color(0xFFD8EDF8)),
-    cities: _colorsFor(const Color(0xFFE8E0F5)),
-    borderCountries: _colorsFor(const Color(0xFFE8E0F5)),
+    cities: _colorsFor(const Color(0xFFFDF3D0)),
+    borderCountries: _colorsFor(const Color(0xFFD8EDF8)),
     times: _colorsFor(const Color(0xFFFDF3D0)),
-    advisory: _colorsFor(const Color(0xFFD8EDE0)),
-    language: _colorsFor(const Color(0xFFFAE0E4)),
-    norms: _colorsFor(const Color(0xFFFDECD8)),
-    holidays: _colorsFor(const Color(0xFFFDF3D0)),
+    holidays: _colorsFor(const Color(0xFFD8EDF8)),
+    advisory: _colorsFor(const Color(0xFFFDF3D0)),
+    language: _colorsFor(const Color(0xFFD8EDF8)),
+    norms: _colorsFor(const Color(0xFFFDF3D0)),
     resources: _colorsFor(const Color(0xFFD8EDF8)),
     header: _colorsFor(_deepen(const Color(0xFFD8EDF8)), toneDown: false),
     stub: _colorsFor(_midtone(const Color(0xFFD8EDF8)), toneDown: false),
