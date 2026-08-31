@@ -13,10 +13,10 @@ import '../models/language_content.dart';
 /// `CountryHeaderPreviewScreen._load()`.
 ///
 /// First pass — only fetches what the accordion UI actually renders today
-/// (facts, cities, best times, practical norms, US advisories/visa, one
-/// featured word). Points of interest, tips, phrases, categories aren't
-/// shown anywhere yet, so they're left empty rather than fetched unused.
-/// See HANDOFF.md for the full list of what's not wired yet.
+/// (facts, cities, public holidays, best times, practical norms, US
+/// advisories/visa, one featured word). Points of interest, tips, phrases,
+/// categories aren't shown anywhere yet, so they're left empty rather than
+/// fetched unused. See HANDOFF.md for the full list of what's not wired yet.
 class SupabaseCountryRepository {
   SupabaseClient get _client => Supabase.instance.client;
 
@@ -37,6 +37,12 @@ class SupabaseCountryRepository {
         .maybeSingle();
 
     final cityRows = await _client.from('cities').select().eq('country_id', countryId);
+
+    final holidayRows = await _client
+        .from('public_holidays')
+        .select()
+        .eq('country_id', countryId)
+        .order('date');
 
     final guideRow = await _client
         .from('country_guides')
@@ -70,6 +76,7 @@ class SupabaseCountryRepository {
       }),
       facts: CountryFacts.fromJson(_factsJson(factsRow)),
       cities: cityRows.map((r) => City.fromJson(_cityJson(r))).toList(),
+      holidays: holidayRows.map((r) => PublicHoliday.fromJson(_holidayJson(r))).toList(),
       guide: guide,
       pointsOfInterest: const [],
       tips: const [],
@@ -151,6 +158,13 @@ class SupabaseCountryRepository {
       'borderingCountryCodes': (row['neighbors'] as List?)?.cast<String>() ?? [],
     };
   }
+
+  Map<String, dynamic> _holidayJson(Map<String, dynamic> row) => {
+    'date': row['date'],
+    'name': row['name'],
+    'localName': row['local_name'],
+    'isNational': row['is_national'],
+  };
 
   Map<String, dynamic> _cityJson(Map<String, dynamic> row) => {
     'id': row['id'],
