@@ -68,7 +68,14 @@ class SectionPalette {
       colors.isNotEmpty,
       'SectionPalette.fromFlagColors needs at least one color',
     );
-    final ordered = List.generate(8, (i) => colors[i % colors.length]);
+    final headerSource = _headerSource(colors);
+    // The first section heading sits directly under the stub, which is a
+    // midtone of headerSource — if the section cycle also starts on
+    // headerSource, that heading (toned but same hue) reads as one
+    // blended block with the stub above it instead of a new section. Push
+    // headerSource later in the cycle so a different flag color leads.
+    final sectionSource = _withoutLeading(colors, headerSource);
+    final ordered = List.generate(8, (i) => sectionSource[i % sectionSource.length]);
     final sectionColors = ordered.map(_colorsFor).toList();
     return SectionPalette(
       visa: sectionColors[0],
@@ -79,9 +86,17 @@ class SectionPalette {
       language: sectionColors[5],
       norms: sectionColors[6],
       resources: sectionColors[7],
-      header: _colorsFor(_deepen(_headerSource(colors)), toneDown: false),
-      stub: _colorsFor(_midtone(_headerSource(colors)), toneDown: false),
+      header: _colorsFor(_deepen(headerSource), toneDown: false),
+      stub: _colorsFor(_midtone(headerSource), toneDown: false),
     );
+  }
+
+  // Rotates [leading] to the end of [colors] if it's currently first,
+  // so it doesn't head the section cycle. No-op if there's nothing else
+  // to lead with, or [leading] isn't first to begin with.
+  static List<Color> _withoutLeading(List<Color> colors, Color leading) {
+    if (colors.length <= 1 || colors.first != leading) return colors;
+    return [...colors.skip(1), colors.first];
   }
 
   // The masthead/stub want a real hue to deepen, not just the single most
