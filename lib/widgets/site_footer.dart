@@ -13,7 +13,7 @@ class SiteFooter extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 24),
       child: Center(
         child: Text(
-          '© 2026 Whereabout — placeholder',
+          '© 2026 Forin — placeholder',
           style: TextStyle(
             fontFamily: AccordionTheme.dmMono,
             fontSize: 10.5,

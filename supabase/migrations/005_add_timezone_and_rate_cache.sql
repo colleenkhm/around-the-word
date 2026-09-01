@@ -1,4 +1,4 @@
--- Whereabout: timezone (commodity) + exchange rate cache (server-side only)
+-- Forin: timezone (commodity) + exchange rate cache (server-side only)
 
 -- Timezone: commodity, same tier as capital/currency/hemisphere. IANA name
 -- (e.g. "Europe/Athens") lets the Flutter client compute correct local

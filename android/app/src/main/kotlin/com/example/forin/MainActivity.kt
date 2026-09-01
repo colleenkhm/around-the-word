@@ -1,4 +1,4 @@
-package com.example.whereabout
+package com.example.forin
 
 import io.flutter.embedding.android.FlutterActivity
 

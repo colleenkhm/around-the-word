@@ -1,4 +1,4 @@
-// Whereabout: leadership importer (Tier A, added 2026-08-26)
+// Forin: leadership importer (Tier A, added 2026-08-26)
 //
 // Fills country_leadership from Wikidata, batched to stay well inside
 // WDQS's timeout. Two passes, not one — confirmed empirically 2026-08-26:
@@ -13,7 +13,7 @@
 // Approach:
 //   - wdt:P297 maps ISO 3166-1 alpha-2 -> Wikidata QID (no crosswalk table
 //     needed — sidesteps the "identity/linking mismatch" discrepancy class
-//     documented in whereabout-data-architecture.md).
+//     documented in forin-data-architecture.md (docs/forin-data-architecture.md from repo root)).
 //   - Head of government (P6) is primary; head of state (P35) is the
 //     fallback for countries with no separate head of government (e.g.
 //     absolute monarchies).
@@ -53,7 +53,7 @@ const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 const DRY_RUN = process.argv.includes('--dry-run');
 const LEADER_CHUNK_SIZE = 80; // country->leader pass, empirically ~1s at this size
 const POSITION_CHUNK_SIZE = 80; // leader->positions pass, keyed on QIDs directly
-const USER_AGENT = 'whereabout-commodity-importer/0.1 (leadership fetch; contact via project owner)';
+const USER_AGENT = 'forin-commodity-importer/0.1 (leadership fetch; contact via project owner)';
 const FETCH_TIMEOUT_MS = 30_000;
 const MAX_RETRIES = 2;
 

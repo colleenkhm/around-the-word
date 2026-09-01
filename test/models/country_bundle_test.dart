@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:whereabout/models/country_bundle.dart';
-import 'package:whereabout/models/country_guide.dart';
-import 'package:whereabout/models/language_content.dart';
-import 'package:whereabout/models/point_of_interest.dart';
+import 'package:forin/models/country_bundle.dart';
+import 'package:forin/models/country_guide.dart';
+import 'package:forin/models/language_content.dart';
+import 'package:forin/models/point_of_interest.dart';
 
 /// Parses the real Costa Rica mock bundle (assets/data/bundles/cr.json) —
 /// the same file the app will eventually load via rootBundle — to catch

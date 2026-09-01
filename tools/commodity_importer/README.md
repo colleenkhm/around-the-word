@@ -86,5 +86,5 @@ the country-page header's small-type native name, not itself a
 
 `fetch_cities.py` → `cities` table columns exactly.
 
-See whereabout-data-architecture.md's "Schema" section for what each
+See forin-data-architecture.md (docs/forin-data-architecture.md from repo root)'s "Schema" section for what each
 column means.

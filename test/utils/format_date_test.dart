@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:whereabout/utils/format_date.dart';
+import 'package:forin/utils/format_date.dart';
 
 void main() {
   test('formats as "Mon D, YYYY"', () {

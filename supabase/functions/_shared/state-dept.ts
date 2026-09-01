@@ -1,4 +1,4 @@
-// Whereabout: shared helpers for cadataapi.state.gov-fetching Edge
+// Forin: shared helpers for cadataapi.state.gov-fetching Edge
 // Functions (`refresh-state-dept-data`, `discover-state-dept-codes`).
 // Factored out 2026-08-25 so the two functions can't drift apart on how a
 // response gets cleaned or a country name gets matched — see CLAUDE.md's
@@ -8,7 +8,7 @@
 export const BASE_URL = "https://cadataapi.state.gov/api";
 
 export const HEADERS = {
-  "User-Agent": "Mozilla/5.0 (compatible; WhereaboutApp/1.0; personal travel app data refresh)",
+  "User-Agent": "Mozilla/5.0 (compatible; ForinApp/1.0; personal travel app data refresh)",
   "Accept": "application/json",
 };
 

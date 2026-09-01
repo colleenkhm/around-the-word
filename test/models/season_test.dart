@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:whereabout/models/country_guide.dart';
+import 'package:forin/models/country_guide.dart';
 
 void main() {
   group('Season.covers', () {

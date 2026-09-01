@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:whereabout/main.dart';
+import 'package:forin/main.dart';
 
 void main() {
   testWidgets(
     'Destination search -> country page',
     (WidgetTester tester) async {
-      await tester.pumpWidget(const WhereaboutApp());
+      await tester.pumpWidget(const ForinApp());
       await tester.pumpAndSettle(); // reference data loads async
 
       // Destination screen: search field filters the full country list.
-      expect(find.text('Where are you going?'), findsOneWidget);
+      expect(find.text('Tell me about...'), findsOneWidget);
       await tester.enterText(find.byType(TextField), 'Costa');
       await tester.pumpAndSettle();
       expect(find.text('Costa Rica'), findsOneWidget);
@@ -22,7 +22,7 @@ void main() {
       // rather than the old CategorySelectionScreen checkboxes — that flow
       // is still real code (see category_selection_flow_test.dart), just
       // not reachable from here until it's wired as the Language tab.
-      expect(find.text('Where are you going?'), findsNothing);
+      expect(find.text('Tell me about...'), findsNothing);
       expect(find.text('What do you want to learn?'), findsNothing);
 
       // 2026-08-18: the country page is now a collapsible accordion —

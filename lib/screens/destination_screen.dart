@@ -7,12 +7,13 @@ import '../theme/accordion_theme.dart';
 import '../widgets/country_page/dashed_divider.dart';
 import '../widgets/site_footer.dart';
 import '../widgets/site_header.dart';
-import 'about_screen.dart';
 import 'country_header_preview_screen.dart';
 
-/// Screen 1: "Where are you going?" — a search-first destination picker.
+/// Screen 1: "Tell me about..." — a search-first destination picker.
 /// Every country opens the country page, `active` or not — see
 /// `CountryHeaderPreviewScreen`. See HANDOFF.md for history.
+/// Copy changed from "Where are you going?" 2026-08-31, alongside the
+/// Whereabout -> Forin rename.
 class DestinationScreen extends StatefulWidget {
   const DestinationScreen({super.key});
 
@@ -62,11 +63,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
         top: false,
         child: Column(
           children: [
-            SiteHeader(
-              onAboutTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const AboutScreen()),
-              ),
-            ),
+            const SiteHeader(),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -74,7 +71,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                   children: [
                     const SizedBox(height: 32),
                     Text(
-                      'Where are you going?',
+                      'Tell me about...',
                       style: AccordionTheme.pageHeading(31),
                       textAlign: TextAlign.center,
                     ),

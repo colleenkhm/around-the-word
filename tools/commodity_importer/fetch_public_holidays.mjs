@@ -1,4 +1,4 @@
-// Whereabout: public holidays importer (Tier A, added 2026-08-26)
+// Forin: public holidays importer (Tier A, added 2026-08-26)
 //
 // Source: Nager.Date. CLAUDE.md's original note said "build against v4
 // from day one" (v3 EOL 2027-01-31, v4 supposedly shipped 2026-06-30) —
@@ -19,7 +19,7 @@
 //
 // `is_national`: Nager's `global` field (true = whole country, false =
 // specific subdivisions only, listed in `counties`). Deliberately NOT a
-// source for country_guides.festivals — see whereabout-data-architecture.md
+// source for country_guides.festivals — see forin-data-architecture.md (docs/forin-data-architecture.md from repo root)
 // and CLAUDE.md's External Data Sources section for why those stay separate
 // concepts (a bank holiday isn't a named event worth planning a trip
 // around).
@@ -50,7 +50,7 @@ const yearsArg = process.argv.find((a) => a.startsWith('--years='));
 const currentYear = new Date().getFullYear();
 const YEARS = yearsArg ? yearsArg.split('=')[1].split(',').map(Number) : [currentYear, currentYear + 1];
 const BASE_URL = 'https://date.nager.at/api/v3';
-const USER_AGENT = 'whereabout-commodity-importer/0.1 (public holidays fetch)';
+const USER_AGENT = 'forin-commodity-importer/0.1 (public holidays fetch)';
 const REQUEST_DELAY_MS = 150; // polite pacing; Nager.Date has no documented hard rate limit
 
 function sleep(ms) {

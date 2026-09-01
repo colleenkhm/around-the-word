@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:whereabout/models/country.dart';
-import 'package:whereabout/widgets/country_page/border_countries_section.dart';
+import 'package:forin/models/country.dart';
+import 'package:forin/widgets/country_page/border_countries_section.dart';
 
 const _accent = Color(0xFF3A78AA);
 

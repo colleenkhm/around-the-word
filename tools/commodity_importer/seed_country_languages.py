@@ -5,7 +5,7 @@ Supabase project, from data already sitting in `country_facts.official_languages
 
 **Deliberate exception to CLAUDE.md's "language content is hand-curated, API
 or not" rule** — confirmed 2026-08-26. `country_languages` was originally
-scoped as fully curated (see whereabout-data-architecture.md's "Curated:
+scoped as fully curated (see forin-data-architecture.md (docs/forin-data-architecture.md from repo root)'s "Curated:
 language content" section), but the base fact "these languages are spoken
 here" is genuinely commodity data, already fetched and sitting unused in
 `country_facts`. What stays hand-curated is `usage_note` (regional nuance,
