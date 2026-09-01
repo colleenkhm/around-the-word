@@ -16,7 +16,6 @@ import '../state/trip_selection.dart';
 import '../theme/accordion_theme.dart';
 import '../theme/section_palette.dart';
 import '../utils/flag_palette.dart' show extractFlagBaseColors;
-import 'about_screen.dart';
 import 'destination_screen.dart';
 import '../widgets/country_page/accordion_section.dart';
 import '../widgets/country_page/additional_resources_section.dart';
@@ -224,11 +223,6 @@ class _CountryHeaderPreviewScreenState
                           builder: (context) => const DestinationScreen(),
                         ),
                         (route) => false,
-                      ),
-                      onAboutTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const AboutScreen(),
-                        ),
                       ),
                       // Matches the masthead below.
                       backgroundColor: _palette.header.tint,

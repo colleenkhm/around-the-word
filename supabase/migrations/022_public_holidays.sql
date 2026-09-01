@@ -1,5 +1,5 @@
--- Whereabout: public holidays ("what's closed when") — new Tier A
--- commodity field, added 2026-08-26. See whereabout-data-architecture.md's
+-- Forin: public holidays ("what's closed when") — new Tier A
+-- commodity field, added 2026-08-26. See forin-data-architecture.md (docs/forin-data-architecture.md from repo root)'s
 -- "Reopened 2026-08-26" subsection and CLAUDE.md's External Data Sources
 -- note: distinct from country_guides.festivals (named recurring events
 -- worth planning a trip around) — this is the practical, checkable

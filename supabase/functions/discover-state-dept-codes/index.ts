@@ -1,4 +1,4 @@
-// Whereabout: state_dept_entry_exit_code discovery — Edge Function
+// Forin: state_dept_entry_exit_code discovery — Edge Function
 //
 // Run this when a common, common-as-Japan-common destination has no visa
 // summary — it means cadataapi.state.gov's entry_exit_requirements

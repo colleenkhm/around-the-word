@@ -1,4 +1,4 @@
-// Whereabout: State Department advisory/visa refresh — Edge Function version
+// Forin: State Department advisory/visa refresh — Edge Function version
 // (field mapping corrected 2026-08-19)
 //
 // CADENCE NOTE (decided): scheduled MONTHLY via pg_cron while

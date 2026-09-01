@@ -1,4 +1,4 @@
--- Whereabout: prevent the duplicate-row bug (found twice: Germany's
+-- Forin: prevent the duplicate-row bug (found twice: Germany's
 -- travel_advisories via import-curated-data.mjs's plain .insert(), and
 -- the same pattern in the State Dept refresh function) from recurring,
 -- and make future refreshes fast (one bulk upsert instead of N sequential

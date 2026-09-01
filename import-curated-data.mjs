@@ -1,4 +1,4 @@
-// Whereabout: curated data importer
+// Forin: curated data importer
 //
 // Reads aroundtheworddatacollection.xlsx and pushes everything real in it
 // into Supabase. This is YOUR researched content — nothing here is fetched

@@ -57,12 +57,14 @@ node_modules/
 
 # Planning/working-notes docs — personal notes, kept local only, not in git.
 # See CLAUDE.md's own note on this for why and what that means for a fresh clone.
+# Moved into docs/ 2026-08-31 (Whereabout -> Forin rename); CLAUDE.md itself
+# stays at root — Claude Code auto-loads it only from there.
 /CLAUDE.md
-/HANDOFF.md
-/design-preferences.md
-/whereabout-client-design.md
-/whereabout-data-architecture.md
-/whereabout-scratch-notes.md
-/language-app-system-design.md
-/app-design-doc.md
-/state-dept-data-handoff.md
+/docs/HANDOFF.md
+/docs/design-preferences.md
+/docs/forin-client-design.md
+/docs/forin-data-architecture.md
+/docs/forin-scratch-notes.md
+/docs/language-app-system-design.md
+/docs/app-design-doc.md
+/docs/state-dept-data-handoff.md

@@ -1,4 +1,4 @@
-// Whereabout: currency conversion — Edge Function
+// Forin: currency conversion — Edge Function
 //
 // Why this exists as an Edge Function at all (per the architecture doc):
 // ExchangeRate-API needs a key, and any key shipped inside the Flutter

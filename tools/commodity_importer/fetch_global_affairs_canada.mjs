@@ -1,4 +1,4 @@
-// Whereabout: Global Affairs Canada advisories — second issuing authority
+// Forin: Global Affairs Canada advisories — second issuing authority
 // for travel_advisories (Tier A, added 2026-08-26).
 //
 // Source: data.international.gc.ca/travel-voyage/index-updated.json — a
@@ -18,7 +18,7 @@
 //
 // This is the multi-authority case the schema was built for: a country
 // can now carry both a "US State Department" and a "Global Affairs
-// Canada" row side by side, exactly as whereabout-data-architecture.md's
+// Canada" row side by side, exactly as forin-data-architecture.md (docs/forin-data-architecture.md from repo root)'s
 // travel_advisories section describes ("multiple rows per country are
 // expected and desirable").
 //
@@ -48,7 +48,7 @@ const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const FEED_URL = 'https://data.international.gc.ca/travel-voyage/index-updated.json';
-const USER_AGENT = 'whereabout-commodity-importer/0.1 (Global Affairs Canada advisories fetch)';
+const USER_AGENT = 'forin-commodity-importer/0.1 (Global Affairs Canada advisories fetch)';
 
 function toIsoDate(gacDate) {
   // "2026-07-29 14:31:46" -> "2026-07-29"
