@@ -25,6 +25,12 @@ class CitiesSection extends StatelessWidget {
     this.capital,
   });
 
+  // Some countries have dozens of cities on file — cap the list to the
+  // top few so the section doesn't dwarf its neighbors. The accordion's
+  // meta line still shows the true count, so this cutoff is never
+  // misleading (same reasoning as border countries, reverted there).
+  static const _maxDisplayed = 5;
+
   @override
   Widget build(BuildContext context) {
     if (cities.isEmpty) return const SizedBox.shrink();
@@ -40,15 +46,32 @@ class CitiesSection extends StatelessWidget {
         return b.population!.compareTo(a.population!);
       });
 
+    // The capital always leads the shown set, regardless of its
+    // featured/population rank — a small or unfeatured capital (on file
+    // at all) shouldn't be able to fall off the list.
+    City? capitalCity;
+    for (final city in sorted) {
+      if (city.name == capital) {
+        capitalCity = city;
+        break;
+      }
+    }
+    final shown = capitalCity == null
+        ? sorted.take(_maxDisplayed).toList()
+        : [
+            capitalCity,
+            ...sorted.where((city) => city != capitalCity).take(_maxDisplayed - 1),
+          ];
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        for (var i = 0; i < sorted.length; i++)
+        for (var i = 0; i < shown.length; i++)
           _CityRow(
             index: i + 1,
-            city: sorted[i],
-            isCapital: sorted[i].name == capital,
-            isLast: i == sorted.length - 1,
+            city: shown[i],
+            isCapital: shown[i].name == capital,
+            isLast: i == shown.length - 1,
             accent: accent,
           ),
       ],
