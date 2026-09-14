@@ -4,6 +4,7 @@ import '../../models/travel_info.dart';
 import '../../theme/accordion_theme.dart';
 import '../../utils/format_date.dart';
 import 'external_link.dart';
+import 'flip_reveal.dart';
 
 /// The "Travel Advisory" [AccordionSection]'s expanded content, including
 /// the top-right "Emergency" stamp.
@@ -84,6 +85,12 @@ class _AdvisoryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = level == null ? null : AccordionTheme.advisoryColor(level!);
+    final headStyle = AccordionTheme.sHead.copyWith(color: color ?? AccordionTheme.ink);
+    final levelEn = [advisory.level, advisory.levelLabel].nonNulls.join(' — ');
+    final levelEs = [
+      advisory.level?.replaceFirst('Level', 'Nivel'),
+      advisory.levelLabelEs ?? advisory.levelLabel,
+    ].nonNulls.join(' — ');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,16 +98,20 @@ class _AdvisoryRow extends StatelessWidget {
         Text(advisory.issuingAuthority, style: AccordionTheme.sLabel),
         if (advisory.level != null || advisory.levelLabel != null) ...[
           const SizedBox(height: 5),
-          Text(
-            [advisory.level, advisory.levelLabel].nonNulls.join(' — '),
-            style: AccordionTheme.sHead.copyWith(
-              color: color ?? AccordionTheme.ink,
-            ),
+          FlipReveal(
+            front: Text(levelEs, style: headStyle),
+            back: Text(levelEn, style: headStyle),
           ),
         ],
         if (advisory.summary != null) ...[
           const SizedBox(height: 6),
-          Text(advisory.summary!, style: AccordionTheme.sBody),
+          if (advisory.summaryEs != null)
+            FlipReveal(
+              front: Text(advisory.summaryEs!, style: AccordionTheme.sBody),
+              back: Text(advisory.summary!, style: AccordionTheme.sBody),
+            )
+          else
+            Text(advisory.summary!, style: AccordionTheme.sBody),
         ],
         const SizedBox(height: 10),
         // Dates on one line, "Full advisory" right-aligned below.
@@ -110,24 +121,44 @@ class _AdvisoryRow extends StatelessWidget {
           runSpacing: 4,
           children: [
             if (advisory.issuedAt != null)
-              Text(
-                'Issued ${formatShortDate(advisory.issuedAt!)}',
+              FlipReveal(
+                front: Text(
+                  'Emitido ${formatShortDate(advisory.issuedAt!, spanish: true)}',
+                  style: AccordionTheme.srcRow,
+                ),
+                back: Text(
+                  'Issued ${formatShortDate(advisory.issuedAt!)}',
+                  style: AccordionTheme.srcRow,
+                ),
+              ),
+            FlipReveal(
+              front: Text(
+                'Verificado ${formatShortDate(advisory.lastVerifiedAt, spanish: true)}',
                 style: AccordionTheme.srcRow,
               ),
-            Text(
-              'Checked ${formatShortDate(advisory.lastVerifiedAt)}',
-              style: AccordionTheme.srcRow,
+              back: Text(
+                'Checked ${formatShortDate(advisory.lastVerifiedAt)}',
+                style: AccordionTheme.srcRow,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 4),
         Align(
           alignment: Alignment.centerRight,
-          child: ExternalLink(
-            label: 'Full advisory',
-            url: advisory.officialUrl,
-            color: accent,
-            fontFamily: AccordionTheme.dmMono,
+          child: FlipReveal(
+            front: ExternalLink(
+              label: 'Advertencia completa',
+              url: advisory.officialUrl,
+              color: accent,
+              fontFamily: AccordionTheme.dmMono,
+            ),
+            back: ExternalLink(
+              label: 'Full advisory',
+              url: advisory.officialUrl,
+              color: accent,
+              fontFamily: AccordionTheme.dmMono,
+            ),
           ),
         ),
       ],
@@ -143,11 +174,15 @@ class _EmergencyStamp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final labelStyle = AccordionTheme.sLabel.copyWith(fontSize: 8);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('EMERGENCY', style: AccordionTheme.sLabel.copyWith(fontSize: 8)),
+        FlipReveal(
+          front: Text('EMERGENCIA', style: labelStyle),
+          back: Text('EMERGENCY', style: labelStyle),
+        ),
         const SizedBox(height: 2),
         Row(
           mainAxisSize: MainAxisSize.min,

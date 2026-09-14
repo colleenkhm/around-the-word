@@ -6,6 +6,7 @@ import '../../models/travel_info.dart';
 import '../../theme/accordion_theme.dart';
 import '../../utils/format_date.dart';
 import 'external_link.dart';
+import 'flip_reveal.dart';
 
 /// The "Visa & Entry" [AccordionSection]'s expanded content. No invented
 /// "No visa required" headline — [VisaInfo.summary] is free text only.
@@ -34,21 +35,41 @@ class VisaSection extends StatelessWidget {
             children: [
               Text(visa.issuingAuthority, style: AccordionTheme.sLabel),
               const SizedBox(height: 5),
-              Text(
-                'For ${visa.nationalityIsoCode} passport holders',
-                style: AccordionTheme.sHead,
+              FlipReveal(
+                front: Text(
+                  'Para titulares de pasaporte ${visa.nationalityIsoCode}',
+                  style: AccordionTheme.sHead,
+                ),
+                back: Text(
+                  'For ${visa.nationalityIsoCode} passport holders',
+                  style: AccordionTheme.sHead,
+                ),
               ),
               const SizedBox(height: 6),
-              Text(visa.summary, style: AccordionTheme.sBody),
+              if (visa.summaryEs != null)
+                FlipReveal(
+                  front: Text(visa.summaryEs!, style: AccordionTheme.sBody),
+                  back: Text(visa.summary, style: AccordionTheme.sBody),
+                )
+              else
+                Text(visa.summary, style: AccordionTheme.sBody),
               if (visa.applicationUrl != null) ...[
                 const SizedBox(height: 4),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: ExternalLink(
-                    label: 'Apply',
-                    url: visa.applicationUrl!,
-                    color: accent,
-                    fontFamily: AccordionTheme.dmMono,
+                  child: FlipReveal(
+                    front: ExternalLink(
+                      label: 'Solicitar',
+                      url: visa.applicationUrl!,
+                      color: accent,
+                      fontFamily: AccordionTheme.dmMono,
+                    ),
+                    back: ExternalLink(
+                      label: 'Apply',
+                      url: visa.applicationUrl!,
+                      color: accent,
+                      fontFamily: AccordionTheme.dmMono,
+                    ),
                   ),
                 ),
               ],
@@ -69,7 +90,8 @@ class VisaSection extends StatelessWidget {
                     children: [
                       if (visa.prohibitedOnEntry != null)
                         _ProhibitedNote(
-                          label: 'Declare on entry',
+                          labelEn: 'Declare on entry',
+                          labelEs: 'Declarar al ingresar',
                           body: visa.prohibitedOnEntry!,
                         ),
                       if (visa.prohibitedOnEntry != null &&
@@ -77,7 +99,8 @@ class VisaSection extends StatelessWidget {
                         const SizedBox(height: 8),
                       if (visa.prohibitedOnExit != null)
                         _ProhibitedNote(
-                          label: 'Declare on exit',
+                          labelEn: 'Declare on exit',
+                          labelEs: 'Declarar al salir',
                           body: visa.prohibitedOnExit!,
                         ),
                     ],
@@ -92,18 +115,33 @@ class VisaSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      'Visa & entry info verified ${formatShortDate(visa.lastVerifiedAt)}',
-                      style: AccordionTheme.srcRow,
+                    FlipReveal(
+                      front: Text(
+                        'Información de visa y entrada verificada el '
+                        '${formatShortDate(visa.lastVerifiedAt, spanish: true)}',
+                        style: AccordionTheme.srcRow,
+                      ),
+                      back: Text(
+                        'Visa & entry info verified ${formatShortDate(visa.lastVerifiedAt)}',
+                        style: AccordionTheme.srcRow,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: ExternalLink(
-                        label: 'Source',
-                        url: visa.officialUrl,
-                        color: accent,
-                        fontFamily: AccordionTheme.dmMono,
+                      child: FlipReveal(
+                        front: ExternalLink(
+                          label: 'Fuente',
+                          url: visa.officialUrl,
+                          color: accent,
+                          fontFamily: AccordionTheme.dmMono,
+                        ),
+                        back: ExternalLink(
+                          label: 'Source',
+                          url: visa.officialUrl,
+                          color: accent,
+                          fontFamily: AccordionTheme.dmMono,
+                        ),
                       ),
                     ),
                   ],
@@ -186,19 +224,21 @@ class _RegionalStamp extends StatelessWidget {
 }
 
 class _ProhibitedNote extends StatelessWidget {
-  final String label;
+  final String labelEn;
+  final String labelEs;
   final String body;
 
-  const _ProhibitedNote({required this.label, required this.body});
+  const _ProhibitedNote({required this.labelEn, required this.labelEs, required this.body});
 
   @override
   Widget build(BuildContext context) {
+    final labelStyle = AccordionTheme.sLabel.copyWith(color: AccordionTheme.danger);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label.toUpperCase(),
-          style: AccordionTheme.sLabel.copyWith(color: AccordionTheme.danger),
+        FlipReveal(
+          front: Text(labelEs.toUpperCase(), style: labelStyle),
+          back: Text(labelEn.toUpperCase(), style: labelStyle),
         ),
         const SizedBox(height: 3),
         Text(body, style: AccordionTheme.sBody),

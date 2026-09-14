@@ -7,6 +7,15 @@ class TravelAdvisory {
   final String? level;
   final String? levelLabel;
   final String? summary;
+
+  /// [summary] in the country's primary language, for the flashcard_layout
+  /// branch's flip-card treatment. Null on any bundle without a translation
+  /// (every Supabase country today) — sections fall back to English-only,
+  /// no flip affordance. See HANDOFF.md's flashcard_layout entry.
+  final String? summaryEs;
+
+  /// [levelLabel] in the country's primary language — see [summaryEs].
+  final String? levelLabelEs;
   final String officialUrl; // required
   final DateTime? issuedAt;
   final DateTime lastVerifiedAt; // required
@@ -15,7 +24,9 @@ class TravelAdvisory {
     required this.issuingAuthority,
     this.level,
     this.levelLabel,
+    this.levelLabelEs,
     this.summary,
+    this.summaryEs,
     required this.officialUrl,
     this.issuedAt,
     required this.lastVerifiedAt,
@@ -26,7 +37,9 @@ class TravelAdvisory {
       issuingAuthority: json['issuingAuthority'] as String,
       level: json['level'] as String?,
       levelLabel: json['levelLabel'] as String?,
+      levelLabelEs: json['levelLabelEs'] as String?,
       summary: json['summary'] as String?,
+      summaryEs: json['summaryEs'] as String?,
       officialUrl: json['officialUrl'] as String,
       issuedAt: json['issuedAt'] == null
           ? null
@@ -39,6 +52,10 @@ class TravelAdvisory {
 class VisaInfo {
   final String issuingAuthority; // required — same discipline as TravelAdvisory
   final String summary;
+
+  /// [summary] in the country's primary language — see
+  /// [TravelAdvisory.summaryEs].
+  final String? summaryEs;
   final String officialUrl; // required, never null — informational source
   final String? applicationUrl;
   final DateTime lastVerifiedAt; // required, never null
@@ -49,6 +66,7 @@ class VisaInfo {
   const VisaInfo({
     required this.issuingAuthority,
     required this.summary,
+    this.summaryEs,
     required this.officialUrl,
     this.applicationUrl,
     required this.lastVerifiedAt,
@@ -61,6 +79,7 @@ class VisaInfo {
     return VisaInfo(
       issuingAuthority: json['issuingAuthority'] as String,
       summary: json['summary'] as String,
+      summaryEs: json['summaryEs'] as String?,
       officialUrl: json['officialUrl'] as String,
       applicationUrl: json['applicationUrl'] as String?,
       lastVerifiedAt: DateTime.parse(json['lastVerifiedAt'] as String),

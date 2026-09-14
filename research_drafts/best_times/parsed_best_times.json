@@ -1,0 +1,3424 @@
+{
+ "AL": {
+  "name": "Albania",
+  "best_times": [
+   {
+    "months": "April,May,June",
+    "why_short": "mild",
+    "why": "mild, ideal for walking/cycling/sightseeing/watersports",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 77\u00b0F high / 55\u00b0F low"
+   },
+   {
+    "months": "September,October",
+    "why_short": "shoulder season",
+    "why": "shoulder season, warm days cooler evenings, harvest festivals, fewer crowds",
+    "crowd_level": "low",
+    "weather_note": "Avg 80\u00b0F high / 58\u00b0F low"
+   }
+  ]
+ },
+ "DZ": {
+  "name": "Algeria",
+  "best_times": [
+   {
+    "months": "April,May",
+    "why_short": "ideal sahara camping temps",
+    "why": "ideal Sahara camping temps, nights lose chill",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 92\u00b0F high / 70\u00b0F low"
+   },
+   {
+    "months": "October,November",
+    "why_short": "cooler",
+    "why": "cooler, easier exploring, date harvest in M'Zab Valley",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 62\u00b0F low"
+   },
+   {
+    "months": "September",
+    "why_short": "heat eases",
+    "why": "heat eases, touring resumes, warm Mediterranean water without crowds",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 103\u00b0F high / 81\u00b0F low"
+   },
+   {
+    "months": "December",
+    "why_short": "mild winter sun",
+    "why": "mild winter sun, good for photography, occasional Atlas Mountains snow",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 71\u00b0F high / 49\u00b0F low"
+   }
+  ]
+ },
+ "AO": {
+  "name": "Angola",
+  "best_times": [
+   {
+    "months": "June,July,August,September,October",
+    "why_short": "dry",
+    "why": "dry, mild, sunny -- the stated best window",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 53\u00b0F low"
+   }
+  ]
+ },
+ "AQ": {
+  "name": "Antarctica",
+  "best_times": [
+   {
+    "months": "November",
+    "why_short": "largest icebergs",
+    "why": "largest icebergs, spring mating/nesting, unpredictable weather",
+    "crowd_level": "moderate",
+    "weather_note": "Avg -30\u00b0F high / -33\u00b0F low"
+   },
+   {
+    "months": "December",
+    "why_short": "rising temps",
+    "why": "rising temps, 24hr sunlight, more wildlife",
+    "crowd_level": "moderate",
+    "weather_note": "Avg -17\u00b0F high / -20\u00b0F low"
+   },
+   {
+    "months": "January",
+    "why_short": "penguin chicks/seal pups",
+    "why": "penguin chicks/seal pups, relatively warm, humpbacks arrive",
+    "crowd_level": "moderate",
+    "weather_note": "Avg -20\u00b0F high / -23\u00b0F low"
+   },
+   {
+    "months": "February",
+    "why_short": "warmest month",
+    "why": "warmest month, peak whale season, Antarctic Circle crossings possible",
+    "crowd_level": "moderate",
+    "weather_note": "Avg -34\u00b0F high / -38\u00b0F low"
+   },
+   {
+    "months": "March",
+    "why_short": "season end",
+    "why": "season end, fewer visitors/lower prices, continued whale watching",
+    "crowd_level": "moderate",
+    "weather_note": "Avg -48\u00b0F high / -53\u00b0F low"
+   }
+  ]
+ },
+ "AR": {
+  "name": "Argentina",
+  "best_times": [
+   {
+    "months": "December,January,February",
+    "why_short": "summer warmth",
+    "why": "summer warmth, north gets very hot, Patagonia high season (peak crowds/prices)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 85\u00b0F high / 65\u00b0F low"
+   },
+   {
+    "months": "March,April",
+    "why_short": "autumn foliage in lake district",
+    "why": "autumn foliage in Lake District, wine harvest, Apr best for Iguazu",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 77\u00b0F high / 59\u00b0F low"
+   },
+   {
+    "months": "November,December,January,February",
+    "why_short": "long sunny days for southern patagonia",
+    "why": "long sunny days for southern Patagonia",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 64\u00b0F low"
+   }
+  ]
+ },
+ "AM": {
+  "name": "Armenia",
+  "best_times": [
+   {
+    "months": "September,October",
+    "why_short": "best",
+    "why": "best, long sunny mild days, autumn colors",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 64\u00b0F high / 45\u00b0F low"
+   },
+   {
+    "months": "June",
+    "why_short": "hiking",
+    "why": "hiking, balmy/dry ~26C",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 72\u00b0F high / 51\u00b0F low"
+   },
+   {
+    "months": "April,May",
+    "why_short": "culture/history",
+    "why": "culture/history, flowers, passes open",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 55\u00b0F high / 38\u00b0F low"
+   }
+  ]
+ },
+ "AU": {
+  "name": "Australia",
+  "best_times": [
+   {
+    "months": "September,October,November",
+    "why_short": "spring",
+    "why": "spring, wildflowers WA, best for walking",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 86\u00b0F high / 61\u00b0F low"
+   },
+   {
+    "months": "March,April,May",
+    "why_short": "temps dropping",
+    "why": "temps dropping, east coast dry/clear",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 82\u00b0F high / 61\u00b0F low"
+   }
+  ]
+ },
+ "AT": {
+  "name": "Austria",
+  "best_times": [
+   {
+    "months": "January,February,March",
+    "why_short": "snow-guaranteed winter sports",
+    "why": "snow-guaranteed winter sports",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 37\u00b0F high / 19\u00b0F low"
+   },
+   {
+    "months": "April,May",
+    "why_short": "walking/cycling season",
+    "why": "walking/cycling season, festivals",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 52\u00b0F high / 32\u00b0F low"
+   },
+   {
+    "months": "June",
+    "why_short": "wildflowers peak",
+    "why": "wildflowers peak",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 68\u00b0F high / 46\u00b0F low"
+   }
+  ]
+ },
+ "AZ": {
+  "name": "Azerbaijan",
+  "best_times": [
+   {
+    "months": "April,May,June",
+    "why_short": "hiking/culture",
+    "why": "hiking/culture, wildflowers, mild",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 83\u00b0F high / 60\u00b0F low"
+   },
+   {
+    "months": "September,October",
+    "why_short": "excellent weather",
+    "why": "excellent weather, lower heat, harvest festivals, fewer crowds",
+    "crowd_level": "low",
+    "weather_note": "Avg 78\u00b0F high / 61\u00b0F low"
+   },
+   {
+    "months": "March",
+    "why_short": "Novruz Bayrami",
+    "why": "Novruz Bayrami (note: many shops close)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 60\u00b0F high / 41\u00b0F low"
+   }
+  ]
+ },
+ "BD": {
+  "name": "Bangladesh",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March",
+    "why_short": "dry season",
+    "why": "dry season, pleasantly warm, best window",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 60\u00b0F low"
+   }
+  ]
+ },
+ "BZ": {
+  "name": "Belize",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "sunny/dry",
+    "why": "sunny/dry, warmth kicks in by Feb",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 70\u00b0F low"
+   }
+  ]
+ },
+ "BJ": {
+  "name": "Benin",
+  "best_times": [
+   {
+    "months": "November,December,January,February",
+    "why_short": "dry but dusty",
+    "why": "dry but dusty (harmattan wind)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 95\u00b0F high / 66\u00b0F low"
+   },
+   {
+    "months": "December,January,February,March",
+    "why_short": "cooler/more pleasant despite dust",
+    "why": "cooler/more pleasant despite dust",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 96\u00b0F high / 68\u00b0F low"
+   },
+   {
+    "months": "August",
+    "why_short": "alternative",
+    "why": "alternative -- cooler, clear skies, no harmattan, for southern Benin",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 85\u00b0F high / 71\u00b0F low"
+   }
+  ]
+ },
+ "BT": {
+  "name": "Bhutan",
+  "best_times": [
+   {
+    "months": "October,November,December",
+    "why_short": "best",
+    "why": "best, driest/brightest",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 63\u00b0F high / 43\u00b0F low"
+   },
+   {
+    "months": "March,April,May",
+    "why_short": "spring",
+    "why": "spring, wildflowers, trekking season",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 65\u00b0F high / 47\u00b0F low"
+   }
+  ]
+ },
+ "BO": {
+  "name": "Bolivia",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "dry",
+    "why": "dry, clear skies, less disruption",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 59\u00b0F high / 45\u00b0F low"
+   }
+  ]
+ },
+ "BW": {
+  "name": "Botswana",
+  "best_times": [
+   {
+    "months": "August,September,October",
+    "why_short": "dry winter",
+    "why": "dry winter, big wildlife herds at waterholes, hot days/cold nights",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 88\u00b0F high / 58\u00b0F low"
+   },
+   {
+    "months": "May",
+    "why_short": "good combo with victoria falls",
+    "why": "good combo with Victoria Falls, dry season starts",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 80\u00b0F high / 51\u00b0F low"
+   },
+   {
+    "months": "May,June,July,August",
+    "why_short": "best for okavango delta",
+    "why": "best for Okavango Delta (high water)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 78\u00b0F high / 48\u00b0F low"
+   }
+  ]
+ },
+ "BR": {
+  "name": "Brazil",
+  "best_times": [
+   {
+    "months": "December,January,February,March",
+    "why_short": "hot sunny summer",
+    "why": "hot sunny summer, pricier, Feb=Carnival (crowded/expensive)",
+    "crowd_level": "high",
+    "weather_note": "Avg 83\u00b0F high / 70\u00b0F low"
+   },
+   {
+    "months": "September,October",
+    "why_short": "low season",
+    "why": "low season, great wildlife spotting, quiet beaches",
+    "crowd_level": "low",
+    "weather_note": "Avg 91\u00b0F high / 71\u00b0F low"
+   }
+  ]
+ },
+ "BN": {
+  "name": "Brunei",
+  "best_times": [
+   {
+    "months": "February,March",
+    "why_short": "driest",
+    "why": "driest, National Day Feb 23",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 86\u00b0F high / 73\u00b0F low"
+   },
+   {
+    "months": "July",
+    "why_short": "Sultan's birthday",
+    "why": "Sultan's birthday (15th), fireworks/parades",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 87\u00b0F high / 74\u00b0F low"
+   }
+  ]
+ },
+ "BG": {
+  "name": "Bulgaria",
+  "best_times": [
+   {
+    "months": "January,February,March",
+    "why_short": "snowshoeing/winter walking rila mountains",
+    "why": "snowshoeing/winter walking Rila Mountains, fewer tourists",
+    "crowd_level": "low",
+    "weather_note": "Avg 48\u00b0F high / 29\u00b0F low"
+   },
+   {
+    "months": "April,May",
+    "why_short": "snow at elevation",
+    "why": "snow at elevation, valleys warm, wildflowers, rain (pack waterproofs)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 64\u00b0F high / 44\u00b0F low"
+   },
+   {
+    "months": "June",
+    "why_short": "hiking",
+    "why": "hiking, low 20sC, craft fairs",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 75\u00b0F high / 56\u00b0F low"
+   }
+  ]
+ },
+ "KH": {
+  "name": "Cambodia",
+  "best_times": [
+   {
+    "months": "January,February",
+    "why_short": "little rain",
+    "why": "little rain, blue skies, good for coast",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 92\u00b0F high / 73\u00b0F low"
+   },
+   {
+    "months": "March,April",
+    "why_short": "rising temps/humidity",
+    "why": "rising temps/humidity, minimal rain",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 94\u00b0F high / 78\u00b0F low"
+   },
+   {
+    "months": "May,June",
+    "why_short": "monsoon begins",
+    "why": "monsoon begins, heavy coastal rain",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 92\u00b0F high / 78\u00b0F low"
+   }
+  ]
+ },
+ "CM": {
+  "name": "Cameroon",
+  "best_times": [
+   {
+    "months": "November,December,January,February",
+    "why_short": "best",
+    "why": "best, cooler/drier, lowest rainfall, best wildlife viewing, best roads",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 90\u00b0F high / 64\u00b0F low"
+   }
+  ]
+ },
+ "CA": {
+  "name": "Canada",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "warm",
+    "why": "best overall, warm, long days, festivals, everything open -- busiest/priciest",
+    "crowd_level": "peak",
+    "weather_note": "Avg 58\u00b0F high / 44\u00b0F low"
+   },
+   {
+    "months": "May",
+    "why_short": "before summer crowds",
+    "why": "before summer crowds",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 36\u00b0F high / 25\u00b0F low"
+   }
+  ]
+ },
+ "CV": {
+  "name": "Cape Verde",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "comfortable",
+    "why": "best overall, comfortable (20-29C), low rain",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 74\u00b0F high / 72\u00b0F low"
+   }
+  ]
+ },
+ "BQ": {
+  "name": "Caribbean Netherlands",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "high season",
+    "why": "high season, driest, flamingo breeding season, harvest festivals, best diving/windsurfing, ~80F",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 82\u00b0F high / 77\u00b0F low"
+   }
+  ]
+ },
+ "KY": {
+  "name": "Cayman Islands",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "high season",
+    "why": "high season, best overall, balmy (75-85F), vibrant events/festivals",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 80\u00b0F high / 78\u00b0F low"
+   }
+  ]
+ },
+ "CL": {
+  "name": "Chile",
+  "best_times": [
+   {
+    "months": "September,October,November,March,April,May",
+    "why_short": "mild",
+    "why": "best overall, mild, fewer crowds, great hiking/wine tasting",
+    "crowd_level": "low",
+    "weather_note": "Avg 62\u00b0F high / 42\u00b0F low"
+   }
+  ]
+ },
+ "CN": {
+  "name": "China",
+  "best_times": [
+   {
+    "months": "March,April,May,September,October,November",
+    "why_short": "warm/dry",
+    "why": "best overall, warm/dry, lighter crowds than summer",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 55\u00b0F high / 38\u00b0F low"
+   }
+  ]
+ },
+ "CX": {
+  "name": "Christmas Island",
+  "best_times": [
+   {
+    "months": "July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall weather, least rainy/sunniest, calm seas, low humidity",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 76\u00b0F high / 74\u00b0F low"
+   },
+   {
+    "months": "May,June,July,August",
+    "why_short": "low season",
+    "why": "low season, drier days still, quieter",
+    "crowd_level": "low",
+    "weather_note": "Avg 78\u00b0F high / 76\u00b0F low"
+   }
+  ]
+ },
+ "CC": {
+  "name": "Cocos (Keeling) Islands",
+  "best_times": [
+   {
+    "months": "August,February,May,October",
+    "why_short": "cloudless days",
+    "why": "best overall, cloudless days, busy lagoons (snorkel/dive/canoe)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 80\u00b0F high / 78\u00b0F low"
+   },
+   {
+    "months": "December,January,February",
+    "why_short": "best diving/snorkeling",
+    "why": "best diving/snorkeling (calm+clear)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 79\u00b0F low"
+   }
+  ]
+ },
+ "CO": {
+  "name": "Colombia",
+  "best_times": [
+   {
+    "months": "December,January,February,March,July,August",
+    "why_short": "dry seasons",
+    "why": "dry seasons, best overall, warm/clear/ideal for Amazon-Andes-coast",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 88\u00b0F high / 74\u00b0F low"
+   }
+  ]
+ },
+ "KM": {
+  "name": "Comoros",
+  "best_times": [
+   {
+    "months": "April,November,June,October",
+    "why_short": "cool/dry peak season",
+    "why": "cool/dry peak season, mild enough for extended outdoor time -- but priciest/most crowded",
+    "crowd_level": "peak",
+    "weather_note": "Avg 82\u00b0F high / 78\u00b0F low"
+   },
+   {
+    "months": "June,July,August",
+    "why_short": "dry skies",
+    "why": "dry skies, calm seas, humpback whale calving off Moheli",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 78\u00b0F high / 76\u00b0F low"
+   }
+  ]
+ },
+ "CG": {
+  "name": "Congo (Republic of)",
+  "best_times": [
+   {
+    "months": "May,September,January,February",
+    "why_short": "driest",
+    "why": "best overall, driest",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 86\u00b0F high / 70\u00b0F low"
+   }
+  ]
+ },
+ "CK": {
+  "name": "Cook Islands",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "peak",
+    "why": "peak, max sunshine/min rain -- but priciest/most crowded",
+    "crowd_level": "peak",
+    "weather_note": "Avg 72\u00b0F high / 69\u00b0F low"
+   },
+   {
+    "months": "July,August,September,October",
+    "why_short": "humpback whales visible from rarotonga foreshore",
+    "why": "humpback whales visible from Rarotonga foreshore",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 71\u00b0F high / 69\u00b0F low"
+   }
+  ]
+ },
+ "HR": {
+  "name": "Croatia",
+  "best_times": [
+   {
+    "months": "May,June,September,October",
+    "why_short": "mild",
+    "why": "best overall, mild, fewer crowds/lower prices -- late Sep especially good (summer-warm water, way fewer people)",
+    "crowd_level": "low",
+    "weather_note": "Avg 71\u00b0F high / 53\u00b0F low"
+   },
+   {
+    "months": "June,July,August",
+    "why_short": "hot/sunny peak",
+    "why": "hot/sunny peak, festival season, but crowded beaches",
+    "crowd_level": "high",
+    "weather_note": "Avg 82\u00b0F high / 61\u00b0F low"
+   }
+  ]
+ },
+ "CU": {
+  "name": "Cuba",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, comfortable-warm, sunny",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 76\u00b0F low"
+   }
+  ]
+ },
+ "CW": {
+  "name": "Cura\u00e7ao",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry/sunny",
+    "why": "best overall, dry/sunny, ~30C -- Carnival wraps up in March with a big street parade",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 85\u00b0F high / 77\u00b0F low"
+   }
+  ]
+ },
+ "CY": {
+  "name": "Cyprus",
+  "best_times": [
+   {
+    "months": "April,May,June,September,October",
+    "why_short": "warm/quiet beaches",
+    "why": "best overall, warm/quiet beaches, ideal for both seaside + inland exploring",
+    "crowd_level": "low",
+    "weather_note": "Avg 78\u00b0F high / 61\u00b0F low"
+   }
+  ]
+ },
+ "CZ": {
+  "name": "Czechia",
+  "best_times": [
+   {
+    "months": "March,April,May,September,October",
+    "why_short": "good weather",
+    "why": "best overall, good weather, moderate crowds, plenty of festivals -- Sep/May specifically cited as best",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 57\u00b0F high / 42\u00b0F low"
+   }
+  ]
+ },
+ "DK": {
+  "name": "Denmark",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "long daylight",
+    "why": "best overall, long daylight, 59-68F, ideal hiking -- crowded/pricier",
+    "crowd_level": "high",
+    "weather_note": "Avg 68\u00b0F high / 55\u00b0F low"
+   },
+   {
+    "months": "November,December",
+    "why_short": "Christmas beer",
+    "why": "Christmas beer (from Nov 5) + markets, cozy Copenhagen atmosphere",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 43\u00b0F high / 37\u00b0F low"
+   }
+  ]
+ },
+ "CR": {
+  "name": "Costa Rica",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, driest/brightest -- Jan-Feb ideal beach+rainforest combo, but priciest/busiest",
+    "crowd_level": "peak",
+    "weather_note": "Avg 71\u00b0F high / 58\u00b0F low"
+   }
+  ]
+ },
+ "DJ": {
+  "name": "Djibouti",
+  "best_times": [
+   {
+    "months": "November,March,February",
+    "why_short": "cool/dry",
+    "why": "best overall, cool/dry, ideal for desert (Lake Assal/Lake Abbe) + coastal exploring",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 86\u00b0F high / 71\u00b0F low"
+   },
+   {
+    "months": "December,January",
+    "why_short": "peak whale shark season",
+    "why": "peak whale shark season, Gulf of Tadjoura -- a signature draw",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 83\u00b0F high / 70\u00b0F low"
+   },
+   {
+    "months": "October,November,December,January",
+    "why_short": "best diving/snorkeling visibility",
+    "why": "best diving/snorkeling visibility",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 86\u00b0F high / 72\u00b0F low"
+   }
+  ]
+ },
+ "DM": {
+  "name": "Dominica",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "high season",
+    "why": "high season, best overall, no storm risk",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 76\u00b0F high / 67\u00b0F low"
+   },
+   {
+    "months": "October",
+    "why_short": "World Creole Music Festival",
+    "why": "World Creole Music Festival",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 80\u00b0F high / 71\u00b0F low"
+   }
+  ]
+ },
+ "DO": {
+  "name": "Dominican Republic",
+  "best_times": [
+   {
+    "months": "November,April,December",
+    "why_short": "dry season",
+    "why": "dry season, best overall, sunny, low humidity, 70-82F -- priciest around Christmas/spring break",
+    "crowd_level": "peak",
+    "weather_note": "Avg 69\u00b0F high / 55\u00b0F low"
+   },
+   {
+    "months": "February",
+    "why_short": "Carnaval",
+    "why": "Carnaval (Sundays)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 67\u00b0F high / 53\u00b0F low"
+   },
+   {
+    "months": "March",
+    "why_short": "Isle of Light Music Festival",
+    "why": "Isle of Light Music Festival (electronic/dance)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 68\u00b0F high / 53\u00b0F low"
+   }
+  ]
+ },
+ "EC": {
+  "name": "Ecuador",
+  "best_times": [
+   {
+    "months": "June,July,August,September,December,January",
+    "why_short": "most popular overall",
+    "why": "most popular overall, though visitable year-round given equatorial location",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 85\u00b0F high / 71\u00b0F low"
+   }
+  ]
+ },
+ "EG": {
+  "name": "Egypt",
+  "best_times": [
+   {
+    "months": "October,November,December,January,February,March",
+    "why_short": "cooler",
+    "why": "best overall, cooler, comfortable days/cool nights, guaranteed sun",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 73\u00b0F high / 50\u00b0F low"
+   }
+  ]
+ },
+ "SV": {
+  "name": "El Salvador",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, clear skies, warm, good for hiking/city/cultural sites",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 90\u00b0F high / 66\u00b0F low"
+   }
+  ]
+ },
+ "GQ": {
+  "name": "Equatorial Guinea",
+  "best_times": [
+   {
+    "months": "June,July,August,December,January,February",
+    "why_short": "sunny",
+    "why": "best overall, sunny, little rain",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 82\u00b0F high / 72\u00b0F low"
+   }
+  ]
+ },
+ "ER": {
+  "name": "Eritrea",
+  "best_times": [
+   {
+    "months": "November,December,January,February",
+    "why_short": "mild",
+    "why": "best overall, mild (20-30C), good for highlands+coast",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 78\u00b0F high / 53\u00b0F low"
+   },
+   {
+    "months": "September",
+    "why_short": "Meskel festival",
+    "why": "Meskel festival (Orthodox Christian, finding of the True Cross) -- visually spectacular",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 57\u00b0F low"
+   }
+  ]
+ },
+ "EE": {
+  "name": "Estonia",
+  "best_times": [
+   {
+    "months": "June,July,August,September",
+    "why_short": "fine weather for cities+outdoors",
+    "why": "best overall, fine weather for cities+outdoors -- Jul-Aug warmest (70s-80sF) but priciest/most crowded",
+    "crowd_level": "peak",
+    "weather_note": "Avg 68\u00b0F high / 53\u00b0F low"
+   },
+   {
+    "months": "May,September",
+    "why_short": "best balance",
+    "why": "best balance, mild (18-22C), fewer crowds",
+    "crowd_level": "low",
+    "weather_note": "Avg 59\u00b0F high / 44\u00b0F low"
+   },
+   {
+    "months": "April,May",
+    "why_short": "castles/estates touring season starts",
+    "why": "castles/estates touring season starts, prices not yet peak",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 54\u00b0F high / 36\u00b0F low"
+   }
+  ]
+ },
+ "SZ": {
+  "name": "Eswatini",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September",
+    "why_short": "warm days/chilly mornings-evenings",
+    "why": "best overall, warm days/chilly mornings-evenings, little rain, best wildlife viewing (animals gather at waterholes)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 75\u00b0F high / 53\u00b0F low"
+   }
+  ]
+ },
+ "ET": {
+  "name": "Ethiopia",
+  "best_times": [
+   {
+    "months": "October,November,December,January,February,March",
+    "why_short": "dry season",
+    "why": "dry season, best overall, warm/sunny, best hiking/wildlife/sightseeing",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 67\u00b0F high / 48\u00b0F low"
+   }
+  ]
+ },
+ "FK": {
+  "name": "Falkland Islands",
+  "best_times": [
+   {
+    "months": "November,December,January,February",
+    "why_short": "long days",
+    "why": "best overall, long days, clear skies, warmer, prime wildlife viewing -- broader window Oct-Apr also workable",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 56\u00b0F high / 44\u00b0F low"
+   },
+   {
+    "months": "March,April",
+    "why_short": "best whale sightings",
+    "why": "best whale sightings",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 52\u00b0F high / 42\u00b0F low"
+   }
+  ]
+ },
+ "FO": {
+  "name": "Faroe Islands",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September",
+    "why_short": "long days",
+    "why": "best overall, long days, greenest landscapes, best accessibility",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 50\u00b0F high / 46\u00b0F low"
+   }
+  ]
+ },
+ "FJ": {
+  "name": "Fiji",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall, warm/minimal rain, best beaches+underwater world",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 78\u00b0F high / 76\u00b0F low"
+   }
+  ]
+ },
+ "FI": {
+  "name": "Finland",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "for most travelers",
+    "why": "best overall for most travelers, warm, near-endless daylight in the north (up to 10wks May-Jul)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 68\u00b0F high / 52\u00b0F low"
+   },
+   {
+    "months": "September,October",
+    "why_short": "best foliage",
+    "why": "best foliage (red maples, golden birches)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 48\u00b0F high / 39\u00b0F low"
+   }
+  ]
+ },
+ "FR": {
+  "name": "France",
+  "best_times": [
+   {
+    "months": "March,April,May,September,October,November",
+    "why_short": "comfortable temps",
+    "why": "best overall, comfortable temps, fewer crowds",
+    "crowd_level": "low",
+    "weather_note": "Avg 59\u00b0F high / 45\u00b0F low"
+   }
+  ]
+ },
+ "GF": {
+  "name": "French Guiana",
+  "best_times": [
+   {
+    "months": "August,September,October,November",
+    "why_short": "mid-aug-mid-sep & early oct-early nov): dry",
+    "why": "mid-Aug-mid-Sep & early Oct-early Nov): dry season, best overall, clear skies, low humidity, accessible trails",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 89\u00b0F high / 72\u00b0F low"
+   }
+  ]
+ },
+ "PF": {
+  "name": "French Polynesia",
+  "best_times": [
+   {
+    "months": "April,May,June,July,August,September",
+    "why_short": "less humid",
+    "why": "best overall, less humid, balmy temps -- Jun-Aug is high season for Bora Bora etc, sunniest",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 80\u00b0F high / 77\u00b0F low"
+   }
+  ]
+ },
+ "GA": {
+  "name": "Gabon",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September",
+    "why_short": "roads more accessible",
+    "why": "best overall, roads more accessible, best wildlife viewing at water sources",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 82\u00b0F high / 66\u00b0F low"
+   }
+  ]
+ },
+ "GM": {
+  "name": "Gambia",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "sunny",
+    "why": "best overall, sunny, minimal rain, best beaches/wildlife/birdwatching",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 88\u00b0F high / 72\u00b0F low"
+   }
+  ]
+ },
+ "AX": {
+  "name": "\u00c5land Islands",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September",
+    "why_short": "best",
+    "why": "best, warm, active",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 63\u00b0F high / 52\u00b0F low"
+   }
+  ]
+ },
+ "AS": {
+  "name": "American Samoa",
+  "best_times": [
+   {
+    "months": "June,July,August,September",
+    "why_short": "dry season",
+    "why": "dry season, most reliable weather, best beach/outdoor",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 82\u00b0F high / 79\u00b0F low"
+   },
+   {
+    "months": "September,October",
+    "why_short": "dry + whale sightings",
+    "why": "dry + whale sightings",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 82\u00b0F high / 79\u00b0F low"
+   }
+  ]
+ },
+ "AD": {
+  "name": "Andorra",
+  "best_times": [
+   {
+    "months": "June,July,August,September",
+    "why_short": "best",
+    "why": "best, least cold in mountains, warm (not hot) valleys",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 75\u00b0F high / 54\u00b0F low"
+   },
+   {
+    "months": "May,June,July,September",
+    "why_short": "shoulder",
+    "why": "shoulder, Mediterranean sun, fewer tourists, some early-season rain",
+    "crowd_level": "low",
+    "weather_note": "Avg 71\u00b0F high / 50\u00b0F low"
+   }
+  ]
+ },
+ "AI": {
+  "name": "Anguilla",
+  "best_times": [
+   {
+    "months": "January,February,March,April",
+    "why_short": "driest",
+    "why": "driest, best underwater visibility (esp Feb-Mar)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 78\u00b0F high / 76\u00b0F low"
+   },
+   {
+    "months": "September,October",
+    "why_short": "quietest/most peaceful",
+    "why": "quietest/most peaceful",
+    "crowd_level": "low",
+    "weather_note": "Avg 84\u00b0F high / 80\u00b0F low"
+   }
+  ]
+ },
+ "AG": {
+  "name": "Antigua and Barbuda",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, min storm risk",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 82\u00b0F high / 74\u00b0F low"
+   }
+  ]
+ },
+ "BS": {
+  "name": "Bahamas",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "best weather",
+    "why": "best weather, dry season, festivals",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 77\u00b0F high / 75\u00b0F low"
+   },
+   {
+    "months": "November,April",
+    "why_short": "shoulder",
+    "why": "shoulder, fine weather/fewer crowds, still pre/post-hurricane season",
+    "crowd_level": "low",
+    "weather_note": "Avg 80\u00b0F high / 76\u00b0F low"
+   }
+  ]
+ },
+ "BH": {
+  "name": "Bahrain",
+  "best_times": [
+   {
+    "months": "December,January,February,March",
+    "why_short": "best",
+    "why": "best, pleasant/mild for sightseeing (16-28C days)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 75\u00b0F high / 60\u00b0F low"
+   }
+  ]
+ },
+ "BB": {
+  "name": "Barbados",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, low rain/high sun, steady trade winds",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 72\u00b0F low"
+   }
+  ]
+ },
+ "BE": {
+  "name": "Belgium",
+  "best_times": [
+   {
+    "months": "April,May,June,September,October",
+    "why_short": "best",
+    "why": "best, mild, fewer crowds, spring blooms/autumn foliage",
+    "crowd_level": "low",
+    "weather_note": "Avg 65\u00b0F high / 49\u00b0F low"
+   }
+  ]
+ },
+ "BM": {
+  "name": "Bermuda",
+  "best_times": [
+   {
+    "months": "March,April",
+    "why_short": "balance",
+    "why": "best overall balance, warming into 70sF, lower prices than summer",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 68\u00b0F high / 65\u00b0F low"
+   },
+   {
+    "months": "April,May,June",
+    "why_short": "low humidity",
+    "why": "low humidity, ocean warming, good for snorkeling",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 72\u00b0F high / 70\u00b0F low"
+   }
+  ]
+ },
+ "BA": {
+  "name": "Bosnia and Herzegovina",
+  "best_times": [
+   {
+    "months": "April,May,June,July,August,September",
+    "why_short": "broad good window",
+    "why": "broad good window",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 70\u00b0F high / 53\u00b0F low"
+   }
+  ]
+ },
+ "VG": {
+  "name": "British Virgin Islands",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "best",
+    "why": "best, warm/sunny/low rain/low humidity",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 78\u00b0F high / 76\u00b0F low"
+   }
+  ]
+ },
+ "BI": {
+  "name": "Burundi",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "long dry season",
+    "why": "long dry season, driest/sunniest, best overall",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 77\u00b0F high / 57\u00b0F low"
+   },
+   {
+    "months": "December,January",
+    "why_short": "short dry season",
+    "why": "short dry season, sweet spot combining dry travel + birding",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 75\u00b0F high / 58\u00b0F low"
+   },
+   {
+    "months": "February",
+    "why_short": "quietest/cheapest",
+    "why": "quietest/cheapest (rainy)",
+    "crowd_level": "low",
+    "weather_note": "Avg 76\u00b0F high / 58\u00b0F low"
+   }
+  ]
+ },
+ "GE": {
+  "name": "Georgia",
+  "best_times": [
+   {
+    "months": "May,June,September,October",
+    "why_short": "best",
+    "why": "best, mild, fewer crowds -- Sep-Oct (\"Velvet Season\") especially good, wine harvest/Rtveli festival",
+    "crowd_level": "low",
+    "weather_note": "Avg 67\u00b0F high / 49\u00b0F low"
+   },
+   {
+    "months": "April",
+    "why_short": "spring blooms",
+    "why": "spring blooms",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 55\u00b0F high / 36\u00b0F low"
+   }
+  ]
+ },
+ "DE": {
+  "name": "Germany",
+  "best_times": [
+   {
+    "months": "April,May,June,September,October",
+    "why_short": "best",
+    "why": "best, mild, fewer crowds, spring blossoms/fall foliage",
+    "crowd_level": "low",
+    "weather_note": "Avg 62\u00b0F high / 47\u00b0F low"
+   }
+  ]
+ },
+ "GH": {
+  "name": "Ghana",
+  "best_times": [
+   {
+    "months": "October,March,November",
+    "why_short": "best",
+    "why": "best, dry season, cooler/less humid",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 93\u00b0F high / 74\u00b0F low"
+   },
+   {
+    "months": "December",
+    "why_short": "sunny",
+    "why": "sunny, fewer mosquitoes",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 94\u00b0F high / 70\u00b0F low"
+   },
+   {
+    "months": "January,February",
+    "why_short": "coolest/most pleasant",
+    "why": "coolest/most pleasant, though Harmattan wind brings haze/dust from Dec",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 96\u00b0F high / 71\u00b0F low"
+   }
+  ]
+ },
+ "AW": {
+  "name": "Aruba",
+  "best_times": [
+   {
+    "months": "December,April,January",
+    "why_short": "best",
+    "why": "best, dry/sunny/warm (~82F), driest Feb-Apr",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 78\u00b0F low"
+   },
+   {
+    "months": "September,October,November",
+    "why_short": "off-season",
+    "why": "off-season, sporadic rain/higher heat index, but big savings",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 87\u00b0F high / 80\u00b0F low"
+   }
+  ]
+ },
+ "GI": {
+  "name": "Gibraltar",
+  "best_times": [
+   {
+    "months": "May,October,March,September",
+    "why_short": "balance",
+    "why": "best overall balance, comfortable + ideal for sightseeing/hiking -- May is the sweet spot (warm, minimal rain, sunny)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 70\u00b0F high / 60\u00b0F low"
+   },
+   {
+    "months": "September,October,November",
+    "why_short": "peak for spotting migratory birds over",
+    "why": "peak for spotting migratory birds over the Strait",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 71\u00b0F high / 61\u00b0F low"
+   }
+  ]
+ },
+ "GR": {
+  "name": "Greece",
+  "best_times": [
+   {
+    "months": "May,September,October",
+    "why_short": "pleasant",
+    "why": "best overall, pleasant, no rain, smaller crowds (except holiday weekends)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 71\u00b0F high / 54\u00b0F low"
+   },
+   {
+    "months": "April,May,June,September,October",
+    "why_short": "warm not stifling",
+    "why": "warm not stifling, quieter",
+    "crowd_level": "low",
+    "weather_note": "Avg 70\u00b0F high / 53\u00b0F low"
+   }
+  ]
+ },
+ "GL": {
+  "name": "Greenland",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "mild",
+    "why": "best overall, mild, near-constant daylight, most accessible -- hiking/kayaking/whale watching/Ilulissat Icefjord, but mosquitoes in Jul-Aug",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 12\u00b0F high / 2\u00b0F low"
+   },
+   {
+    "months": "September",
+    "why_short": "balance of daylight/dark",
+    "why": "balance of daylight/dark, last cruises, Northern Lights season begins",
+    "crowd_level": "moderate",
+    "weather_note": "Avg -5\u00b0F high / -16\u00b0F low"
+   },
+   {
+    "months": "March,April",
+    "why_short": "pristine snow",
+    "why": "pristine snow, best dog sledding/snowmobiling/skiing",
+    "crowd_level": "moderate",
+    "weather_note": "Avg -18\u00b0F high / -30\u00b0F low"
+   }
+  ]
+ },
+ "GD": {
+  "name": "Grenada",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "high season",
+    "why": "high season, best overall, dry, low humidity, 21-30C",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 74\u00b0F low"
+   }
+  ]
+ },
+ "GP": {
+  "name": "Guadeloupe",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April,May",
+    "why_short": "best",
+    "why": "best, warm/dry, highs mid-80sF",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 82\u00b0F high / 72\u00b0F low"
+   }
+  ]
+ },
+ "GU": {
+  "name": "Guam",
+  "best_times": [
+   {
+    "months": "January,February,March,April,May",
+    "why_short": "dry season",
+    "why": "dry season, best overall, cooler, good beach/outdoor conditions",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 85\u00b0F high / 76\u00b0F low"
+   },
+   {
+    "months": "April,May,June",
+    "why_short": "still pleasant",
+    "why": "still pleasant, good diving/snorkeling/water sports",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 87\u00b0F high / 77\u00b0F low"
+   }
+  ]
+ },
+ "GT": {
+  "name": "Guatemala",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season (verano), best overall -- clear skies, warm days, cooler highland nights, best for Mayan ruins/hiking",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 70\u00b0F high / 56\u00b0F low"
+   }
+  ]
+ },
+ "GG": {
+  "name": "Guernsey",
+  "best_times": [
+   {
+    "months": "June,July,August,September",
+    "why_short": "best",
+    "why": "best, warmest/driest, swimmable sea, long daylight",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 62\u00b0F high / 60\u00b0F low"
+   }
+  ]
+ },
+ "GN": {
+  "name": "Guinea",
+  "best_times": [
+   {
+    "months": "November,April,December,March",
+    "why_short": "dry season",
+    "why": "dry season, best overall, cool/low rain, good for hiking/wildlife/beaches",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 94\u00b0F high / 70\u00b0F low"
+   }
+  ]
+ },
+ "GW": {
+  "name": "Guinea-Bissau",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April,May",
+    "why_short": "dry season",
+    "why": "dry season (harmattan winds), best overall, warm/dry though hazy skies",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 97\u00b0F high / 72\u00b0F low"
+   }
+  ]
+ },
+ "GY": {
+  "name": "Guyana",
+  "best_times": [
+   {
+    "months": "August,March,February,April",
+    "why_short": "accessible interior roads",
+    "why": "best overall, accessible interior roads, easier wildlife spotting",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 86\u00b0F high / 72\u00b0F low"
+   },
+   {
+    "months": "September,October",
+    "why_short": "shorter dry spell",
+    "why": "shorter dry spell, fewer crowds, good for Indigenous Heritage Month cultural experiences",
+    "crowd_level": "low",
+    "weather_note": "Avg 89\u00b0F high / 73\u00b0F low"
+   }
+  ]
+ },
+ "HN": {
+  "name": "Honduras",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, warm (26-32C), low rain, outside hurricane season",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 80\u00b0F high / 61\u00b0F low"
+   }
+  ]
+ },
+ "HK": {
+  "name": "Hong Kong",
+  "best_times": [
+   {
+    "months": "October,November,December,March,April,May",
+    "why_short": "mild/low humidity/clear skies",
+    "why": "best overall, mild/low humidity/clear skies",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 76\u00b0F high / 67\u00b0F low"
+   }
+  ]
+ },
+ "HU": {
+  "name": "Hungary",
+  "best_times": [
+   {
+    "months": "May,June,September,October",
+    "why_short": "mild",
+    "why": "best overall, mild, fewer crowds",
+    "crowd_level": "low",
+    "weather_note": "Avg 73\u00b0F high / 54\u00b0F low"
+   },
+   {
+    "months": "July,August",
+    "why_short": "peak",
+    "why": "peak, hot (80s-90sF), major music festivals (e.g",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 64\u00b0F low"
+   }
+  ]
+ },
+ "IS": {
+  "name": "Iceland",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "Midnight Sun",
+    "why": "best overall, Midnight Sun (up to 21hr daylight), all roads/highlands/Westfjords open -- but busiest/priciest",
+    "crowd_level": "peak",
+    "weather_note": "Avg 50\u00b0F high / 38\u00b0F low"
+   },
+   {
+    "months": "April,May,September",
+    "why_short": "cheaper/quieter shoulder",
+    "why": "cheaper/quieter shoulder, changeable weather, spring wildflowers",
+    "crowd_level": "low",
+    "weather_note": "Avg 36\u00b0F high / 27\u00b0F low"
+   }
+  ]
+ },
+ "IN": {
+  "name": "India",
+  "best_times": [
+   {
+    "months": "October,November,December,January,February,March",
+    "why_short": "cooler/clearer/ideal sightseeing",
+    "why": "best overall, cooler/clearer/ideal sightseeing -- Feb especially good, workable almost everywhere",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 85\u00b0F high / 65\u00b0F low"
+   }
+  ]
+ },
+ "ID": {
+  "name": "Indonesia",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September",
+    "why_short": "dry season",
+    "why": "dry season, best overall, lower rainfall/humidity",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 85\u00b0F high / 75\u00b0F low"
+   }
+  ]
+ },
+ "IE": {
+  "name": "Ireland",
+  "best_times": [
+   {
+    "months": "April,May,September,October",
+    "why_short": "comfortable + fewer crowds than summer",
+    "why": "best overall, comfortable + fewer crowds than summer",
+    "crowd_level": "low",
+    "weather_note": "Avg 59\u00b0F high / 47\u00b0F low"
+   }
+  ]
+ },
+ "IM": {
+  "name": "Isle of Man",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "best",
+    "why": "best, sunny/warm, peak prices",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 61\u00b0F high / 50\u00b0F low"
+   },
+   {
+    "months": "May,June,July",
+    "why_short": "excellent all-round climate without peak crowds",
+    "why": "excellent all-round climate without peak crowds",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 58\u00b0F high / 47\u00b0F low"
+   },
+   {
+    "months": "September",
+    "why_short": "fewer crowds",
+    "why": "fewer crowds, lower rates, still mild",
+    "crowd_level": "low",
+    "weather_note": "Avg 58\u00b0F high / 49\u00b0F low"
+   }
+  ]
+ },
+ "IL": {
+  "name": "Israel",
+  "best_times": [
+   {
+    "months": "April,May,September,October",
+    "why_short": "best",
+    "why": "best, mild/comfortable (20-28C), rare rain, landscapes at their best",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 62\u00b0F low"
+   }
+  ]
+ },
+ "IT": {
+  "name": "Italy",
+  "best_times": [
+   {
+    "months": "April,May,June,September,October",
+    "why_short": "mild",
+    "why": "best overall, mild (60-80F), fewer crowds",
+    "crowd_level": "low",
+    "weather_note": "Avg 70\u00b0F high / 49\u00b0F low"
+   },
+   {
+    "months": "October,November",
+    "why_short": "fewer crowds/lower prices",
+    "why": "fewer crowds/lower prices, still pleasant",
+    "crowd_level": "low",
+    "weather_note": "Avg 62\u00b0F high / 44\u00b0F low"
+   }
+  ]
+ },
+ "CI": {
+  "name": "Ivory Coast",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 94\u00b0F high / 70\u00b0F low"
+   }
+  ]
+ },
+ "JM": {
+  "name": "Jamaica",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "best",
+    "why": "best, high season, sunny/dry, 25-30C -- but busiest/priciest, esp Christmas",
+    "crowd_level": "peak",
+    "weather_note": "Avg 78\u00b0F high / 62\u00b0F low"
+   }
+  ]
+ },
+ "JP": {
+  "name": "Japan",
+  "best_times": [
+   {
+    "months": "March,April,May,September,October,November",
+    "why_short": "mild/clear",
+    "why": "best overall, mild/clear, cherry blossoms (late Mar-early Apr peak, hanami festivities) and autumn foliage -- but also most crowded",
+    "crowd_level": "peak",
+    "weather_note": "Avg 62\u00b0F high / 43\u00b0F low"
+   }
+  ]
+ },
+ "JE": {
+  "name": "Jersey",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "peak",
+    "why": "peak, warmest/most reliable weather, busiest",
+    "crowd_level": "peak",
+    "weather_note": "Avg 67\u00b0F high / 59\u00b0F low"
+   },
+   {
+    "months": "May,June,September",
+    "why_short": "sweet spot",
+    "why": "sweet spot -- dry trails, long days, fewer crowds, off-peak rates",
+    "crowd_level": "low",
+    "weather_note": "Avg 64\u00b0F high / 56\u00b0F low"
+   },
+   {
+    "months": "January",
+    "why_short": "quietest",
+    "why": "quietest, lowest tourism, easy exploring",
+    "crowd_level": "low",
+    "weather_note": "Avg 49\u00b0F high / 44\u00b0F low"
+   }
+  ]
+ },
+ "JO": {
+  "name": "Jordan",
+  "best_times": [
+   {
+    "months": "March,April,May,September,October",
+    "why_short": "mild",
+    "why": "best overall, mild (15-25C), wildflowers in spring, good for hiking/Petra/Wadi Rum",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 79\u00b0F high / 55\u00b0F low"
+   }
+  ]
+ },
+ "KZ": {
+  "name": "Kazakhstan",
+  "best_times": [
+   {
+    "months": "May,June,September",
+    "why_short": "between summer heat/winter cold",
+    "why": "best overall, between summer heat/winter cold",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 76\u00b0F high / 54\u00b0F low"
+   },
+   {
+    "months": "April,May,June,September,October",
+    "why_short": "good sightseeing windows",
+    "why": "good sightseeing windows",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 69\u00b0F high / 47\u00b0F low"
+   }
+  ]
+ },
+ "KE": {
+  "name": "Kenya",
+  "best_times": [
+   {
+    "months": "June,July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall for wildlife -- Great Wildebeest Migration reaches Masai Mara Jul-Aug, stays through Sep",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 91\u00b0F high / 70\u00b0F low"
+   }
+  ]
+ },
+ "KI": {
+  "name": "Kiribati",
+  "best_times": [
+   {
+    "months": "April,May,June,July,August,September",
+    "why_short": "cooler/less humid",
+    "why": "best overall, cooler/less humid, calm seas, good snorkeling/fishing",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 83\u00b0F high / 80\u00b0F low"
+   }
+  ]
+ },
+ "XK": {
+  "name": "Kosovo",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "best for festivals/outdoor sightseeing",
+    "why": "best for festivals/outdoor sightseeing, warm, lively summer festival season -- busy but not overly crowded",
+    "crowd_level": "high",
+    "weather_note": "Avg 82\u00b0F high / 60\u00b0F low"
+   },
+   {
+    "months": "April,May,June",
+    "why_short": "milder",
+    "why": "milder, fewer crowds, wildflowers, still snow-capped mountains, best for hiking",
+    "crowd_level": "low",
+    "weather_note": "Avg 69\u00b0F high / 48\u00b0F low"
+   }
+  ]
+ },
+ "KW": {
+  "name": "Kuwait",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "cooler days/pleasant nights",
+    "why": "best overall, cooler days/pleasant nights",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 74\u00b0F high / 53\u00b0F low"
+   }
+  ]
+ },
+ "KG": {
+  "name": "Kyrgyzstan",
+  "best_times": [
+   {
+    "months": "June,July,August,September",
+    "why_short": "dry",
+    "why": "best overall, dry, good for high-altitude regions/lakes/valleys",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 55\u00b0F high / 38\u00b0F low"
+   }
+  ]
+ },
+ "LA": {
+  "name": "Laos",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 79\u00b0F high / 60\u00b0F low"
+   }
+  ]
+ },
+ "LV": {
+  "name": "Latvia",
+  "best_times": [
+   {
+    "months": "April,May,June,July,August,September",
+    "why_short": "warmest/sunniest overall",
+    "why": "warmest/sunniest overall",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 64\u00b0F high / 49\u00b0F low"
+   }
+  ]
+ },
+ "LS": {
+  "name": "Lesotho",
+  "best_times": [
+   {
+    "months": "March,April,May,September,October,November",
+    "why_short": "best for hiking/pony trekking",
+    "why": "best for hiking/pony trekking, low rain, cool-not-freezing days, lush from summer rain",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 61\u00b0F high / 41\u00b0F low"
+   }
+  ]
+ },
+ "LR": {
+  "name": "Liberia",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, more predictable weather/accessible roads",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 88\u00b0F high / 72\u00b0F low"
+   }
+  ]
+ },
+ "LI": {
+  "name": "Liechtenstein",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September",
+    "why_short": "warm",
+    "why": "best overall, warm (~75F), open trails, Vaduz summer festivals -- Jun-Aug busiest/priciest",
+    "crowd_level": "peak",
+    "weather_note": "Avg 72\u00b0F high / 55\u00b0F low"
+   }
+  ]
+ },
+ "LT": {
+  "name": "Lithuania",
+  "best_times": [
+   {
+    "months": "June,July,August,September",
+    "why_short": "long daylight",
+    "why": "best overall, long daylight (17hrs+ in Jun), midsummer Jonin\u0117s bonfire/sea festivals (late Jun)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 71\u00b0F high / 55\u00b0F low"
+   },
+   {
+    "months": "May,June,September,October",
+    "why_short": "fewer crowds",
+    "why": "fewer crowds, mild, Sep especially dry, forests turn amber/copper",
+    "crowd_level": "low",
+    "weather_note": "Avg 63\u00b0F high / 48\u00b0F low"
+   }
+  ]
+ },
+ "LU": {
+  "name": "Luxembourg",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "best/most popular",
+    "why": "best/most popular, mild-warm, cultural events",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 74\u00b0F high / 56\u00b0F low"
+   },
+   {
+    "months": "April,May",
+    "why_short": "pre-peak",
+    "why": "pre-peak, blooming countryside, fewer visitors, wildflowers",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 60\u00b0F high / 42\u00b0F low"
+   },
+   {
+    "months": "November",
+    "why_short": "Christmas markets begin",
+    "why": "Christmas markets begin",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 47\u00b0F high / 38\u00b0F low"
+   }
+  ]
+ },
+ "MO": {
+  "name": "Macau",
+  "best_times": [
+   {
+    "months": "October,February,December",
+    "why_short": "best",
+    "why": "best, sunny/warm/low humidity -- Oct-Dec also peak for foodie/art festivals and travel business events",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 73\u00b0F high / 63\u00b0F low"
+   }
+  ]
+ },
+ "MG": {
+  "name": "Madagascar",
+  "best_times": [
+   {
+    "months": "April,May,June,July,August,September",
+    "why_short": "cool/dry season",
+    "why": "cool/dry season, best overall",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 74\u00b0F high / 52\u00b0F low"
+   }
+  ]
+ },
+ "MW": {
+  "name": "Malawi",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall, cool days/pleasant evenings",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 74\u00b0F high / 57\u00b0F low"
+   }
+  ]
+ },
+ "MY": {
+  "name": "Malaysia",
+  "best_times": [
+   {
+    "months": "February,March,April,May,June,July",
+    "why_short": "West Coast/Penang/Langkawi best Dec-Mar; East Coast",
+    "why": "West Coast/Penang/Langkawi best Dec-Mar; East Coast best Apr-Oct; Borneo best Mar-Oct",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 83\u00b0F high / 71\u00b0F low"
+   }
+  ]
+ },
+ "MV": {
+  "name": "Maldives",
+  "best_times": [
+   {
+    "months": "January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, clearest/calmest water, best diving/snorkeling -- but priciest/busiest",
+    "crowd_level": "peak",
+    "weather_note": "Avg 84\u00b0F high / 80\u00b0F low"
+   },
+   {
+    "months": "October,November",
+    "why_short": "whale shark season",
+    "why": "whale shark season",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 83\u00b0F high / 80\u00b0F low"
+   }
+  ]
+ },
+ "MT": {
+  "name": "Malta",
+  "best_times": [
+   {
+    "months": "May,June,September,October",
+    "why_short": "balance",
+    "why": "best overall balance -- warm, sunny, fewer crowds than peak summer",
+    "crowd_level": "low",
+    "weather_note": "Avg 78\u00b0F high / 70\u00b0F low"
+   },
+   {
+    "months": "June,July,August",
+    "why_short": "sunniest/hottest",
+    "why": "sunniest/hottest, peak crowds",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 86\u00b0F high / 75\u00b0F low"
+   }
+  ]
+ },
+ "MH": {
+  "name": "Marshall Islands",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 82\u00b0F high / 79\u00b0F low"
+   },
+   {
+    "months": "February,March,August",
+    "why_short": "warm/sunny/low rain",
+    "why": "warm/sunny/low rain, ideal diving/snorkeling/fishing -- Mar best overall (stable weather, low rain, great ocean conditions)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 82\u00b0F high / 79\u00b0F low"
+   }
+  ]
+ },
+ "MQ": {
+  "name": "Martinique",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, warm/sunny, vibrant cultural festivities",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 80\u00b0F high / 72\u00b0F low"
+   }
+  ]
+ },
+ "MR": {
+  "name": "Mauritania",
+  "best_times": [
+   {
+    "months": "November,March,December,February",
+    "why_short": "warm not scorching",
+    "why": "best overall, warm not scorching, manageable for desert/overland travel",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 59\u00b0F low"
+   },
+   {
+    "months": "January,February",
+    "why_short": "watch for saharan dust/air quality",
+    "why": "watch for Saharan dust/air quality",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 80\u00b0F high / 55\u00b0F low"
+   }
+  ]
+ },
+ "MU": {
+  "name": "Mauritius",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "cool/dry season",
+    "why": "cool/dry season, best for hiking/nature/culture",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 70\u00b0F high / 62\u00b0F low"
+   }
+  ]
+ },
+ "YT": {
+  "name": "Mayotte",
+  "best_times": [
+   {
+    "months": "June,July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall, warm/sunny/rare rain, good kitesurfing/sailing",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 72\u00b0F low"
+   }
+  ]
+ },
+ "MX": {
+  "name": "Mexico",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, virtually no rain -- best for Caribbean coast, Pacific resorts, central highland cities",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 75\u00b0F high / 47\u00b0F low"
+   },
+   {
+    "months": "May",
+    "why_short": "best nov-mar",
+    "why": "best Nov-Mar",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 57\u00b0F low"
+   }
+  ]
+ },
+ "FM": {
+  "name": "Micronesia",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, low humidity",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 75\u00b0F low"
+   },
+   {
+    "months": "November,December",
+    "why_short": "traditional festivals",
+    "why": "traditional festivals, dances/music/rituals",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 75\u00b0F low"
+   }
+  ]
+ },
+ "MD": {
+  "name": "Moldova",
+  "best_times": [
+   {
+    "months": "April,May,June,September,October",
+    "why_short": "pleasant",
+    "why": "best overall, pleasant, lush countryside, good for hiking/birdwatching",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 69\u00b0F high / 51\u00b0F low"
+   }
+  ]
+ },
+ "MC": {
+  "name": "Monaco",
+  "best_times": [
+   {
+    "months": "April,May,June,July,August,September",
+    "why_short": "ideal balmy weather + reduced rates",
+    "why": "ideal balmy weather + reduced rates",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 74\u00b0F high / 56\u00b0F low"
+   }
+  ]
+ },
+ "MN": {
+  "name": "Mongolia",
+  "best_times": [
+   {
+    "months": "May,September,June,August",
+    "why_short": "lush steppe",
+    "why": "best overall, lush steppe, mild, long days",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 72\u00b0F high / 48\u00b0F low"
+   },
+   {
+    "months": "July",
+    "why_short": "Naadam Festival",
+    "why": "Naadam Festival (archery/horse racing/wrestling) nationwide -- book far ahead, availability tight",
+    "crowd_level": "peak",
+    "weather_note": "Avg 79\u00b0F high / 58\u00b0F low"
+   },
+   {
+    "months": "September,October",
+    "why_short": "fewer crowds",
+    "why": "fewer crowds, golden autumn, Golden Eagle Festival (first weekend Oct, Altai Mountains)",
+    "crowd_level": "low",
+    "weather_note": "Avg 58\u00b0F high / 36\u00b0F low"
+   }
+  ]
+ },
+ "ME": {
+  "name": "Montenegro",
+  "best_times": [
+   {
+    "months": "April,May,June,September,October",
+    "why_short": "mild",
+    "why": "best overall, mild, fewer crowds, coast at its best May/Jun/Sep",
+    "crowd_level": "low",
+    "weather_note": "Avg 70\u00b0F high / 53\u00b0F low"
+   }
+  ]
+ },
+ "MS": {
+  "name": "Montserrat",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April,May",
+    "why_short": "drier season",
+    "why": "drier season, best overall for northern-hemisphere travelers",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 78\u00b0F high / 72\u00b0F low"
+   }
+  ]
+ },
+ "MA": {
+  "name": "Morocco",
+  "best_times": [
+   {
+    "months": "September,October,November,March,April,May",
+    "why_short": "warm not scorching",
+    "why": "best overall, warm not scorching, manageable crowds",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 74\u00b0F high / 51\u00b0F low"
+   }
+  ]
+ },
+ "MZ": {
+  "name": "Mozambique",
+  "best_times": [
+   {
+    "months": "April,May,June,July,August,September",
+    "why_short": "best overall (dry season), avoids wettest",
+    "why": "best overall (dry season), avoids wettest Dec-Feb",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 64\u00b0F low"
+   }
+  ]
+ },
+ "NA": {
+  "name": "Namibia",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall, mild days/clear skies",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 75\u00b0F high / 49\u00b0F low"
+   }
+  ]
+ },
+ "NR": {
+  "name": "Nauru",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall, steadier trade winds, clearest snorkeling water (Anibare Bay)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 83\u00b0F high / 80\u00b0F low"
+   }
+  ]
+ },
+ "NP": {
+  "name": "Nepal",
+  "best_times": [
+   {
+    "months": "October,December,November",
+    "why_short": "clear skies",
+    "why": "best overall, clear skies, easy trekking, good visibility -- also Dasain and Tihar, Nepal's two biggest festivals",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 71\u00b0F high / 52\u00b0F low"
+   },
+   {
+    "months": "March,April,May",
+    "why_short": "spring",
+    "why": "spring, rhododendrons bloom, good trekking",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 78\u00b0F high / 58\u00b0F low"
+   }
+  ]
+ },
+ "NL": {
+  "name": "Netherlands",
+  "best_times": [
+   {
+    "months": "June,September,October,November",
+    "why_short": "balance",
+    "why": "best overall balance -- good value/quiet/activities, autumn beer & food season",
+    "crowd_level": "low",
+    "weather_note": "Avg 62\u00b0F high / 50\u00b0F low"
+   },
+   {
+    "months": "June,July,August",
+    "why_short": "warmest",
+    "why": "warmest, best cycling/canal cruises, busiest/priciest",
+    "crowd_level": "peak",
+    "weather_note": "Avg 72\u00b0F high / 57\u00b0F low"
+   }
+  ]
+ },
+ "NC": {
+  "name": "New Caledonia",
+  "best_times": [
+   {
+    "months": "June,July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall, low humidity, clearest lagoon visibility (20-30m)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 76\u00b0F high / 62\u00b0F low"
+   }
+  ]
+ },
+ "NZ": {
+  "name": "New Zealand",
+  "best_times": [
+   {
+    "months": "December,January,February",
+    "why_short": "warm/long days",
+    "why": "best overall, warm/long days, ideal hiking, but busiest (esp Christmas/NY)",
+    "crowd_level": "peak",
+    "weather_note": "Avg 68\u00b0F high / 58\u00b0F low"
+   },
+   {
+    "months": "November,March",
+    "why_short": "shoulder",
+    "why": "shoulder, equally good weather, quieter trails -- Nov especially recommended",
+    "crowd_level": "low",
+    "weather_note": "Avg 64\u00b0F high / 56\u00b0F low"
+   }
+  ]
+ },
+ "NI": {
+  "name": "Nicaragua",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, sunny, 77-82F",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 83\u00b0F high / 69\u00b0F low"
+   }
+  ]
+ },
+ "NG": {
+  "name": "Nigeria",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall -- Nov-Jan optimal (dry+relatively cool, though dusty Saharan harmattan winds)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 89\u00b0F high / 65\u00b0F low"
+   }
+  ]
+ },
+ "NU": {
+  "name": "Niue",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall, cooler/less rain",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 77\u00b0F high / 74\u00b0F low"
+   }
+  ]
+ },
+ "MK": {
+  "name": "North Macedonia",
+  "best_times": [
+   {
+    "months": "May,October,April,June,September",
+    "why_short": "mild",
+    "why": "best overall, mild (15-25C) -- Sep often cited as single best month",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 75\u00b0F high / 53\u00b0F low"
+   }
+  ]
+ },
+ "MP": {
+  "name": "Northern Mariana Islands",
+  "best_times": [
+   {
+    "months": "December,May,January,April,February,March",
+    "why_short": "dry season",
+    "why": "dry season, best overall, sunny/pleasant/lower humidity, good beach/hiking/culture conditions",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 75\u00b0F low"
+   }
+  ]
+ },
+ "NO": {
+  "name": "Norway",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "long daylight/midnight sun",
+    "why": "best overall, long daylight/midnight sun, warm for fjords/Arctic, low precip",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 61\u00b0F high / 45\u00b0F low"
+   },
+   {
+    "months": "May",
+    "why_short": "lower rainfall",
+    "why": "lower rainfall, good shoulder",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 47\u00b0F high / 31\u00b0F low"
+   },
+   {
+    "months": "September",
+    "why_short": "crisp air",
+    "why": "crisp air, dramatic light, crowds gone",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 51\u00b0F high / 38\u00b0F low"
+   }
+  ]
+ },
+ "OM": {
+  "name": "Oman",
+  "best_times": [
+   {
+    "months": "October,November,December,January,February,March",
+    "why_short": "warm days/pleasant nights",
+    "why": "best overall, warm days/pleasant nights, virtually no rain",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 88\u00b0F high / 65\u00b0F low"
+   }
+  ]
+ },
+ "PK": {
+  "name": "Pakistan",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "clear skies",
+    "why": "clear skies, mild, accessible, no monsoon/heat extremes",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 65\u00b0F low"
+   }
+  ]
+ },
+ "PW": {
+  "name": "Palau",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, sunny/calm seas -- Feb-Apr clearest skies specifically",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 77\u00b0F low"
+   },
+   {
+    "months": "November,December",
+    "why_short": "shoulder",
+    "why": "shoulder, moderate rain, lighter crowds",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 77\u00b0F low"
+   }
+  ]
+ },
+ "PS": {
+  "name": "Palestine",
+  "best_times": [
+   {
+    "months": "March,April,May,September,October,November",
+    "why_short": "warm/sunny/dry",
+    "why": "best overall, warm/sunny/dry, cool nights, good for hiking",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 74\u00b0F high / 55\u00b0F low"
+   }
+  ]
+ },
+ "PA": {
+  "name": "Panama",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, hot/sunny (~89F), best for Canal tours/beaches/mountain hiking",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 74\u00b0F low"
+   }
+  ]
+ },
+ "NF": {
+  "name": "Norfolk Island",
+  "best_times": [
+   {
+    "months": "October,November,December,January,February,March",
+    "why_short": "best",
+    "why": "best, warmest, driest, longest days -- but Dec busiest, book ahead",
+    "crowd_level": "peak",
+    "weather_note": "Avg 70\u00b0F high / 68\u00b0F low"
+   }
+  ]
+ },
+ "PG": {
+  "name": "Papua New Guinea",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall, clear skies, low humidity",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 77\u00b0F low"
+   }
+  ]
+ },
+ "PY": {
+  "name": "Paraguay",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September",
+    "why_short": "mild/dry",
+    "why": "best overall, mild/dry, comfortable for Asuncion + Jesuit Missions",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 63\u00b0F low"
+   }
+  ]
+ },
+ "PE": {
+  "name": "Peru",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall for trekking -- Jun-Aug peak (Andes trekking, Machu Picchu, Amazon wildlife) but crowded",
+    "crowd_level": "high",
+    "weather_note": "Avg 48\u00b0F high / 34\u00b0F low"
+   }
+  ]
+ },
+ "PH": {
+  "name": "Philippines",
+  "best_times": [
+   {
+    "months": "December,January,February",
+    "why_short": "most accessible",
+    "why": "best overall, most accessible, 75-88F",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 78\u00b0F low"
+   },
+   {
+    "months": "November,May",
+    "why_short": "shoulder",
+    "why": "shoulder, either side of rains, fewer crowds",
+    "crowd_level": "low",
+    "weather_note": "Avg 84\u00b0F high / 80\u00b0F low"
+   }
+  ]
+ },
+ "PN": {
+  "name": "Pitcairn Islands",
+  "best_times": [
+   {
+    "months": "January,February,March",
+    "why_short": "warmest/sunniest",
+    "why": "warmest/sunniest, calmer seas",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 78\u00b0F high / 75\u00b0F low"
+   }
+  ]
+ },
+ "PL": {
+  "name": "Poland",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "best spring pick",
+    "why": "best spring pick, long days, sunny, mountain hiking + wildflowers",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 70\u00b0F high / 53\u00b0F low"
+   }
+  ]
+ },
+ "PT": {
+  "name": "Portugal",
+  "best_times": [
+   {
+    "months": "September,October",
+    "why_short": "summer heat softens",
+    "why": "best overall, summer heat softens, still warm/dry, wine harvest",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 78\u00b0F high / 59\u00b0F low"
+   },
+   {
+    "months": "March,April,May",
+    "why_short": "spring bloom",
+    "why": "spring bloom, before crowds -- Mar specifically good weather + fewer tourists",
+    "crowd_level": "low",
+    "weather_note": "Avg 70\u00b0F high / 51\u00b0F low"
+   },
+   {
+    "months": "June",
+    "why_short": "Lisbon's Festas de Lisboa + Porto's",
+    "why": "Lisbon's Festas de Lisboa + Porto's Festa de Sao Joao, lively but crowded/hot",
+    "crowd_level": "high",
+    "weather_note": "Avg 82\u00b0F high / 59\u00b0F low"
+   }
+  ]
+ },
+ "PR": {
+  "name": "Puerto Rico",
+  "best_times": [
+   {
+    "months": "April,May,June",
+    "why_short": "milder",
+    "why": "best overall, milder, fewer crowds, just after winter peak/before rains",
+    "crowd_level": "low",
+    "weather_note": "Avg 85\u00b0F high / 70\u00b0F low"
+   }
+  ]
+ },
+ "QA": {
+  "name": "Qatar",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "mild",
+    "why": "best overall, mild (68-95F), best for Doha sightseeing/desert/coast",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 82\u00b0F high / 63\u00b0F low"
+   }
+  ]
+ },
+ "RE": {
+  "name": "R\u00e9union",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "~25c",
+    "why": "best overall, ~25C, low rain, best hiking (Piton de la Fournaise) + Jul-Oct whale watching off Saint-Gilles",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 54\u00b0F high / 43\u00b0F low"
+   }
+  ]
+ },
+ "RO": {
+  "name": "Romania",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September",
+    "why_short": "warm/sunny",
+    "why": "best overall, warm/sunny",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 72\u00b0F high / 54\u00b0F low"
+   },
+   {
+    "months": "April,May",
+    "why_short": "best scenery + ideal temps",
+    "why": "best scenery + ideal temps, occasional early rain",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 60\u00b0F high / 42\u00b0F low"
+   }
+  ]
+ },
+ "RW": {
+  "name": "Rwanda",
+  "best_times": [
+   {
+    "months": "June,July,August,September,December,January",
+    "why_short": "dry seasons",
+    "why": "dry seasons, best overall, easiest hiking/gorilla trekking, lowest malaria risk",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 79\u00b0F high / 58\u00b0F low"
+   }
+  ]
+ },
+ "BL": {
+  "name": "Saint Barth\u00e9lemy",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, warm/sunny/low humidity -- also Christmas Village + St Barts Music Festival",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 79\u00b0F high / 77\u00b0F low"
+   }
+  ]
+ },
+ "SH": {
+  "name": "Saint Helena",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March",
+    "why_short": "warmer/drier",
+    "why": "best overall, warmer/drier, 20-27C",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 66\u00b0F high / 64\u00b0F low"
+   }
+  ]
+ },
+ "KN": {
+  "name": "Saint Kitts and Nevis",
+  "best_times": [
+   {
+    "months": "February,May,March,April",
+    "why_short": "driest",
+    "why": "driest, best overall, sunny/warm, avoids Jul-Nov hurricane season",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 76\u00b0F high / 70\u00b0F low"
+   },
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "peak season",
+    "why": "peak season, incl",
+    "crowd_level": "peak",
+    "weather_note": "Avg 75\u00b0F high / 69\u00b0F low"
+   }
+  ]
+ },
+ "LC": {
+  "name": "Saint Lucia",
+  "best_times": [
+   {
+    "months": "December,January,February,March",
+    "why_short": "~81f",
+    "why": "best overall, ~81F, ideal beach weather -- but peak season/pricier",
+    "crowd_level": "peak",
+    "weather_note": "Avg 78\u00b0F high / 70\u00b0F low"
+   },
+   {
+    "months": "February,March,April,May",
+    "why_short": "driest window",
+    "why": "driest window",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 79\u00b0F high / 71\u00b0F low"
+   }
+  ]
+ },
+ "MF": {
+  "name": "Saint Martin",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, warm/sunny/little rain -- Jan-Feb peak prices",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 79\u00b0F high / 77\u00b0F low"
+   },
+   {
+    "months": "May",
+    "why_short": "smart shoulder pick",
+    "why": "smart shoulder pick, still hot/beach-friendly, crowds ease, better value",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 79\u00b0F low"
+   }
+  ]
+ },
+ "PM": {
+  "name": "Saint Pierre and Miquelon",
+  "best_times": [
+   {
+    "months": "July,August,September",
+    "why_short": "mildest",
+    "why": "best overall, mildest (~63F highs), Bastille Day (mid-Jul), Basque Festival (Aug, pelota/dance), Miquelon Seafood Festival (mid-Aug)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 59\u00b0F high / 56\u00b0F low"
+   }
+  ]
+ },
+ "VC": {
+  "name": "Saint Vincent and the Grenadines",
+  "best_times": [
+   {
+    "months": "February,March,April",
+    "why_short": "driest",
+    "why": "driest, best overall, 81-86F",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 75\u00b0F high / 68\u00b0F low"
+   },
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "peak season",
+    "why": "peak season, warm/dry, most tour options -- but crowded/pricier",
+    "crowd_level": "peak",
+    "weather_note": "Avg 75\u00b0F high / 68\u00b0F low"
+   }
+  ]
+ },
+ "WS": {
+  "name": "Samoa",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "weather",
+    "why": "best overall weather, sunny, good snorkeling visibility",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 76\u00b0F high / 68\u00b0F low"
+   }
+  ]
+ },
+ "SM": {
+  "name": "San Marino",
+  "best_times": [
+   {
+    "months": "July,August",
+    "why_short": "hottest",
+    "why": "hottest, driest, peak season, largest crowds",
+    "crowd_level": "peak",
+    "weather_note": "Avg 82\u00b0F high / 64\u00b0F low"
+   },
+   {
+    "months": "December",
+    "why_short": "Christmas Market",
+    "why": "Christmas Market, cold/quiet, some limited hours",
+    "crowd_level": "low",
+    "weather_note": "Avg 48\u00b0F high / 38\u00b0F low"
+   }
+  ]
+ },
+ "ST": {
+  "name": "S\u00e3o Tom\u00e9 and Pr\u00edncipe",
+  "best_times": [
+   {
+    "months": "December,January,February,June,July,August",
+    "why_short": "sunny",
+    "why": "best overall, sunny, good snorkeling/diving visibility",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 80\u00b0F high / 78\u00b0F low"
+   }
+  ]
+ },
+ "SA": {
+  "name": "Saudi Arabia",
+  "best_times": [
+   {
+    "months": "November,December,January,February",
+    "why_short": "mild",
+    "why": "best overall, mild, only recognized tourist season, numerous festivals/events",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 73\u00b0F high / 53\u00b0F low"
+   }
+  ]
+ },
+ "SN": {
+  "name": "Senegal",
+  "best_times": [
+   {
+    "months": "November,December,January,February",
+    "why_short": "dry season",
+    "why": "dry season, best overall, coolest, best wildlife viewing",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 98\u00b0F high / 72\u00b0F low"
+   },
+   {
+    "months": "May",
+    "why_short": "Saint-Louis Jazz Festival",
+    "why": "Saint-Louis Jazz Festival, world-famous",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 106\u00b0F high / 81\u00b0F low"
+   }
+  ]
+ },
+ "RS": {
+  "name": "Serbia",
+  "best_times": [
+   {
+    "months": "March,April,May,September,October",
+    "why_short": "mild",
+    "why": "best overall, mild, pleasant countryside",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 64\u00b0F high / 47\u00b0F low"
+   },
+   {
+    "months": "July",
+    "why_short": "EXIT Festival draws big crowds",
+    "why": "EXIT Festival draws big crowds (otherwise no huge tourist influx even in summer)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 83\u00b0F high / 65\u00b0F low"
+   }
+  ]
+ },
+ "SC": {
+  "name": "Seychelles",
+  "best_times": [
+   {
+    "months": "April,May,October,November",
+    "why_short": "less windy",
+    "why": "best overall, less windy, mild, best diving visibility (up to 30m)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 83\u00b0F high / 80\u00b0F low"
+   }
+  ]
+ },
+ "SL": {
+  "name": "Sierra Leone",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall, low humidity (esp Dec-Feb), beaches/forests fully accessible",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 90\u00b0F high / 71\u00b0F low"
+   }
+  ]
+ },
+ "SG": {
+  "name": "Singapore",
+  "best_times": [
+   {
+    "months": "March,April,May,June,July,August",
+    "why_short": "least frequent rainfall",
+    "why": "best overall, least frequent rainfall -- though tropical climate means very consistent temps/humidity year-round, visitable any time",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 86\u00b0F high / 76\u00b0F low"
+   }
+  ]
+ },
+ "SX": {
+  "name": "Sint Maarten",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry/sunny season",
+    "why": "dry/sunny season, best overall, peak prices Jan-Feb -- Heineken Regatta + Carnival add cultural draw",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 79\u00b0F high / 76\u00b0F low"
+   }
+  ]
+ },
+ "SK": {
+  "name": "Slovakia",
+  "best_times": [
+   {
+    "months": "April,May,September,October",
+    "why_short": "sweet spot",
+    "why": "best overall, sweet spot -- Sep top month, mild/clear/fewer tourists",
+    "crowd_level": "low",
+    "weather_note": "Avg 52\u00b0F high / 37\u00b0F low"
+   },
+   {
+    "months": "December,March,April",
+    "why_short": "ski season",
+    "why": "ski season",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 39\u00b0F high / 25\u00b0F low"
+   }
+  ]
+ },
+ "SI": {
+  "name": "Slovenia",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "warm/clear",
+    "why": "best overall, warm/clear, mild Adriatic, fewer crowds than nearby countries -- Jul-Aug best for high-alpine Triglav hiking",
+    "crowd_level": "low",
+    "weather_note": "Avg 77\u00b0F high / 60\u00b0F low"
+   },
+   {
+    "months": "May,June,September,October",
+    "why_short": "fewer crowds",
+    "why": "fewer crowds, still excellent, May great for road-tripping, Sep good for summiting Triglav + wine tastings (Goriska Brda etc)",
+    "crowd_level": "low",
+    "weather_note": "Avg 67\u00b0F high / 52\u00b0F low"
+   }
+  ]
+ },
+ "SB": {
+  "name": "Solomon Islands",
+  "best_times": [
+   {
+    "months": "June,July,August,September",
+    "why_short": "dry season",
+    "why": "dry season, best overall, predictable weather, calm waters, great diving/snorkeling/hiking",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 76\u00b0F low"
+   }
+  ]
+ },
+ "ZA": {
+  "name": "South Africa",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September",
+    "why_short": "best for safari/wildlife",
+    "why": "best for safari/wildlife, thinned vegetation concentrates animals at waterholes",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 73\u00b0F high / 42\u00b0F low"
+   }
+  ]
+ },
+ "KR": {
+  "name": "South Korea",
+  "best_times": [
+   {
+    "months": "March,April,May,September,October,November",
+    "why_short": "moderate temps",
+    "why": "best overall, moderate temps, comfortable humidity",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 65\u00b0F high / 45\u00b0F low"
+   }
+  ]
+ },
+ "ES": {
+  "name": "Spain",
+  "best_times": [
+   {
+    "months": "April,May,June,September,October",
+    "why_short": "pleasant temps",
+    "why": "best overall, pleasant temps, fewer crowds -- fall specifically well-balanced with harvest festivals",
+    "crowd_level": "low",
+    "weather_note": "Avg 78\u00b0F high / 56\u00b0F low"
+   },
+   {
+    "months": "March,April,May",
+    "why_short": "mild",
+    "why": "mild, rain rare, nature blooming",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 71\u00b0F high / 49\u00b0F low"
+   }
+  ]
+ },
+ "LK": {
+  "name": "Sri Lanka",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "best overall (south/west coasts), hot/sunny, driest,",
+    "why": "best overall (south/west coasts), hot/sunny, driest, but also high season/pricier",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 77\u00b0F high / 63\u00b0F low"
+   },
+   {
+    "months": "May",
+    "why_short": "quiet sweet spot between monsoons",
+    "why": "quiet sweet spot between monsoons",
+    "crowd_level": "low",
+    "weather_note": "Avg 82\u00b0F high / 67\u00b0F low"
+   }
+  ]
+ },
+ "SR": {
+  "name": "Suriname",
+  "best_times": [
+   {
+    "months": "August,November,October",
+    "why_short": "driest/sunniest",
+    "why": "driest/sunniest, best overall",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 90\u00b0F high / 73\u00b0F low"
+   },
+   {
+    "months": "February,March",
+    "why_short": "secondary dry window",
+    "why": "secondary dry window",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 86\u00b0F high / 71\u00b0F low"
+   }
+  ]
+ },
+ "SJ": {
+  "name": "Svalbard and Jan Mayen",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September",
+    "why_short": "main season",
+    "why": "main season, best overall -- Jul-Aug best for wildlife/polar bear spotting, ice melted, active wildlife",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 36\u00b0F high / 34\u00b0F low"
+   },
+   {
+    "months": "April,May,June,July,August",
+    "why_short": "midnight sun",
+    "why": "midnight sun (no sunset)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 33\u00b0F high / 30\u00b0F low"
+   }
+  ]
+ },
+ "SE": {
+  "name": "Sweden",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "peak season",
+    "why": "peak season, best overall, long daylight, mildest temps, best for outdoor activities -- crowded/pricier",
+    "crowd_level": "peak",
+    "weather_note": "Avg 66\u00b0F high / 50\u00b0F low"
+   },
+   {
+    "months": "December,January,February",
+    "why_short": "winter wonderland cities",
+    "why": "winter wonderland cities (Stockholm, Kiruna), Christmas markets, Northern Lights in the north",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 28\u00b0F high / 18\u00b0F low"
+   }
+  ]
+ },
+ "CH": {
+  "name": "Switzerland",
+  "best_times": [
+   {
+    "months": "July,August",
+    "why_short": "peak",
+    "why": "peak, best hiking/swimming/paddleboarding, most popular/crowded",
+    "crowd_level": "high",
+    "weather_note": "Avg 69\u00b0F high / 54\u00b0F low"
+   },
+   {
+    "months": "September,October",
+    "why_short": "crisp",
+    "why": "crisp, vibrant foliage, ideal hiking",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 60\u00b0F high / 46\u00b0F low"
+   }
+  ]
+ },
+ "TW": {
+  "name": "Taiwan",
+  "best_times": [
+   {
+    "months": "October,November,April",
+    "why_short": "lowest rain chance",
+    "why": "best overall, lowest rain chance, pleasant",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 61\u00b0F high / 45\u00b0F low"
+   },
+   {
+    "months": "March,April,May",
+    "why_short": "comfortable temps islandwide",
+    "why": "comfortable temps islandwide, though a 2-3wk 'Plum Rain' monsoon usually starts in May",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 59\u00b0F high / 45\u00b0F low"
+   }
+  ]
+ },
+ "TJ": {
+  "name": "Tajikistan",
+  "best_times": [
+   {
+    "months": "April,May,June,September,October",
+    "why_short": "-- may or sep sweet spot",
+    "why": "best overall -- May or Sep sweet spot for combining mountains+cities",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 43\u00b0F high / 26\u00b0F low"
+   }
+  ]
+ },
+ "TZ": {
+  "name": "Tanzania",
+  "best_times": [
+   {
+    "months": "June,July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall wildlife viewing, animals concentrate at water sources",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 83\u00b0F high / 64\u00b0F low"
+   }
+  ]
+ },
+ "TH": {
+  "name": "Thailand",
+  "best_times": [
+   {
+    "months": "November,December,January,February",
+    "why_short": "cooler/drier",
+    "why": "best overall, cooler/drier, ideal beaches+heritage sites",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 89\u00b0F high / 71\u00b0F low"
+   }
+  ]
+ },
+ "TL": {
+  "name": "Timor-Leste",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "hot/dry/clear skies",
+    "why": "best overall, hot/dry/clear skies",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 77\u00b0F high / 64\u00b0F low"
+   }
+  ]
+ },
+ "TG": {
+  "name": "Togo",
+  "best_times": [
+   {
+    "months": "November,December,January,February",
+    "why_short": "harmattan dry season",
+    "why": "harmattan dry season, best overall, lower humidity/cooler nights",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 95\u00b0F high / 70\u00b0F low"
+   }
+  ]
+ },
+ "TK": {
+  "name": "Tokelau",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "driest",
+    "why": "driest, best overall, calmer seas (important given access is a 24-36hr boat trip from Samoa)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 83\u00b0F high / 80\u00b0F low"
+   }
+  ]
+ },
+ "TO": {
+  "name": "Tonga",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "dry season",
+    "why": "dry season, best overall",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 76\u00b0F high / 74\u00b0F low"
+   }
+  ]
+ },
+ "TT": {
+  "name": "Trinidad and Tobago",
+  "best_times": [
+   {
+    "months": "January,February,March,April,May",
+    "why_short": "dry season",
+    "why": "dry season, best overall, low humidity/rain",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 79\u00b0F low"
+   },
+   {
+    "months": "September",
+    "why_short": "'petit carem'",
+    "why": "'petit carem' -- brief sunny respite mid rainy season, low-season rates",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 85\u00b0F high / 81\u00b0F low"
+   }
+  ]
+ },
+ "TN": {
+  "name": "Tunisia",
+  "best_times": [
+   {
+    "months": "April,May,September,October",
+    "why_short": "mild",
+    "why": "best overall, mild, uncrowded ruins",
+    "crowd_level": "low",
+    "weather_note": "Avg 87\u00b0F high / 66\u00b0F low"
+   },
+   {
+    "months": "March,April,May,June",
+    "why_short": "spring",
+    "why": "spring, 16-20C, pleasant",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 85\u00b0F high / 63\u00b0F low"
+   }
+  ]
+ },
+ "TR": {
+  "name": "T\u00fcrkiye",
+  "best_times": [
+   {
+    "months": "April,May,June,September,October",
+    "why_short": "comfortable temps",
+    "why": "best overall, comfortable temps, low rain, blossoms (spring) / foliage (fall)",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 70\u00b0F high / 48\u00b0F low"
+   }
+  ]
+ },
+ "TM": {
+  "name": "Turkmenistan",
+  "best_times": [
+   {
+    "months": "March,April,May,September,October,November",
+    "why_short": "23-35c",
+    "why": "best overall, 23-35C, comfortable for historical sites/desert/mountains",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 72\u00b0F high / 51\u00b0F low"
+   }
+  ]
+ },
+ "TC": {
+  "name": "Turks and Caicos Islands",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "peak season",
+    "why": "peak season, best overall weather, dry/sunny/warm",
+    "crowd_level": "peak",
+    "weather_note": "Avg 79\u00b0F high / 76\u00b0F low"
+   }
+  ]
+ },
+ "TV": {
+  "name": "Tuvalu",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "sunny",
+    "why": "best overall, sunny, calm seas, best snorkeling/diving visibility + lagoon boat travel",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 80\u00b0F low"
+   }
+  ]
+ },
+ "AE": {
+  "name": "United Arab Emirates",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March",
+    "why_short": "sunny not too hot",
+    "why": "best overall, sunny not too hot, peak beach weather -- but busiest",
+    "crowd_level": "peak",
+    "weather_note": "Avg 82\u00b0F high / 64\u00b0F low"
+   }
+  ]
+ },
+ "GB": {
+  "name": "United Kingdom",
+  "best_times": [
+   {
+    "months": "March,April,May,June,September,October",
+    "why_short": "shoulder seasons",
+    "why": "best overall shoulder seasons, warm/dry + fewer crowds than summer, spring flowers or autumn color",
+    "crowd_level": "low",
+    "weather_note": "Avg 53\u00b0F high / 41\u00b0F low"
+   }
+  ]
+ },
+ "US": {
+  "name": "United States",
+  "best_times": [
+   {
+    "months": "June,July,August",
+    "why_short": "peak/family travel season",
+    "why": "peak/family travel season, crowded national parks/beaches; West Coast hot/dry Jul-Aug, East Coast humid",
+    "crowd_level": "high",
+    "weather_note": "Avg 88\u00b0F high / 70\u00b0F low"
+   }
+  ]
+ },
+ "VI": {
+  "name": "United States Virgin Islands",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April,May",
+    "why_short": "dry/sunny",
+    "why": "best overall, dry/sunny, ~78F, low rain -- Dec-Mar is high season",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 77\u00b0F high / 74\u00b0F low"
+   }
+  ]
+ },
+ "UY": {
+  "name": "Uruguay",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March",
+    "why_short": "best overall (southern summer), warmest/driest, peak",
+    "why": "best overall (southern summer), warmest/driest, peak season",
+    "crowd_level": "peak",
+    "weather_note": "Avg 82\u00b0F high / 63\u00b0F low"
+   }
+  ]
+ },
+ "UZ": {
+  "name": "Uzbekistan",
+  "best_times": [
+   {
+    "months": "March,April,May,June,September,October",
+    "why_short": "avoids extreme continental summers/winters",
+    "why": "best overall, avoids extreme continental summers/winters",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 78\u00b0F high / 56\u00b0F low"
+   }
+  ]
+ },
+ "VU": {
+  "name": "Vanuatu",
+  "best_times": [
+   {
+    "months": "April,May,June,July,August,September",
+    "why_short": "comfortable",
+    "why": "best overall, comfortable (64-82F), low rain",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 78\u00b0F low"
+   }
+  ]
+ },
+ "VA": {
+  "name": "Vatican City",
+  "best_times": [
+   {
+    "months": "November,December,January,February",
+    "why_short": "for smaller crowds",
+    "why": "best overall for smaller crowds -- Jan-Feb most peaceful, can experience Sistine Chapel without heavy crowds",
+    "crowd_level": "low",
+    "weather_note": "Avg 58\u00b0F high / 43\u00b0F low"
+   }
+  ]
+ },
+ "VE": {
+  "name": "Venezuela",
+  "best_times": [
+   {
+    "months": "December,January,February,March,April",
+    "why_short": "dry season",
+    "why": "dry season, best overall for Caribbean coast/Los Roques/Andes/Gran Sabana trekking -- Jan-Feb driest/most comfortable",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 93\u00b0F high / 76\u00b0F low"
+   }
+  ]
+ },
+ "VN": {
+  "name": "Vietnam",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "best overall (least rain nationally), but",
+    "why": "best overall (least rain nationally), but climate varies hugely by region",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 72\u00b0F high / 60\u00b0F low"
+   }
+  ]
+ },
+ "WF": {
+  "name": "Wallis and Futuna",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "low humidity/rain",
+    "why": "best overall, low humidity/rain, calm water for snorkeling/diving/hiking",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 82\u00b0F high / 79\u00b0F low"
+   }
+  ]
+ },
+ "EH": {
+  "name": "Western Sahara",
+  "best_times": [
+   {
+    "months": "November,December,January,February,March,April",
+    "why_short": "20-25c",
+    "why": "best overall, 20-25C, manageable for desert travel",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 80\u00b0F high / 56\u00b0F low"
+   }
+  ]
+ },
+ "ZM": {
+  "name": "Zambia",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "wildlife viewing",
+    "why": "best overall wildlife viewing, mild days",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 84\u00b0F high / 62\u00b0F low"
+   }
+  ]
+ },
+ "ZW": {
+  "name": "Zimbabwe",
+  "best_times": [
+   {
+    "months": "May,June,July,August,September,October",
+    "why_short": "for game viewing",
+    "why": "best overall for game viewing, low malaria risk, animals gather at water",
+    "crowd_level": "moderate",
+    "weather_note": "Avg 81\u00b0F high / 56\u00b0F low"
+   }
+  ]
+ }
+}

@@ -10,9 +10,15 @@ import '../../theme/section_palette.dart';
 import '../../utils/flag_url.dart';
 import 'dashed_divider.dart';
 import 'external_link.dart';
+import 'flip_reveal.dart';
 
 /// Country-page ticket header: flag, name, native name, ticket stub, and
-/// expand/collapse-all link.
+/// expand/collapse-all link. Most of its own labels are [FlipReveal]
+/// flashcards too — see that class's doc and HANDOFF.md's
+/// flashcard_layout entries. "Expand/Collapse all info" is the one
+/// exception: it's a functional control (its whole body is already the
+/// tap target for its own action), not content, so it stays in English
+/// rather than doubling as a flashcard on top of that.
 class CountryHeader extends StatefulWidget {
   final CountryBundle bundle;
   final String? nativeName;
@@ -86,6 +92,7 @@ class _CountryHeaderState extends State<CountryHeader> {
     final isDesktop = MediaQuery.sizeOf(context).width >= 900;
     final header = widget.header;
     final onHeaderSoft = header.textColor.withValues(alpha: 0.55);
+    final eyebrowStyle = AccordionTheme.tkEyebrow.copyWith(color: onHeaderSoft);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,11 +109,9 @@ class _CountryHeaderState extends State<CountryHeader> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'DESTINATION',
-                      style: AccordionTheme.tkEyebrow.copyWith(
-                        color: onHeaderSoft,
-                      ),
+                    FlipReveal(
+                      front: Text('DESTINO', style: eyebrowStyle),
+                      back: Text('DESTINATION', style: eyebrowStyle),
                     ),
                     const SizedBox(height: 12),
                     Text(
@@ -298,6 +303,9 @@ class _TicketStub extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final local = _localTime();
+    final labelStyle = AccordionTheme.tfLabel.copyWith(color: stub.textColor.withValues(alpha: 0.75));
+    final subStyle = AccordionTheme.tfSub.copyWith(color: stub.textColor.withValues(alpha: 0.75));
+    final hemisphere = _hemisphereLabel();
 
     return Container(
       width: double.infinity,
@@ -320,43 +328,70 @@ class _TicketStub extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _field(
-                        'LOCAL TIME',
+                        FlipReveal(
+                          front: Text('HORA LOCAL', style: labelStyle),
+                          back: Text('LOCAL TIME', style: labelStyle),
+                        ),
                         local == null ? '—' : _timeLabel(local.wallClock),
-                        local == null
-                            ? ''
-                            : '${_dateLabel(local.wallClock)} · ${_utcLabel(local.utcOffset)}',
-                        trailing: _hemisphereLabel() == null
+                        subtitle: local == null
                             ? null
-                            : Text(
-                                _hemisphereLabel()!,
-                                style: TextStyle(
-                                  fontFamily: AccordionTheme.dmMono,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 11.5,
-                                  color: stub.textColor.withValues(alpha: 0.75),
+                            : FlipReveal(
+                                front: Text(
+                                  '${_dateLabelEs(local.wallClock)} · ${_utcLabel(local.utcOffset)}',
+                                  style: subStyle,
                                 ),
+                                back: Text(
+                                  '${_dateLabelEn(local.wallClock)} · ${_utcLabel(local.utcOffset)}',
+                                  style: subStyle,
+                                ),
+                              ),
+                        trailing: hemisphere == null
+                            ? null
+                            : FlipReveal(
+                                front: Text(hemisphere.es, style: _hemisphereStyle()),
+                                back: Text(hemisphere.en, style: _hemisphereStyle()),
                               ),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
+                      // $1/USD are a currency symbol and an ISO code, not
+                      // language content — unchanged either way.
                       child: _field(
-                        r'$1 USD',
+                        Text(r'$1 USD', style: labelStyle),
                         exchangeRate == null ? '—' : _rateLabel(exchangeRate!),
-                        currencyName ?? 'Daily rate',
+                        subtitle: currencyName != null
+                            // A real currency name is a proper noun
+                            // (already partly Spanish, e.g. "Costa Rican
+                            // Colón") — shown as-is, not flipped.
+                            ? Text(currencyName!, style: subStyle)
+                            : FlipReveal(
+                                front: Text('Tasa diaria', style: subStyle),
+                                back: Text('Daily rate', style: subStyle),
+                              ),
                         trailing: exchangeRate == null
                             ? null
-                            : ExternalLink(
-                                label: 'Convert',
-                                url: _converterUrl(exchangeRate!.currencyCode),
-                                color: stub.textColor,
-                                fontFamily: AccordionTheme.dmMono,
+                            : FlipReveal(
+                                front: ExternalLink(
+                                  label: 'Convertir',
+                                  url: _converterUrl(exchangeRate!.currencyCode),
+                                  color: stub.textColor,
+                                  fontFamily: AccordionTheme.dmMono,
+                                ),
+                                back: ExternalLink(
+                                  label: 'Convert',
+                                  url: _converterUrl(exchangeRate!.currencyCode),
+                                  color: stub.textColor,
+                                  fontFamily: AccordionTheme.dmMono,
+                                ),
                               ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 14),
+                // The one non-flashcard control on this page — see this
+                // file's class doc for why.
                 InkWell(
                   onTap: onToggleAll,
                   child: Row(
@@ -387,36 +422,30 @@ class _TicketStub extends StatelessWidget {
     );
   }
 
+  TextStyle _hemisphereStyle() => TextStyle(
+    fontFamily: AccordionTheme.dmMono,
+    fontWeight: FontWeight.w600,
+    fontSize: 11.5,
+    color: stub.textColor.withValues(alpha: 0.75),
+  );
+
   Widget _field(
-    String label,
-    String value,
-    String subtitle, {
+    Widget label,
+    String value, {
+    Widget? subtitle,
     Widget? trailing,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          label,
-          style: AccordionTheme.tfLabel.copyWith(
-            color: stub.textColor.withValues(alpha: 0.75),
-          ),
-        ),
+        label,
         const SizedBox(height: 3),
         Text(
           value,
           style: AccordionTheme.tfVal.copyWith(color: stub.textColor),
         ),
-        if (subtitle.isNotEmpty) ...[
-          const SizedBox(height: 2),
-          Text(
-            subtitle,
-            style: AccordionTheme.tfSub.copyWith(
-              color: stub.textColor.withValues(alpha: 0.75),
-            ),
-          ),
-        ],
+        if (subtitle != null) ...[const SizedBox(height: 2), subtitle],
         if (trailing != null) ...[const SizedBox(height: 4), trailing],
       ],
     );
@@ -440,11 +469,13 @@ class _TicketStub extends StatelessWidget {
   }
 
   // North/South only; null for missing latitude, distinct label at 0.
-  String? _hemisphereLabel() {
+  ({String en, String es})? _hemisphereLabel() {
     final lat = latitude;
     if (lat == null) return null;
-    if (lat == 0) return 'On the Equator';
-    return lat > 0 ? 'Northern Hemisphere' : 'Southern Hemisphere';
+    if (lat == 0) return (en: 'On the Equator', es: 'En el Ecuador');
+    return lat > 0
+        ? (en: 'Northern Hemisphere', es: 'Hemisferio Norte')
+        : (en: 'Southern Hemisphere', es: 'Hemisferio Sur');
   }
 
   String _timeLabel(DateTime local) {
@@ -453,8 +484,11 @@ class _TicketStub extends StatelessWidget {
     return '$h:$m';
   }
 
-  String _dateLabel(DateTime local) =>
-      '${_monthAbbrev[local.month - 1]} ${local.day}';
+  String _dateLabelEn(DateTime local) => '${_monthAbbrevEn[local.month - 1]} ${local.day}';
+
+  // Day-first, lowercase abbreviation — the conventional Spanish short-date
+  // order, not just a swapped month list.
+  String _dateLabelEs(DateTime local) => '${local.day} ${_monthAbbrevEs[local.month - 1]}';
 
   String _utcLabel(Duration offset) {
     final totalMinutes = offset.inMinutes;
@@ -466,7 +500,7 @@ class _TicketStub extends StatelessWidget {
         : 'UTC$sign$hours:${minutes.toString().padLeft(2, '0')}';
   }
 
-  static const _monthAbbrev = [
+  static const _monthAbbrevEn = [
     'Jan',
     'Feb',
     'Mar',
@@ -479,6 +513,21 @@ class _TicketStub extends StatelessWidget {
     'Oct',
     'Nov',
     'Dec',
+  ];
+
+  static const _monthAbbrevEs = [
+    'ene',
+    'feb',
+    'mar',
+    'abr',
+    'may',
+    'jun',
+    'jul',
+    'ago',
+    'sep',
+    'oct',
+    'nov',
+    'dic',
   ];
 
   String _rateLabel(ExchangeRate r) {

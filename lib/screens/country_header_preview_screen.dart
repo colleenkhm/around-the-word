@@ -276,7 +276,8 @@ class _CountryHeaderPreviewScreenState
     final visa = bundle.visa;
     final colors = _palette.visa;
     return AccordionSection(
-      title: 'Visa & Entry',
+      titleEn: 'Visa & Entry',
+      titleEs: 'Visa y Entrada',
       tint: colors.tint,
       textColor: colors.textColor,
       hasData: visa != null,
@@ -295,7 +296,8 @@ class _CountryHeaderPreviewScreenState
     final cities = bundle.cities;
     final colors = _palette.cities;
     return AccordionSection(
-      title: 'Cities',
+      titleEn: 'Cities',
+      titleEs: 'Ciudades',
       tint: colors.tint,
       textColor: colors.textColor,
       hasData: cities.isNotEmpty,
@@ -304,6 +306,9 @@ class _CountryHeaderPreviewScreenState
           : '${cities.length} destination${cities.length == 1 ? '' : 's'}',
       expanded: _expanded[_Section.cities]!,
       onToggle: () => _toggle(_Section.cities),
+      // No FlipReveal inside — "Capital" is spelled the same in Spanish,
+      // and city names are proper nouns (already Spanish); nothing in
+      // this section's chrome actually changes between languages.
       contentBuilder: (_) => CitiesSection(
         cities: cities,
         capital: bundle.facts.capital,
@@ -316,7 +321,8 @@ class _CountryHeaderPreviewScreenState
     final bestTimes = bundle.guide.bestTimes;
     final colors = _palette.times;
     return AccordionSection(
-      title: 'When to Visit',
+      titleEn: 'When to Visit',
+      titleEs: 'Cuándo Visitar',
       tint: colors.tint,
       textColor: colors.textColor,
       hasData: bestTimes.isNotEmpty,
@@ -325,7 +331,10 @@ class _CountryHeaderPreviewScreenState
           : bestTimes.map((b) => b.months).join(' · '),
       expanded: _expanded[_Section.times]!,
       onToggle: () => _toggle(_Section.times),
-      contentBuilder: (_) => BestTimesSection(bestTimes: bestTimes, palette: _palette.cycle),
+      contentBuilder: (_) => BestTimesSection(
+        bestTimes: bestTimes,
+        palette: _palette.cycle,
+      ),
     );
   }
 
@@ -337,7 +346,8 @@ class _CountryHeaderPreviewScreenState
         : [first.level, first.issuingAuthority].nonNulls.join(' · ');
     final colors = _palette.advisory;
     return AccordionSection(
-      title: 'Travel Advisory',
+      titleEn: 'Travel Advisory',
+      titleEs: 'Advertencia de Viaje',
       tint: colors.tint,
       textColor: colors.textColor,
       hasData: advisories.isNotEmpty,
@@ -358,7 +368,8 @@ class _CountryHeaderPreviewScreenState
     final hasData = languages.isNotEmpty || featuredWord != null;
     final colors = _palette.language;
     return AccordionSection(
-      title: 'Language',
+      titleEn: 'Language',
+      titleEs: 'Idioma',
       tint: colors.tint,
       textColor: colors.textColor,
       hasData: hasData,
@@ -374,7 +385,7 @@ class _CountryHeaderPreviewScreenState
       ),
     );
   }
-  
+
     Widget _borderCountriesSection(
     CountryBundle bundle,
     List<country_model.Country> allCountries,
@@ -382,7 +393,8 @@ class _CountryHeaderPreviewScreenState
     final codes = bundle.facts.borderingCountryCodes;
     final colors = _palette.borderCountries;
     return AccordionSection(
-      title: 'Border Countries',
+      titleEn: 'Border Countries',
+      titleEs: 'Países Fronterizos',
       tint: colors.tint,
       textColor: colors.textColor,
       hasData: codes.isNotEmpty,
@@ -391,6 +403,8 @@ class _CountryHeaderPreviewScreenState
           : '${codes.length} bordering ${codes.length == 1 ? 'country' : 'countries'}',
       expanded: _expanded[_Section.borderCountries]!,
       onToggle: () => _toggle(_Section.borderCountries),
+      // Country names stay in English regardless — proper nouns, same
+      // policy as city names and resource labels (see HANDOFF.md).
       contentBuilder: (_) => BorderCountriesSection(
         borderingCountryCodes: codes,
         allCountries: allCountries,
@@ -412,7 +426,8 @@ class _CountryHeaderPreviewScreenState
     final norms = bundle.guide.practicalNorms;
     final colors = _palette.norms;
     return AccordionSection(
-      title: 'Practical Norms',
+      titleEn: 'Practical Norms',
+      titleEs: 'Normas Prácticas',
       tint: colors.tint,
       textColor: colors.textColor,
       hasData: norms.isNotEmpty,
@@ -430,7 +445,8 @@ class _CountryHeaderPreviewScreenState
   Widget _resourcesSection(List<Resource> resources) {
     final colors = _palette.resources;
     return AccordionSection(
-      title: 'Additional Resources',
+      titleEn: 'Additional Resources',
+      titleEs: 'Recursos Adicionales',
       tint: colors.tint,
       textColor: colors.textColor,
       hasData: resources.isNotEmpty,
@@ -439,6 +455,8 @@ class _CountryHeaderPreviewScreenState
           : resources.map((r) => r.label).join(' · '),
       expanded: _expanded[_Section.resources]!,
       onToggle: () => _toggle(_Section.resources),
+      // Resource labels ("Google Translate") stay in English — brand
+      // names, same proper-noun policy as border-country names above.
       contentBuilder: (_) => AdditionalResourcesSection(
         resources: resources,
         accent: colors.accentOnWhite,

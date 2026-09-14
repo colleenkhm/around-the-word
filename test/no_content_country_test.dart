@@ -33,13 +33,20 @@ void main() {
       // AccordionSection's class doc). (Collapsed-row subheadings, which
       // would otherwise read "Coming soon" too, are hidden for now — see
       // AccordionSection.showSubheading — so not asserted here.)
+      // 2026-09-14 (flashcard_layout): section titles and the "Coming
+      // soon" fallback are flashcards defaulting to Spanish
+      // ("Ciudades"/"Próximamente...") and no longer expand the row on
+      // tap — only the chevron (keyed by the English title) does.
       expect(find.text('Mexico'), findsWidgets);
       expect(find.text('What do you want to learn?'), findsNothing);
-      expect(find.text('Cities'), findsOneWidget);
+      expect(find.text('Ciudades'), findsOneWidget);
 
-      await tester.tap(find.text('Cities'));
+      await tester.tap(find.byKey(const ValueKey('chevron-Cities')));
       await tester.pumpAndSettle();
-      expect(find.text("Coming soon — we haven't curated this yet."), findsOneWidget);
+      expect(
+        find.text('Próximamente — todavía no hemos preparado este contenido.'),
+        findsOneWidget,
+      );
     },
   );
 }

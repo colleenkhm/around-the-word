@@ -17,6 +17,12 @@ const _accent = Color(0xFF3A78AA);
 /// including the [RegionalNote] stamp and the emergency-number stamp,
 /// which both previously lived inside `IntrinsicHeight`-wrapped desktop
 /// layout logic that no longer exists.
+///
+/// 2026-09-14 (flashcard_layout): every link/label inside these sections
+/// is now a `FlipReveal` flashcard defaulting to Spanish (its front) — so
+/// these tests assert the Spanish text that actually renders first
+/// ("Solicitar", "Fuente", "Nivel 1", "Advertencia completa",
+/// "EMERGENCIA"), not the English text a reader flips to.
 void main() {
   final advisory = TravelAdvisory(
     issuingAuthority: 'US State Department',
@@ -60,10 +66,8 @@ void main() {
       expect(tester.takeException(), isNull);
       expect(find.text('US State Department'), findsOneWidget);
       expect(find.textContaining('90 days'), findsOneWidget);
-      expect(find.text('Apply'), findsOneWidget);
-      // 'Official source' -> 'Source', 2026-08-19, per direction received
-      // (see VisaSection).
-      expect(find.text('Source'), findsOneWidget);
+      expect(find.text('Solicitar'), findsOneWidget);
+      expect(find.text('Fuente'), findsOneWidget);
     },
   );
 
@@ -94,8 +98,8 @@ void main() {
       );
 
       expect(tester.takeException(), isNull);
-      expect(find.textContaining('Level 1'), findsOneWidget);
-      expect(find.text('Full advisory'), findsOneWidget);
+      expect(find.textContaining('Nivel 1'), findsOneWidget);
+      expect(find.text('Advertencia completa'), findsOneWidget);
     },
   );
 
@@ -113,7 +117,7 @@ void main() {
 
       expect(tester.takeException(), isNull);
       expect(find.text('911'), findsOneWidget);
-      expect(find.text('EMERGENCY'), findsOneWidget);
+      expect(find.text('EMERGENCIA'), findsOneWidget);
     },
   );
 }

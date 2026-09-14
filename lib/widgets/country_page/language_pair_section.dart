@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../models/language_content.dart';
 import '../../theme/accordion_theme.dart';
+import '../../utils/bilingual.dart';
+import 'flip_reveal.dart';
 
 /// The "Language" [AccordionSection]'s expanded content — official
 /// languages side by side with a "Word of the day" card. Content-only,
@@ -70,6 +72,7 @@ class _LanguagesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final labelStyle = AccordionTheme.sLabel.copyWith(color: textColor.withValues(alpha: 0.75));
     return ColoredBox(
       color: tint,
       child: Padding(
@@ -78,7 +81,10 @@ class _LanguagesCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('LANGUAGES', style: AccordionTheme.sLabel.copyWith(color: textColor.withValues(alpha: 0.75))),
+            FlipReveal(
+              front: Text('IDIOMAS', style: labelStyle),
+              back: Text('LANGUAGES', style: labelStyle),
+            ),
             const SizedBox(height: 8),
             for (var i = 0; i < languages.length; i++) ...[
               if (i != 0)
@@ -86,7 +92,7 @@ class _LanguagesCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: Container(height: 1, color: textColor.withValues(alpha: 0.15)),
                 ),
-              _LanguageRow(name: languages[i], textColor: textColor),
+              _LanguageRow(nameEn: languages[i], textColor: textColor),
             ],
           ],
         ),
@@ -96,39 +102,47 @@ class _LanguagesCard extends StatelessWidget {
 }
 
 class _LanguageRow extends StatelessWidget {
-  final String name;
+  final String nameEn;
   final Color textColor;
 
-  const _LanguageRow({required this.name, required this.textColor});
+  const _LanguageRow({required this.nameEn, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
+    final nameStyle = AccordionTheme.rowTitle.copyWith(color: textColor);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          Expanded(child: Text(name, style: AccordionTheme.rowTitle.copyWith(color: textColor))),
+          Expanded(
+            child: FlipReveal(
+              front: Text(translateLanguageNameEs(nameEn), style: nameStyle),
+              back: Text(nameEn, style: nameStyle),
+            ),
+          ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
             decoration: BoxDecoration(
               color: textColor.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(3),
             ),
-            child: Text(
-              'official',
-              style: TextStyle(
-                fontFamily: AccordionTheme.dmMono,
-                fontSize: 8,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.3,
-                color: textColor,
-              ),
+            child: FlipReveal(
+              front: Text('oficial', style: _chipStyle),
+              back: Text('official', style: _chipStyle),
             ),
           ),
         ],
       ),
     );
   }
+
+  TextStyle get _chipStyle => TextStyle(
+    fontFamily: AccordionTheme.dmMono,
+    fontSize: 8,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0.3,
+    color: textColor,
+  );
 }
 
 class _WordOfDayCard extends StatelessWidget {
@@ -143,6 +157,12 @@ class _WordOfDayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final eyebrowStyle = AccordionTheme.sLabel.copyWith(color: accent);
+    final learnEn = languageName == null ? 'Learn →' : 'Learn $languageName →';
+    final learnEs = languageName == null
+        ? 'Aprender →'
+        : 'Aprender ${translateLanguageNameEs(languageName!)} →';
+
     // Inset ring: outer white fill for the gap, inner bordered box for the ring.
     return Container(
       color: AccordionTheme.white,
@@ -158,7 +178,10 @@ class _WordOfDayCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('WORD OF THE DAY', style: AccordionTheme.sLabel.copyWith(color: accent)),
+              FlipReveal(
+                front: Text('PALABRA DEL DÍA', style: eyebrowStyle),
+                back: Text('WORD OF THE DAY', style: eyebrowStyle),
+              ),
               const SizedBox(height: 8),
               Text(
                 word.lemma,
@@ -168,39 +191,53 @@ class _WordOfDayCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(word.pronunciation!, style: AccordionTheme.tfSub.copyWith(color: accent)),
               ],
-              const SizedBox(height: 5),
-              Text(
-                word.translation,
-                style: AccordionTheme.sBody.copyWith(fontSize: 12.5, fontWeight: FontWeight.w600, color: AccordionTheme.ink2),
-              ),
-              if (word.usageNote != null) ...[
-                const SizedBox(height: 4),
-                Text(
-                  word.usageNote!,
+              const SizedBox(height: 8),
+              // Translation stays hidden until tapped — same flashcard
+              // pattern as the rest of the page, independent of every
+              // other card.
+              FlipReveal(
+                front: Text(
+                  'significado oculto — toca para revelar',
                   style: AccordionTheme.sBody.copyWith(
-                    fontSize: 11,
+                    fontSize: 12,
                     fontStyle: FontStyle.italic,
                     color: AccordionTheme.ink3,
                   ),
                 ),
-              ],
+                back: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      word.translation,
+                      style: AccordionTheme.sBody.copyWith(fontSize: 12.5, fontWeight: FontWeight.w600, color: AccordionTheme.ink2),
+                    ),
+                    if (word.usageNote != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        word.usageNote!,
+                        style: AccordionTheme.sBody.copyWith(
+                          fontSize: 11,
+                          fontStyle: FontStyle.italic,
+                          color: AccordionTheme.ink3,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
               const SizedBox(height: 10),
-              // Static, not tappable.
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
                 decoration: BoxDecoration(
                   color: AccordionTheme.ink,
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: Text(
-                  languageName == null ? 'Learn →' : 'Learn $languageName →',
-                  style: const TextStyle(
-                    fontFamily: AccordionTheme.dmMono,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.5,
-                    color: AccordionTheme.white,
-                  ),
+                // Not a real link yet (no Learn flow wired from here), so
+                // it's free to double as a flashcard like everything else.
+                child: FlipReveal(
+                  front: Text(learnEs, style: _learnStyle),
+                  back: Text(learnEn, style: _learnStyle),
                 ),
               ),
             ],
@@ -209,4 +246,12 @@ class _WordOfDayCard extends StatelessWidget {
       ),
     );
   }
+
+  static const _learnStyle = TextStyle(
+    fontFamily: AccordionTheme.dmMono,
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.5,
+    color: AccordionTheme.white,
+  );
 }

@@ -1,0 +1,222 @@
+country_code,country_name,latitude,longitude,monthly_avg_high_low_f
+AD,Andorra,42.5,1.5,Jan 45/29F; Feb 52/32F; Mar 53/34F; Apr 56/37F; May 64/43F; Jun 72/51F; Jul 79/57F; Aug 79/56F; Sep 70/50F; Oct 63/44F; Nov 51/35F; Dec 48/32F
+AE,United Arab Emirates,24,54,Jan 76/59F; Feb 80/61F; Mar 87/65F; Apr 96/72F; May 103/78F; Jun 107/83F; Jul 110/88F; Aug 110/87F; Sep 106/83F; Oct 98/77F; Nov 88/70F; Dec 80/63F
+AG,Antigua and Barbuda,17.05,-61.8,Jan 81/74F; Feb 81/74F; Mar 82/74F; Apr 83/75F; May 85/77F; Jun 86/78F; Jul 86/78F; Aug 87/79F; Sep 87/79F; Oct 85/78F; Nov 83/77F; Dec 82/75F
+AI,Anguilla,18.25,-63.16666666,Jan 79/76F; Feb 78/76F; Mar 78/76F; Apr 79/76F; May 81/79F; Jun 82/80F; Jul 83/80F; Aug 84/81F; Sep 84/81F; Oct 84/80F; Nov 82/79F; Dec 80/78F
+AL,Albania,41,20,Jan 54/36F; Feb 58/37F; Mar 62/41F; Apr 67/46F; May 77/55F; Jun 86/63F; Jul 93/68F; Aug 92/68F; Sep 84/63F; Oct 76/54F; Nov 66/49F; Dec 59/42F
+AM,Armenia,40,45,Jan 29/15F; Feb 31/17F; Mar 39/25F; Apr 50/33F; May 60/42F; Jun 72/51F; Jul 77/55F; Aug 79/56F; Sep 70/50F; Oct 58/40F; Nov 45/31F; Dec 36/23F
+AO,Angola,-12.5,18.5,Jan 78/62F; Feb 79/61F; Mar 79/60F; Apr 80/58F; May 81/52F; Jun 78/47F; Jul 79/46F; Aug 85/52F; Sep 88/58F; Oct 88/61F; Nov 82/61F; Dec 79/61F
+AQ,Antarctica,-90,0,Jan -20/-23F; Feb -34/-38F; Mar -48/-53F; Apr -55/-61F; May -57/-63F; Jun -58/-65F; Jul -60/-68F; Aug -62/-69F; Sep -60/-67F; Oct -52/-57F; Nov -30/-33F; Dec -17/-20F
+AR,Argentina,-34,-64,Jan 86/67F; Feb 83/64F; Mar 80/62F; Apr 74/56F; May 66/48F; Jun 60/43F; Jul 60/41F; Aug 66/44F; Sep 69/48F; Oct 75/54F; Nov 83/62F; Dec 86/65F
+AS,American Samoa,-14.33333333,-170,Jan 83/79F; Feb 83/79F; Mar 84/80F; Apr 84/79F; May 83/80F; Jun 83/79F; Jul 82/79F; Aug 81/79F; Sep 81/79F; Oct 82/79F; Nov 82/79F; Dec 83/79F
+AT,Austria,47.33333333,13.33333333,Jan 32/17F; Feb 38/19F; Mar 42/22F; Apr 48/28F; May 55/36F; Jun 68/46F; Jul 69/49F; Aug 68/48F; Sep 62/42F; Oct 56/35F; Nov 43/25F; Dec 36/20F
+BI,Burundi,-3.5,30,Jan 75/58F; Feb 76/58F; Mar 76/58F; Apr 74/58F; May 74/58F; Jun 75/57F; Jul 76/56F; Aug 79/58F; Sep 80/59F; Oct 79/59F; Nov 76/58F; Dec 75/58F
+BJ,Benin,9.5,2.25,Jan 94/65F; Feb 97/67F; Mar 98/75F; Apr 97/76F; May 94/75F; Jun 89/73F; Jul 86/72F; Aug 85/71F; Sep 86/71F; Oct 90/71F; Nov 95/69F; Dec 94/65F
+BL,Saint Barthélemy,18.5,-63.41666666,Jan 79/76F; Feb 78/76F; Mar 78/76F; Apr 79/77F; May 81/78F; Jun 82/80F; Jul 83/80F; Aug 84/81F; Sep 84/81F; Oct 84/80F; Nov 82/79F; Dec 80/78F
+BM,Bermuda,32.33333333,-64.75,Jan 68/64F; Feb 68/64F; Mar 67/64F; Apr 69/66F; May 72/69F; Jun 76/74F; Jul 81/78F; Aug 83/80F; Sep 81/78F; Oct 78/75F; Nov 74/70F; Dec 70/67F
+BN,Brunei,4.5,114.66666666,Jan 85/73F; Feb 86/73F; Mar 87/73F; Apr 87/74F; May 88/75F; Jun 87/74F; Jul 87/74F; Aug 88/74F; Sep 87/73F; Oct 87/73F; Nov 86/73F; Dec 86/73F
+BO,Bolivia,-17,-65,Jan 63/51F; Feb 63/51F; Mar 64/50F; Apr 61/49F; May 57/45F; Jun 55/43F; Jul 56/43F; Aug 59/43F; Sep 63/47F; Oct 66/50F; Nov 66/50F; Dec 65/51F
+BQ,Caribbean Netherlands,12.18,-68.25,Jan 81/76F; Feb 82/76F; Mar 82/76F; Apr 83/78F; May 84/79F; Jun 84/79F; Jul 85/79F; Aug 86/80F; Sep 87/81F; Oct 85/80F; Nov 83/78F; Dec 83/78F
+BR,Brazil,-10,-55,Jan 83/70F; Feb 83/70F; Mar 83/70F; Apr 84/70F; May 86/69F; Jun 89/67F; Jul 92/66F; Aug 94/69F; Sep 93/71F; Oct 89/71F; Nov 86/71F; Dec 84/71F
+BS,Bahamas,24.25,-76,Jan 77/74F; Feb 77/74F; Mar 77/74F; Apr 78/75F; May 80/77F; Jun 82/79F; Jul 84/81F; Aug 85/82F; Sep 85/81F; Oct 83/80F; Nov 81/78F; Dec 78/76F
+BT,Bhutan,27.5,90.5,Jan 52/32F; Feb 53/36F; Mar 60/41F; Apr 66/46F; May 69/53F; Jun 74/60F; Jul 74/63F; Aug 75/62F; Sep 73/60F; Oct 69/52F; Nov 64/42F; Dec 57/36F
+BW,Botswana,-22,24,Jan 88/68F; Feb 86/67F; Mar 87/65F; Apr 84/60F; May 80/51F; Jun 75/45F; Jul 75/44F; Aug 82/51F; Sep 89/58F; Oct 94/65F; Nov 94/69F; Dec 91/69F
+BZ,Belize,17.25,-88.75,Jan 80/68F; Feb 83/69F; Mar 86/70F; Apr 92/73F; May 91/75F; Jun 89/75F; Jul 88/75F; Aug 90/75F; Sep 89/74F; Oct 88/73F; Nov 83/70F; Dec 81/68F
+CA,Canada,60,-95,Jan -8/-20F; Feb -13/-25F; Mar 4/-11F; Apr 19/6F; May 36/25F; Jun 51/37F; Jul 62/47F; Aug 61/49F; Sep 51/41F; Oct 37/29F; Nov 12/0F; Dec -1/-13F
+CC,Cocos (Keeling) Islands,-12.5,96.83333333,Jan 81/79F; Feb 82/79F; Mar 82/79F; Apr 83/80F; May 82/79F; Jun 81/79F; Jul 80/78F; Aug 79/77F; Sep 79/77F; Oct 79/77F; Nov 80/77F; Dec 81/78F
+CG,Congo (Republic of),-1,15,Jan 86/70F; Feb 88/71F; Mar 87/71F; Apr 87/71F; May 86/71F; Jun 84/70F; Jul 84/69F; Aug 84/69F; Sep 84/70F; Oct 84/70F; Nov 84/70F; Dec 85/70F
+CH,Switzerland,47,8,Jan 36/23F; Feb 44/27F; Mar 46/30F; Apr 50/34F; May 56/42F; Jun 68/52F; Jul 70/54F; Aug 68/54F; Sep 63/49F; Oct 57/43F; Nov 45/33F; Dec 40/28F
+CI,Ivory Coast,8,-5,Jan 94/66F; Feb 96/70F; Mar 95/74F; Apr 93/74F; May 90/74F; Jun 87/72F; Jul 85/71F; Aug 84/71F; Sep 86/71F; Oct 88/71F; Nov 92/71F; Dec 93/67F
+CK,Cook Islands,-21.23333333,-159.76666666,Jan 76/74F; Feb 77/74F; Mar 78/74F; Apr 76/74F; May 75/72F; Jun 73/70F; Jul 72/69F; Aug 71/68F; Sep 71/69F; Oct 71/69F; Nov 72/70F; Dec 75/72F
+CL,Chile,-30,-71,Jan 68/48F; Feb 69/49F; Mar 67/47F; Apr 63/43F; May 60/40F; Jun 56/36F; Jul 55/35F; Aug 58/37F; Sep 58/37F; Oct 61/40F; Nov 63/43F; Dec 66/46F
+CM,Cameroon,6,12,Jan 91/64F; Feb 94/66F; Mar 91/68F; Apr 85/68F; May 83/68F; Jun 80/66F; Jul 79/66F; Aug 79/66F; Sep 80/66F; Oct 81/66F; Nov 85/65F; Dec 89/63F
+CN,China,35,105,Jan 30/16F; Feb 34/19F; Mar 48/30F; Apr 56/37F; May 64/45F; Jun 71/54F; Jul 75/58F; Aug 73/57F; Sep 65/50F; Oct 52/39F; Nov 43/28F; Dec 32/17F
+CO,Colombia,4,-72,Jan 90/74F; Feb 92/75F; Mar 89/74F; Apr 86/73F; May 84/73F; Jun 83/72F; Jul 83/72F; Aug 85/72F; Sep 86/73F; Oct 86/73F; Nov 86/73F; Dec 88/74F
+CR,Costa Rica,10,-84,Jan 70/57F; Feb 71/57F; Mar 72/58F; Apr 73/60F; May 73/61F; Jun 72/61F; Jul 72/61F; Aug 72/61F; Sep 73/60F; Oct 72/60F; Nov 71/60F; Dec 70/59F
+CU,Cuba,21.5,-80,Jan 79/74F; Feb 80/75F; Mar 80/75F; Apr 82/77F; May 83/79F; Jun 85/80F; Jul 86/81F; Aug 86/82F; Sep 86/81F; Oct 85/80F; Nov 83/78F; Dec 80/76F
+GW,Guinea-Bissau,12,-15,Jan 95/69F; Feb 99/71F; Mar 100/73F; Apr 100/76F; May 97/77F; Jun 92/78F; Jul 85/76F; Aug 84/75F; Sep 86/75F; Oct 89/76F; Nov 92/73F; Dec 93/69F
+GY,Guyana,5,-59,Jan 84/71F; Feb 84/71F; Mar 86/71F; Apr 86/72F; May 84/72F; Jun 84/72F; Jul 85/72F; Aug 86/72F; Sep 89/73F; Oct 89/73F; Nov 87/73F; Dec 85/72F
+HK,Hong Kong,22.267,114.188,Jan 66/56F; Feb 68/59F; Mar 73/65F; Apr 76/69F; May 81/75F; Jun 84/79F; Jul 86/80F; Aug 85/79F; Sep 85/78F; Oct 81/72F; Nov 76/66F; Dec 68/56F
+HN,Honduras,15,-86.5,Jan 76/60F; Feb 80/60F; Mar 83/61F; Apr 87/64F; May 85/66F; Jun 82/65F; Jul 83/64F; Aug 83/65F; Sep 83/65F; Oct 80/64F; Nov 77/63F; Dec 76/61F
+HR,Croatia,45.16666666,15.5,Jan 44/29F; Feb 51/33F; Mar 55/35F; Apr 60/41F; May 67/50F; Jun 80/60F; Jul 84/62F; Aug 82/62F; Sep 73/54F; Oct 65/48F; Nov 52/40F; Dec 47/34F
+HU,Hungary,47,20,Jan 40/29F; Feb 48/32F; Mar 55/35F; Apr 61/42F; May 70/51F; Jun 81/62F; Jul 85/65F; Aug 84/64F; Sep 75/56F; Oct 65/47F; Nov 51/39F; Dec 43/33F
+ID,Indonesia,-5,120,Jan 88/77F; Feb 87/76F; Mar 88/75F; Apr 87/75F; May 86/76F; Jun 84/75F; Jul 84/74F; Aug 85/74F; Sep 87/75F; Oct 90/75F; Nov 91/76F; Dec 89/76F
+IE,Ireland,53,-8,Jan 46/38F; Feb 49/40F; Mar 51/39F; Apr 55/42F; May 60/46F; Jun 64/51F; Jul 67/55F; Aug 67/54F; Sep 63/52F; Oct 57/47F; Nov 50/42F; Dec 47/39F
+IL,Israel,31.47,35.13,Jan 55/42F; Feb 56/43F; Mar 61/46F; Apr 74/54F; May 83/62F; Jun 87/64F; Jul 91/68F; Aug 91/69F; Sep 88/67F; Oct 80/63F; Nov 69/55F; Dec 60/47F
+IM,Isle of Man,54.25,-4.5,Jan 42/36F; Feb 44/36F; Mar 45/36F; Apr 49/38F; May 53/43F; Jun 60/48F; Jul 61/51F; Aug 61/52F; Sep 58/49F; Oct 52/45F; Nov 46/40F; Dec 43/37F
+IN,India,20,77,Jan 81/60F; Feb 87/63F; Mar 94/71F; Apr 100/77F; May 102/81F; Jun 94/78F; Jul 85/74F; Aug 83/73F; Sep 84/73F; Oct 85/69F; Nov 84/65F; Dec 81/62F
+IS,Iceland,65,-18,Jan 24/14F; Feb 24/15F; Mar 24/16F; Apr 31/22F; May 35/26F; Jun 47/36F; Jul 52/40F; Aug 50/39F; Sep 42/33F; Oct 32/25F; Nov 28/19F; Dec 22/12F
+IT,Italy,42.83333333,12.83333333,Jan 46/30F; Feb 52/32F; Mar 55/34F; Apr 59/39F; May 68/48F; Jun 80/56F; Jul 86/61F; Aug 85/60F; Sep 76/54F; Oct 67/47F; Nov 57/41F; Dec 51/35F
+JE,Jersey,49.25,-2.16666666,Jan 49/44F; Feb 50/44F; Mar 52/45F; Apr 55/47F; May 59/51F; Jun 65/56F; Jul 68/60F; Aug 68/61F; Sep 67/60F; Oct 61/56F; Nov 55/50F; Dec 51/46F
+JM,Jamaica,18.25,-77.5,Jan 76/61F; Feb 77/62F; Mar 78/62F; Apr 80/63F; May 80/65F; Jun 82/67F; Jul 83/67F; Aug 83/68F; Sep 82/67F; Oct 80/67F; Nov 78/65F; Dec 77/63F
+JO,Jordan,31,36,Jan 55/37F; Feb 58/39F; Mar 63/43F; Apr 75/51F; May 85/59F; Jun 88/63F; Jul 92/66F; Aug 93/66F; Sep 90/64F; Oct 81/58F; Nov 69/49F; Dec 61/42F
+JP,Japan,36,138,Jan 40/24F; Feb 43/25F; Mar 52/31F; Apr 58/37F; May 68/47F; Jun 74/56F; Jul 79/64F; Aug 83/66F; Sep 77/60F; Oct 63/46F; Nov 55/36F; Dec 45/28F
+KE,Kenya,1,38,Jan 90/70F; Feb 93/72F; Mar 93/73F; Apr 91/72F; May 92/72F; Jun 91/71F; Jul 90/70F; Aug 91/70F; Sep 93/70F; Oct 92/71F; Nov 87/70F; Dec 88/70F
+KG,Kyrgyzstan,41,75,Jan 15/-1F; Feb 20/5F; Mar 28/15F; Apr 37/24F; May 45/29F; Jun 52/35F; Jul 60/43F; Aug 57/40F; Sep 52/33F; Oct 36/20F; Nov 26/9F; Dec 18/3F
+KH,Cambodia,13,105,Jan 91/72F; Feb 93/74F; Mar 95/77F; Apr 94/78F; May 92/78F; Jun 91/77F; Jul 89/77F; Aug 88/76F; Sep 86/75F; Oct 86/74F; Nov 87/73F; Dec 88/71F
+KI,Kiribati,1.41666666,173,Jan 83/80F; Feb 83/80F; Mar 82/80F; Apr 83/80F; May 83/80F; Jun 83/80F; Jul 83/80F; Aug 84/80F; Sep 84/81F; Oct 83/80F; Nov 83/80F; Dec 83/80F
+KM,Comoros,-12.16666666,44.25,Jan 83/80F; Feb 83/80F; Mar 84/80F; Apr 84/80F; May 82/79F; Jun 80/77F; Jul 78/76F; Aug 77/75F; Sep 78/75F; Oct 80/77F; Nov 82/79F; Dec 83/80F
+KN,Saint Kitts and Nevis,17.33333333,-62.75,Jan 74/69F; Feb 74/68F; Mar 75/69F; Apr 76/70F; May 78/72F; Jun 79/73F; Jul 79/73F; Aug 80/74F; Sep 80/74F; Oct 79/73F; Nov 77/72F; Dec 76/70F
+KR,South Korea,37,127.5,Jan 37/21F; Feb 42/24F; Mar 55/33F; Apr 65/42F; May 75/53F; Jun 82/63F; Jul 85/70F; Aug 84/71F; Sep 77/62F; Oct 65/47F; Nov 53/35F; Dec 38/22F
+NO,Norway,62,10,Jan 23/12F; Feb 25/13F; Mar 30/15F; Apr 38/23F; May 47/31F; Jun 62/45F; Jul 61/45F; Aug 59/44F; Sep 51/38F; Oct 40/30F; Nov 29/20F; Dec 23/11F
+NP,Nepal,28,84,Jan 62/42F; Feb 66/45F; Mar 75/52F; Apr 80/59F; May 80/62F; Jun 81/67F; Jul 80/69F; Aug 80/69F; Sep 79/67F; Oct 77/61F; Nov 72/52F; Dec 65/44F
+NR,Nauru,-0.53333333,166.91666666,Jan 83/80F; Feb 83/80F; Mar 82/80F; Apr 83/80F; May 83/80F; Jun 83/80F; Jul 83/80F; Aug 83/80F; Sep 83/80F; Oct 83/80F; Nov 83/80F; Dec 83/80F
+NU,Niue,-19.03333333,-169.86666666,Jan 81/78F; Feb 81/78F; Mar 81/78F; Apr 80/77F; May 79/76F; Jun 78/75F; Jul 76/74F; Aug 76/74F; Sep 76/74F; Oct 77/74F; Nov 78/75F; Dec 80/77F
+NZ,New Zealand,-41,174,Jan 69/59F; Feb 68/59F; Mar 66/57F; Apr 62/54F; May 60/53F; Jun 56/49F; Jul 54/47F; Aug 54/47F; Sep 56/48F; Oct 59/50F; Nov 63/54F; Dec 66/56F
+OM,Oman,21,57,Jan 80/58F; Feb 85/60F; Mar 92/67F; Apr 100/74F; May 106/79F; Jun 109/83F; Jul 105/82F; Aug 107/82F; Sep 102/78F; Oct 97/73F; Nov 89/68F; Dec 83/62F
+PA,Panama,9,-80,Jan 83/73F; Feb 84/74F; Mar 84/74F; Apr 85/74F; May 85/75F; Jun 85/74F; Jul 84/74F; Aug 84/74F; Sep 85/74F; Oct 85/73F; Nov 83/73F; Dec 83/73F
+PE,Peru,-10,-76,Jan 48/36F; Feb 48/36F; Mar 48/36F; Apr 49/35F; May 48/35F; Jun 47/33F; Jul 48/33F; Aug 49/32F; Sep 48/33F; Oct 49/35F; Nov 49/35F; Dec 48/36F
+PF,French Polynesia,-15,-140,Jan 81/78F; Feb 81/78F; Mar 82/79F; Apr 82/79F; May 81/79F; Jun 80/78F; Jul 79/76F; Aug 78/76F; Sep 78/76F; Oct 79/76F; Nov 80/77F; Dec 81/78F
+PG,Papua New Guinea,-6,147,Jan 84/77F; Feb 84/77F; Mar 84/77F; Apr 84/77F; May 84/78F; Jun 84/77F; Jul 84/77F; Aug 85/77F; Sep 85/77F; Oct 85/77F; Nov 85/77F; Dec 85/78F
+PH,Philippines,13,122,Jan 81/78F; Feb 80/77F; Mar 82/79F; Apr 84/80F; May 85/81F; Jun 85/81F; Jul 84/80F; Aug 84/81F; Sep 84/80F; Oct 84/80F; Nov 83/80F; Dec 82/79F
+PK,Pakistan,30,70,Jan 51/35F; Feb 60/42F; Mar 64/49F; Apr 75/58F; May 83/65F; Jun 85/69F; Jul 82/69F; Aug 80/67F; Sep 80/65F; Oct 75/57F; Nov 64/47F; Dec 56/40F
+PL,Poland,52,20,Jan 37/29F; Feb 42/30F; Mar 48/33F; Apr 55/38F; May 64/46F; Jun 77/58F; Jul 77/59F; Aug 77/60F; Sep 68/51F; Oct 59/46F; Nov 46/37F; Dec 39/31F
+PM,Saint Pierre and Miquelon,46.83333333,-56.33333333,Jan 34/27F; Feb 31/23F; Mar 32/27F; Apr 36/32F; May 40/36F; Jun 47/44F; Jul 56/53F; Aug 62/59F; Sep 59/55F; Oct 52/48F; Nov 44/39F; Dec 38/32F
+PN,Pitcairn Islands,-25.06666666,-130.1,Jan 77/75F; Feb 78/75F; Mar 78/75F; Apr 76/74F; May 75/72F; Jun 72/70F; Jul 71/68F; Aug 70/67F; Sep 70/68F; Oct 71/69F; Nov 73/71F; Dec 75/72F
+PR,Puerto Rico,18.25,-66.5,Jan 80/67F; Feb 80/66F; Mar 81/66F; Apr 83/68F; May 85/70F; Jun 86/72F; Jul 87/73F; Aug 87/73F; Sep 86/73F; Oct 85/72F; Nov 83/70F; Dec 80/68F
+PS,Palestine,31.9,35.2,Jan 54/41F; Feb 55/41F; Mar 59/43F; Apr 70/50F; May 79/57F; Jun 83/60F; Jul 87/64F; Aug 88/65F; Sep 86/64F; Oct 79/60F; Nov 68/54F; Dec 59/47F
+PT,Portugal,39.5,-8,Jan 56/41F; Feb 62/44F; Mar 65/47F; Apr 68/50F; May 78/56F; Jun 82/59F; Jul 92/64F; Aug 91/64F; Sep 82/61F; Oct 75/57F; Nov 62/49F; Dec 58/46F
+PW,Palau,7.5,134.5,Jan 83/77F; Feb 83/77F; Mar 84/77F; Apr 84/77F; May 84/77F; Jun 84/76F; Jul 83/76F; Aug 84/77F; Sep 84/77F; Oct 84/77F; Nov 84/77F; Dec 84/77F
+PY,Paraguay,-23,-58,Jan 93/77F; Feb 91/74F; Mar 90/73F; Apr 85/68F; May 79/63F; Jun 77/61F; Jul 79/61F; Aug 83/63F; Sep 87/68F; Oct 90/71F; Nov 91/72F; Dec 93/75F
+QA,Qatar,25.5,51.25,Jan 72/56F; Feb 77/58F; Mar 84/63F; Apr 94/70F; May 103/78F; Jun 109/84F; Jul 111/86F; Aug 111/86F; Sep 107/81F; Oct 99/75F; Nov 86/68F; Dec 77/61F
+RE,Réunion,-21.15,55.5,Jan 61/53F; Feb 61/52F; Mar 61/52F; Apr 59/51F; May 56/46F; Jun 52/42F; Jul 52/41F; Aug 53/42F; Sep 54/42F; Oct 58/46F; Nov 59/48F; Dec 60/51F
+RO,Romania,46,25,Jan 37/25F; Feb 42/26F; Mar 48/30F; Apr 56/36F; May 65/47F; Jun 73/56F; Jul 77/59F; Aug 78/59F; Sep 69/51F; Oct 61/42F; Nov 49/35F; Dec 42/30F
+RS,Serbia,44,21,Jan 40/29F; Feb 48/33F; Mar 52/36F; Apr 60/42F; May 69/52F; Jun 77/61F; Jul 83/65F; Aug 82/64F; Sep 74/57F; Oct 65/49F; Nov 54/41F; Dec 46/35F
+VI,United States Virgin Islands,18.35,-64.933333,Jan 76/74F; Feb 76/73F; Mar 76/73F; Apr 77/74F; May 79/76F; Jun 80/77F; Jul 81/78F; Aug 81/78F; Sep 82/78F; Oct 81/78F; Nov 80/77F; Dec 78/75F
+VN,Vietnam,16.16666666,107.83333333,Jan 66/55F; Feb 71/57F; Mar 78/62F; Apr 80/65F; May 82/67F; Jun 84/68F; Jul 82/68F; Aug 82/68F; Sep 78/66F; Oct 73/64F; Nov 71/61F; Dec 65/57F
+VU,Vanuatu,-16,167,Jan 84/80F; Feb 84/81F; Mar 83/80F; Apr 83/80F; May 82/79F; Jun 81/78F; Jul 80/77F; Aug 80/77F; Sep 80/77F; Oct 81/78F; Nov 82/79F; Dec 83/80F
+WF,Wallis and Futuna,-13.3,-176.2,Jan 83/80F; Feb 83/79F; Mar 83/79F; Apr 83/80F; May 83/80F; Jun 83/80F; Jul 82/79F; Aug 82/79F; Sep 82/79F; Oct 82/79F; Nov 83/79F; Dec 83/79F
+WS,Samoa,-13.58333333,-172.33333333,Jan 77/69F; Feb 76/69F; Mar 78/69F; Apr 77/69F; May 76/69F; Jun 76/68F; Jul 75/68F; Aug 75/67F; Sep 75/67F; Oct 76/68F; Nov 77/68F; Dec 77/68F
+XK,Kosovo,42.666667,21.166667,Jan 40/26F; Feb 47/29F; Mar 52/32F; Apr 59/38F; May 70/49F; Jun 78/57F; Jul 84/61F; Aug 84/61F; Sep 75/54F; Oct 66/45F; Nov 54/39F; Dec 45/32F
+YT,Mayotte,-12.83333333,45.16666666,Jan 84/77F; Feb 84/77F; Mar 85/77F; Apr 85/77F; May 83/76F; Jun 81/73F; Jul 79/71F; Aug 81/70F; Sep 81/71F; Oct 83/73F; Nov 84/76F; Dec 85/77F
+ZA,South Africa,-29,24,Jan 93/66F; Feb 90/64F; Mar 87/60F; Apr 80/52F; May 74/44F; Jun 68/38F; Jul 69/37F; Aug 73/40F; Sep 82/49F; Oct 88/56F; Nov 90/59F; Dec 91/63F
+ZM,Zambia,-15,30,Jan 81/70F; Feb 82/70F; Mar 82/68F; Apr 82/66F; May 81/61F; Jun 78/58F; Jul 77/56F; Aug 84/61F; Sep 90/66F; Oct 95/72F; Nov 94/74F; Dec 87/72F
+ZW,Zimbabwe,-20,30,Jan 85/68F; Feb 84/67F; Mar 83/64F; Apr 82/61F; May 79/55F; Jun 75/52F; Jul 74/50F; Aug 82/55F; Sep 87/59F; Oct 91/65F; Nov 91/68F; Dec 87/68F
+AU,Australia,-27,133,Jan 97/73F; Feb 95/70F; Mar 93/70F; Apr 83/61F; May 71/51F; Jun 66/46F; Jul 68/46F; Aug 73/49F; Sep 82/57F; Oct 86/61F; Nov 91/66F; Dec 97/71F
+AW,Aruba,12.5,-69.96666666,Jan 83/77F; Feb 83/76F; Mar 84/77F; Apr 85/78F; May 86/79F; Jun 87/79F; Jul 86/79F; Aug 88/80F; Sep 89/81F; Oct 87/80F; Nov 85/79F; Dec 84/78F
+AX,Åland Islands,60.116667,19.9,Jan 36/30F; Feb 36/28F; Mar 39/30F; Apr 46/34F; May 53/41F; Jun 67/54F; Jul 68/57F; Aug 67/58F; Sep 59/51F; Oct 50/44F; Nov 42/37F; Dec 36/30F
+AZ,Azerbaijan,40.5,47.5,Jan 49/30F; Feb 54/35F; Mar 60/41F; Apr 72/50F; May 82/60F; Jun 95/71F; Jul 97/75F; Aug 96/73F; Sep 84/66F; Oct 73/56F; Nov 61/44F; Dec 51/36F
+BA,Bosnia and Herzegovina,44,18,Jan 40/27F; Feb 47/31F; Mar 50/33F; Apr 56/39F; May 64/48F; Jun 74/57F; Jul 79/61F; Aug 78/61F; Sep 71/54F; Oct 64/47F; Nov 53/39F; Dec 46/34F
+BB,Barbados,13.16666666,-59.53333333,Jan 80/72F; Feb 80/72F; Mar 81/72F; Apr 82/73F; May 83/75F; Jun 83/75F; Jul 83/75F; Aug 83/75F; Sep 85/76F; Oct 83/75F; Nov 82/74F; Dec 81/73F
+BD,Bangladesh,24,90,Jan 75/54F; Feb 81/58F; Mar 89/67F; Apr 93/73F; May 91/76F; Jun 90/79F; Jul 90/79F; Aug 90/79F; Sep 89/78F; Oct 88/74F; Nov 83/64F; Dec 77/58F
+BE,Belgium,50.83333333,4,Jan 44/36F; Feb 49/37F; Mar 52/38F; Apr 57/41F; May 63/47F; Jun 73/56F; Jul 73/57F; Aug 74/59F; Sep 69/54F; Oct 61/49F; Nov 51/41F; Dec 46/38F
+BG,Bulgaria,43,25,Jan 43/27F; Feb 48/29F; Mar 52/32F; Apr 59/38F; May 69/49F; Jun 75/56F; Jul 82/60F; Aug 84/61F; Sep 75/53F; Oct 67/45F; Nov 55/38F; Dec 46/31F
+BH,Bahrain,26,50.55,Jan 69/57F; Feb 74/59F; Mar 81/63F; Apr 91/71F; May 101/79F; Jun 107/85F; Jul 109/88F; Aug 109/88F; Sep 105/84F; Oct 96/78F; Nov 84/71F; Dec 75/62F
+CV,Cape Verde,16,-24,Jan 73/71F; Feb 72/70F; Mar 72/70F; Apr 72/71F; May 73/72F; Jun 75/74F; Jul 77/75F; Aug 79/78F; Sep 81/79F; Oct 80/79F; Nov 78/77F; Dec 75/74F
+CW,Curaçao,12.116667,-68.933333,Jan 84/77F; Feb 84/77F; Mar 85/77F; Apr 86/78F; May 87/79F; Jun 87/79F; Jul 87/80F; Aug 89/80F; Sep 90/81F; Oct 88/80F; Nov 85/78F; Dec 85/78F
+CX,Christmas Island,-10.5,105.66666666,Jan 79/77F; Feb 79/76F; Mar 80/77F; Apr 80/77F; May 80/77F; Jun 78/76F; Jul 77/75F; Aug 76/74F; Sep 76/74F; Oct 77/75F; Nov 78/75F; Dec 79/76F
+CY,Cyprus,35,33,Jan 54/42F; Feb 55/41F; Mar 59/44F; Apr 68/51F; May 78/60F; Jun 82/65F; Jul 91/72F; Aug 90/72F; Sep 85/67F; Oct 77/60F; Nov 68/53F; Dec 60/46F
+CZ,Czechia,49.75,15.5,Jan 36/27F; Feb 42/29F; Mar 47/32F; Apr 53/37F; May 60/44F; Jun 72/55F; Jul 74/57F; Aug 73/57F; Sep 66/51F; Oct 58/44F; Nov 45/36F; Dec 38/30F
+DE,Germany,51,9,Jan 38/31F; Feb 43/32F; Mar 48/34F; Apr 54/38F; May 61/45F; Jun 73/56F; Jul 72/56F; Aug 73/57F; Sep 66/51F; Oct 57/45F; Nov 45/37F; Dec 40/33F
+DJ,Djibouti,11.5,43,Jan 82/69F; Feb 84/69F; Mar 87/72F; Apr 90/76F; May 98/81F; Jun 106/87F; Jul 106/89F; Aug 104/87F; Sep 104/86F; Oct 93/77F; Nov 87/73F; Dec 84/70F
+DK,Denmark,56,10,Jan 41/33F; Feb 43/33F; Mar 46/33F; Apr 51/36F; May 58/43F; Jun 68/53F; Jul 68/55F; Aug 69/56F; Sep 63/52F; Oct 55/46F; Nov 46/40F; Dec 40/34F
+DM,Dominica,15.41666666,-61.33333333,Jan 75/67F; Feb 75/67F; Mar 75/67F; Apr 77/68F; May 79/70F; Jun 79/71F; Jul 79/71F; Aug 80/72F; Sep 82/72F; Oct 80/71F; Nov 78/70F; Dec 76/68F
+DO,Dominican Republic,19,-70.66666666,Jan 67/52F; Feb 67/53F; Mar 68/53F; Apr 70/55F; May 72/57F; Jun 74/58F; Jul 74/59F; Aug 74/59F; Sep 74/58F; Oct 73/57F; Nov 70/55F; Dec 68/54F
+DZ,Algeria,28,3,Jan 66/44F; Feb 72/50F; Mar 79/56F; Apr 89/65F; May 96/74F; Jun 106/83F; Jul 108/86F; Aug 107/85F; Sep 103/81F; Oct 90/69F; Nov 78/56F; Dec 71/49F
+EC,Ecuador,-2,-77.5,Jan 86/72F; Feb 87/73F; Mar 86/72F; Apr 86/72F; May 84/72F; Jun 83/71F; Jul 83/70F; Aug 85/70F; Sep 87/71F; Oct 87/72F; Nov 87/72F; Dec 86/72F
+EE,Estonia,59,26,Jan 31/22F; Feb 32/23F; Mar 38/25F; Apr 49/32F; May 59/41F; Jun 72/54F; Jul 71/55F; Aug 70/55F; Sep 59/47F; Oct 49/40F; Nov 39/32F; Dec 30/23F
+EG,Egypt,27,30,Jan 64/41F; Feb 67/44F; Mar 75/51F; Apr 85/59F; May 93/68F; Jun 97/74F; Jul 99/75F; Aug 98/75F; Sep 94/71F; Oct 86/64F; Nov 77/55F; Dec 69/47F
+EH,Western Sahara,24.5,-13,Jan 73/50F; Feb 78/54F; Mar 83/57F; Apr 85/59F; May 91/63F; Jun 94/67F; Jul 103/73F; Aug 102/74F; Sep 99/73F; Oct 93/68F; Nov 83/60F; Dec 77/53F
+ER,Eritrea,15,39,Jan 78/51F; Feb 81/53F; Mar 85/56F; Apr 86/59F; May 86/61F; Jun 85/60F; Jul 78/59F; Aug 75/58F; Sep 81/57F; Oct 80/56F; Nov 78/54F; Dec 77/53F
+ES,Spain,40,-4,Jan 51/33F; Feb 60/38F; Mar 64/43F; Apr 68/47F; May 80/56F; Jun 87/63F; Jul 97/71F; Aug 94/69F; Sep 81/60F; Oct 74/53F; Nov 59/44F; Dec 54/40F
+ET,Ethiopia,8,38,Jan 67/47F; Feb 69/50F; Mar 69/51F; Apr 67/51F; May 65/49F; Jun 62/49F; Jul 60/49F; Aug 61/49F; Sep 62/48F; Oct 65/48F; Nov 65/47F; Dec 66/47F
+FI,Finland,64,26,Jan 25/16F; Feb 27/16F; Mar 33/20F; Apr 44/26F; May 54/38F; Jun 69/51F; Jul 68/54F; Aug 66/52F; Sep 55/44F; Oct 42/34F; Nov 32/26F; Dec 26/20F
+FJ,Fiji,-18,175,Jan 82/79F; Feb 83/80F; Mar 83/79F; Apr 82/79F; May 80/78F; Jun 79/77F; Jul 78/76F; Aug 77/75F; Sep 78/75F; Oct 79/77F; Nov 80/77F; Dec 82/79F
+FK,Falkland Islands,-51.75,-59,Jan 58/46F; Feb 57/45F; Mar 54/43F; Apr 50/40F; May 45/36F; Jun 41/33F; Jul 39/31F; Aug 42/33F; Sep 45/35F; Oct 50/38F; Nov 55/42F; Dec 56/43F
+FM,Micronesia,6.91666666,158.25,Jan 81/75F; Feb 81/75F; Mar 80/75F; Apr 80/75F; May 81/75F; Jun 81/75F; Jul 81/75F; Aug 81/75F; Sep 82/75F; Oct 81/75F; Nov 81/75F; Dec 81/75F
+FO,Faroe Islands,62,-7,Jan 42/37F; Feb 42/38F; Mar 42/37F; Apr 43/39F; May 45/41F; Jun 49/46F; Jul 51/48F; Aug 52/49F; Sep 51/47F; Oct 48/44F; Nov 45/41F; Dec 42/37F
+FR,France,46,2,Jan 42/33F; Feb 50/37F; Mar 52/38F; Apr 57/41F; May 63/47F; Jun 72/55F; Jul 75/57F; Aug 75/58F; Sep 71/54F; Oct 62/49F; Nov 50/40F; Dec 46/37F
+GA,Gabon,-1,11.75,Jan 84/66F; Feb 85/67F; Mar 84/67F; Apr 83/67F; May 83/67F; Jun 82/65F; Jul 81/65F; Aug 81/66F; Sep 82/66F; Oct 81/66F; Nov 81/66F; Dec 83/66F
+GB,United Kingdom,54,-2,Jan 40/32F; Feb 43/33F; Mar 45/34F; Apr 49/35F; May 54/41F; Jun 61/47F; Jul 62/51F; Aug 62/51F; Sep 59/48F; Oct 51/43F; Nov 45/37F; Dec 41/34F
+GD,Grenada,12.11666666,-61.66666666,Jan 80/74F; Feb 80/73F; Mar 80/74F; Apr 82/75F; May 83/76F; Jun 82/76F; Jul 82/76F; Aug 83/77F; Sep 84/77F; Oct 83/77F; Nov 82/76F; Dec 81/75F
+GE,Georgia,42,43.5,Jan 38/22F; Feb 38/23F; Mar 44/29F; Apr 55/36F; May 64/44F; Jun 74/56F; Jul 75/58F; Aug 80/61F; Sep 70/52F; Oct 60/43F; Nov 49/34F; Dec 41/26F
+GU,Guam,13.46666666,144.78333333,Jan 84/76F; Feb 84/76F; Mar 85/76F; Apr 86/77F; May 87/77F; Jun 87/77F; Jul 86/77F; Aug 85/76F; Sep 85/76F; Oct 85/76F; Nov 86/77F; Dec 85/77F
+KW,Kuwait,29.5,45.75,Jan 63/44F; Feb 69/47F; Mar 78/55F; Apr 89/64F; May 100/75F; Jun 109/82F; Jul 112/86F; Aug 111/85F; Sep 106/79F; Oct 95/69F; Nov 77/58F; Dec 67/48F
+KZ,Kazakhstan,48,68,Jan 19/6F; Feb 22/8F; Mar 38/19F; Apr 62/38F; May 76/53F; Jun 84/61F; Jul 90/67F; Aug 83/62F; Sep 69/48F; Oct 54/35F; Nov 35/21F; Dec 22/10F
+LA,Laos,18,105,Jan 75/54F; Feb 79/57F; Mar 84/63F; Apr 85/67F; May 85/70F; Jun 83/71F; Jul 83/71F; Aug 81/70F; Sep 81/69F; Oct 78/66F; Nov 77/62F; Dec 72/55F
+LK,Sri Lanka,7,81,Jan 74/62F; Feb 75/63F; Mar 79/63F; Apr 80/64F; May 82/67F; Jun 83/66F; Jul 83/67F; Aug 84/67F; Sep 81/66F; Oct 80/65F; Nov 77/65F; Dec 75/64F
+LR,Liberia,6.5,-9.5,Jan 90/72F; Feb 91/73F; Mar 89/73F; Apr 87/73F; May 86/73F; Jun 83/72F; Jul 82/71F; Aug 82/71F; Sep 82/71F; Oct 84/72F; Nov 86/72F; Dec 88/71F
+LS,Lesotho,-29.5,28.5,Jan 67/49F; Feb 65/48F; Mar 64/45F; Apr 58/40F; May 54/35F; Jun 49/31F; Jul 50/30F; Aug 54/33F; Sep 61/39F; Oct 64/43F; Nov 65/44F; Dec 65/47F
+LT,Lithuania,56,24,Jan 34/26F; Feb 37/26F; Mar 44/30F; Apr 53/36F; May 61/43F; Jun 74/56F; Jul 73/57F; Aug 73/57F; Sep 64/49F; Oct 54/43F; Nov 42/36F; Dec 34/27F
+LU,Luxembourg,49.75,6.16666666,Jan 40/32F; Feb 46/34F; Mar 50/35F; Apr 56/38F; May 63/45F; Jun 74/55F; Jul 74/56F; Aug 75/57F; Sep 68/51F; Oct 58/46F; Nov 47/38F; Dec 42/35F
+LV,Latvia,57,25,Jan 32/23F; Feb 33/24F; Mar 41/27F; Apr 51/35F; May 59/42F; Jun 73/55F; Jul 71/56F; Aug 71/56F; Sep 61/48F; Oct 51/41F; Nov 40/34F; Dec 32/25F
+MA,Morocco,32,-5,Jan 56/33F; Feb 60/37F; Mar 65/42F; Apr 73/49F; May 82/57F; Jun 90/64F; Jul 97/72F; Aug 95/70F; Sep 86/62F; Oct 75/53F; Nov 65/43F; Dec 60/37F
+MC,Monaco,43.73333333,7.4,Jan 49/32F; Feb 54/35F; Mar 57/38F; Apr 60/42F; May 67/50F; Jun 77/60F; Jul 82/64F; Aug 82/64F; Sep 75/57F; Oct 67/50F; Nov 57/41F; Dec 52/36F
+MD,Moldova,47,29,Jan 38/27F; Feb 44/29F; Mar 51/33F; Apr 59/40F; May 70/51F; Jun 80/62F; Jul 83/64F; Aug 84/64F; Sep 74/55F; Oct 64/47F; Nov 50/38F; Dec 41/31F
+ME,Montenegro,42.5,19.3,Jan 46/33F; Feb 50/34F; Mar 54/38F; Apr 60/43F; May 69/51F; Jun 79/60F; Jul 87/65F; Aug 86/65F; Sep 77/59F; Oct 67/50F; Nov 58/45F; Dec 50/39F
+MF,Saint Martin,18.08333333,-63.95,Jan 79/76F; Feb 79/76F; Mar 79/76F; Apr 79/77F; May 81/79F; Jun 82/80F; Jul 83/80F; Aug 84/81F; Sep 84/81F; Oct 84/80F; Nov 82/79F; Dec 81/78F
+MG,Madagascar,-20,47,Jan 79/63F; Feb 79/62F; Mar 78/62F; Apr 77/59F; May 74/54F; Jun 70/51F; Jul 70/49F; Aug 74/50F; Sep 78/52F; Oct 82/57F; Nov 83/60F; Dec 81/61F
+MH,Marshall Islands,9,168,Jan 82/80F; Feb 82/79F; Mar 82/79F; Apr 82/79F; May 83/80F; Jun 83/80F; Jul 83/80F; Aug 83/80F; Sep 84/80F; Oct 83/79F; Nov 83/80F; Dec 83/80F
+MK,North Macedonia,41.83333333,22,Jan 44/29F; Feb 51/32F; Mar 56/36F; Apr 64/43F; May 75/53F; Jun 84/62F; Jul 90/66F; Aug 90/67F; Sep 81/59F; Oct 69/49F; Nov 58/42F; Dec 48/34F
+MN,Mongolia,46,105,Jan 14/-9F; Feb 24/-2F; Mar 41/17F; Apr 53/28F; May 65/39F; Jun 77/53F; Jul 79/58F; Aug 75/54F; Sep 69/45F; Oct 48/26F; Nov 30/11F; Dec 14/-6F
+MO,Macau,22.16666666,113.55,Jan 67/57F; Feb 69/60F; Mar 74/66F; Apr 77/70F; May 82/76F; Jun 86/80F; Jul 88/81F; Aug 86/80F; Sep 86/78F; Oct 81/73F; Nov 77/68F; Dec 69/57F
+MP,Northern Mariana Islands,15.2,145.75,Jan 80/75F; Feb 80/74F; Mar 81/75F; Apr 82/76F; May 83/76F; Jun 83/77F; Jul 83/76F; Aug 82/76F; Sep 82/76F; Oct 81/76F; Nov 82/77F; Dec 81/76F
+MQ,Martinique,14.666667,-61,Jan 79/72F; Feb 79/72F; Mar 80/72F; Apr 82/73F; May 83/75F; Jun 83/76F; Jul 83/75F; Aug 84/76F; Sep 85/76F; Oct 83/75F; Nov 82/74F; Dec 81/73F
+MR,Mauritania,20,-12,Jan 77/53F; Feb 82/57F; Mar 87/60F; Apr 93/67F; May 100/75F; Jun 103/81F; Jul 104/82F; Aug 102/82F; Sep 102/81F; Oct 97/73F; Nov 87/62F; Dec 80/56F
+MS,Montserrat,16.75,-62.2,Jan 77/71F; Feb 77/71F; Mar 77/71F; Apr 79/72F; May 80/74F; Jun 81/75F; Jul 81/75F; Aug 82/76F; Sep 82/76F; Oct 81/75F; Nov 79/74F; Dec 78/73F
+MT,Malta,35.83333333,14.58333333,Jan 59/53F; Feb 60/52F; Mar 61/54F; Apr 65/57F; May 72/63F; Jun 82/71F; Jul 88/76F; Aug 88/78F; Sep 83/75F; Oct 76/69F; Nov 70/63F; Dec 64/57F
+MU,Mauritius,-20.28333333,57.55,Jan 78/69F; Feb 78/69F; Mar 78/69F; Apr 76/68F; May 73/65F; Jun 69/62F; Jul 68/61F; Aug 69/60F; Sep 70/61F; Oct 74/63F; Nov 76/65F; Dec 78/68F
+MV,Maldives,3.25,73,Jan 83/80F; Feb 83/80F; Mar 83/80F; Apr 85/81F; May 84/81F; Jun 84/81F; Jul 84/80F; Aug 84/81F; Sep 83/80F; Oct 83/80F; Nov 83/79F; Dec 83/79F
+MW,Malawi,-13.5,34,Jan 76/64F; Feb 76/64F; Mar 75/63F; Apr 73/61F; May 72/56F; Jun 69/54F; Jul 68/52F; Aug 73/56F; Sep 78/59F; Oct 82/64F; Nov 83/66F; Dec 79/65F
+MX,Mexico,23,-102,Jan 69/43F; Feb 74/46F; Mar 80/50F; Apr 83/54F; May 84/57F; Jun 82/59F; Jul 80/58F; Aug 80/58F; Sep 77/57F; Oct 76/53F; Nov 73/48F; Dec 69/44F
+MY,Malaysia,2.5,112.5,Jan 82/71F; Feb 82/71F; Mar 83/71F; Apr 84/71F; May 84/72F; Jun 83/71F; Jul 84/71F; Aug 84/71F; Sep 84/71F; Oct 83/71F; Nov 83/71F; Dec 82/71F
+MZ,Mozambique,-18.25,35,Jan 89/74F; Feb 89/74F; Mar 86/71F; Apr 86/69F; May 84/64F; Jun 80/63F; Jul 79/60F; Aug 84/63F; Sep 90/66F; Oct 95/71F; Nov 96/73F; Dec 93/74F
+NA,Namibia,-22,17,Jan 83/59F; Feb 81/59F; Mar 81/58F; Apr 79/55F; May 74/51F; Jun 68/44F; Jul 68/44F; Aug 74/47F; Sep 82/53F; Oct 86/57F; Nov 87/57F; Dec 85/57F
+NC,New Caledonia,-21.5,165.5,Jan 84/71F; Feb 84/72F; Mar 83/71F; Apr 80/69F; May 77/65F; Jun 75/62F; Jul 74/61F; Aug 74/60F; Sep 76/61F; Oct 79/64F; Nov 81/66F; Dec 84/70F
+NF,Norfolk Island,-29.03333333,167.95,Jan 72/70F; Feb 74/72F; Mar 73/71F; Apr 71/69F; May 69/66F; Jun 66/63F; Jul 64/62F; Aug 63/61F; Sep 64/61F; Oct 65/63F; Nov 67/65F; Dec 71/68F
+NG,Nigeria,10,8,Jan 87/61F; Feb 88/62F; Mar 92/69F; Apr 91/71F; May 88/71F; Jun 84/69F; Jul 81/68F; Aug 79/67F; Sep 82/67F; Oct 86/67F; Nov 89/65F; Dec 86/61F
+NI,Nicaragua,13,-85,Jan 80/68F; Feb 82/68F; Mar 84/69F; Apr 88/71F; May 87/72F; Jun 84/72F; Jul 83/72F; Aug 84/72F; Sep 85/72F; Oct 84/72F; Nov 82/71F; Dec 80/69F
+NL,Netherlands,52.5,5.75,Jan 44/36F; Feb 48/37F; Mar 51/38F; Apr 56/40F; May 62/46F; Jun 72/56F; Jul 71/57F; Aug 73/58F; Sep 68/53F; Oct 59/49F; Nov 50/41F; Dec 45/37F
+RW,Rwanda,-2,30,Jan 78/58F; Feb 79/58F; Mar 78/58F; Apr 76/58F; May 76/59F; Jun 77/57F; Jul 79/57F; Aug 81/59F; Sep 80/59F; Oct 79/59F; Nov 78/59F; Dec 77/58F
+SA,Saudi Arabia,25,45,Jan 67/48F; Feb 73/51F; Mar 81/57F; Apr 89/65F; May 99/75F; Jun 105/81F; Jul 107/83F; Aug 106/82F; Sep 102/77F; Oct 93/68F; Nov 81/61F; Dec 71/51F
+SB,Solomon Islands,-8,159,Jan 86/77F; Feb 84/77F; Mar 85/76F; Apr 85/76F; May 85/77F; Jun 84/76F; Jul 84/76F; Aug 84/75F; Sep 84/76F; Oct 85/76F; Nov 85/76F; Dec 85/76F
+SC,Seychelles,-4.58333333,55.66666666,Jan 82/78F; Feb 83/80F; Mar 84/81F; Apr 84/80F; May 84/80F; Jun 82/79F; Jul 79/77F; Aug 79/77F; Sep 80/78F; Oct 82/79F; Nov 82/79F; Dec 83/79F
+SE,Sweden,62,15,Jan 27/18F; Feb 30/19F; Mar 36/22F; Apr 44/27F; May 54/36F; Jun 68/50F; Jul 66/50F; Aug 65/50F; Sep 55/43F; Oct 44/35F; Nov 33/26F; Dec 26/18F
+SG,Singapore,1.36666666,103.8,Jan 84/74F; Feb 86/74F; Mar 87/75F; Apr 86/76F; May 86/77F; Jun 85/77F; Jul 85/77F; Aug 85/77F; Sep 85/76F; Oct 86/76F; Nov 85/75F; Dec 84/74F
+SH,Saint Helena,-15.95,-5.72,Jan 66/64F; Feb 68/66F; Mar 69/67F; Apr 68/66F; May 66/64F; Jun 64/62F; Jul 63/60F; Aug 61/59F; Sep 61/58F; Oct 61/58F; Nov 63/60F; Dec 64/61F
+SI,Slovenia,46.11666666,14.81666666,Jan 40/28F; Feb 47/31F; Mar 51/34F; Apr 57/40F; May 63/48F; Jun 76/58F; Jul 79/61F; Aug 77/61F; Sep 69/54F; Oct 61/47F; Nov 49/38F; Dec 41/32F
+SJ,Svalbard and Jan Mayen,78,20,Jan 19/13F; Feb 16/9F; Mar 14/6F; Apr 21/15F; May 28/24F; Jun 35/33F; Jul 40/38F; Aug 41/38F; Sep 37/35F; Oct 31/28F; Nov 26/21F; Dec 22/15F
+SK,Slovakia,48.66666666,19.5,Jan 28/17F; Feb 33/19F; Mar 40/24F; Apr 46/30F; May 54/38F; Jun 66/49F; Jul 68/51F; Aug 67/52F; Sep 59/44F; Oct 50/36F; Nov 38/28F; Dec 30/22F
+SL,Sierra Leone,8.5,-11.5,Jan 93/68F; Feb 94/70F; Mar 92/72F; Apr 89/73F; May 86/72F; Jun 83/71F; Jul 80/70F; Aug 79/70F; Sep 81/70F; Oct 82/70F; Nov 84/71F; Dec 87/70F
+SM,San Marino,43.76666666,12.41666666,Jan 44/33F; Feb 50/36F; Mar 52/37F; Apr 57/41F; May 65/50F; Jun 77/60F; Jul 83/64F; Aug 82/64F; Sep 73/57F; Oct 65/51F; Nov 54/43F; Dec 48/38F
+SN,Senegal,14,-14,Jan 96/70F; Feb 100/73F; Mar 102/75F; Apr 106/80F; May 106/81F; Jun 100/80F; Jul 92/78F; Aug 89/76F; Sep 89/75F; Oct 95/76F; Nov 98/73F; Dec 97/71F
+SR,Suriname,4,-56,Jan 84/71F; Feb 84/71F; Mar 87/71F; Apr 86/72F; May 85/72F; Jun 85/72F; Jul 86/71F; Aug 87/72F; Sep 91/72F; Oct 93/73F; Nov 89/73F; Dec 86/72F
+ST,São Tomé and Príncipe,1,7,Jan 82/78F; Feb 83/80F; Mar 84/80F; Apr 83/80F; May 83/79F; Jun 80/78F; Jul 78/77F; Aug 78/77F; Sep 79/77F; Oct 80/77F; Nov 81/78F; Dec 82/78F
+SV,El Salvador,13.83333333,-88.91666666,Jan 89/64F; Feb 91/65F; Mar 93/66F; Apr 92/68F; May 87/68F; Jun 83/67F; Jul 88/68F; Aug 86/68F; Sep 84/67F; Oct 83/67F; Nov 85/66F; Dec 88/65F
+SX,Sint Maarten,18.033333,-63.05,Jan 79/76F; Feb 78/75F; Mar 78/76F; Apr 79/76F; May 81/78F; Jun 82/79F; Jul 83/80F; Aug 83/80F; Sep 84/81F; Oct 83/80F; Nov 82/79F; Dec 80/77F
+SZ,Eswatini,-26.5,31.5,Jan 84/67F; Feb 82/67F; Mar 82/65F; Apr 78/61F; May 75/56F; Jun 73/51F; Jul 73/50F; Aug 76/53F; Sep 80/57F; Oct 81/61F; Nov 83/64F; Dec 82/66F
+TC,Turks and Caicos Islands,21.75,-71.58333333,Jan 78/76F; Feb 78/76F; Mar 78/75F; Apr 79/76F; May 81/78F; Jun 83/80F; Jul 84/81F; Aug 84/82F; Sep 84/81F; Oct 84/81F; Nov 82/79F; Dec 80/77F
+TG,Togo,8,1.16666666,Jan 96/68F; Feb 99/72F; Mar 97/75F; Apr 94/75F; May 92/74F; Jun 88/73F; Jul 84/71F; Aug 84/71F; Sep 84/71F; Oct 87/72F; Nov 92/71F; Dec 94/68F
+TH,Thailand,15,100,Jan 89/69F; Feb 92/72F; Mar 97/77F; Apr 98/80F; May 97/80F; Jun 96/80F; Jul 94/79F; Aug 93/78F; Sep 89/77F; Oct 88/75F; Nov 89/74F; Dec 87/70F
+TJ,Tajikistan,39,71,Jan 13/0F; Feb 19/7F; Mar 27/14F; Apr 36/22F; May 41/25F; Jun 49/30F; Jul 58/40F; Aug 56/39F; Sep 52/33F; Oct 36/19F; Nov 25/7F; Dec 18/4F
+TK,Tokelau,-9,-172,Jan 83/80F; Feb 83/80F; Mar 84/80F; Apr 84/80F; May 84/80F; Jun 84/80F; Jul 83/80F; Aug 83/80F; Sep 83/80F; Oct 83/80F; Nov 84/80F; Dec 84/80F
+TL,Timor-Leste,-8.83333333,125.91666666,Jan 81/69F; Feb 81/69F; Mar 80/68F; Apr 80/67F; May 76/66F; Jun 75/64F; Jul 74/62F; Aug 76/62F; Sep 79/63F; Oct 83/66F; Nov 85/68F; Dec 84/69F
+TM,Turkmenistan,40,60,Jan 42/27F; Feb 51/34F; Mar 62/42F; Apr 76/56F; May 87/66F; Jun 98/76F; Jul 101/79F; Aug 95/73F; Sep 84/61F; Oct 69/48F; Nov 53/35F; Dec 42/28F
+TN,Tunisia,34,9,Jan 62/43F; Feb 68/48F; Mar 72/52F; Apr 80/58F; May 88/66F; Jun 100/75F; Jul 103/79F; Aug 102/79F; Sep 95/75F; Oct 84/66F; Nov 72/54F; Dec 65/47F
+TO,Tonga,-20,-175,Jan 81/79F; Feb 82/79F; Mar 81/78F; Apr 81/78F; May 78/76F; Jun 77/75F; Jul 76/74F; Aug 75/73F; Sep 76/73F; Oct 76/74F; Nov 78/76F; Dec 80/78F
+TR,Türkiye,39,35,Jan 39/24F; Feb 41/25F; Mar 48/30F; Apr 60/40F; May 69/48F; Jun 76/55F; Jul 82/58F; Aug 85/60F; Sep 77/53F; Oct 68/46F; Nov 56/36F; Dec 47/31F
+TT,Trinidad and Tobago,11,-61,Jan 80/78F; Feb 80/78F; Mar 80/78F; Apr 81/79F; May 82/80F; Jun 83/79F; Jul 83/79F; Aug 84/80F; Sep 85/81F; Oct 84/81F; Nov 83/79F; Dec 82/79F
+TV,Tuvalu,-8,178,Jan 84/80F; Feb 84/80F; Mar 84/80F; Apr 84/80F; May 84/80F; Jun 84/81F; Jul 84/80F; Aug 83/80F; Sep 83/80F; Oct 84/80F; Nov 84/80F; Dec 84/80F
+TW,Taiwan,23.5,121,Jan 52/35F; Feb 54/37F; Mar 56/41F; Apr 59/45F; May 63/49F; Jun 65/49F; Jul 67/50F; Aug 66/50F; Sep 65/49F; Oct 63/47F; Nov 60/43F; Dec 55/39F
+TZ,Tanzania,-6,35,Jan 82/68F; Feb 82/69F; Mar 82/68F; Apr 80/68F; May 80/66F; Jun 80/62F; Jul 80/61F; Aug 82/63F; Sep 85/66F; Oct 88/68F; Nov 87/69F; Dec 84/69F
+US,United States,38,-97,Jan 44/26F; Feb 44/23F; Mar 57/37F; Apr 67/46F; May 74/56F; Jun 86/67F; Jul 89/71F; Aug 89/71F; Sep 83/65F; Oct 68/49F; Nov 55/37F; Dec 49/31F
+UY,Uruguay,-33,-56,Jan 85/67F; Feb 82/64F; Mar 79/63F; Apr 72/56F; May 65/50F; Jun 61/47F; Jul 60/45F; Aug 63/46F; Sep 66/49F; Oct 71/52F; Nov 79/59F; Dec 83/62F
+UZ,Uzbekistan,41,64,Jan 41/25F; Feb 50/31F; Mar 61/40F; Apr 75/52F; May 86/64F; Jun 96/73F; Jul 100/77F; Aug 94/70F; Sep 83/59F; Oct 67/46F; Nov 51/33F; Dec 41/26F
+VA,Vatican City,41.9,12.45,Jan 54/38F; Feb 59/41F; Mar 62/43F; Apr 66/47F; May 74/55F; Jun 85/64F; Jul 92/70F; Aug 90/70F; Sep 82/63F; Oct 73/56F; Nov 64/50F; Dec 57/43F
+VC,Saint Vincent and the Grenadines,13.25,-61.2,Jan 74/67F; Feb 74/67F; Mar 75/68F; Apr 77/69F; May 78/70F; Jun 78/71F; Jul 77/71F; Aug 78/71F; Sep 79/72F; Oct 79/71F; Nov 77/70F; Dec 76/69F
+VE,Venezuela,8,-66,Jan 91/74F; Feb 93/76F; Mar 95/77F; Apr 94/78F; May 89/76F; Jun 85/74F; Jul 85/73F; Aug 86/74F; Sep 88/74F; Oct 88/75F; Nov 88/74F; Dec 90/75F
+VG,British Virgin Islands,18.431383,-64.62305,Jan 78/75F; Feb 78/75F; Mar 78/75F; Apr 78/76F; May 80/78F; Jun 82/79F; Jul 82/79F; Aug 83/80F; Sep 83/80F; Oct 83/79F; Nov 81/78F; Dec 80/77F
+GF,French Guiana,4,-53,Jan 82/71F; Feb 82/71F; Mar 84/71F; Apr 83/72F; May 83/72F; Jun 84/71F; Jul 85/71F; Aug 87/72F; Sep 91/72F; Oct 92/73F; Nov 87/72F; Dec 83/72F
+GG,Guernsey,49.46666666,-2.58333333,Jan 50/46F; Feb 50/46F; Mar 50/47F; Apr 51/48F; May 54/52F; Jun 59/56F; Jul 62/60F; Aug 64/61F; Sep 64/61F; Oct 61/57F; Nov 56/52F; Dec 52/48F
+GH,Ghana,8,-2,Jan 95/69F; Feb 97/73F; Mar 95/76F; Apr 94/76F; May 92/75F; Jun 88/73F; Jul 86/72F; Aug 86/72F; Sep 86/72F; Oct 89/72F; Nov 94/73F; Dec 94/70F
+GI,Gibraltar,36.13333333,-5.35,Jan 59/50F; Feb 60/52F; Mar 62/53F; Apr 65/55F; May 70/59F; Jun 74/63F; Jul 80/68F; Aug 81/69F; Sep 76/66F; Oct 71/62F; Nov 65/56F; Dec 62/53F
+GL,Greenland,72,-40,Jan -28/-40F; Feb -28/-40F; Mar -27/-39F; Apr -9/-22F; May -2/-14F; Jun 10/-1F; Jul 16/7F; Aug 11/0F; Sep -5/-16F; Oct -12/-23F; Nov -19/-31F; Dec -27/-39F
+GM,Gambia,13.46666666,-16.56666666,Jan 89/70F; Feb 90/72F; Mar 87/71F; Apr 85/71F; May 82/72F; Jun 85/77F; Jul 85/78F; Aug 84/78F; Sep 85/78F; Oct 87/80F; Nov 91/77F; Dec 89/72F
+GN,Guinea,11,-10,Jan 90/63F; Feb 94/66F; Mar 97/72F; Apr 98/76F; May 94/75F; Jun 89/72F; Jul 84/71F; Aug 82/70F; Sep 84/70F; Oct 88/70F; Nov 92/68F; Dec 91/64F
+GP,Guadeloupe,16.25,-61.583333,Jan 80/71F; Feb 81/71F; Mar 82/71F; Apr 83/73F; May 85/75F; Jun 86/76F; Jul 85/76F; Aug 86/76F; Sep 86/76F; Oct 84/75F; Nov 83/74F; Dec 82/72F
+GQ,Equatorial Guinea,2,10,Jan 84/72F; Feb 84/73F; Mar 84/73F; Apr 84/73F; May 83/72F; Jun 81/71F; Jul 80/71F; Aug 80/71F; Sep 81/71F; Oct 82/71F; Nov 82/71F; Dec 83/72F
+GR,Greece,39,22,Jan 46/33F; Feb 50/35F; Mar 53/37F; Apr 59/43F; May 70/52F; Jun 78/61F; Jul 85/66F; Aug 85/66F; Sep 76/59F; Oct 67/52F; Nov 58/46F; Dec 52/40F
+GT,Guatemala,15.5,-90.25,Jan 68/55F; Feb 70/55F; Mar 72/56F; Apr 76/59F; May 76/61F; Jun 75/61F; Jul 74/61F; Aug 75/61F; Sep 74/61F; Oct 72/60F; Nov 69/58F; Dec 68/55F
+KY,Cayman Islands,19.5,-80.5,Jan 80/77F; Feb 80/77F; Mar 80/77F; Apr 81/79F; May 83/80F; Jun 84/81F; Jul 85/82F; Aug 86/82F; Sep 86/82F; Oct 85/81F; Nov 83/80F; Dec 81/78F
+LC,Saint Lucia,13.88333333,-60.96666666,Jan 77/70F; Feb 77/70F; Mar 78/70F; Apr 80/71F; May 81/73F; Jun 81/73F; Jul 81/73F; Aug 81/74F; Sep 82/74F; Oct 81/74F; Nov 80/73F; Dec 79/71F
+LI,Liechtenstein,47.26666666,9.53333333,Jan 42/26F; Feb 50/30F; Mar 53/34F; Apr 58/40F; May 64/47F; Jun 76/57F; Jul 76/60F; Aug 75/58F; Sep 70/52F; Oct 64/46F; Nov 51/35F; Dec 45/29F

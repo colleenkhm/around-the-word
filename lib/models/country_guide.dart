@@ -127,12 +127,26 @@ class BestTime {
   final CrowdLevel crowdLevel;
   final String? weatherNote;
 
+  /// [whyShort]/[why] in the country's primary language — see
+  /// [TravelAdvisory.summaryEs] in travel_info.dart for the pattern. Both
+  /// null or both set; never just one.
+  final String? whyShortEs;
+  final String? whyEs;
+
+  /// [months] in the country's primary language (e.g. "Diciembre–Abril").
+  /// Comma-separated the same way [months] is, so a caller splitting one
+  /// can split the other at matching indices.
+  final String? monthsEs;
+
   const BestTime({
     required this.months,
     required this.whyShort,
     required this.why,
     required this.crowdLevel,
     this.weatherNote,
+    this.whyShortEs,
+    this.whyEs,
+    this.monthsEs,
   });
 
   factory BestTime.fromJson(Map<String, dynamic> json) {
@@ -142,6 +156,9 @@ class BestTime {
       why: json['why'] as String,
       crowdLevel: _crowdLevelFromJson(json['crowdLevel'] as String),
       weatherNote: json['weatherNote'] as String?,
+      whyShortEs: json['whyShortEs'] as String?,
+      whyEs: json['whyEs'] as String?,
+      monthsEs: json['monthsEs'] as String?,
     );
   }
 }
@@ -181,11 +198,17 @@ class NormItem {
   final String body;
   final Severity severity;
 
+  /// [title]/[body] in the country's primary language — see [BestTime.whyEs].
+  final String? titleEs;
+  final String? bodyEs;
+
   const NormItem({
     required this.type,
     required this.title,
     required this.body,
     required this.severity,
+    this.titleEs,
+    this.bodyEs,
   });
 
   factory NormItem.fromJson(Map<String, dynamic> json) {
@@ -194,6 +217,8 @@ class NormItem {
       title: json['title'] as String,
       body: json['body'] as String,
       severity: _severityFromJson(json['severity'] as String),
+      titleEs: json['titleEs'] as String?,
+      bodyEs: json['bodyEs'] as String?,
     );
   }
 }

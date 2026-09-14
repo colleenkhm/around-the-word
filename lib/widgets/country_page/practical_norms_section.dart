@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/country_guide.dart';
 import '../../theme/accordion_theme.dart';
+import 'flip_reveal.dart';
 
 /// The "Practical Norms" [AccordionSection]'s expanded content — icon +
 /// title + detail rows, one per [NormItem]. Icon is generic by
@@ -51,10 +52,29 @@ class _NormRow extends StatelessWidget {
   final bool showTopBorder;
   final Color textColor;
 
-  const _NormRow({required this.norm, required this.showTopBorder, required this.textColor});
+  const _NormRow({
+    required this.norm,
+    required this.showTopBorder,
+    required this.textColor,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final hasTranslation = norm.titleEs != null && norm.bodyEs != null;
+
+    final englishBody = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(norm.title, style: AccordionTheme.rowTitle.copyWith(fontSize: 13.5, color: textColor)),
+        const SizedBox(height: 2),
+        Text(
+          norm.body,
+          style: AccordionTheme.sBody.copyWith(fontSize: 12.5, color: textColor.withValues(alpha: 0.85)),
+        ),
+      ],
+    );
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
       decoration: showTopBorder
@@ -69,17 +89,26 @@ class _NormRow extends StatelessWidget {
           ),
           const SizedBox(width: 13),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(norm.title, style: AccordionTheme.rowTitle.copyWith(fontSize: 13.5, color: textColor)),
-                const SizedBox(height: 2),
-                Text(
-                  norm.body,
-                  style: AccordionTheme.sBody.copyWith(fontSize: 12.5, color: textColor.withValues(alpha: 0.85)),
-                ),
-              ],
-            ),
+            child: hasTranslation
+                ? FlipReveal(
+                    front: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          norm.titleEs!,
+                          style: AccordionTheme.rowTitle.copyWith(fontSize: 13.5, color: textColor),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          norm.bodyEs!,
+                          style: AccordionTheme.sBody.copyWith(fontSize: 12.5, color: textColor.withValues(alpha: 0.85)),
+                        ),
+                      ],
+                    ),
+                    back: englishBody,
+                  )
+                : englishBody,
           ),
         ],
       ),

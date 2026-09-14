@@ -31,10 +31,13 @@ void main() {
       // in the tree once its section is expanded. (Collapsed-row
       // subheadings, e.g. "4 destinations", are hidden for now — see
       // AccordionSection.showSubheading — so not asserted here.)
-      expect(find.text('Cities'), findsOneWidget);
+      // 2026-09-14 (flashcard_layout): section titles are flashcards that
+      // default to Spanish ("Ciudades", not "Cities") and no longer expand
+      // the row on tap — only the chevron (keyed by the English title) does.
+      expect(find.text('Ciudades'), findsOneWidget);
       expect(find.text('San José'), findsNothing); // collapsed by default
 
-      await tester.tap(find.text('Cities'));
+      await tester.tap(find.byKey(const ValueKey('chevron-Cities')));
       await tester.pumpAndSettle();
       expect(find.text('San José'), findsOneWidget); // Costa Rica's capital
     },

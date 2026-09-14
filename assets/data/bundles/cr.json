@@ -31,17 +31,17 @@
   "leader": null,
   "guide": {
     "bestTimes": [
-      { "months": "December–April", "whyShort": "dry season nationwide", "why": "Dry season nationwide — the most reliable weather for a first trip covering multiple regions.", "crowdLevel": "high", "weatherNote": "Little to no rain; Guanacaste gets dusty and brown by March." },
-      { "months": "May–June", "whyShort": "green season, fewer crowds", "why": "Green season begins, but mornings are usually still dry.", "crowdLevel": "moderate", "weatherNote": "Predictable afternoon showers, lush landscape, noticeably fewer crowds." }
+      { "months": "December–April", "monthsEs": "Diciembre–Abril", "whyShort": "dry season nationwide", "whyShortEs": "temporada seca en todo el país", "why": "Dry season nationwide — the most reliable weather for a first trip covering multiple regions.", "whyEs": "Temporada seca en todo el país: el clima más confiable para un primer viaje que cubra varias regiones.", "crowdLevel": "high", "weatherNote": "Little to no rain; Guanacaste gets dusty and brown by March." },
+      { "months": "May–June", "monthsEs": "Mayo–Junio", "whyShort": "green season, fewer crowds", "whyShortEs": "temporada verde, menos turistas", "why": "Green season begins, but mornings are usually still dry.", "whyEs": "Comienza la temporada verde, pero las mañanas suelen seguir secas.", "crowdLevel": "moderate", "weatherNote": "Predictable afternoon showers, lush landscape, noticeably fewer crowds." }
     ],
     "seasons": [
       { "startMonth": 12, "endMonth": 4, "label": "Dry season" },
       { "startMonth": 5, "endMonth": 11, "label": "Green season" }
     ],
     "practicalNorms": [
-      { "type": "tipping_norm", "title": "Service charge is already included", "body": "Restaurants add a mandatory 10% service charge plus 13% tax to the bill — an additional tip isn't expected, though rounding up for great service is appreciated.", "severity": "important" },
-      { "type": "punctuality_norm", "title": "\"Tico time\" is real, but not everywhere", "body": "Social plans routinely start 15–30 minutes later than stated. Tours and transport, however, run on schedule — don't apply the same flexibility there.", "severity": "fyi" },
-      { "type": "transport_norm", "title": "Use Uber, not street taxis, in San José", "body": "Uber operates in a legal gray area but is what nearly every tourist actually uses — cheaper and more reliable than flagging red taxis, and it avoids the fixed-rate disputes that are a common complaint.", "severity": "important" }
+      { "type": "tipping_norm", "title": "Service charge is already included", "titleEs": "El servicio ya está incluido", "body": "Restaurants add a mandatory 10% service charge plus 13% tax to the bill — an additional tip isn't expected, though rounding up for great service is appreciated.", "bodyEs": "Los restaurantes agregan un cargo de servicio obligatorio del 10% más un 13% de impuesto a la cuenta; no se espera una propina adicional, aunque redondear hacia arriba por un buen servicio siempre se aprecia.", "severity": "important" },
+      { "type": "punctuality_norm", "title": "\"Tico time\" is real, but not everywhere", "titleEs": "La \"hora tica\" es real, pero no en todas partes", "body": "Social plans routinely start 15–30 minutes later than stated. Tours and transport, however, run on schedule — don't apply the same flexibility there.", "bodyEs": "Los planes sociales suelen comenzar entre 15 y 30 minutos después de lo indicado. Sin embargo, los tours y el transporte sí cumplen el horario — no apliques esa misma flexibilidad ahí.", "severity": "fyi" },
+      { "type": "transport_norm", "title": "Use Uber, not street taxis, in San José", "titleEs": "Usa Uber, no taxis de la calle, en San José", "body": "Uber operates in a legal gray area but is what nearly every tourist actually uses — cheaper and more reliable than flagging red taxis, and it avoids the fixed-rate disputes that are a common complaint.", "bodyEs": "Uber opera en una zona legal ambigua, pero es lo que casi todos los turistas realmente usan: más barato y confiable que parar un taxi rojo en la calle, y evita las disputas por tarifas fijas que son una queja común.", "severity": "important" }
     ],
     "dressExpectations": [
       { "context": "Beach towns", "expectation": "Casual and beachwear are completely normal, even at dinner.", "appliesTo": "all" },
@@ -234,13 +234,14 @@
     { "id": "cat-nature", "slug": "nature", "name": "Hiking / The Outdoors", "children": [], "sortOrder": 5 }
   ],
   "advisories": [
-    { "issuingAuthority": "US State Department", "level": "Level 1", "levelLabel": "Exercise Normal Precautions", "summary": "Overall a very safe destination; standard precautions apply, with elevated caution around petty theft in tourist areas and unattended beaches or parked cars.", "officialUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/costa-rica-travel-advisory.html", "issuedAt": "2026-03-01", "lastVerifiedAt": "2026-07-01T00:00:00Z" },
-    { "issuingAuthority": "UK FCDO", "level": null, "levelLabel": "Most visits are trouble-free", "summary": "No parts of the country are advised against for travel. Standard guidance on petty crime and road safety applies.", "officialUrl": "https://www.gov.uk/foreign-travel-advice/costa-rica", "issuedAt": null, "lastVerifiedAt": "2026-06-20T00:00:00Z" }
+    { "issuingAuthority": "US State Department", "level": "Level 1", "levelLabel": "Exercise Normal Precautions", "levelLabelEs": "Ejercer precauciones normales", "summary": "Overall a very safe destination; standard precautions apply, with elevated caution around petty theft in tourist areas and unattended beaches or parked cars.", "summaryEs": "En general, un destino muy seguro; se aplican las precauciones habituales, con mayor cautela ante los hurtos menores en zonas turísticas y en playas o autos estacionados sin vigilancia.", "officialUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/costa-rica-travel-advisory.html", "issuedAt": "2026-03-01", "lastVerifiedAt": "2026-07-01T00:00:00Z" },
+    { "issuingAuthority": "UK FCDO", "level": null, "levelLabel": "Most visits are trouble-free", "levelLabelEs": "La mayoría de las visitas transcurren sin problemas", "summary": "No parts of the country are advised against for travel. Standard guidance on petty crime and road safety applies.", "summaryEs": "No se desaconseja viajar a ninguna parte del país. Se aplican las recomendaciones habituales sobre delitos menores y seguridad vial.", "officialUrl": "https://www.gov.uk/foreign-travel-advice/costa-rica", "issuedAt": null, "lastVerifiedAt": "2026-06-20T00:00:00Z" }
   ],
   "contributorNames": ["Sarah M.", "the Whitfield family"],
   "visa": {
     "issuingAuthority": "US State Department",
     "summary": "US citizens may enter Costa Rica visa-free for stays up to 90 days with a passport valid for the duration of the stay.",
+    "summaryEs": "Los ciudadanos estadounidenses pueden ingresar a Costa Rica sin visa para estadías de hasta 90 días, con un pasaporte válido durante todo el tiempo de la estadía.",
     "officialUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/costa-rica-travel-advisory.html",
     "applicationUrl": "https://costarica-embassy.org/visas/",
     "lastVerifiedAt": "2026-07-01T00:00:00Z",

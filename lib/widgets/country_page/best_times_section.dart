@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/country_guide.dart';
 import '../../theme/accordion_theme.dart';
 import '../../theme/section_palette.dart';
+import 'flip_reveal.dart';
 
 /// The "When to Visit" [AccordionSection]'s expanded content — a two-up
 /// grid of month squares, each a different flag-derived color (cycling
@@ -24,9 +25,7 @@ class BestTimesSection extends StatelessWidget {
     if (bestTimes.isEmpty) return const SizedBox.shrink();
 
     final squares = <_MonthSquare>[
-      for (final bestTime in bestTimes)
-        for (final month in bestTime.months.split(','))
-          _MonthSquare(month: month.trim(), bestTime: bestTime),
+      for (final bestTime in bestTimes) ..._squaresFor(bestTime),
     ];
 
     return Padding(
@@ -46,13 +45,33 @@ class BestTimesSection extends StatelessWidget {
       ),
     );
   }
+
+  // Pairs each comma-separated English month with its Spanish equivalent
+  // by index. Falls back to null (that square's month heading isn't a
+  // flashcard, just shown in English) when monthsEs is missing or splits
+  // into a different count — an honest degrade rather than a misaligned
+  // guess.
+  List<_MonthSquare> _squaresFor(BestTime bestTime) {
+    final enParts = bestTime.months.split(',').map((m) => m.trim()).toList();
+    final esParts = bestTime.monthsEs?.split(',').map((m) => m.trim()).toList();
+    final aligned = esParts != null && esParts.length == enParts.length;
+    return [
+      for (var i = 0; i < enParts.length; i++)
+        _MonthSquare(
+          month: enParts[i],
+          monthEs: aligned ? esParts[i] : null,
+          bestTime: bestTime,
+        ),
+    ];
+  }
 }
 
 class _MonthSquare {
   final String month;
+  final String? monthEs;
   final BestTime bestTime;
 
-  const _MonthSquare({required this.month, required this.bestTime});
+  const _MonthSquare({required this.month, required this.monthEs, required this.bestTime});
 }
 
 class _MonthRow extends StatelessWidget {
@@ -99,6 +118,36 @@ class _MonthCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textColor = colors.textColor;
     final bestTime = square.bestTime;
+    final hasWhyTranslation = bestTime.whyShortEs != null && bestTime.whyEs != null;
+    final monthHeadStyle = AccordionTheme.sHead.copyWith(fontSize: 17, color: textColor);
+    final monthHeading = square.monthEs == null
+        ? Text(square.month, style: monthHeadStyle)
+        : FlipReveal(
+            front: Text(square.monthEs!, style: monthHeadStyle),
+            back: Text(square.month, style: monthHeadStyle),
+          );
+
+    final englishBody = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '(${bestTime.whyShort})',
+          style: AccordionTheme.sBody.copyWith(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            fontStyle: FontStyle.italic,
+            color: textColor.withValues(alpha: 0.85),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          bestTime.why,
+          style: AccordionTheme.sBody.copyWith(fontSize: 12.5, color: textColor.withValues(alpha: 0.85)),
+        ),
+      ],
+    );
+
     return Container(
       color: colors.tint,
       padding: const EdgeInsets.fromLTRB(14, 13, 14, 14),
@@ -106,22 +155,34 @@ class _MonthCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(square.month, style: AccordionTheme.sHead.copyWith(fontSize: 17, color: textColor)),
+          monthHeading,
           const SizedBox(height: 3),
-          Text(
-            '(${bestTime.whyShort})',
-            style: AccordionTheme.sBody.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              fontStyle: FontStyle.italic,
-              color: textColor.withValues(alpha: 0.85),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            bestTime.why,
-            style: AccordionTheme.sBody.copyWith(fontSize: 12.5, color: textColor.withValues(alpha: 0.85)),
-          ),
+          if (hasWhyTranslation)
+            FlipReveal(
+              front: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '(${bestTime.whyShortEs!})',
+                    style: AccordionTheme.sBody.copyWith(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      fontStyle: FontStyle.italic,
+                      color: textColor.withValues(alpha: 0.85),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    bestTime.whyEs!,
+                    style: AccordionTheme.sBody.copyWith(fontSize: 12.5, color: textColor.withValues(alpha: 0.85)),
+                  ),
+                ],
+              ),
+              back: englishBody,
+            )
+          else
+            englishBody,
         ],
       ),
     );
