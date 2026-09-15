@@ -10,6 +10,16 @@ import 'flip_reveal.dart';
 
 /// The "Visa & Entry" [AccordionSection]'s expanded content. No invented
 /// "No visa required" headline — [VisaInfo.summary] is free text only.
+///
+/// **Never wrap an [ExternalLink] (or anything else with its own tap
+/// gesture) inside [FlipReveal].** A link's whole point is that tapping
+/// it does something (opens a URL); layering a second, independent tap
+/// gesture on top of it — as an earlier version of this file did — means
+/// a single tap ambiguously both flips the label's language *and* tries
+/// to launch the link. Every link on this page shows a static label in
+/// the country's primary language instead: it's a control (it has its
+/// own icon, `↗`), not a flashcard. See HANDOFF.md's flashcard_layout
+/// entries for the fuller reasoning.
 class VisaSection extends StatelessWidget {
   final VisaInfo visa;
   final RegionalNote? regionalNote;
@@ -46,9 +56,9 @@ class VisaSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 6),
-              if (visa.summaryEs != null)
+              if (visa.summaryLocal != null)
                 FlipReveal(
-                  front: Text(visa.summaryEs!, style: AccordionTheme.sBody),
+                  front: Text(visa.summaryLocal!, style: AccordionTheme.sBody),
                   back: Text(visa.summary, style: AccordionTheme.sBody),
                 )
               else
@@ -57,19 +67,11 @@ class VisaSection extends StatelessWidget {
                 const SizedBox(height: 4),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: FlipReveal(
-                    front: ExternalLink(
-                      label: 'Solicitar',
-                      url: visa.applicationUrl!,
-                      color: accent,
-                      fontFamily: AccordionTheme.dmMono,
-                    ),
-                    back: ExternalLink(
-                      label: 'Apply',
-                      url: visa.applicationUrl!,
-                      color: accent,
-                      fontFamily: AccordionTheme.dmMono,
-                    ),
+                  child: ExternalLink(
+                    label: 'Solicitar',
+                    url: visa.applicationUrl!,
+                    color: accent,
+                    fontFamily: AccordionTheme.dmMono,
                   ),
                 ),
               ],
@@ -92,7 +94,8 @@ class VisaSection extends StatelessWidget {
                         _ProhibitedNote(
                           labelEn: 'Declare on entry',
                           labelEs: 'Declarar al ingresar',
-                          body: visa.prohibitedOnEntry!,
+                          bodyEn: visa.prohibitedOnEntry!,
+                          bodyLocal: visa.prohibitedOnEntryLocal,
                         ),
                       if (visa.prohibitedOnEntry != null &&
                           visa.prohibitedOnExit != null)
@@ -101,7 +104,8 @@ class VisaSection extends StatelessWidget {
                         _ProhibitedNote(
                           labelEn: 'Declare on exit',
                           labelEs: 'Declarar al salir',
-                          body: visa.prohibitedOnExit!,
+                          bodyEn: visa.prohibitedOnExit!,
+                          bodyLocal: visa.prohibitedOnExitLocal,
                         ),
                     ],
                   ),
@@ -129,19 +133,11 @@ class VisaSection extends StatelessWidget {
                     const SizedBox(height: 4),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: FlipReveal(
-                        front: ExternalLink(
-                          label: 'Fuente',
-                          url: visa.officialUrl,
-                          color: accent,
-                          fontFamily: AccordionTheme.dmMono,
-                        ),
-                        back: ExternalLink(
-                          label: 'Source',
-                          url: visa.officialUrl,
-                          color: accent,
-                          fontFamily: AccordionTheme.dmMono,
-                        ),
+                      child: ExternalLink(
+                        label: 'Fuente',
+                        url: visa.officialUrl,
+                        color: accent,
+                        fontFamily: AccordionTheme.dmMono,
                       ),
                     ),
                   ],
@@ -226,13 +222,24 @@ class _RegionalStamp extends StatelessWidget {
 class _ProhibitedNote extends StatelessWidget {
   final String labelEn;
   final String labelEs;
-  final String body;
+  final String bodyEn;
 
-  const _ProhibitedNote({required this.labelEn, required this.labelEs, required this.body});
+  /// Null when this row has no translation on file — falls back to
+  /// showing [bodyEn] on both sides of the label flip, same degrade as
+  /// every other `*Local`-backed field on this page.
+  final String? bodyLocal;
+
+  const _ProhibitedNote({
+    required this.labelEn,
+    required this.labelEs,
+    required this.bodyEn,
+    required this.bodyLocal,
+  });
 
   @override
   Widget build(BuildContext context) {
     final labelStyle = AccordionTheme.sLabel.copyWith(color: AccordionTheme.danger);
+    final englishBody = Text(bodyEn, style: AccordionTheme.sBody);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -241,7 +248,12 @@ class _ProhibitedNote extends StatelessWidget {
           back: Text(labelEn.toUpperCase(), style: labelStyle),
         ),
         const SizedBox(height: 3),
-        Text(body, style: AccordionTheme.sBody),
+        bodyLocal == null
+            ? englishBody
+            : FlipReveal(
+                front: Text(bodyLocal!, style: AccordionTheme.sBody),
+                back: englishBody,
+              ),
       ],
     );
   }

@@ -48,12 +48,12 @@ class BestTimesSection extends StatelessWidget {
 
   // Pairs each comma-separated English month with its Spanish equivalent
   // by index. Falls back to null (that square's month heading isn't a
-  // flashcard, just shown in English) when monthsEs is missing or splits
+  // flashcard, just shown in English) when monthsLocal is missing or splits
   // into a different count — an honest degrade rather than a misaligned
   // guess.
   List<_MonthSquare> _squaresFor(BestTime bestTime) {
     final enParts = bestTime.months.split(',').map((m) => m.trim()).toList();
-    final esParts = bestTime.monthsEs?.split(',').map((m) => m.trim()).toList();
+    final esParts = bestTime.monthsLocal?.split(',').map((m) => m.trim()).toList();
     final aligned = esParts != null && esParts.length == enParts.length;
     return [
       for (var i = 0; i < enParts.length; i++)
@@ -118,7 +118,7 @@ class _MonthCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textColor = colors.textColor;
     final bestTime = square.bestTime;
-    final hasWhyTranslation = bestTime.whyShortEs != null && bestTime.whyEs != null;
+    final hasWhyTranslation = bestTime.whyShortLocal != null && bestTime.whyLocal != null;
     final monthHeadStyle = AccordionTheme.sHead.copyWith(fontSize: 17, color: textColor);
     final monthHeading = square.monthEs == null
         ? Text(square.month, style: monthHeadStyle)
@@ -164,7 +164,7 @@ class _MonthCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '(${bestTime.whyShortEs!})',
+                    '(${bestTime.whyShortLocal!})',
                     style: AccordionTheme.sBody.copyWith(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -174,7 +174,7 @@ class _MonthCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    bestTime.whyEs!,
+                    bestTime.whyLocal!,
                     style: AccordionTheme.sBody.copyWith(fontSize: 12.5, color: textColor.withValues(alpha: 0.85)),
                   ),
                 ],

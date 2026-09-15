@@ -60,7 +60,7 @@ class _NormRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasTranslation = norm.titleEs != null && norm.bodyEs != null;
+    final hasTranslation = norm.titleLocal != null && norm.bodyLocal != null;
 
     final englishBody = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,12 +96,12 @@ class _NormRow extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          norm.titleEs!,
+                          norm.titleLocal!,
                           style: AccordionTheme.rowTitle.copyWith(fontSize: 13.5, color: textColor),
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          norm.bodyEs!,
+                          norm.bodyLocal!,
                           style: AccordionTheme.sBody.copyWith(fontSize: 12.5, color: textColor.withValues(alpha: 0.85)),
                         ),
                       ],

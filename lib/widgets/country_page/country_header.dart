@@ -369,21 +369,16 @@ class _TicketStub extends StatelessWidget {
                                 front: Text('Tasa diaria', style: subStyle),
                                 back: Text('Daily rate', style: subStyle),
                               ),
+                        // A link, not a flashcard — see VisaSection's
+                        // class doc for why an ExternalLink never goes
+                        // inside FlipReveal.
                         trailing: exchangeRate == null
                             ? null
-                            : FlipReveal(
-                                front: ExternalLink(
-                                  label: 'Convertir',
-                                  url: _converterUrl(exchangeRate!.currencyCode),
-                                  color: stub.textColor,
-                                  fontFamily: AccordionTheme.dmMono,
-                                ),
-                                back: ExternalLink(
-                                  label: 'Convert',
-                                  url: _converterUrl(exchangeRate!.currencyCode),
-                                  color: stub.textColor,
-                                  fontFamily: AccordionTheme.dmMono,
-                                ),
+                            : ExternalLink(
+                                label: 'Convertir',
+                                url: _converterUrl(exchangeRate!.currencyCode),
+                                color: stub.textColor,
+                                fontFamily: AccordionTheme.dmMono,
                               ),
                       ),
                     ),

@@ -8,14 +8,16 @@ class TravelAdvisory {
   final String? levelLabel;
   final String? summary;
 
-  /// [summary] in the country's primary language, for the flashcard_layout
-  /// branch's flip-card treatment. Null on any bundle without a translation
-  /// (every Supabase country today) — sections fall back to English-only,
-  /// no flip affordance. See HANDOFF.md's flashcard_layout entry.
-  final String? summaryEs;
+  /// [summary] in the country's own primary language — "local" means
+  /// "this row's primary language," not one fixed language, so the same
+  /// field name works for a Spanish-speaking country, a Portuguese-
+  /// speaking one, etc. Null on any bundle without a translation (every
+  /// Supabase country today) — sections fall back to English-only, no
+  /// flip affordance. See HANDOFF.md's flashcard_layout entries.
+  final String? summaryLocal;
 
-  /// [levelLabel] in the country's primary language — see [summaryEs].
-  final String? levelLabelEs;
+  /// [levelLabel] in the country's primary language — see [summaryLocal].
+  final String? levelLabelLocal;
   final String officialUrl; // required
   final DateTime? issuedAt;
   final DateTime lastVerifiedAt; // required
@@ -24,9 +26,9 @@ class TravelAdvisory {
     required this.issuingAuthority,
     this.level,
     this.levelLabel,
-    this.levelLabelEs,
+    this.levelLabelLocal,
     this.summary,
-    this.summaryEs,
+    this.summaryLocal,
     required this.officialUrl,
     this.issuedAt,
     required this.lastVerifiedAt,
@@ -37,9 +39,9 @@ class TravelAdvisory {
       issuingAuthority: json['issuingAuthority'] as String,
       level: json['level'] as String?,
       levelLabel: json['levelLabel'] as String?,
-      levelLabelEs: json['levelLabelEs'] as String?,
+      levelLabelLocal: json['levelLabelLocal'] as String?,
       summary: json['summary'] as String?,
-      summaryEs: json['summaryEs'] as String?,
+      summaryLocal: json['summaryLocal'] as String?,
       officialUrl: json['officialUrl'] as String,
       issuedAt: json['issuedAt'] == null
           ? null
@@ -54,38 +56,44 @@ class VisaInfo {
   final String summary;
 
   /// [summary] in the country's primary language — see
-  /// [TravelAdvisory.summaryEs].
-  final String? summaryEs;
+  /// [TravelAdvisory.summaryLocal].
+  final String? summaryLocal;
   final String officialUrl; // required, never null — informational source
   final String? applicationUrl;
   final DateTime lastVerifiedAt; // required, never null
   final String nationalityIsoCode;
   final String? prohibitedOnEntry;
   final String? prohibitedOnExit;
+  final String? prohibitedOnEntryLocal;
+  final String? prohibitedOnExitLocal;
 
   const VisaInfo({
     required this.issuingAuthority,
     required this.summary,
-    this.summaryEs,
+    this.summaryLocal,
     required this.officialUrl,
     this.applicationUrl,
     required this.lastVerifiedAt,
     required this.nationalityIsoCode,
     this.prohibitedOnEntry,
     this.prohibitedOnExit,
+    this.prohibitedOnEntryLocal,
+    this.prohibitedOnExitLocal,
   });
 
   factory VisaInfo.fromJson(Map<String, dynamic> json) {
     return VisaInfo(
       issuingAuthority: json['issuingAuthority'] as String,
       summary: json['summary'] as String,
-      summaryEs: json['summaryEs'] as String?,
+      summaryLocal: json['summaryLocal'] as String?,
       officialUrl: json['officialUrl'] as String,
       applicationUrl: json['applicationUrl'] as String?,
       lastVerifiedAt: DateTime.parse(json['lastVerifiedAt'] as String),
       nationalityIsoCode: json['nationalityIsoCode'] as String,
       prohibitedOnEntry: json['prohibitedOnEntry'] as String?,
       prohibitedOnExit: json['prohibitedOnExit'] as String?,
+      prohibitedOnEntryLocal: json['prohibitedOnEntryLocal'] as String?,
+      prohibitedOnExitLocal: json['prohibitedOnExitLocal'] as String?,
     );
   }
 }

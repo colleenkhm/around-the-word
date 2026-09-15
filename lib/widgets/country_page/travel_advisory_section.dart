@@ -89,7 +89,7 @@ class _AdvisoryRow extends StatelessWidget {
     final levelEn = [advisory.level, advisory.levelLabel].nonNulls.join(' — ');
     final levelEs = [
       advisory.level?.replaceFirst('Level', 'Nivel'),
-      advisory.levelLabelEs ?? advisory.levelLabel,
+      advisory.levelLabelLocal ?? advisory.levelLabel,
     ].nonNulls.join(' — ');
 
     return Column(
@@ -105,9 +105,9 @@ class _AdvisoryRow extends StatelessWidget {
         ],
         if (advisory.summary != null) ...[
           const SizedBox(height: 6),
-          if (advisory.summaryEs != null)
+          if (advisory.summaryLocal != null)
             FlipReveal(
-              front: Text(advisory.summaryEs!, style: AccordionTheme.sBody),
+              front: Text(advisory.summaryLocal!, style: AccordionTheme.sBody),
               back: Text(advisory.summary!, style: AccordionTheme.sBody),
             )
           else
@@ -144,21 +144,15 @@ class _AdvisoryRow extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
+        // A link, not a flashcard — see VisaSection's class doc for why
+        // an ExternalLink never goes inside FlipReveal.
         Align(
           alignment: Alignment.centerRight,
-          child: FlipReveal(
-            front: ExternalLink(
-              label: 'Advertencia completa',
-              url: advisory.officialUrl,
-              color: accent,
-              fontFamily: AccordionTheme.dmMono,
-            ),
-            back: ExternalLink(
-              label: 'Full advisory',
-              url: advisory.officialUrl,
-              color: accent,
-              fontFamily: AccordionTheme.dmMono,
-            ),
+          child: ExternalLink(
+            label: 'Advertencia completa',
+            url: advisory.officialUrl,
+            color: accent,
+            fontFamily: AccordionTheme.dmMono,
           ),
         ),
       ],

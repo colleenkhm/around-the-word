@@ -18,11 +18,15 @@ const _accent = Color(0xFF3A78AA);
 /// which both previously lived inside `IntrinsicHeight`-wrapped desktop
 /// layout logic that no longer exists.
 ///
-/// 2026-09-14 (flashcard_layout): every link/label inside these sections
-/// is now a `FlipReveal` flashcard defaulting to Spanish (its front) — so
-/// these tests assert the Spanish text that actually renders first
-/// ("Solicitar", "Fuente", "Nivel 1", "Advertencia completa",
-/// "EMERGENCIA"), not the English text a reader flips to.
+/// 2026-09-14 (flashcard_layout): most text inside these sections is now
+/// a `FlipReveal` flashcard defaulting to Spanish (its front) — so these
+/// tests assert the Spanish text that actually renders first ("Nivel 1",
+/// "EMERGENCIA"), not the English text a reader flips to. Links
+/// ("Solicitar"/"Apply", "Fuente"/"Source", "Advertencia completa"/"Full
+/// advisory") are the one deliberate exception — they're static controls
+/// with their own tap behavior, never wrapped in `FlipReveal` (see
+/// `VisaSection`'s class doc for the bug that taught this), so they
+/// render in Spanish only, with no flip to test.
 void main() {
   final advisory = TravelAdvisory(
     issuingAuthority: 'US State Department',
@@ -68,6 +72,24 @@ void main() {
       expect(find.textContaining('90 days'), findsOneWidget);
       expect(find.text('Solicitar'), findsOneWidget);
       expect(find.text('Fuente'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'VisaSection: tapping the Apply link never flips its own label — regression for the double-gesture bug',
+    (tester) async {
+      await pump(tester, VisaSection(visa: visaWithApplyLink, accent: _accent));
+
+      // A real ExternalLink also swallows the tap and tries to launch a
+      // URL, which throws in a widget-test environment with no platform
+      // channel wired up — that's expected and fine here; the only thing
+      // under test is that the label itself is untouched by the tap, not
+      // that navigation succeeds.
+      await tester.tap(find.text('Solicitar'));
+      await tester.pump();
+
+      expect(find.text('Solicitar'), findsOneWidget);
+      expect(find.text('Apply'), findsNothing);
     },
   );
 
