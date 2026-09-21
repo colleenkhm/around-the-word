@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../data/phrases.dart';
 import '../models/category.dart';
+import '../state/location_settings.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/phrase_flip_card.dart';
 import '../widgets/pt_app_bar.dart';
@@ -27,12 +29,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final phrases = phrasesForCategory(widget.category.id).where((p) {
-      final q = _query.trim().toLowerCase();
-      if (q.isEmpty) return true;
-      return p.english.toLowerCase().contains(q) ||
-          p.target.toLowerCase().contains(q);
-    }).toList();
+    final place = context.watch<LocationSettings>().place;
+    final q = _query.trim().toLowerCase();
+    final phrases = phrasesForCategory(widget.category.id, place)
+        .where((p) => q.isEmpty || p.matches(q, place.country))
+        .toList();
 
     return Scaffold(
       appBar: PTAppBar.back(title: widget.category.name),
@@ -104,7 +105,10 @@ class _SearchField extends StatelessWidget {
             child: TextField(
               controller: controller,
               onChanged: onChanged,
-              style: const TextStyle(fontFamily: 'IBM Plex Sans', fontSize: 13.5),
+              style: const TextStyle(
+                fontFamily: 'IBM Plex Sans',
+                fontSize: 13.5,
+              ),
               decoration: InputDecoration(
                 hintText: hint,
                 hintStyle: const TextStyle(color: PTColors.inkSoft),

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../data/phrases.dart';
+import '../state/location_settings.dart';
 import '../theme/pocket_talk_theme.dart';
+import 'place_picker_sheet.dart';
 
 /// The app's one app-bar shape, matching the mockup's `.app-bar`: a thin
 /// bottom divider, Fraunces title, and either the circular "PT" monogram
@@ -33,14 +37,61 @@ class PTAppBar extends StatelessWidget implements PreferredSizeWidget {
       leadingWidth: showBack ? 44 : 48,
       leading: showBack
           ? IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new, size: 17, color: PTColors.ink),
+              icon: const Icon(
+                Icons.arrow_back_ios_new,
+                size: 17,
+                color: PTColors.ink,
+              ),
               onPressed: () => Navigator.of(context).maybePop(),
             )
           : const Center(child: _Mark()),
-      title: Text(title, style: ptHeading(size: 16), overflow: TextOverflow.ellipsis),
+      title: Text(
+        title,
+        style: ptHeading(size: 16),
+        overflow: TextOverflow.ellipsis,
+      ),
+      actions: const [_LanguageBadge(), SizedBox(width: 14)],
       bottom: const PreferredSize(
         preferredSize: Size.fromHeight(1),
         child: Divider(height: 1, thickness: 1, color: PTColors.line),
+      ),
+    );
+  }
+}
+
+/// Shows the language and chosen country; tapping opens the country and setting picker.
+class _LanguageBadge extends StatelessWidget {
+  const _LanguageBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    final country = context.watch<LocationSettings>().country;
+
+    return Center(
+      child: Material(
+        color: PTColors.tealTint,
+        borderRadius: BorderRadius.circular(999),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(999),
+          onTap: () => showPlacePicker(context),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(10, 4, 6, 4),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  country == null ? targetLanguage : '$targetLanguage · $country',
+                  style: ptMono(size: 11, color: PTColors.tealInk),
+                ),
+                const Icon(
+                  Icons.arrow_drop_down,
+                  size: 16,
+                  color: PTColors.tealInk,
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

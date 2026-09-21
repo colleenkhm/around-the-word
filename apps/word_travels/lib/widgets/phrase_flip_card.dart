@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/phrase.dart';
+import '../state/location_settings.dart';
 import '../state/vocab_bank.dart';
 import '../theme/pocket_talk_theme.dart';
 import 'ticket_row.dart';
@@ -48,6 +49,9 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
       (bank) => bank.isSaved(widget.phrase.id),
     );
 
+    final country = context.select<LocationSettings, String?>((r) => r.country);
+    final phrase = widget.phrase.forCountry(country);
+
     return TicketRow(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,12 +76,11 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
                             ? Transform(
                                 alignment: Alignment.center,
                                 transform: Matrix4.identity()..rotateY(pi),
-                                child: _EnglishFace(text: widget.phrase.english),
+                                child: _EnglishFace(
+                                  text: widget.phrase.english,
+                                ),
                               )
-                            : _TargetFace(
-                                target: widget.phrase.target,
-                                pronunciation: widget.phrase.pronunciation,
-                              ),
+                            : _TargetFace(phrase: phrase),
                       );
                     },
                   ),
@@ -112,22 +115,83 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
 }
 
 class _TargetFace extends StatelessWidget {
-  const _TargetFace({required this.target, required this.pronunciation});
+  const _TargetFace({required this.phrase});
+
+  final Phrase phrase;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 18),
+      child: phrase.variesByCountry
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const _CountryFlag(),
+                for (final v in phrase.variants) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    v.countryLabel.toUpperCase(),
+                    style: ptMono(size: 10, color: PTColors.inkSoft),
+                  ),
+                  const SizedBox(height: 1),
+                  _TargetLines(
+                    target: v.target,
+                    pronunciation: v.pronunciation,
+                  ),
+                ],
+              ],
+            )
+          : _TargetLines(
+              target: phrase.target,
+              pronunciation: phrase.pronunciation,
+            ),
+    );
+  }
+}
+
+class _TargetLines extends StatelessWidget {
+  const _TargetLines({required this.target, required this.pronunciation});
 
   final String target;
   final String pronunciation;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 18),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(target, style: ptHeading(size: 15.5, color: PTColors.postalInk)),
+        const SizedBox(height: 3),
+        Text(pronunciation, style: ptMono()),
+      ],
+    );
+  }
+}
+
+/// Marks a phrase whose wording differs by country.
+class _CountryFlag extends StatelessWidget {
+  const _CountryFlag();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: PTColors.mustardTint,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(target, style: ptHeading(size: 15.5, color: PTColors.postalInk)),
-          const SizedBox(height: 3),
-          Text(pronunciation, style: ptMono()),
+          const Icon(Icons.public, size: 11, color: PTColors.mustardInk),
+          const SizedBox(width: 4),
+          Text(
+            'Varies by country',
+            style: ptMono(size: 10, color: PTColors.mustardInk),
+          ),
         ],
       ),
     );

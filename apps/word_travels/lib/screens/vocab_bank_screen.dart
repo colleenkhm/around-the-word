@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../state/location_settings.dart';
 import '../state/vocab_bank.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/phrase_flip_card.dart';
@@ -12,7 +13,12 @@ class VocabBankScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final saved = context.watch<VocabBank>().savedPhrases;
+    final place = context.watch<LocationSettings>().place;
+    final saved = context
+        .watch<VocabBank>()
+        .savedPhrases
+        .where((p) => p.appliesTo(place))
+        .toList();
 
     return Scaffold(
       appBar: const PTAppBar.mark(title: 'Saved'),

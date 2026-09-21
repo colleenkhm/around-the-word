@@ -1,10 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../data/phrases.dart';
 import '../models/category.dart';
 import '../models/phrase.dart';
+import '../models/place.dart';
+import '../state/location_settings.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/phrase_flip_card.dart';
 import '../widgets/pt_app_bar.dart';
@@ -31,18 +34,16 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  List<Phrase> get _searchResults {
+  List<Phrase> _searchResults(Place place) {
     final q = _query.trim().toLowerCase();
     if (q.isEmpty) return const [];
-    return allPhrases
-        .where((p) =>
-            p.english.toLowerCase().contains(q) || p.target.toLowerCase().contains(q))
-        .toList();
+    return phrasesForPlace(place).where((p) => p.matches(q, place.country)).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     final searching = _query.trim().isNotEmpty;
+    final place = context.watch<LocationSettings>().place;
 
     return Scaffold(
       appBar: const PTAppBar.mark(title: 'Pocket Talk'),
@@ -56,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Text('Ready when you are', style: ptHeading(size: 19)),
               const SizedBox(height: 4),
               Text(
-                '${allPhrases.length} phrases across ${categories.length} categories',
+                '${phrasesForPlace(place).length} phrases across ${categories.length} categories',
                 style: ptBody(size: 12.5, color: PTColors.inkSoft),
               ),
               const SizedBox(height: 14),
@@ -66,9 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onChanged: (v) => setState(() => _query = v),
               ),
               const SizedBox(height: 16),
-              Expanded(
-                child: searching ? _buildResults() : _buildGrid(),
-              ),
+              Expanded(child: searching ? _buildResults(place) : _buildGrid()),
             ],
           ),
         ),
@@ -76,8 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildResults() {
-    final results = _searchResults;
+  Widget _buildResults(Place place) {
+    final results = _searchResults(place);
     if (results.isEmpty) {
       return Center(
         child: Text('No phrases match that search.', style: ptMono(size: 12.5)),
@@ -110,7 +109,11 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _SearchField extends StatelessWidget {
-  const _SearchField({required this.controller, required this.hint, required this.onChanged});
+  const _SearchField({
+    required this.controller,
+    required this.hint,
+    required this.onChanged,
+  });
 
   final TextEditingController controller;
   final String hint;
@@ -157,7 +160,8 @@ class _CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final count = phrasesForCategory(category.id).length;
+    final place = context.watch<LocationSettings>().place;
+    final count = phrasesForCategory(category.id, place).length;
 
     return Transform.rotate(
       angle: tiltDegrees * pi / 180,
@@ -186,13 +190,25 @@ class _CategoryTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Center(child: Icon(category.icon, color: category.tint.ink, size: 19)),
+                    Center(
+                      child: Icon(
+                        category.icon,
+                        color: category.tint.ink,
+                        size: 19,
+                      ),
+                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(category.name, style: ptHeading(size: 14, color: category.tint.ink)),
+                        Text(
+                          category.name,
+                          style: ptHeading(size: 14, color: category.tint.ink),
+                        ),
                         const SizedBox(height: 2),
-                        Text('$count phrases', style: ptMono(size: 10, color: category.tint.ink)),
+                        Text(
+                          '$count phrases',
+                          style: ptMono(size: 10, color: category.tint.ink),
+                        ),
                       ],
                     ),
                   ],

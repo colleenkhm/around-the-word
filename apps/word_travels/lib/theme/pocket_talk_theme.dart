@@ -36,6 +36,12 @@ class PTColors {
   static const slate = Color(0xFF6B6659);
   static const slateInk = Color(0xFF2C2A24);
   static const slateTint = Color(0xFFE7E5DE);
+  static const sky = Color(0xFF3E6A8A);
+  static const skyInk = Color(0xFF14283A);
+  static const skyTint = Color(0xFFE1EAF1);
+  static const clay = Color(0xFF9A5B3C);
+  static const clayInk = Color(0xFF3D2113);
+  static const clayTint = Color(0xFFF1E4DC);
 }
 
 /// One category's tile tint — a soft background plus the ink color that
@@ -54,6 +60,9 @@ class PTTints {
   static const conversation = PTTint(PTColors.plumTint, PTColors.plumInk);
   static const emergencies = PTTint(PTColors.postalTint, PTColors.postalInk);
   static const basics = PTTint(PTColors.slateTint, PTColors.slateInk);
+  static const shopping = PTTint(PTColors.mustardTint, PTColors.mustardInk);
+  static const lodging = PTTint(PTColors.skyTint, PTColors.skyInk);
+  static const health = PTTint(PTColors.clayTint, PTColors.clayInk);
 }
 
 ThemeData buildPocketTalkTheme() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/phrase.dart';
+import '../state/location_settings.dart';
 import '../state/vocab_bank.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/pt_app_bar.dart';
@@ -29,7 +30,19 @@ class _PracticeScreenState extends State<PracticeScreen> {
   @override
   void initState() {
     super.initState();
-    _deck = context.read<VocabBank>().savedPhrases.toList()..shuffle();
+    _deck = _newDeck();
+  }
+
+  /// Saved phrases that apply to the user's place, worded for their country, in random order.
+  List<Phrase> _newDeck() {
+    final place = context.read<LocationSettings>().place;
+    return context
+        .read<VocabBank>()
+        .savedPhrases
+        .where((p) => p.appliesTo(place))
+        .map((p) => p.forCountry(place.country))
+        .toList()
+      ..shuffle();
   }
 
   @override
@@ -63,7 +76,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   void _restart() {
     setState(() {
-      _deck = context.read<VocabBank>().savedPhrases.toList()..shuffle();
+      _deck = _newDeck();
       _index = 0;
       _correctCount = 0;
       _result = _Result.unanswered;
@@ -102,7 +115,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
               backgroundColor: PTColors.postal,
               foregroundColor: const Color(0xFFFBE9E2),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             onPressed: _restart,
             child: const Text('Practice again'),
@@ -125,10 +140,21 @@ class _PracticeScreenState extends State<PracticeScreen> {
         Text('${_index + 1} of ${_deck.length}', style: ptMono(size: 11.5)),
         const SizedBox(height: 20),
         Text(phrase.english, style: ptHeading(size: 18)),
+        if (phrase.practiceCountry != null) ...[
+          const SizedBox(height: 6),
+          Text(
+            '${phrase.practiceCountry} version',
+            style: ptMono(size: 11, color: PTColors.mustardInk),
+          ),
+        ],
         const SizedBox(height: 16),
         Text(
           phrase.targetWithBlank,
-          style: ptHeading(size: 17, weight: FontWeight.w500, color: PTColors.postalInk),
+          style: ptHeading(
+            size: 17,
+            weight: FontWeight.w500,
+            color: PTColors.postalInk,
+          ),
         ),
         const SizedBox(height: 24),
         TextField(
@@ -157,11 +183,19 @@ class _PracticeScreenState extends State<PracticeScreen> {
           width: double.infinity,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: _result == _Result.unanswered ? PTColors.ink : PTColors.postal,
+              backgroundColor: _result == _Result.unanswered
+                  ? PTColors.ink
+                  : PTColors.postal,
               foregroundColor: const Color(0xFFFBE9E2),
               padding: const EdgeInsets.symmetric(vertical: 13),
-              textStyle: const TextStyle(fontFamily: 'IBM Plex Sans', fontWeight: FontWeight.w500, fontSize: 14.5),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              textStyle: const TextStyle(
+                fontFamily: 'IBM Plex Sans',
+                fontWeight: FontWeight.w500,
+                fontSize: 14.5,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             onPressed: _result == _Result.unanswered
                 ? _check
