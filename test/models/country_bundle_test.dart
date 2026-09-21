@@ -27,7 +27,13 @@ void main() {
     expect(bundle.country.contentStatus, ContentStatus.partial);
     expect(bundle.facts.capital, 'San José');
     expect(bundle.facts.currencyCode, 'CRC');
-    expect(bundle.facts.officialLanguages, ['Spanish']);
+    expect(bundle.facts.languages.map((l) => l.name), ['Spanish', 'English', 'Cabécar', 'Bribri']);
+    final spanish = bundle.facts.languages.first;
+    expect(spanish.isOfficial, isTrue);
+    expect(spanish.percentSpeakers, 99);
+    final english = bundle.facts.languages[1];
+    expect(english.isOfficial, isFalse);
+    expect(english.percentSpeakers, isNull);
   });
 
   test('parses cities, distinguishing featured from non-featured', () {

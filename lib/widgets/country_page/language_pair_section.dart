@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../models/country_bundle.dart';
 import '../../models/language_content.dart';
 import '../../theme/accordion_theme.dart';
 
-/// The "Language" [AccordionSection]'s expanded content — official
-/// languages side by side with a "Word of the day" card. Content-only,
-/// no card chrome or heading.
+/// The "Language" [AccordionSection]'s expanded content — a country's
+/// languages (official and commonly-spoken-but-not) side by side with a
+/// "Word of the day" card. Content-only, no card chrome or heading.
 class LanguagePairSection extends StatelessWidget {
-  final List<String> officialLanguages;
+  final List<LanguageEntry> languages;
   final Word? featuredWord;
 
   /// This section's flag color.
@@ -21,7 +22,7 @@ class LanguagePairSection extends StatelessWidget {
 
   const LanguagePairSection({
     super.key,
-    required this.officialLanguages,
+    required this.languages,
     required this.tint,
     required this.textColor,
     required this.accentOnWhite,
@@ -30,17 +31,17 @@ class LanguagePairSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showLanguages = officialLanguages.isNotEmpty;
+    final showLanguages = languages.isNotEmpty;
     final showWord = featuredWord != null;
     if (!showLanguages && !showWord) return const SizedBox.shrink();
 
     final languagesCard = showLanguages
-        ? _LanguagesCard(languages: officialLanguages, tint: tint, textColor: textColor)
+        ? _LanguagesCard(languages: languages, tint: tint, textColor: textColor)
         : null;
     final wordCard = showWord
         ? _WordOfDayCard(
             word: featuredWord!,
-            languageName: showLanguages ? officialLanguages.first : null,
+            languageName: showLanguages ? languages.first.name : null,
             accent: accentOnWhite,
           )
         : null;
@@ -62,14 +63,31 @@ class LanguagePairSection extends StatelessWidget {
 }
 
 class _LanguagesCard extends StatelessWidget {
-  final List<String> languages;
+  final List<LanguageEntry> languages;
   final Color tint;
   final Color textColor;
 
   const _LanguagesCard({required this.languages, required this.tint, required this.textColor});
 
+  /// Official languages first, then by [LanguageEntry.percentSpeakers]
+  /// descending (no-data entries last) — and English always present, even
+  /// when the source data has no entry for it, so a traveler can always
+  /// see at a glance whether it's spoken here. Only runs once there's at
+  /// least one real language on record; a country with none yet still
+  /// reads "coming soon" rather than showing English alone.
+  List<LanguageEntry> get _displayLanguages {
+    final sorted = [...languages]..sort((a, b) {
+      if (a.isOfficial != b.isOfficial) return a.isOfficial ? -1 : 1;
+      return (b.percentSpeakers ?? -1).compareTo(a.percentSpeakers ?? -1);
+    });
+    final hasEnglish = sorted.any((l) => l.name.toLowerCase() == 'english');
+    if (!hasEnglish) sorted.add(const LanguageEntry(name: 'English', isOfficial: false));
+    return sorted;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final display = _displayLanguages;
     return ColoredBox(
       color: tint,
       child: Padding(
@@ -80,13 +98,13 @@ class _LanguagesCard extends StatelessWidget {
           children: [
             Text('LANGUAGES', style: AccordionTheme.sLabel.copyWith(color: textColor.withValues(alpha: 0.75))),
             const SizedBox(height: 8),
-            for (var i = 0; i < languages.length; i++) ...[
+            for (var i = 0; i < display.length; i++) ...[
               if (i != 0)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: Container(height: 1, color: textColor.withValues(alpha: 0.15)),
                 ),
-              _LanguageRow(name: languages[i], textColor: textColor),
+              _LanguageRow(entry: display[i], textColor: textColor),
             ],
           ],
         ),
@@ -96,35 +114,92 @@ class _LanguagesCard extends StatelessWidget {
 }
 
 class _LanguageRow extends StatelessWidget {
-  final String name;
+  final LanguageEntry entry;
   final Color textColor;
 
-  const _LanguageRow({required this.name, required this.textColor});
+  const _LanguageRow({required this.entry, required this.textColor});
+
+  static String _formatPercent(double percent) {
+    final rounded = percent == percent.roundToDouble()
+        ? percent.round().toString()
+        : percent.toStringAsFixed(1);
+    return '$rounded%';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final percent = entry.percentSpeakers;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: Text(name, style: AccordionTheme.rowTitle.copyWith(color: textColor))),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-            decoration: BoxDecoration(
-              color: textColor.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(3),
+          Row(
+            children: [
+              Expanded(child: Text(entry.name, style: AccordionTheme.rowTitle.copyWith(color: textColor))),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                decoration: BoxDecoration(
+                  color: textColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+                child: Text(
+                  entry.isOfficial ? 'official' : 'unofficial',
+                  style: TextStyle(
+                    fontFamily: AccordionTheme.dmMono,
+                    fontSize: 8,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.3,
+                    color: textColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // No bar when there's no sourced figure — an empty/zero-filled
+          // bar would misrepresent "we don't know" as "basically none".
+          if (percent != null) ...[
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(2.5),
+                    child: LinearProgressIndicator(
+                      value: (percent / 100).clamp(0.0, 1.0),
+                      minHeight: 5,
+                      backgroundColor: textColor.withValues(alpha: 0.15),
+                      valueColor: AlwaysStoppedAnimation(textColor.withValues(alpha: 0.85)),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 7),
+                Text(
+                  _formatPercent(percent),
+                  style: TextStyle(
+                    fontFamily: AccordionTheme.dmMono,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: textColor,
+                  ),
+                ),
+              ],
             ),
-            child: Text(
-              'official',
+          ],
+          if (entry.usageNote != null) ...[
+            const SizedBox(height: 3),
+            Text(
+              entry.usageNote!,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: AccordionTheme.dmMono,
-                fontSize: 8,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.3,
-                color: textColor,
+                fontSize: 10,
+                fontStyle: FontStyle.italic,
+                color: textColor.withValues(alpha: 0.75),
               ),
             ),
-          ),
+          ],
         ],
       ),
     );

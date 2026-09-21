@@ -16,6 +16,34 @@ enum CountryTab { overview, explore, guide, language }
 ContentStatus _contentStatusFromJson(String value) =>
     ContentStatus.values.firstWhere((e) => e.name == value);
 
+/// One language spoken in a country — official or not. Backed by
+/// `country_languages`/`languages`; see the data architecture doc's
+/// "Curated: language content" section. [percentSpeakers] is null, not 0,
+/// whenever no reasonably sourced figure exists — never guessed (Tier C,
+/// same standard as `usageNote`).
+class LanguageEntry {
+  final String name;
+  final bool isOfficial;
+  final double? percentSpeakers;
+  final String? usageNote;
+
+  const LanguageEntry({
+    required this.name,
+    required this.isOfficial,
+    this.percentSpeakers,
+    this.usageNote,
+  });
+
+  factory LanguageEntry.fromJson(Map<String, dynamic> json) {
+    return LanguageEntry(
+      name: json['name'] as String,
+      isOfficial: json['isOfficial'] as bool? ?? false,
+      percentSpeakers: (json['percentSpeakers'] as num?)?.toDouble(),
+      usageNote: json['usageNote'] as String?,
+    );
+  }
+}
+
 class Country {
   final String id;
   final String isoCode;
@@ -51,7 +79,7 @@ class CountryFacts {
   final String? currencyCode;
   final String? currencyName;
   final String? callingCode;
-  final List<String> officialLanguages;
+  final List<LanguageEntry> languages;
   final double? latitude;
   final double? longitude;
 
@@ -83,7 +111,7 @@ class CountryFacts {
     this.currencyCode,
     this.currencyName,
     this.callingCode,
-    required this.officialLanguages,
+    required this.languages,
     this.latitude,
     this.longitude,
     this.utcOffsetMinutes,
@@ -102,8 +130,8 @@ class CountryFacts {
       currencyCode: json['currencyCode'] as String?,
       currencyName: json['currencyName'] as String?,
       callingCode: json['callingCode'] as String?,
-      officialLanguages: (json['officialLanguages'] as List<dynamic>? ?? [])
-          .map((e) => e as String)
+      languages: (json['languages'] as List<dynamic>? ?? [])
+          .map((e) => LanguageEntry.fromJson(e as Map<String, dynamic>))
           .toList(),
       utcOffsetMinutes: json['utcOffsetMinutes'] as int?,
       timezone: json['timezone'] as String?,

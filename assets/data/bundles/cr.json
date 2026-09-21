@@ -13,7 +13,32 @@
     "currencyCode": "CRC",
     "currencyName": "Costa Rican Colón",
     "callingCode": "+506",
-    "officialLanguages": ["Spanish"],
+    "languages": [
+      {
+        "name": "Spanish",
+        "isOfficial": true,
+        "percentSpeakers": 99,
+        "usageNote": "Nearly universal first language. ~99% is a rounded estimate — no single census/survey question gives an exact figure."
+      },
+      {
+        "name": "English",
+        "isOfficial": false,
+        "percentSpeakers": null,
+        "usageNote": "Most widely spoken foreign language; compulsory in schools and common in tourism areas. No reliable population-wide percentage figure found."
+      },
+      {
+        "name": "Cabécar",
+        "isOfficial": false,
+        "percentSpeakers": 0.3,
+        "usageNote": "Indigenous Chibchan language spoken across several Talamanca-area reservations; ~11,000 native speakers per Costa Rica's 2011 census."
+      },
+      {
+        "name": "Bribri",
+        "isOfficial": false,
+        "percentSpeakers": 0.2,
+        "usageNote": "Indigenous Chibchan language spoken in the Talamanca region; ~7,000 speakers per Costa Rica's 2011 census."
+      }
+    ],
     "borderingCountryCodes": ["PA", "NI"],
     "latitude": 9.7489,
     "longitude": -83.7534,

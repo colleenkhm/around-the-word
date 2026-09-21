@@ -158,7 +158,7 @@ class _CountryHeaderPreviewScreenState
         nameOfficial: country.name,
         contentStatus: ContentStatus.none,
       ),
-      facts: const CountryFacts(officialLanguages: []),
+      facts: const CountryFacts(languages: []),
       cities: const [],
       guide: const CountryGuide(
         bestTimes: [],
@@ -353,7 +353,7 @@ class _CountryHeaderPreviewScreenState
   }
 
   Widget _languageSection(CountryBundle bundle) {
-    final languages = bundle.facts.officialLanguages;
+    final languages = bundle.facts.languages;
     final featuredWord = bundle.words.isEmpty ? null : bundle.words.first;
     final hasData = languages.isNotEmpty || featuredWord != null;
     final colors = _palette.language;
@@ -362,11 +362,11 @@ class _CountryHeaderPreviewScreenState
       tint: colors.tint,
       textColor: colors.textColor,
       hasData: hasData,
-      meta: languages.isEmpty ? null : languages.join(' · '),
+      meta: languages.isEmpty ? null : languages.map((l) => l.name).join(' · '),
       expanded: _expanded[_Section.language]!,
       onToggle: () => _toggle(_Section.language),
       contentBuilder: (_) => LanguagePairSection(
-        officialLanguages: languages,
+        languages: languages,
         featuredWord: featuredWord,
         tint: colors.tint,
         textColor: colors.textColor,

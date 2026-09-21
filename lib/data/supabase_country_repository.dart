@@ -13,10 +13,11 @@ import '../models/language_content.dart';
 /// `CountryHeaderPreviewScreen._load()`.
 ///
 /// First pass — only fetches what the accordion UI actually renders today
-/// (facts, cities, best times, practical norms, US advisories/visa, one
-/// featured word). Points of interest, tips, phrases, categories aren't
-/// shown anywhere yet, so they're left empty rather than fetched unused.
-/// See HANDOFF.md for the full list of what's not wired yet.
+/// (facts, cities, best times, practical norms, US advisories/visa,
+/// country_languages, one featured word). Points of interest, tips,
+/// phrases, categories aren't shown anywhere yet, so they're left empty
+/// rather than fetched unused. See HANDOFF.md for the full list of what's
+/// not wired yet.
 class SupabaseCountryRepository {
   SupabaseClient get _client => Supabase.instance.client;
 
@@ -44,6 +45,14 @@ class SupabaseCountryRepository {
         .eq('country_id', countryId)
         .maybeSingle();
 
+    // `languages(name)` pulls the joined language name through the FK —
+    // percent_speakers/is_official/usage_note live on country_languages
+    // itself (see migration 023).
+    final languageRows = await _client
+        .from('country_languages')
+        .select('is_official, percent_speakers, usage_note, languages(name)')
+        .eq('country_id', countryId);
+
     final advisoryRows = await _client
         .from('travel_advisories')
         .select()
@@ -68,7 +77,7 @@ class SupabaseCountryRepository {
         'nameOfficial': countryRow['name_official'] ?? countryRow['name_common'],
         'contentStatus': countryRow['content_status'] ?? 'none',
       }),
-      facts: CountryFacts.fromJson(_factsJson(factsRow)),
+      facts: CountryFacts.fromJson(_factsJson(factsRow, languageRows)),
       cities: cityRows.map((r) => City.fromJson(_cityJson(r))).toList(),
       guide: guide,
       pointsOfInterest: const [],
@@ -127,9 +136,9 @@ class SupabaseCountryRepository {
     });
   }
 
-  Map<String, dynamic> _factsJson(Map<String, dynamic>? row) {
-    if (row == null) return {'officialLanguages': []};
-    final languages = row['official_languages'];
+  Map<String, dynamic> _factsJson(Map<String, dynamic>? row, List<Map<String, dynamic>> languageRows) {
+    final languages = languageRows.map(_languageJson).toList();
+    if (row == null) return {'languages': languages};
     return {
       'flagSvgUrl': null,
       'capital': row['capital'],
@@ -137,9 +146,7 @@ class SupabaseCountryRepository {
       'currencyCode': row['currency_code'],
       'currencyName': row['currency_name'],
       'callingCode': row['calling_code'],
-      'officialLanguages': languages is Map
-          ? languages.values.map((v) => v.toString()).toList()
-          : [],
+      'languages': languages,
       'latitude': row['latitude'],
       'longitude': row['longitude'],
       // Not in the Supabase schema yet — see HANDOFF.md.
@@ -151,6 +158,13 @@ class SupabaseCountryRepository {
       'borderingCountryCodes': (row['neighbors'] as List?)?.cast<String>() ?? [],
     };
   }
+
+  Map<String, dynamic> _languageJson(Map<String, dynamic> row) => {
+    'name': (row['languages'] as Map<String, dynamic>)['name'],
+    'isOfficial': row['is_official'] ?? true,
+    'percentSpeakers': row['percent_speakers'],
+    'usageNote': row['usage_note'],
+  };
 
   Map<String, dynamic> _cityJson(Map<String, dynamic> row) => {
     'id': row['id'],
