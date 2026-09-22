@@ -201,13 +201,28 @@ class _TargetLines extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Capped rather than left to wrap freely: the pronunciation especially
+    // has few natural break points, and in the narrow "recently looked up"
+    // strip an uncapped long phrase could wrap across many lines, making
+    // that one card balloon in height far past its neighbors — reading as
+    // "bigger" for the wrong reason, not because it's the primary card.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(target, style: ptHeading(size: 15.5, color: PTColors.postalInk)),
+        Text(
+          target,
+          style: ptHeading(size: 15.5, color: PTColors.postalInk),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
         const SizedBox(height: 3),
-        Text(pronunciation, style: ptMono()),
+        Text(
+          pronunciation,
+          style: ptMono(),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
       ],
     );
   }
@@ -230,9 +245,13 @@ class _CountryFlag extends StatelessWidget {
         children: [
           const Icon(Icons.public, size: 11, color: PTColors.mustardInk),
           const SizedBox(width: 4),
-          Text(
-            'Varies by country',
-            style: ptMono(size: 10, color: PTColors.mustardInk),
+          Flexible(
+            child: Text(
+              'Varies by country',
+              style: ptMono(size: 10, color: PTColors.mustardInk),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
@@ -251,7 +270,12 @@ class _EnglishFace extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Padding(
         padding: const EdgeInsets.only(right: 18),
-        child: Text(text, style: ptBody(size: 14, weight: FontWeight.w500)),
+        child: Text(
+          text,
+          style: ptBody(size: 14, weight: FontWeight.w500),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
     );
   }

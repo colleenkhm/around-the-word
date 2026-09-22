@@ -45,8 +45,10 @@ class VocabBankScreen extends StatelessWidget {
                     Expanded(
                       child: ListView.builder(
                         itemCount: saved.length,
-                        itemBuilder: (context, index) =>
-                            PhraseFlipCard(phrase: saved[index]),
+                        itemBuilder: (context, index) => PhraseFlipCard(
+                          key: ValueKey(saved[index].id),
+                          phrase: saved[index],
+                        ),
                       ),
                     ),
                   ],

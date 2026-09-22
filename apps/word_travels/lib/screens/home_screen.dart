@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart' show setEquals;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,9 +30,25 @@ class _HomeScreenState extends State<HomeScreen> {
   final _searchController = TextEditingController();
   String _query = '';
 
+  // The order the "recently looked up" strip is currently showing. Flipping
+  // a card in the strip re-records that phrase as most recent, which would
+  // otherwise re-sort the strip out from under the user's finger the moment
+  // they tap it — visually a different card than the one they tapped ends
+  // up in that spot. So this only adopts a fresh order when the *set* of
+  // recent phrases changes (a genuinely new lookup came in from elsewhere);
+  // re-ranking an already-shown phrase doesn't reshuffle what's on screen.
+  List<String> _recentOrder = const [];
+
+  // Scrolls the strip back to its start whenever _recentOrder gets a fresh
+  // set — otherwise, if the user had scrolled the strip over, the new
+  // primary card could land off to the left instead of being the one
+  // actually on screen, which defeats the point of it being the primary one.
+  final _recentScrollController = ScrollController();
+
   @override
   void dispose() {
     _searchController.dispose();
+    _recentScrollController.dispose();
     super.dispose();
   }
 
@@ -43,8 +60,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Recently viewed phrases that still apply to [place], most recent first.
   List<Phrase> _recentPhrases(Place place) {
-    final ids = context.watch<RecentPhrases>().ids;
-    return ids
+    final liveIds = context.watch<RecentPhrases>().ids;
+    if (!setEquals(liveIds.toSet(), _recentOrder.toSet())) {
+      _recentOrder = liveIds;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_recentScrollController.hasClients) {
+          _recentScrollController.animateTo(
+            0,
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
+    return _recentOrder
         .map(phraseById)
         .whereType<Phrase>()
         .where((p) => p.appliesTo(place))
@@ -78,7 +107,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 hint: 'Search a word or phrase',
                 onChanged: (v) => setState(() => _query = v),
               ),
-              if (!searching && recent.isNotEmpty) _RecentSection(phrases: recent),
+              if (!searching && recent.isNotEmpty)
+                _RecentSection(
+                  phrases: recent,
+                  scrollController: _recentScrollController,
+                ),
               const SizedBox(height: 16),
               Expanded(child: searching ? _buildResults(place) : _buildGrid()),
             ],
@@ -97,7 +130,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return ListView.builder(
       itemCount: results.length,
-      itemBuilder: (context, index) => PhraseFlipCard(phrase: results[index]),
+      itemBuilder: (context, index) => PhraseFlipCard(
+        key: ValueKey(results[index].id),
+        phrase: results[index],
+      ),
     );
   }
 
@@ -123,13 +159,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
 /// A horizontal strip of the last few phrases the user actually looked at —
 /// the fastest way back to what they needed a minute ago, without re-typing
-/// a search or re-opening a category. No fixed height: a country-flagged
-/// phrase's card can run taller than most, and this only needs to fit the
-/// tallest one currently shown, not clip to a guess.
+/// a search or re-opening a category. Capped at [_maxCardHeight]: a
+/// country-flagged phrase's card can run taller than most (one row per
+/// country), and with no cap at all, an unlucky combination — a short
+/// screen plus a multi-country phrase as the most recent lookup — could
+/// push the strip tall enough to overflow the whole page. Ordinary cards
+/// (no variants) sit well under the cap and are never affected; a card
+/// that does hit it scrolls internally rather than however far it needs.
 class _RecentSection extends StatelessWidget {
-  const _RecentSection({required this.phrases});
+  const _RecentSection({required this.phrases, required this.scrollController});
 
   final List<Phrase> phrases;
+  final ScrollController scrollController;
+
+  // The most recent lookup (first in the list) reads as the primary one —
+  // a bit larger than the rest, which all share one size.
+  static const _primaryWidth = 250.0;
+  static const _width = 210.0;
+  static const _gap = 10.0;
+  static const _maxCardHeight = 190.0;
 
   @override
   Widget build(BuildContext context) {
@@ -141,14 +189,38 @@ class _RecentSection extends StatelessWidget {
           Text('RECENTLY LOOKED UP', style: ptMono(size: 10.5, color: PTColors.inkSoft)),
           const SizedBox(height: 6),
           SingleChildScrollView(
+            controller: scrollController,
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                for (final phrase in phrases)
+                for (var i = 0; i < phrases.length; i++) ...[
+                  if (i > 0) const SizedBox(width: _gap),
+                  // Keyed by phrase id, and on this SizedBox specifically —
+                  // it's the direct Row child, so this is the widget Flutter
+                  // actually looks at to decide whether to move an element
+                  // (preserving its state) versus unmount/remount it. A key
+                  // one level down, on PhraseFlipCard alone, isn't visible
+                  // to that decision.
                   SizedBox(
-                    width: 230,
-                    child: PhraseFlipCard(phrase: phrase),
+                    key: ValueKey(phrases[i].id),
+                    width: i == 0 ? _primaryWidth : _width,
+                    // Ordinary cards (no country variants) are already
+                    // bounded to a couple of lines each, so they just hug
+                    // their own short content as before. Only a
+                    // country-flagged phrase — one row of content per
+                    // country, unbounded in count — gets capped, with the
+                    // rest reachable by an internal scroll rather than
+                    // risking the whole page overflowing around it.
+                    child: phrases[i].variesByCountry
+                        ? SizedBox(
+                            height: _maxCardHeight,
+                            child: SingleChildScrollView(
+                              child: PhraseFlipCard(phrase: phrases[i]),
+                            ),
+                          )
+                        : PhraseFlipCard(phrase: phrases[i]),
                   ),
+                ],
               ],
             ),
           ),

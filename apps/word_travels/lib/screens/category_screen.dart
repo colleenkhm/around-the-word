@@ -65,8 +65,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       )
                     : ListView.builder(
                         itemCount: phrases.length,
-                        itemBuilder: (context, index) =>
-                            PhraseFlipCard(phrase: phrases[index]),
+                        itemBuilder: (context, index) => PhraseFlipCard(
+                          key: ValueKey(phrases[index].id),
+                          phrase: phrases[index],
+                        ),
                       ),
               ),
             ],
