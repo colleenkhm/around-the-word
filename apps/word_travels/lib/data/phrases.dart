@@ -422,3 +422,13 @@ List<Phrase> phrasesForPlace(Place place) =>
 
 List<Phrase> phrasesForCategory(String categoryId, Place place) =>
     phrasesForPlace(place).where((p) => p.categoryId == categoryId).toList();
+
+/// Looks up a phrase by id, or null if it no longer exists — used to resolve
+/// ids saved earlier (recently-viewed history) that shouldn't crash the app
+/// if the underlying phrase data ever changes.
+Phrase? phraseById(String id) {
+  for (final p in allPhrases) {
+    if (p.id == id) return p;
+  }
+  return null;
+}

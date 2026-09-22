@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/phrase.dart';
 import '../state/location_settings.dart';
+import '../state/recent_phrases.dart';
 import '../state/vocab_bank.dart';
 import '../theme/pocket_talk_theme.dart';
 import 'ticket_row.dart';
@@ -36,6 +37,9 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
 
   void _flip() {
     if (_controller.isAnimating) return;
+    // Flipping is the "I needed this phrase" signal — it's the deliberate
+    // lookup action, unlike a card merely scrolling into view.
+    context.read<RecentPhrases>().recordView(widget.phrase.id);
     if (_controller.value == 0) {
       _controller.forward();
     } else {
@@ -58,42 +62,80 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
         children: [
           Expanded(
             child: GestureDetector(
+              key: const Key('phrase_flip_tap_area'),
               onTap: _flip,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  AnimatedBuilder(
-                    animation: _controller,
-                    builder: (context, child) {
-                      final angle = _controller.value * pi;
-                      final showBack = _controller.value > 0.5;
-                      return Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.identity()
-                          ..setEntry(3, 2, 0.001)
-                          ..rotateY(angle),
-                        child: showBack
-                            ? Transform(
-                                alignment: Alignment.center,
-                                transform: Matrix4.identity()..rotateY(pi),
-                                child: _EnglishFace(
-                                  text: widget.phrase.english,
+              // Without this, the detector only hit-tests the flip card's
+              // painted content — here the text itself, which for a short
+              // phrase leaves most of the row untappable. Opaque plus a
+              // full-width container (below) makes the whole row (minus the
+              // bookmark button next to it) flip the card.
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                width: double.infinity,
+                alignment: Alignment.topLeft,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    AnimatedBuilder(
+                      animation: _controller,
+                      builder: (context, child) {
+                        final angle = _controller.value * pi;
+                        final showBack = _controller.value > 0.5;
+                        return Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.identity()
+                            ..setEntry(3, 2, 0.001)
+                            ..rotateY(angle),
+                          // Both faces stay mounted (one just hidden), so
+                          // the card's size is the taller of the two
+                          // throughout — English is one line, but the
+                          // target phrase is often two or more. Swapping
+                          // the widget out entirely (rather than hiding it)
+                          // let the row shrink to whichever face was
+                          // showing, so after flipping to English the tap
+                          // area shrank down to just that line and tapping
+                          // the rest of the row no longer flipped it back.
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Visibility(
+                                key: const Key('phrase_flip_target_face'),
+                                visible: !showBack,
+                                maintainState: true,
+                                maintainAnimation: true,
+                                maintainSize: true,
+                                child: _TargetFace(phrase: phrase),
+                              ),
+                              Visibility(
+                                key: const Key('phrase_flip_english_face'),
+                                visible: showBack,
+                                maintainState: true,
+                                maintainAnimation: true,
+                                maintainSize: true,
+                                child: Transform(
+                                  alignment: Alignment.center,
+                                  transform: Matrix4.identity()..rotateY(pi),
+                                  child: _EnglishFace(
+                                    text: widget.phrase.english,
+                                  ),
                                 ),
-                              )
-                            : _TargetFace(phrase: phrase),
-                      );
-                    },
-                  ),
-                  Positioned(
-                    top: -2,
-                    right: 0,
-                    child: Icon(
-                      Icons.swap_horiz,
-                      size: 14,
-                      color: PTColors.inkSoft.withValues(alpha: 0.55),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  ),
-                ],
+                    Positioned(
+                      top: -2,
+                      right: 0,
+                      child: Icon(
+                        Icons.swap_horiz,
+                        size: 14,
+                        color: PTColors.inkSoft.withValues(alpha: 0.55),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

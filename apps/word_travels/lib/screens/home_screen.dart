@@ -8,6 +8,7 @@ import '../models/category.dart';
 import '../models/phrase.dart';
 import '../models/place.dart';
 import '../state/location_settings.dart';
+import '../state/recent_phrases.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/phrase_flip_card.dart';
 import '../widgets/pt_app_bar.dart';
@@ -40,10 +41,21 @@ class _HomeScreenState extends State<HomeScreen> {
     return phrasesForPlace(place).where((p) => p.matches(q, place.country)).toList();
   }
 
+  /// Recently viewed phrases that still apply to [place], most recent first.
+  List<Phrase> _recentPhrases(Place place) {
+    final ids = context.watch<RecentPhrases>().ids;
+    return ids
+        .map(phraseById)
+        .whereType<Phrase>()
+        .where((p) => p.appliesTo(place))
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final searching = _query.trim().isNotEmpty;
     final place = context.watch<LocationSettings>().place;
+    final recent = _recentPhrases(place);
 
     return Scaffold(
       appBar: const PTAppBar.mark(title: 'Pocket Talk'),
@@ -66,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 hint: 'Search a word or phrase',
                 onChanged: (v) => setState(() => _query = v),
               ),
+              if (!searching && recent.isNotEmpty) _RecentSection(phrases: recent),
               const SizedBox(height: 16),
               Expanded(child: searching ? _buildResults(place) : _buildGrid()),
             ],
@@ -104,6 +117,43 @@ class _HomeScreenState extends State<HomeScreen> {
           tiltDegrees: _tileTilts[index % _tileTilts.length],
         );
       },
+    );
+  }
+}
+
+/// A horizontal strip of the last few phrases the user actually looked at —
+/// the fastest way back to what they needed a minute ago, without re-typing
+/// a search or re-opening a category. No fixed height: a country-flagged
+/// phrase's card can run taller than most, and this only needs to fit the
+/// tallest one currently shown, not clip to a guess.
+class _RecentSection extends StatelessWidget {
+  const _RecentSection({required this.phrases});
+
+  final List<Phrase> phrases;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('RECENTLY LOOKED UP', style: ptMono(size: 10.5, color: PTColors.inkSoft)),
+          const SizedBox(height: 6),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final phrase in phrases)
+                  SizedBox(
+                    width: 230,
+                    child: PhraseFlipCard(phrase: phrase),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
