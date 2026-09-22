@@ -87,13 +87,27 @@ class Phrase {
     return this;
   }
 
-  /// Whether [query] (already trimmed and lowercased) matches this phrase as
-  /// seen by [country] — English, the target wording, or any still-shown variant.
+  /// Whether [query] matches this phrase as seen by [country] — English, the
+  /// target wording, or any still-shown variant. This is meant for a quick,
+  /// under-pressure lookup, so it's forgiving: every word of [query] must
+  /// appear somewhere (in any order, so punctuation between words in the
+  /// phrase doesn't break a match), accents and hyphens are ignored, and a
+  /// handful of common English synonyms (see [searchSynonyms]) are tried too.
   bool matches(String query, String? country) {
     final p = forCountry(country);
-    return p.english.toLowerCase().contains(query) ||
-        p.target.toLowerCase().contains(query) ||
-        p.variants.any((v) => v.target.toLowerCase().contains(query));
+    final tokens = searchTokens(query);
+    if (tokens.isEmpty) return false;
+
+    final haystacks = [
+      p.english,
+      p.target,
+      ...p.variants.map((v) => v.target),
+    ].map(normalizeForSearch).toList();
+
+    return tokens.every((token) {
+      final withSynonyms = searchSynonyms[token] ?? [token];
+      return withSynonyms.any((t) => haystacks.any((h) => h.contains(t)));
+    });
   }
 
   /// [target] with [blankWord] replaced by a blank, for the practice screen.
@@ -129,4 +143,64 @@ class CountryVariant {
   });
 
   String get countryLabel => countries.join(', ');
+}
+
+const Map<String, String> _searchAccents = {
+  'á': 'a',
+  'é': 'e',
+  'í': 'i',
+  'ó': 'o',
+  'ú': 'u',
+  'ü': 'u',
+  'ñ': 'n',
+};
+
+/// Lowercases, drops accents (so "bano" finds "baño" on a keyboard with no
+/// accent keys) and hyphens (so "checkout" finds "check-out"), for both the
+/// query and the phrase text it's compared against.
+String normalizeForSearch(String s) {
+  var out = s.toLowerCase().replaceAll('-', '');
+  for (final entry in _searchAccents.entries) {
+    out = out.replaceAll(entry.key, entry.value);
+  }
+  return out;
+}
+
+/// Splits a search query into normalized words. A phrase matches when every
+/// token is found somewhere (see [Phrase.matches]) — so word order, and
+/// punctuation in the phrase between words, doesn't matter: "check please"
+/// still finds "The check, please".
+List<String> searchTokens(String query) => normalizeForSearch(
+  query,
+).trim().split(RegExp(r'\s+')).where((t) => t.isNotEmpty).toList();
+
+/// Common English words travelers might type instead of the word a phrase
+/// actually uses — e.g. searching "bathroom" should still find "restroom".
+/// Built from these groups: every word in a group is treated as
+/// interchangeable with every other word in it.
+final Map<String, List<String>> searchSynonyms = _buildSynonyms([
+  ['restroom', 'bathroom', 'toilet', 'washroom'],
+  ['taxi', 'cab'],
+  ['hospital', 'er'],
+  ['pharmacy', 'drugstore'],
+  ['check', 'bill'],
+  ['subway', 'metro'],
+  ['cost', 'price', 'how much'],
+  ['stolen', 'robbed'],
+  ['sick', 'ill'],
+  ['reservation', 'booking'],
+  ['wallet', 'purse'],
+  ['petrol', 'gas'],
+  ['cashpoint', 'atm'],
+  ['wifi', 'internet'],
+]);
+
+Map<String, List<String>> _buildSynonyms(List<List<String>> groups) {
+  final map = <String, List<String>>{};
+  for (final group in groups) {
+    for (final word in group) {
+      map[word] = group;
+    }
+  }
+  return map;
 }

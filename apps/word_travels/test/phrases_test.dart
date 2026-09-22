@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pocket_talk/data/phrases.dart';
+import 'package:pocket_talk/models/phrase.dart';
 import 'package:pocket_talk/models/place.dart';
 
 void main() {
@@ -86,5 +87,48 @@ void main() {
 
   test('phrase ids are unique', () {
     expect(allPhrases.map((p) => p.id).toSet().length, allPhrases.length);
+  });
+
+  group('forgiving search', () {
+    Phrase byId(String id) => allPhrases.firstWhere((p) => p.id == id);
+
+    test('an English synonym finds the phrase that uses the other word', () {
+      final restroom = byId('basics_10'); // "Where is the restroom?"
+      expect(restroom.matches('bathroom', null), isTrue);
+      expect(restroom.matches('toilet', null), isTrue);
+
+      final bill = byId('food_19'); // "Can we split the bill?"
+      expect(bill.matches('check', null), isTrue);
+      final check = byId('food_1'); // "The check, please"
+      expect(check.matches('bill', null), isTrue);
+    });
+
+    test('punctuation in the phrase doesn\'t block a multi-word search', () {
+      // "The check, please" — searching without the comma should still hit.
+      expect(byId('food_1').matches('check please', null), isTrue);
+    });
+
+    test('accents are optional when searching Spanish', () {
+      // "¿Dónde está el baño?"
+      expect(byId('basics_10').matches('bano', null), isTrue);
+      expect(byId('basics_10').matches('baño', null), isTrue);
+    });
+
+    test('hyphens are ignored', () {
+      final checkout = allPhrases.firstWhere(
+        (p) => p.english == 'What time is check-out?',
+      );
+      expect(checkout.matches('checkout', null), isTrue);
+    });
+
+    test('every query word has to match somewhere', () {
+      final restroom = byId('basics_10');
+      expect(restroom.matches('restroom please', null), isFalse);
+    });
+
+    test('an empty or blank query matches nothing', () {
+      expect(byId('basics_10').matches('', null), isFalse);
+      expect(byId('basics_10').matches('   ', null), isFalse);
+    });
   });
 }
