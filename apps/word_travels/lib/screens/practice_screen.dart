@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/phrase.dart';
 import '../state/location_settings.dart';
+import '../state/practice_scores.dart';
 import '../state/vocab_bank.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/pt_app_bar.dart';
@@ -33,16 +34,26 @@ class _PracticeScreenState extends State<PracticeScreen> {
     _deck = _newDeck();
   }
 
-  /// Saved phrases that apply to the user's place, worded for their country, in random order.
+  /// Saved phrases that apply to the user's place, worded for their
+  /// country, weakest first: sorted by practice score ascending (a phrase
+  /// missed more than it's been gotten right sits at negative, and sorts
+  /// ahead of one that's rarely missed), so drilling time goes toward what
+  /// actually still needs it. Shuffled first so phrases sharing a score
+  /// (most starting out at 0) don't always land in the same order.
   List<Phrase> _newDeck() {
     final place = context.read<LocationSettings>().place;
-    return context
+    final scores = context.read<PracticeScores>();
+    final deck = context
         .read<VocabBank>()
         .savedPhrases
         .where((p) => p.appliesTo(place))
         .map((p) => p.forCountry(place.country))
         .toList()
       ..shuffle();
+    deck.sort(
+      (a, b) => scores.scoreFor(a.id).compareTo(scores.scoreFor(b.id)),
+    );
+    return deck;
   }
 
   @override
@@ -59,6 +70,12 @@ class _PracticeScreenState extends State<PracticeScreen> {
   void _check() {
     if (_result != _Result.unanswered) return;
     final correct = _current.checkAnswer(_answerController.text);
+    final scores = context.read<PracticeScores>();
+    if (correct) {
+      scores.recordCorrect(_current.id);
+    } else {
+      scores.recordIncorrect(_current.id);
+    }
     setState(() {
       _result = correct ? _Result.correct : _Result.incorrect;
       if (correct) _correctCount++;

@@ -8,6 +8,7 @@ import 'screens/home_screen.dart';
 import 'screens/vocab_bank_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'state/location_settings.dart';
+import 'state/practice_scores.dart';
 import 'state/recent_phrases.dart';
 import 'state/vocab_bank.dart';
 import 'theme/pocket_talk_theme.dart';
@@ -29,6 +30,7 @@ class PocketTalkApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => VocabBank()..load()),
         ChangeNotifierProvider(create: (_) => LocationSettings()..load()),
         ChangeNotifierProvider(create: (_) => RecentPhrases()..load()),
+        ChangeNotifierProvider(create: (_) => PracticeScores()..load()),
       ],
       child: MaterialApp(
         title: 'Pocket Talk',

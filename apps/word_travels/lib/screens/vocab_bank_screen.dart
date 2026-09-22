@@ -55,19 +55,39 @@ class VocabBankScreen extends StatelessWidget {
                 ),
               ),
       ),
-      floatingActionButton: saved.isEmpty
-          ? null
-          : FloatingActionButton.extended(
-              backgroundColor: PTColors.postal,
-              foregroundColor: const Color(0xFFFBE9E2),
-              icon: const Icon(Icons.edit_note),
-              label: const Text('Practice'),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const PracticeScreen()),
-                );
-              },
-            ),
+      // Always visible, even with nothing saved yet — a button that only
+      // appears once you've cleared its own precondition means there's
+      // nothing on screen to tell you practice exists at all. Muted and
+      // still tappable while empty, so tapping it is how you find out what
+      // unlocks it, rather than a dead end.
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: saved.isEmpty ? PTColors.cardRow : PTColors.postal,
+        foregroundColor: saved.isEmpty
+            ? PTColors.inkSoft
+            : const Color(0xFFFBE9E2),
+        elevation: saved.isEmpty ? 0 : null,
+        shape: saved.isEmpty
+            ? RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+                side: const BorderSide(color: PTColors.line),
+              )
+            : null,
+        icon: const Icon(Icons.edit_note),
+        label: const Text('Practice'),
+        onPressed: () {
+          if (saved.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Bookmark a phrase first to unlock practice.'),
+              ),
+            );
+            return;
+          }
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const PracticeScreen()),
+          );
+        },
+      ),
     );
   }
 }
