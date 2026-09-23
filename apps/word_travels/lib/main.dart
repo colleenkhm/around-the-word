@@ -3,10 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/country_screen.dart';
+import 'screens/deck_screen.dart';
 import 'screens/environment_screen.dart';
-import 'screens/home_screen.dart';
-import 'screens/vocab_bank_screen.dart';
+import 'screens/phrasebook_screen.dart';
+import 'screens/translate_screen.dart';
 import 'screens/welcome_screen.dart';
+import 'services/translation_service.dart';
 import 'state/location_settings.dart';
 import 'state/practice_scores.dart';
 import 'state/recent_phrases.dart';
@@ -31,6 +33,7 @@ class PocketTalkApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LocationSettings()..load()),
         ChangeNotifierProvider(create: (_) => RecentPhrases()..load()),
         ChangeNotifierProvider(create: (_) => PracticeScores()..load()),
+        Provider<TranslationProvider>.value(value: activeTranslationProvider),
       ],
       child: MaterialApp(
         title: 'Pocket Talk',
@@ -90,7 +93,10 @@ class _AppEntryState extends State<AppEntry> {
   }
 }
 
-/// Bottom-nav shell: browse categories, or review the vocab bank.
+/// Bottom-nav shell: look anything up, browse the curated phrasebook, or
+/// practice what's been saved. An [IndexedStack] rather than swapping widgets,
+/// so each tab keeps its state (a typed query, a scrolled grid) while the
+/// user is on another one.
 class RootScaffold extends StatefulWidget {
   const RootScaffold({super.key});
 
@@ -99,27 +105,53 @@ class RootScaffold extends StatefulWidget {
 }
 
 class _RootScaffoldState extends State<RootScaffold> {
-  int _tab = 0;
+  static const _translateTab = 0;
 
-  static const _screens = [HomeScreen(), VocabBankScreen()];
+  int _tab = _translateTab;
+
+  // Set when another tab hands a query to Translate (the phrasebook's empty
+  // search offering to look it up). TranslateScreen picks it up as a prop
+  // change, since it stays alive in the IndexedStack.
+  String? _translateQuery;
 
   static const _items = [
     PTTabItem(
-      icon: Icons.home_outlined,
-      selectedIcon: Icons.home,
-      label: 'Home',
+      // Icons.translate has no outlined variant; the tab bar already marks
+      // the selected tab with ink color and weight.
+      icon: Icons.translate,
+      selectedIcon: Icons.translate,
+      label: 'Translate',
     ),
     PTTabItem(
-      icon: Icons.bookmark_border,
-      selectedIcon: Icons.bookmark,
-      label: 'Saved',
+      icon: Icons.menu_book_outlined,
+      selectedIcon: Icons.menu_book,
+      label: 'Phrasebook',
+    ),
+    PTTabItem(
+      icon: Icons.school_outlined,
+      selectedIcon: Icons.school,
+      label: 'Practice',
     ),
   ];
+
+  void _translate(String query) {
+    setState(() {
+      _translateQuery = query;
+      _tab = _translateTab;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _tab, children: _screens),
+      body: IndexedStack(
+        index: _tab,
+        children: [
+          TranslateScreen(incomingQuery: _translateQuery),
+          PhrasebookScreen(onTranslate: _translate),
+          const DeckScreen(),
+        ],
+      ),
       bottomNavigationBar: PTTabBar(
         items: _items,
         selectedIndex: _tab,

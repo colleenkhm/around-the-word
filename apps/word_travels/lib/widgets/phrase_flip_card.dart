@@ -19,16 +19,10 @@ class PhraseFlipCard extends StatefulWidget {
     super.key,
     required this.phrase,
     this.showNotches = true,
-    this.centerEnglish = false,
   });
 
   final Phrase phrase;
   final bool showNotches;
-
-  /// The recent strip's cards are narrow and uniform, where a centered
-  /// English translation reads better than the full-width rows elsewhere
-  /// (search results, category lists), which stay left-aligned.
-  final bool centerEnglish;
 
   @override
   State<PhraseFlipCard> createState() => _PhraseFlipCardState();
@@ -67,7 +61,10 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
 
     final country = context.select<LocationSettings, String?>((r) => r.country);
     final phrase = widget.phrase.forCountry(country);
-    final tint = categoryById(widget.phrase.categoryId).tint;
+    // A live-translated phrase belongs to no curated category, so it falls
+    // back to the same neutral tint its result card uses on Translate —
+    // the saved flashcard then looks like the card it came from.
+    final tint = categoryById(widget.phrase.categoryId)?.tint ?? PTTints.basics;
 
     return TicketRow(
       tint: tint,
@@ -121,18 +118,24 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
                                 maintainSize: true,
                                 child: _TargetFace(phrase: phrase, tint: tint),
                               ),
-                              Visibility(
-                                key: const Key('phrase_flip_english_face'),
-                                visible: showBack,
-                                maintainState: true,
-                                maintainAnimation: true,
-                                maintainSize: true,
-                                child: Transform(
-                                  alignment: Alignment.center,
-                                  transform: Matrix4.identity()..rotateY(pi),
-                                  child: _EnglishFace(
-                                    text: widget.phrase.english,
-                                    center: widget.centerEnglish,
+                              // Filled rather than left to shrink-wrap: the
+                              // card's height comes from the target face, so
+                              // only by taking that full height can the one
+                              // English line sit in the vertical middle of
+                              // it instead of at the top.
+                              Positioned.fill(
+                                child: Visibility(
+                                  key: const Key('phrase_flip_english_face'),
+                                  visible: showBack,
+                                  maintainState: true,
+                                  maintainAnimation: true,
+                                  maintainSize: true,
+                                  child: Transform(
+                                    alignment: Alignment.center,
+                                    transform: Matrix4.identity()..rotateY(pi),
+                                    child: _EnglishFace(
+                                      text: widget.phrase.english,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -205,7 +208,7 @@ class _TargetFace extends StatelessWidget {
             )
           : _TargetLines(
               target: phrase.target,
-              pronunciation: phrase.pronunciation,
+              pronunciation: phrase.pronunciationGuide,
               ink: tint.ink,
             ),
     );
@@ -240,13 +243,16 @@ class _TargetLines extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(height: 3),
-        Text(
-          pronunciation,
-          style: ptMono(),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
+        // Skip the line rather than leaving a gap when there's no guide.
+        if (pronunciation.isNotEmpty) ...[
+          const SizedBox(height: 3),
+          Text(
+            pronunciation,
+            style: ptMono(),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ],
     );
   }
@@ -283,21 +289,22 @@ class _CountryFlag extends StatelessWidget {
   }
 }
 
+/// The English translation, alone on the back of the card: left-aligned like
+/// every other line, but sitting in the vertical middle rather than riding
+/// at the top of the height the target face sets.
 class _EnglishFace extends StatelessWidget {
-  const _EnglishFace({required this.text, this.center = false});
+  const _EnglishFace({required this.text});
 
   final String text;
-  final bool center;
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: center ? Alignment.center : Alignment.centerLeft,
+      alignment: Alignment.centerLeft,
       child: Padding(
         padding: const EdgeInsets.only(right: 18),
         child: Text(
           text,
-          textAlign: center ? TextAlign.center : TextAlign.left,
           style: ptBody(size: 14, weight: FontWeight.w500),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,

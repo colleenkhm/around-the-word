@@ -1,4 +1,11 @@
+import 'language.dart';
 import 'place.dart';
+import 'pronunciation.dart';
+
+/// The [Phrase.categoryId] of a live-translated phrase. Deliberately not a
+/// real category — adding it to `categories` would put a bogus tile in the
+/// phrasebook grid.
+const String lookupCategoryId = 'lookup';
 
 /// A single phrase: shown as a flip card while browsing, and as a
 /// fill-in-the-blank exercise once it's in the vocab bank.
@@ -37,6 +44,12 @@ class Phrase {
   /// means it's useful in any setting.
   final List<String> environments;
 
+  /// The [Language.code] this phrase is in. Defaults to Spanish so none of
+  /// the curated phrases below need to name it — it only matters for
+  /// phrases created via [Phrase.fromLookup], to scope saved/practice data
+  /// per language once a second one exists.
+  final String languageCode;
+
   const Phrase({
     required this.id,
     required this.categoryId,
@@ -47,7 +60,62 @@ class Phrase {
     this.variants = const [],
     this.countries = const [],
     this.environments = const [],
+    this.languageCode = 'es',
   });
+
+  /// A phrase built from a live translation lookup rather than the curated
+  /// set — nothing here was hand-written, so the practice [blankWord] is
+  /// guessed by [autoBlankWord] and the pronunciation guide is generated on
+  /// demand (see [pronunciationGuide]) rather than stored.
+  factory Phrase.fromLookup({
+    required String english,
+    required String target,
+    required Language language,
+  }) {
+    final normalized = normalizeForSearch(
+      english,
+    ).replaceAll(RegExp(r'[^a-z0-9]+'), '_').replaceAll(RegExp(r'^_+|_+$'), '');
+    return Phrase(
+      id: 'lookup_${language.code}_$normalized',
+      categoryId: lookupCategoryId,
+      english: english,
+      target: target,
+      pronunciation: '',
+      blankWord: autoBlankWord(target),
+      languageCode: language.code,
+    );
+  }
+
+  factory Phrase.fromJson(Map<String, dynamic> json) => Phrase(
+    id: json['id'] as String,
+    categoryId: json['categoryId'] as String,
+    english: json['english'] as String,
+    target: json['target'] as String,
+    // Generated for lookups, so whatever an older version stored here is
+    // ignored rather than migrated.
+    pronunciation: '',
+    blankWord: json['blankWord'] as String,
+    languageCode: json['languageCode'] as String? ?? 'es',
+  );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'categoryId': categoryId,
+    'english': english,
+    'target': target,
+    'blankWord': blankWord,
+    'languageCode': languageCode,
+  };
+
+  /// Whether this came from a live translation rather than the curated set.
+  bool get isLookup => categoryId == lookupCategoryId;
+
+  /// The pronunciation guide to show. Curated phrases have one written by
+  /// hand; a looked-up phrase derives its own from [target] every time it's
+  /// read, which costs microseconds and means it can never be left stale by
+  /// a change to the rules that generate it.
+  String get pronunciationGuide =>
+      isLookup ? spanishPronunciation(target) : pronunciation;
 
   /// Whether a user in [place] should see this phrase: its country scope
   /// matches (or it's language-wide) and its setting scope matches (or it
@@ -143,6 +211,47 @@ class CountryVariant {
   });
 
   String get countryLabel => countries.join(', ');
+}
+
+/// Common short Spanish function words — articles, prepositions, pronouns —
+/// that make poor blank-word choices even though they're often the
+/// shortest, most frequent words in a sentence.
+const Set<String> _blankWordStopwords = {
+  'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas',
+  'de', 'del', 'a', 'al', 'en', 'con', 'sin', 'por', 'para',
+  'y', 'o', 'que', 'es', 'son', 'esta', 'este', 'estan',
+  'lo', 'le', 'les', 'se', 'su', 'sus', 'mi', 'mis', 'tu', 'tus',
+  'yo', 'me', 'te',
+};
+
+/// Guesses which word of a live-translated [target] sentence is worth
+/// drilling in practice, since (unlike the curated set) nothing hand-picked
+/// one: the longest word that isn't a common function word, since that's
+/// usually the content word carrying the sentence's meaning. Falls back to
+/// the last word if every word got filtered out.
+String autoBlankWord(String target) {
+  // Strips surrounding punctuation (¿ ? ¡ ! , . ...) by matching anything
+  // that isn't a letter or digit. Has to be the Unicode property escape,
+  // not \w — \w is ASCII-only, so it would eat the accented letter off the
+  // end of "está" or "café".
+  final words = target
+      .split(RegExp(r'\s+'))
+      .map(
+        (w) => w.replaceAll(
+          RegExp(r'^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$', unicode: true),
+          '',
+        ),
+      )
+      .where((w) => w.isNotEmpty)
+      .toList();
+  if (words.isEmpty) return target;
+
+  final candidates = words
+      .where((w) => !_blankWordStopwords.contains(normalizeForSearch(w)))
+      .toList();
+  final pool = candidates.isNotEmpty ? candidates : words;
+
+  return pool.reduce((a, b) => b.length > a.length ? b : a);
 }
 
 const Map<String, String> _searchAccents = {

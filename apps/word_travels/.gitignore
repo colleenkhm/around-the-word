@@ -46,3 +46,7 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Local AI assistant instructions — personal working notes, not shared
+CLAUDE.md
+.claude/

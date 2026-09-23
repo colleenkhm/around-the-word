@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
+import 'package:pocket_talk/data/phrases.dart';
+import 'package:pocket_talk/models/phrase.dart';
 import 'package:pocket_talk/screens/practice_screen.dart';
 import 'package:pocket_talk/state/location_settings.dart';
 import 'package:pocket_talk/state/practice_scores.dart';
@@ -71,5 +73,34 @@ void main() {
     await tester.pump();
 
     expect(scores.scoreFor('basics_1'), -1);
+  });
+
+  testWidgets('looked-up phrases drill in the same deck as bookmarked ones', (
+    tester,
+  ) async {
+    final lookup = Phrase.fromLookup(
+      english: 'my flight was delayed',
+      target: 'mi vuelo se ha retrasado',
+      language: currentLanguage,
+    );
+    final vocabBank = VocabBank()
+      ..toggle('basics_1') // curated
+      ..saveLookup(lookup); // translated in-app
+    // Sort the lookup to the front so it's the first question asked.
+    final scores = PracticeScores()..recordIncorrect(lookup.id);
+
+    await tester.pumpWidget(_harness(vocabBank: vocabBank, scores: scores));
+
+    // One pool: both sources are in the same deck.
+    expect(find.text('1 of 2'), findsOneWidget);
+    expect(find.text('my flight was delayed'), findsOneWidget);
+
+    // And the auto-picked blank word makes a working exercise.
+    await tester.enterText(find.byType(TextField), 'retrasado');
+    await tester.tap(find.text('Check'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Correct!'), findsOneWidget);
+    expect(scores.scoreFor(lookup.id), 0); // -1 then +1
   });
 }

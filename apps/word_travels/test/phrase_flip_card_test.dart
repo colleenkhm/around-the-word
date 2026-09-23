@@ -97,6 +97,30 @@ void main() {
     },
   );
 
+  testWidgets('the English face sits in the vertical middle of the card', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_harness());
+
+    // Measured after flipping, since the English face is pre-rotated 180°
+    // and only lands in its true position once the card's own rotation
+    // cancels that out.
+    final card = tester.getRect(find.byKey(_targetFaceKey));
+    await tester.tap(find.byKey(_tapAreaKey));
+    await tester.pumpAndSettle();
+    expect(_showingEnglish(tester), isTrue);
+
+    final english = tester.getRect(find.text('Yes'));
+
+    expect(
+      english.center.dy,
+      moreOrLessEquals(card.center.dy, epsilon: 1.5),
+      reason: 'English should be vertically centered',
+    );
+    // Still left-aligned horizontally, flush with the target line above it.
+    expect(english.left, moreOrLessEquals(card.left, epsilon: 1));
+  });
+
   testWidgets('tapping the bookmark button does not flip the card', (
     tester,
   ) async {

@@ -7,6 +7,7 @@ import '../state/location_settings.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/phrase_flip_card.dart';
 import '../widgets/pt_app_bar.dart';
+import '../widgets/pt_search_field.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key, required this.category});
@@ -44,7 +45,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _SearchField(
+              PTSearchField(
                 controller: _searchController,
                 hint: 'Search ${widget.category.name.toLowerCase()}',
                 onChanged: (v) => setState(() => _query = v),
@@ -74,53 +75,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SearchField extends StatelessWidget {
-  const _SearchField({
-    required this.controller,
-    required this.hint,
-    required this.onChanged,
-  });
-
-  final TextEditingController controller;
-  final String hint;
-  final ValueChanged<String> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: PTColors.cardRow,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: PTColors.line),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.search, size: 18, color: PTColors.inkSoft),
-          const SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              onChanged: onChanged,
-              style: const TextStyle(
-                fontFamily: 'IBM Plex Sans',
-                fontSize: 13.5,
-              ),
-              decoration: InputDecoration(
-                hintText: hint,
-                hintStyle: const TextStyle(color: PTColors.inkSoft),
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

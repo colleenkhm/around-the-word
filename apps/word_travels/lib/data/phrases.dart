@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/category.dart';
+import '../models/language.dart';
 import '../models/phrase.dart';
 import '../models/place.dart';
+import '../state/vocab_bank.dart';
 import '../theme/pocket_talk_theme.dart';
 
 /// Mock Spanish content, seeded from the original UI mockup plus a few
@@ -15,6 +18,16 @@ const String targetLanguage = 'Spanish';
 /// Countries a user can pick. Country variants and country-specific phrases
 /// may only name countries from this list.
 const List<String> spanishCountries = ['Mexico', 'Spain', 'Chile', 'Argentina'];
+
+/// The language actively taught by this build of the app, built from the
+/// constants above. Live-translated lookups and their storage key off this
+/// rather than assuming Spanish, so a second [Language] can be added later
+/// without reworking them — see `lib/models/language.dart`.
+const Language currentLanguage = Language(
+  code: 'es',
+  name: targetLanguage,
+  countries: spanishCountries,
+);
 
 /// Kinds of setting a user can say they'll be in. Phrases may only name
 /// settings from this list.
@@ -419,7 +432,16 @@ const List<Phrase> allPhrases = [
   Phrase(id: 'health_17', categoryId: 'health', english: 'Is the water safe to drink?', target: '¿Se puede beber el agua?', pronunciation: 'seh PWEH-deh beh-BEHR el AH-gwah', blankWord: 'beber', environments: ['Rural', 'Mountain']),
 ];
 
-Category categoryById(String id) => categories.firstWhere((c) => c.id == id);
+/// The category a phrase belongs to, or null when it isn't in a curated
+/// one. A live-translated lookup carries `categoryId: 'lookup'`, which
+/// deliberately isn't in [categories] — adding it would put a bogus tile in
+/// the phrasebook grid — so callers have to handle its absence.
+Category? categoryById(String id) {
+  for (final c in categories) {
+    if (c.id == id) return c;
+  }
+  return null;
+}
 
 /// Everything a user in [place] should see: phrases for the whole language and
 /// any setting, plus those specific to their country and settings.
@@ -438,3 +460,11 @@ Phrase? phraseById(String id) {
   }
   return null;
 }
+
+/// Resolves an id to a phrase from either source: the curated set, or one
+/// the user looked up live and got auto-saved to their vocab bank. Ids
+/// saved before this app knew about live lookups (recently-viewed history,
+/// vocab bank) only ever matched [phraseById]; this widens that without
+/// changing behavior for anything that still does.
+Phrase? resolvePhrase(BuildContext context, String id) =>
+    phraseById(id) ?? context.read<VocabBank>().dynamicPhrase(id);

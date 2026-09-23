@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../data/phrases.dart';
 import '../models/phrase.dart';
 import '../state/location_settings.dart';
 import '../state/practice_scores.dart';
@@ -45,7 +46,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
     final scores = context.read<PracticeScores>();
     final deck = context
         .read<VocabBank>()
-        .savedPhrases
+        .savedPhrasesForLanguage(currentLanguage.code)
         .where((p) => p.appliesTo(place))
         .map((p) => p.forCountry(place.country))
         .toList()
