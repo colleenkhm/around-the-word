@@ -107,13 +107,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 hint: 'Search a word or phrase',
                 onChanged: (v) => setState(() => _query = v),
               ),
-              if (!searching && recent.isNotEmpty)
-                _RecentSection(
-                  phrases: recent,
-                  scrollController: _recentScrollController,
-                ),
-              const SizedBox(height: 16),
-              Expanded(child: searching ? _buildResults(place) : _buildGrid()),
+              const SizedBox(height: 10),
+              Expanded(
+                child: searching
+                    ? _buildResults(place)
+                    : _buildBrowse(recent),
+              ),
             ],
           ),
         ),
@@ -137,35 +136,46 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildGrid() {
-    return GridView.builder(
-      padding: const EdgeInsets.only(top: 4),
-      itemCount: categories.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 14,
-        crossAxisSpacing: 10,
-        childAspectRatio: 1.35,
-      ),
-      itemBuilder: (context, index) {
-        return _CategoryTile(
-          category: categories[index],
-          tiltDegrees: _tileTilts[index % _tileTilts.length],
-        );
-      },
+  Widget _buildBrowse(List<Phrase> recent) {
+    return CustomScrollView(
+      slivers: [
+        if (recent.isNotEmpty)
+          SliverToBoxAdapter(
+            child: _RecentSection(
+              phrases: recent,
+              scrollController: _recentScrollController,
+            ),
+          ),
+        SliverPadding(
+          padding: const EdgeInsets.only(top: 8),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 14,
+              crossAxisSpacing: 10,
+              childAspectRatio: 1.35,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => _CategoryTile(
+                category: categories[index],
+                tiltDegrees: _tileTilts[index % _tileTilts.length],
+              ),
+              childCount: categories.length,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
 
 /// A horizontal strip of the last few phrases the user actually looked at —
 /// the fastest way back to what they needed a minute ago, without re-typing
-/// a search or re-opening a category. Capped at [_maxCardHeight]: a
-/// country-flagged phrase's card can run taller than most (one row per
-/// country), and with no cap at all, an unlucky combination — a short
-/// screen plus a multi-country phrase as the most recent lookup — could
-/// push the strip tall enough to overflow the whole page. Ordinary cards
-/// (no variants) sit well under the cap and are never affected; a card
-/// that does hit it scrolls internally rather than however far it needs.
+/// a search or re-opening a category. Every card shares [_cardHeight]
+/// regardless of how much content it holds, so the strip reads as one row
+/// of even tiles rather than a jagged skyline; a card whose content would
+/// run taller (e.g. a country-flagged phrase, with one row per country)
+/// scrolls internally instead of growing past it.
 class _RecentSection extends StatelessWidget {
   const _RecentSection({required this.phrases, required this.scrollController});
 
@@ -177,7 +187,7 @@ class _RecentSection extends StatelessWidget {
   static const _primaryWidth = 250.0;
   static const _width = 210.0;
   static const _gap = 10.0;
-  static const _maxCardHeight = 190.0;
+  static const _cardHeight = 128.0;
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +202,7 @@ class _RecentSection extends StatelessWidget {
             controller: scrollController,
             scrollDirection: Axis.horizontal,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 for (var i = 0; i < phrases.length; i++) ...[
                   if (i > 0) const SizedBox(width: _gap),
@@ -204,21 +215,14 @@ class _RecentSection extends StatelessWidget {
                   SizedBox(
                     key: ValueKey(phrases[i].id),
                     width: i == 0 ? _primaryWidth : _width,
-                    // Ordinary cards (no country variants) are already
-                    // bounded to a couple of lines each, so they just hug
-                    // their own short content as before. Only a
-                    // country-flagged phrase — one row of content per
-                    // country, unbounded in count — gets capped, with the
-                    // rest reachable by an internal scroll rather than
-                    // risking the whole page overflowing around it.
-                    child: phrases[i].variesByCountry
-                        ? SizedBox(
-                            height: _maxCardHeight,
-                            child: SingleChildScrollView(
-                              child: PhraseFlipCard(phrase: phrases[i]),
-                            ),
-                          )
-                        : PhraseFlipCard(phrase: phrases[i]),
+                    height: _cardHeight,
+                    child: SingleChildScrollView(
+                      child: PhraseFlipCard(
+                        phrase: phrases[i],
+                        showNotches: false,
+                        centerEnglish: true,
+                      ),
+                    ),
                   ),
                 ],
               ],

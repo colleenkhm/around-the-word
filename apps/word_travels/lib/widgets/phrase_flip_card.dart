@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../data/phrases.dart';
 import '../models/phrase.dart';
 import '../state/location_settings.dart';
 import '../state/recent_phrases.dart';
@@ -14,9 +15,20 @@ import 'ticket_row.dart';
 /// target-language phrase and its English translation; the bookmark button
 /// saves it to the vocab bank independently of the flip state.
 class PhraseFlipCard extends StatefulWidget {
-  const PhraseFlipCard({super.key, required this.phrase});
+  const PhraseFlipCard({
+    super.key,
+    required this.phrase,
+    this.showNotches = true,
+    this.centerEnglish = false,
+  });
 
   final Phrase phrase;
+  final bool showNotches;
+
+  /// The recent strip's cards are narrow and uniform, where a centered
+  /// English translation reads better than the full-width rows elsewhere
+  /// (search results, category lists), which stay left-aligned.
+  final bool centerEnglish;
 
   @override
   State<PhraseFlipCard> createState() => _PhraseFlipCardState();
@@ -55,8 +67,11 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
 
     final country = context.select<LocationSettings, String?>((r) => r.country);
     final phrase = widget.phrase.forCountry(country);
+    final tint = categoryById(widget.phrase.categoryId).tint;
 
     return TicketRow(
+      tint: tint,
+      showNotches: widget.showNotches,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -104,7 +119,7 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
                                 maintainState: true,
                                 maintainAnimation: true,
                                 maintainSize: true,
-                                child: _TargetFace(phrase: phrase),
+                                child: _TargetFace(phrase: phrase, tint: tint),
                               ),
                               Visibility(
                                 key: const Key('phrase_flip_english_face'),
@@ -117,6 +132,7 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
                                   transform: Matrix4.identity()..rotateY(pi),
                                   child: _EnglishFace(
                                     text: widget.phrase.english,
+                                    center: widget.centerEnglish,
                                   ),
                                 ),
                               ),
@@ -157,9 +173,10 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
 }
 
 class _TargetFace extends StatelessWidget {
-  const _TargetFace({required this.phrase});
+  const _TargetFace({required this.phrase, required this.tint});
 
   final Phrase phrase;
+  final PTTint tint;
 
   @override
   Widget build(BuildContext context) {
@@ -181,6 +198,7 @@ class _TargetFace extends StatelessWidget {
                   _TargetLines(
                     target: v.target,
                     pronunciation: v.pronunciation,
+                    ink: tint.ink,
                   ),
                 ],
               ],
@@ -188,16 +206,22 @@ class _TargetFace extends StatelessWidget {
           : _TargetLines(
               target: phrase.target,
               pronunciation: phrase.pronunciation,
+              ink: tint.ink,
             ),
     );
   }
 }
 
 class _TargetLines extends StatelessWidget {
-  const _TargetLines({required this.target, required this.pronunciation});
+  const _TargetLines({
+    required this.target,
+    required this.pronunciation,
+    required this.ink,
+  });
 
   final String target;
   final String pronunciation;
+  final Color ink;
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +236,7 @@ class _TargetLines extends StatelessWidget {
       children: [
         Text(
           target,
-          style: ptHeading(size: 15.5, color: PTColors.postalInk),
+          style: ptHeading(size: 15.5, color: ink),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
@@ -260,18 +284,20 @@ class _CountryFlag extends StatelessWidget {
 }
 
 class _EnglishFace extends StatelessWidget {
-  const _EnglishFace({required this.text});
+  const _EnglishFace({required this.text, this.center = false});
 
   final String text;
+  final bool center;
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: center ? Alignment.center : Alignment.centerLeft,
       child: Padding(
         padding: const EdgeInsets.only(right: 18),
         child: Text(
           text,
+          textAlign: center ? TextAlign.center : TextAlign.left,
           style: ptBody(size: 14, weight: FontWeight.w500),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
