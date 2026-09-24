@@ -3,7 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 import 'package:pocket_talk/models/phrase.dart';
-import 'package:pocket_talk/state/location_settings.dart';
+import 'package:pocket_talk/state/trips.dart';
+import 'trip_support.dart';
 import 'package:pocket_talk/state/recent_phrases.dart';
 import 'package:pocket_talk/state/vocab_bank.dart';
 import 'package:pocket_talk/widgets/phrase_flip_card.dart';
@@ -23,11 +24,11 @@ const _targetFaceKey = Key('phrase_flip_target_face');
 const _englishFaceKey = Key('phrase_flip_english_face');
 const _tapAreaKey = Key('phrase_flip_tap_area');
 
-Widget _harness({RecentPhrases? recentPhrases}) {
+Widget _harness({RecentPhrases? recentPhrases, Trips? trips}) {
   return MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => VocabBank()),
-      ChangeNotifierProvider(create: (_) => LocationSettings()),
+      ChangeNotifierProvider.value(value: trips ?? tripsWithOne()),
       ChangeNotifierProvider(create: (_) => recentPhrases ?? RecentPhrases()),
     ],
     child: const MaterialApp(

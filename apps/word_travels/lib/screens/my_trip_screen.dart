@@ -7,11 +7,13 @@ import '../data/phrases.dart';
 import '../models/category.dart';
 import '../models/phrase.dart';
 import '../models/place.dart';
-import '../state/location_settings.dart';
+import '../models/trip.dart';
+import '../state/trips.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/phrase_flip_card.dart';
 import '../widgets/pt_app_bar.dart';
 import '../widgets/pt_search_field.dart';
+import '../widgets/place_picker_sheet.dart';
 import 'category_screen.dart';
 
 // Matches the mockup's .cat-tile.r1..r6 — a small alternating tilt per
@@ -22,16 +24,16 @@ const _tileTilts = [-0.6, 0.5, -0.4, 0.6, -0.5, 0.4];
 /// scoped to where the user is, browsable by category. Search here filters
 /// that set and nothing more — anything not in it is the Translate tab's
 /// job, which [onTranslate] hands off to.
-class PhrasebookScreen extends StatefulWidget {
-  const PhrasebookScreen({super.key, required this.onTranslate});
+class MyTripScreen extends StatefulWidget {
+  const MyTripScreen({super.key, required this.onTranslate});
 
   final ValueChanged<String> onTranslate;
 
   @override
-  State<PhrasebookScreen> createState() => _PhrasebookScreenState();
+  State<MyTripScreen> createState() => _MyTripScreenState();
 }
 
-class _PhrasebookScreenState extends State<PhrasebookScreen> {
+class _MyTripScreenState extends State<MyTripScreen> {
   final _searchController = TextEditingController();
   String _query = '';
 
@@ -50,10 +52,12 @@ class _PhrasebookScreenState extends State<PhrasebookScreen> {
   @override
   Widget build(BuildContext context) {
     final searching = _query.trim().isNotEmpty;
-    final place = context.watch<LocationSettings>().place;
+    final trips = context.watch<Trips>();
+    final trip = trips.active;
+    final place = trips.activePlace;
 
     return Scaffold(
-      appBar: const PTAppBar.mark(title: 'Phrasebook'),
+      appBar: const PTAppBar.mark(title: 'My trip'),
       body: SafeArea(
         top: false,
         child: Padding(
@@ -61,10 +65,31 @@ class _PhrasebookScreenState extends State<PhrasebookScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Ready when you are', style: ptHeading(size: 19)),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      trip?.name ?? 'Ready when you are',
+                      style: ptHeading(size: 19),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (trip != null)
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: PTColors.inkSoft,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () => showTripEditor(context, trip: trip),
+                      child: Text('Edit', style: ptMono(size: 11.5)),
+                    ),
+                ],
+              ),
               const SizedBox(height: 4),
               Text(
-                '${phrasesForPlace(place).length} phrases across ${categories.length} categories',
+                _subtitle(trip, place),
                 style: ptBody(size: 12.5, color: PTColors.inkSoft),
               ),
               const SizedBox(height: 14),
@@ -82,6 +107,18 @@ class _PhrasebookScreenState extends State<PhrasebookScreen> {
         ),
       ),
     );
+  }
+
+  /// Where this trip is going and how much of the phrasebook it opens up —
+  /// the settings are what narrow it, so it's worth saying which are on.
+  String _subtitle(Trip? trip, Place place) {
+    final count = phrasesForPlace(place).length;
+    final phrases = '$count phrases across ${categories.length} categories';
+    if (trip == null) return phrases;
+    final where = trip.environments.isEmpty
+        ? trip.country
+        : '${trip.country} · ${trip.environments.join(', ')}';
+    return '$where · $phrases';
   }
 
   Widget _buildResults(Place place) {
@@ -155,7 +192,7 @@ class _CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final place = context.watch<LocationSettings>().place;
+    final place = context.watch<Trips>().activePlace;
     final count = phrasesForCategory(category.id, place).length;
 
     return Transform.rotate(

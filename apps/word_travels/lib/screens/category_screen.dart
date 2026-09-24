@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../data/phrases.dart';
 import '../models/category.dart';
-import '../state/location_settings.dart';
+import '../state/trips.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/phrase_flip_card.dart';
 import '../widgets/pt_app_bar.dart';
@@ -30,7 +30,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final place = context.watch<LocationSettings>().place;
+    final place = context.watch<Trips>().activePlace;
     final q = _query.trim().toLowerCase();
     final phrases = phrasesForCategory(widget.category.id, place)
         .where((p) => q.isEmpty || p.matches(q, place.country))

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../data/phrases.dart';
-import '../state/location_settings.dart';
+import '../state/trips.dart';
 import '../theme/pocket_talk_theme.dart';
 import 'place_picker_sheet.dart';
 
@@ -59,13 +59,13 @@ class PTAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-/// Shows the language and chosen country; tapping opens the country and setting picker.
+/// Shows the trip you're on; tapping opens the trip picker.
 class _LanguageBadge extends StatelessWidget {
   const _LanguageBadge();
 
   @override
   Widget build(BuildContext context) {
-    final country = context.watch<LocationSettings>().country;
+    final trip = context.watch<Trips>().active;
 
     return Center(
       child: Material(
@@ -73,14 +73,14 @@ class _LanguageBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
         child: InkWell(
           borderRadius: BorderRadius.circular(999),
-          onTap: () => showPlacePicker(context),
+          onTap: () => showTripPicker(context),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(10, 4, 6, 4),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  country == null ? targetLanguage : '$targetLanguage · $country',
+                  trip == null ? targetLanguage : trip.name,
                   style: ptMono(size: 11, color: PTColors.tealInk),
                 ),
                 const Icon(

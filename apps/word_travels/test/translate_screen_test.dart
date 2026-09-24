@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 import 'package:pocket_talk/screens/translate_screen.dart';
-import 'package:pocket_talk/state/location_settings.dart';
+import 'trip_support.dart';
 import 'package:pocket_talk/state/recent_phrases.dart';
 import 'package:pocket_talk/state/vocab_bank.dart';
 import 'package:pocket_talk/widgets/phrase_flip_card.dart';
@@ -20,7 +20,7 @@ Widget _harness(RecentPhrases recentPhrases) {
   return MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => VocabBank()),
-      ChangeNotifierProvider(create: (_) => LocationSettings()),
+      ChangeNotifierProvider.value(value: tripsWithOne()),
       ChangeNotifierProvider.value(value: recentPhrases),
     ],
     child: const MaterialApp(home: TranslateScreen()),

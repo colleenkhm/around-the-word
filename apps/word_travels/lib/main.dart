@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'data/phrases.dart';
+import 'models/trip.dart';
 import 'screens/country_screen.dart';
 import 'screens/deck_screen.dart';
 import 'screens/environment_screen.dart';
-import 'screens/phrasebook_screen.dart';
+import 'screens/my_trip_screen.dart';
 import 'screens/translate_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'services/translation_service.dart';
-import 'state/location_settings.dart';
+import 'state/trips.dart';
 import 'state/practice_scores.dart';
 import 'state/recent_phrases.dart';
 import 'state/vocab_bank.dart';
@@ -30,7 +32,7 @@ class PocketTalkApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => VocabBank()..load()),
-        ChangeNotifierProvider(create: (_) => LocationSettings()..load()),
+        ChangeNotifierProvider(create: (_) => Trips()..load()),
         ChangeNotifierProvider(create: (_) => RecentPhrases()..load()),
         ChangeNotifierProvider(create: (_) => PracticeScores()..load()),
         Provider<TranslationProvider>.value(value: activeTranslationProvider),
@@ -45,8 +47,8 @@ class PocketTalkApp extends StatelessWidget {
   }
 }
 
-/// First launch: welcome splash, then pick a country and the kinds of setting
-/// there. After that, straight to the app.
+/// First launch: welcome splash, then set up a first trip — where you're
+/// going and what it'll be like there. After that, straight to the app.
 class AppEntry extends StatefulWidget {
   const AppEntry({super.key});
 
@@ -56,6 +58,11 @@ class AppEntry extends StatefulWidget {
 
 class _AppEntryState extends State<AppEntry> {
   bool? _seenWelcome;
+  bool _migrationChecked = false;
+
+  /// The destination chosen but not yet committed — the trip isn't created
+  /// until its settings are picked too.
+  String? _draftCountry;
 
   @override
   void initState() {
@@ -74,20 +81,59 @@ class _AppEntryState extends State<AppEntry> {
     setState(() => _seenWelcome = true);
   }
 
+  /// Carries a pre-trips install over: the country and settings that used to
+  /// be global become the first trip, and everything already saved becomes
+  /// its deck, so nobody is asked to set up again or loses their vocabulary.
+  void _migrateIfNeeded() {
+    final trip = context.read<Trips>().migrateLegacySettings(
+      currentLanguage.code,
+    );
+    if (trip != null) context.read<VocabBank>().adoptLegacySaves(trip.id);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final location = context.watch<LocationSettings>();
-    if (_seenWelcome == null || !location.loaded) {
+    final trips = context.watch<Trips>();
+    final bank = context.watch<VocabBank>();
+    if (_seenWelcome == null || !trips.loaded || !bank.loaded) {
       return const Scaffold(body: SizedBox.shrink());
     }
+
+    // Both stores are up; check for an older install exactly once. Deferred
+    // a frame because it notifies listeners, which can't happen mid-build.
+    if (!_migrationChecked) {
+      _migrationChecked = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _migrateIfNeeded();
+        // Rebuild unconditionally: with nothing to carry over, migrating
+        // notifies no one, and this gate would never lift.
+        setState(() {});
+      });
+      return const Scaffold(body: SizedBox.shrink());
+    }
+
     if (!_seenWelcome!) {
       return WelcomeScreen(onGetStarted: _completeWelcome);
     }
-    if (location.country == null) {
-      return const CountryScreen();
-    }
-    if (location.environments == null) {
-      return const EnvironmentScreen();
+    if (!trips.hasTrip) {
+      if (_draftCountry == null) {
+        return CountryScreen(
+          onSelected: (country) => setState(() => _draftCountry = country),
+        );
+      }
+      return EnvironmentScreen(
+        onDone: (environments) {
+          context.read<Trips>().add(
+            Trip.create(
+              languageCode: currentLanguage.code,
+              country: _draftCountry!,
+              environments: environments,
+            ),
+          );
+          setState(() => _draftCountry = null);
+        },
+      );
     }
     return const RootScaffold();
   }
@@ -125,7 +171,7 @@ class _RootScaffoldState extends State<RootScaffold> {
     PTTabItem(
       icon: Icons.menu_book_outlined,
       selectedIcon: Icons.menu_book,
-      label: 'Phrasebook',
+      label: 'My trip',
     ),
     PTTabItem(
       icon: Icons.school_outlined,
@@ -148,7 +194,7 @@ class _RootScaffoldState extends State<RootScaffold> {
         index: _tab,
         children: [
           TranslateScreen(incomingQuery: _translateQuery),
-          PhrasebookScreen(onTranslate: _translate),
+          MyTripScreen(onTranslate: _translate),
           const DeckScreen(),
         ],
       ),

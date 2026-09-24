@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../data/phrases.dart';
-import '../state/location_settings.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/place_picker_sheet.dart';
 
-/// First-launch step after the welcome splash: pick the country the user is
-/// using the language in. Required — everything after this is filtered by it.
+/// First step of setting up a trip: pick its destination. Required —
+/// everything the trip shows is filtered by it.
 class CountryScreen extends StatefulWidget {
-  const CountryScreen({super.key});
+  const CountryScreen({super.key, required this.onSelected});
+
+  final ValueChanged<String> onSelected;
 
   @override
   State<CountryScreen> createState() => _CountryScreenState();
@@ -62,7 +62,7 @@ class _CountryScreenState extends State<CountryScreen> {
                   ),
                   onPressed: _choice == null
                       ? null
-                      : () => context.read<LocationSettings>().selectCountry(_choice!),
+                      : () => widget.onSelected(_choice!),
                   child: const Text('Continue'),
                 ),
               ),

@@ -8,7 +8,7 @@ import '../data/phrases.dart';
 import '../models/phrase.dart';
 import '../models/place.dart';
 import '../services/translation_service.dart';
-import '../state/location_settings.dart';
+import '../state/trips.dart';
 import '../state/recent_phrases.dart';
 import '../state/vocab_bank.dart';
 import '../theme/pocket_talk_theme.dart';
@@ -119,7 +119,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
     if (trimmed.length < 2) return;
     _lookupDebounce = Timer(_lookupDebounceDelay, () {
       if (!mounted) return;
-      final place = context.read<LocationSettings>().place;
+      final place = context.read<Trips>().activePlace;
       // A curated match beats a live translation — don't bother looking one
       // up if the search already found something.
       if (_searchResults(place).isNotEmpty) return;
@@ -145,8 +145,10 @@ class _TranslateScreenState extends State<TranslateScreen> {
         target: target,
         language: currentLanguage,
       );
-      // Looking it up is the save — no extra tap.
-      context.read<VocabBank>().saveLookup(phrase);
+      // Looking it up is the save — no extra tap. It lands in the deck for
+      // the trip they're on.
+      final tripId = context.read<Trips>().active?.id;
+      if (tripId != null) context.read<VocabBank>().saveLookup(phrase, tripId);
       context.read<RecentPhrases>().recordView(phrase.id);
       setState(() => _lookupResult = phrase);
     } catch (_) {
@@ -183,7 +185,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
   @override
   Widget build(BuildContext context) {
     final searching = _query.trim().isNotEmpty;
-    final place = context.watch<LocationSettings>().place;
+    final place = context.watch<Trips>().activePlace;
     final recent = _recentPhrases(place);
 
     return Scaffold(
@@ -318,7 +320,10 @@ class _LiveTranslationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final saved = context.select<VocabBank, bool>((bank) => bank.isSaved(phrase.id));
+    final tripId = context.select<Trips, String?>((t) => t.active?.id);
+    final saved = context.select<VocabBank, bool>(
+      (bank) => tripId != null && bank.isInTrip(phrase.id, tripId),
+    );
     const tint = PTTints.basics;
 
     return TicketRow(
@@ -346,7 +351,7 @@ class _LiveTranslationCard extends StatelessWidget {
           IconButton(
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
-            onPressed: () => context.read<VocabBank>().toggle(phrase.id),
+            onPressed: tripId == null ? null : () => context.read<VocabBank>().toggle(phrase.id, tripId),
             icon: Icon(
               saved ? Icons.bookmark : Icons.bookmark_border,
               color: saved ? PTColors.mustard : PTColors.inkSoft,

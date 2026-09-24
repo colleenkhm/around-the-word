@@ -42,6 +42,11 @@ class PTColors {
   static const clay = Color(0xFF9A5B3C);
   static const clayInk = Color(0xFF3D2113);
   static const clayTint = Color(0xFFF1E4DC);
+  // The one cool red in the set — the other warm reds (postal, clay) were
+  // already spoken for when a ninth category arrived.
+  static const rose = Color(0xFFA8556B);
+  static const roseInk = Color(0xFF3D1A24);
+  static const roseTint = Color(0xFFF2E1E7);
 }
 
 /// One category's tile tint — a soft background plus the ink color that
@@ -63,6 +68,7 @@ class PTTints {
   static const shopping = PTTint(PTColors.mustardTint, PTColors.mustardInk);
   static const lodging = PTTint(PTColors.skyTint, PTColors.skyInk);
   static const health = PTTint(PTColors.clayTint, PTColors.clayInk);
+  static const activities = PTTint(PTColors.roseTint, PTColors.roseInk);
 }
 
 ThemeData buildPocketTalkTheme() {

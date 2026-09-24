@@ -22,17 +22,43 @@ network call is translation (see below).
 | `lib/data/phrases.dart` | The curated phrase set (`allPhrases`), categories, selectable countries/settings, and `currentLanguage` |
 | `lib/models/` | `Phrase`, `Language`, `Category`, `Place` |
 | `lib/state/` | `ChangeNotifier`s, registered in `main.dart` via `provider`, each persisting to `shared_preferences` |
+| `lib/models/trip.dart` | A trip: name, destination, settings — the container decks hang off |
 | `lib/services/` | `TranslationProvider` and its implementations |
 | `lib/screens/`, `lib/widgets/` | UI |
 | `lib/theme/pocket_talk_theme.dart` | Palette (`PTColors`, `PTTints`) and type ramp (`ptHeading`, `ptBody`, `ptMono`) |
 
-State objects: `VocabBank` (saved phrases), `PracticeScores` (per-phrase
-running score, weakest drilled first), `RecentPhrases` (quick-access strip),
-`LocationSettings` (country + settings, chosen at onboarding).
+State objects: `VocabBank` (deck membership plus looked-up phrase content),
+`PracticeScores` (per-phrase running score, weakest drilled first),
+`RecentPhrases` (quick-access strip), `Trips` (the trips and which is
+active).
 
 Use the theme helpers rather than raw `Color`s or `TextStyle`s. `TicketRow`,
 `PhraseFlipCard` and `PTSearchField` are shared — build on them rather than
 restyling a copy per screen.
+
+### Trips
+
+A **trip** is the container for vocabulary: a name, a destination country and
+the settings (urban, coastal, ...) you'll be in. Those live on the trip
+rather than in global settings because they describe a journey, not the
+language — so two trips to different countries can show different wording
+(`carro` in Mexico, `auto` in Chile) without one overwriting the other.
+
+`Trips` (`lib/state/trips.dart`) owns the list and which one is active, and
+exposes `activePlace`. Everything downstream still filters by a `Place`, so
+only the *source* of it moved.
+
+Decks are membership, not copies: `VocabBank._decks` maps a phrase id to the
+set of trips holding it. Looking the same phrase up for a second trip adds
+membership rather than a duplicate, so its practice score — kept by phrase id
+in `PracticeScores` — carries over instead of resetting. A phrase is saved
+exactly when it belongs to at least one deck, so deleting a trip removes only
+what was unique to it.
+
+An install from before trips is carried over on first launch:
+`Trips.migrateLegacySettings` turns the old global country and settings into
+a first trip, and `VocabBank.adoptLegacySaves` puts everything already saved
+into it.
 
 ### Tabs
 
@@ -42,16 +68,19 @@ its state while you're on another:
 1. **Translate** (`translate_screen.dart`) — the landing tab. Looks anything
    up, shows the recently-looked-up strip. A curated phrase wins when one
    matches the query, since it has a real pronunciation and a hand-picked
-   practice word; everything else is translated live.
-2. **Phrasebook** (`phrasebook_screen.dart`) — the curated set by category,
-   scoped to the user's country and settings. Its search filters that set
-   only and never calls the API; an unmatched search offers to hand the
-   query to Translate, via the `onTranslate` callback `RootScaffold` passes
-   down and `TranslateScreen.incomingQuery` picks up.
-3. **Practice** (`deck_screen.dart`) — a start card showing the deck's size
-   and how much of it needs work, then the deck itself. The session
-   (`practice_screen.dart`) is a pushed screen rather than inline, because
-   the deck list below it shows every answer.
+   practice word; everything else is translated live and saved to the active
+   trip's deck.
+2. **My trip** (`my_trip_screen.dart`) — the active trip's destination and
+   settings, then the curated set by category scoped to them. Its search
+   filters that set only and never calls the API; an unmatched search offers
+   to hand the query to Translate, via the `onTranslate` callback
+   `RootScaffold` passes down and `TranslateScreen.incomingQuery` picks up.
+3. **Practice** (`deck_screen.dart`) — with one trip it opens straight into
+   that deck; with several it lists a deck per trip, plus an umbrella deck
+   per language that two or more trips share. The session
+   (`practice_screen.dart`) takes its deck as a parameter and is a pushed
+   screen rather than inline, because the deck list below it shows every
+   answer.
 
 ## Phrases come from two places
 
@@ -118,26 +147,26 @@ match, so ordinary phrasebook searching costs nothing.
 ## Adding a second language
 
 The data model is ready for this; the app around it is not yet. Already done:
-`Language` exists, every `Phrase` carries a `languageCode`,
-`VocabBank.savedPhrasesForLanguage()` filters on it, looked-up ids are
-namespaced by language, and the translation call takes `from`/`to` rather
-than assuming Spanish.
+`Language` exists, every `Phrase` and every `Trip` carries a `languageCode`,
+`Trips.tripsForLanguage()` groups by it (which is what decides whether an
+umbrella practice deck is offered), looked-up ids are namespaced by language,
+and the translation call takes `from`/`to` rather than assuming Spanish.
 
 Still hardcoded, and what a second language would need:
 
 1. `currentLanguage` in `lib/data/phrases.dart` is a `const`. It needs to
-   become selectable state (probably a `ChangeNotifier` alongside
-   `LocationSettings`), and the handful of `currentLanguage` reads point at
-   that instead.
-2. `targetLanguage` and `spanishCountries` are loose constants used by
-   `country_screen.dart`, `place_picker_sheet.dart` and `pt_app_bar.dart`.
-   They'd be read off the active `Language` (which already has `name` and
-   `countries` fields for this).
+   become selectable state (probably alongside `Trips`, since a trip already
+   names the language it teaches), and the handful of `currentLanguage` reads
+   point at that instead.
+2. `targetLanguage` and `spanishCountries` are loose constants still used by
+   `country_screen.dart` and `pt_app_bar.dart`. They'd be read off the
+   active `Language`, which already has `name` and `countries` fields for
+   this — the trip editor already reads `currentLanguage.countries`.
 3. `allPhrases` is Spanish-only and its entries rely on the `languageCode`
    default of `'es'`. Curated content for another language would need to set
    it explicitly.
-4. `RecentPhrases` is not language-scoped — it's a flat id list, so the
-   quick-access strip would mix languages until it filters too.
+4. `RecentPhrases` is not language- or trip-scoped — it's a flat id list, so
+   the quick-access strip would mix languages until it filters too.
 5. There's no language-switcher UI at all.
 
 ## Tests

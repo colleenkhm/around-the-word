@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:pocket_talk/models/phrase.dart';
 import 'package:pocket_talk/screens/translate_screen.dart';
 import 'package:pocket_talk/services/translation_service.dart';
-import 'package:pocket_talk/state/location_settings.dart';
+import 'package:pocket_talk/state/trips.dart';
+import 'trip_support.dart';
 import 'package:pocket_talk/state/recent_phrases.dart';
 import 'package:pocket_talk/state/vocab_bank.dart';
 import 'package:pocket_talk/widgets/ticket_row.dart';
@@ -41,11 +42,12 @@ Widget _harness(
   _FakeTranslationProvider translator, {
   VocabBank? vocabBank,
   String? incomingQuery,
+  Trips? trips,
 }) {
   return MultiProvider(
     providers: [
       ChangeNotifierProvider.value(value: vocabBank ?? VocabBank()),
-      ChangeNotifierProvider(create: (_) => LocationSettings()),
+      ChangeNotifierProvider.value(value: trips ?? tripsWithOne()),
       ChangeNotifierProvider(create: (_) => RecentPhrases()),
       Provider<TranslationProvider>.value(value: translator),
     ],
@@ -108,8 +110,6 @@ void main() {
     expect(saved.english, 'my flight was delayed');
     expect(saved.target, 'mi vuelo se ha retrasado');
     expect(saved.languageCode, 'es');
-    expect(vocabBank.savedPhrasesForLanguage('es'), hasLength(1));
-    expect(vocabBank.savedPhrasesForLanguage('fr'), isEmpty);
   });
 
   testWidgets('a curated match is used instead of hitting the API', (

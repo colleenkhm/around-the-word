@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../data/phrases.dart';
-import '../state/location_settings.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/place_picker_sheet.dart';
 
-/// First-launch step after choosing a country: what kinds of setting the user
-/// will be in. Pick any number, or none — this only adds vocab, it never
-/// hides the language-wide basics.
+/// Second step of setting up a trip: what kinds of setting it'll involve.
+/// Pick any number, or none — this only adds vocab, it never hides the
+/// language-wide basics.
 class EnvironmentScreen extends StatefulWidget {
-  const EnvironmentScreen({super.key});
+  const EnvironmentScreen({super.key, required this.onDone});
+
+  final ValueChanged<Set<String>> onDone;
 
   @override
   State<EnvironmentScreen> createState() => _EnvironmentScreenState();
@@ -64,7 +64,7 @@ class _EnvironmentScreenState extends State<EnvironmentScreen> {
                       fontSize: 14.5,
                     ),
                   ),
-                  onPressed: () => context.read<LocationSettings>().setEnvironments(_choices),
+                  onPressed: () => widget.onDone(_choices),
                   child: Text(_choices.isEmpty ? 'Skip' : 'Continue'),
                 ),
               ),

@@ -31,11 +31,13 @@ void main() {
     expect(find.text('Translate a word or phrase'), findsOneWidget);
     expect(find.textContaining('Type anything'), findsOneWidget);
 
-    // The curated phrasebook is one tab over.
-    await tester.tap(find.text('Phrasebook'));
+    // The curated phrasebook is one tab over, now headed by the trip that
+    // was just set up.
+    await tester.tap(find.text('My trip'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Ready when you are'), findsOneWidget);
+    expect(find.textContaining('Mexico'), findsWidgets);
+    expect(find.textContaining('Coastal'), findsOneWidget);
     expect(find.text('Food & drink'), findsOneWidget);
   });
 }

@@ -5,10 +5,16 @@ import 'package:provider/provider.dart';
 import 'package:pocket_talk/data/phrases.dart';
 import 'package:pocket_talk/models/phrase.dart';
 import 'package:pocket_talk/screens/practice_screen.dart';
-import 'package:pocket_talk/state/location_settings.dart';
+import 'package:pocket_talk/state/trips.dart';
+import 'trip_support.dart';
 import 'package:pocket_talk/state/practice_scores.dart';
 import 'package:pocket_talk/state/vocab_bank.dart';
 
+late Trips _trips;
+late String _tripId;
+
+/// Builds the deck the way the practice tab does — everything saved to the
+/// trip — then hands it to the screen.
 Widget _harness({
   required VocabBank vocabBank,
   required PracticeScores scores,
@@ -16,21 +22,31 @@ Widget _harness({
   return MultiProvider(
     providers: [
       ChangeNotifierProvider.value(value: vocabBank),
-      ChangeNotifierProvider(create: (_) => LocationSettings()),
+      ChangeNotifierProvider.value(value: _trips),
       ChangeNotifierProvider.value(value: scores),
     ],
-    child: const MaterialApp(home: PracticeScreen()),
+    child: MaterialApp(
+      home: PracticeScreen(
+        phrases: vocabBank.deckFor(_tripId),
+        place: _trips.activePlace,
+      ),
+    ),
   );
 }
 
 void main() {
+  setUp(() {
+    _trips = tripsWithOne();
+    _tripId = onlyTripId(_trips);
+  });
+
   testWidgets('the deck starts with the lowest-scoring phrase', (
     tester,
   ) async {
     final vocabBank = VocabBank()
-      ..toggle('basics_1') // Please
-      ..toggle('basics_2') // Thank you
-      ..toggle('basics_3'); // Good morning
+      ..toggle('basics_1', _tripId) // Please
+      ..toggle('basics_2', _tripId) // Thank you
+      ..toggle('basics_3', _tripId); // Good morning
     final scores = PracticeScores()
       ..recordCorrect('basics_1')
       ..recordCorrect('basics_1')
@@ -49,7 +65,7 @@ void main() {
   });
 
   testWidgets('a correct answer adds a point to that phrase', (tester) async {
-    final vocabBank = VocabBank()..toggle('basics_1'); // Please / Por favor
+    final vocabBank = VocabBank()..toggle('basics_1', _tripId); // Please / Por favor
     final scores = PracticeScores();
     await tester.pumpWidget(_harness(vocabBank: vocabBank, scores: scores));
 
@@ -64,7 +80,7 @@ void main() {
   testWidgets('a wrong answer subtracts a point from that phrase', (
     tester,
   ) async {
-    final vocabBank = VocabBank()..toggle('basics_1');
+    final vocabBank = VocabBank()..toggle('basics_1', _tripId);
     final scores = PracticeScores();
     await tester.pumpWidget(_harness(vocabBank: vocabBank, scores: scores));
 
@@ -84,8 +100,8 @@ void main() {
       language: currentLanguage,
     );
     final vocabBank = VocabBank()
-      ..toggle('basics_1') // curated
-      ..saveLookup(lookup); // translated in-app
+      ..toggle('basics_1', _tripId) // curated
+      ..saveLookup(lookup, _tripId); // translated in-app
     // Sort the lookup to the front so it's the first question asked.
     final scores = PracticeScores()..recordIncorrect(lookup.id);
 

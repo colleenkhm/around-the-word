@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
-import 'package:pocket_talk/screens/phrasebook_screen.dart';
-import 'package:pocket_talk/state/location_settings.dart';
+import 'package:pocket_talk/screens/my_trip_screen.dart';
+import 'trip_support.dart';
 import 'package:pocket_talk/state/recent_phrases.dart';
 import 'package:pocket_talk/state/vocab_bank.dart';
 
@@ -11,11 +11,11 @@ Widget _harness({ValueChanged<String>? onTranslate}) {
   return MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => VocabBank()),
-      ChangeNotifierProvider(create: (_) => LocationSettings()),
+      ChangeNotifierProvider.value(value: tripsWithOne()),
       ChangeNotifierProvider(create: (_) => RecentPhrases()),
     ],
     child: MaterialApp(
-      home: PhrasebookScreen(onTranslate: onTranslate ?? (_) {}),
+      home: MyTripScreen(onTranslate: onTranslate ?? (_) {}),
     ),
   );
 }

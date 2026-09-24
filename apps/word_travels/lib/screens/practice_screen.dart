@@ -1,21 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../data/phrases.dart';
 import '../models/phrase.dart';
-import '../state/location_settings.dart';
+import '../models/place.dart';
 import '../state/practice_scores.dart';
-import '../state/vocab_bank.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/pt_app_bar.dart';
 
 enum _Result { unanswered, correct, incorrect }
 
-/// Fill-in-the-blank practice, drawn only from what's in the vocab bank.
-/// One phrase at a time: English prompt, target sentence with the blank
-/// word missing, type the answer, check, move on.
+/// Fill-in-the-blank practice over one deck. One phrase at a time: English
+/// prompt, target sentence with the blank word missing, type the answer,
+/// check, move on.
+///
+/// The deck is handed in rather than read from the vocab bank, so drilling
+/// one trip and drilling a whole language's worth of trips are the same
+/// screen. [place] is the destination whose wording to quiz on — a phrase
+/// that varies by country is asked the way that trip would say it.
 class PracticeScreen extends StatefulWidget {
-  const PracticeScreen({super.key});
+  const PracticeScreen({
+    super.key,
+    required this.phrases,
+    required this.place,
+    this.title = 'Practice',
+  });
+
+  final List<Phrase> phrases;
+  final Place place;
+  final String title;
 
   @override
   State<PracticeScreen> createState() => _PracticeScreenState();
@@ -35,20 +47,16 @@ class _PracticeScreenState extends State<PracticeScreen> {
     _deck = _newDeck();
   }
 
-  /// Saved phrases that apply to the user's place, worded for their
-  /// country, weakest first: sorted by practice score ascending (a phrase
-  /// missed more than it's been gotten right sits at negative, and sorts
-  /// ahead of one that's rarely missed), so drilling time goes toward what
-  /// actually still needs it. Shuffled first so phrases sharing a score
-  /// (most starting out at 0) don't always land in the same order.
+  /// The deck worded for its destination, weakest first: sorted by practice
+  /// score ascending (a phrase missed more than it's been gotten right sits
+  /// at negative, and sorts ahead of one that's rarely missed), so drilling
+  /// time goes toward what actually still needs it. Shuffled first so
+  /// phrases sharing a score (most starting out at 0) don't always land in
+  /// the same order.
   List<Phrase> _newDeck() {
-    final place = context.read<LocationSettings>().place;
     final scores = context.read<PracticeScores>();
-    final deck = context
-        .read<VocabBank>()
-        .savedPhrasesForLanguage(currentLanguage.code)
-        .where((p) => p.appliesTo(place))
-        .map((p) => p.forCountry(place.country))
+    final deck = widget.phrases
+        .map((p) => p.forCountry(widget.place.country))
         .toList()
       ..shuffle();
     deck.sort(
@@ -105,7 +113,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PTAppBar.back(title: 'Practice'),
+      appBar: PTAppBar.back(title: widget.title),
       body: SafeArea(
         top: false,
         child: Padding(

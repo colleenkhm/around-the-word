@@ -82,6 +82,12 @@ const List<Category> categories = [
     tint: PTTints.lodging,
   ),
   Category(
+    id: 'activities',
+    name: 'Activities',
+    icon: Icons.explore_outlined,
+    tint: PTTints.activities,
+  ),
+  Category(
     id: 'health',
     name: 'Health',
     icon: Icons.medical_services_outlined,
@@ -142,6 +148,7 @@ const List<Phrase> allPhrases = [
   Phrase(id: 'food_8', categoryId: 'food', english: 'How much is this?', target: '¿Cuánto cuesta esto?', pronunciation: 'KWAHN-toh KWEHS-tah EHS-toh', blankWord: 'cuesta'),
   Phrase(id: 'food_21', categoryId: 'food', english: 'Is the tip included?', target: '¿Está incluida la propina?', pronunciation: 'ehs-TAH een-kloo-EE-dah lah proh-PEE-nah', blankWord: 'propina'),
   Phrase(id: 'food_20', categoryId: 'food', english: 'Do you take cards?', target: '¿Aceptan tarjetas?', pronunciation: 'ah-SEHP-tahn tar-HEH-tahs', blankWord: 'tarjetas'),
+  Phrase(id: 'food_25', categoryId: 'food', english: 'Do you only take cash?', target: '¿Solo aceptan efectivo?', pronunciation: 'SOH-loh ah-SEHP-tahn eh-fehk-TEE-voh', blankWord: 'efectivo', environments: ['Rural']),
 
   // Transportation
   Phrase(id: 'transportation_6', categoryId: 'transportation', english: 'Where is the bus stop?', target: '¿Dónde está la parada de autobús?', pronunciation: 'DOHN-deh ehs-TAH lah pah-RAH-dah deh ow-toh-BOOS', blankWord: 'parada'),
@@ -182,6 +189,8 @@ const List<Phrase> allPhrases = [
   Phrase(id: 'transportation_8', categoryId: 'transportation', english: 'Round trip, please', target: 'Ida y vuelta, por favor', pronunciation: 'EE-dah ee VWEHL-tah por fah-VOR', blankWord: 'vuelta'),
   Phrase(id: 'transportation_7', categoryId: 'transportation', english: 'What time does the train leave?', target: '¿A qué hora sale el tren?', pronunciation: 'ah keh OH-rah SAH-leh el trehn', blankWord: 'sale'),
   Phrase(id: 'transportation_21', categoryId: 'transportation', english: 'Is there a night bus?', target: '¿Hay autobús nocturno?', pronunciation: 'eye ow-toh-BOOS nohk-TOOR-noh', blankWord: 'nocturno', environments: ['Urban']),
+  Phrase(id: 'transportation_29', categoryId: 'transportation', english: 'Which stop do I get off at?', target: '¿En qué parada me bajo?', pronunciation: 'ehn keh pah-RAH-dah meh BAH-hoh', blankWord: 'parada', environments: ['Urban']),
+  Phrase(id: 'transportation_28', categoryId: 'transportation', english: 'What time does the last bus leave?', target: '¿A qué hora sale el último autobús?', pronunciation: 'ah keh OH-rah SAH-leh el OOL-tee-moh ow-toh-BOOS', blankWord: 'último', environments: ['Rural']),
   Phrase(id: 'transportation_22', categoryId: 'transportation', english: 'Is there a bus to the village?', target: '¿Hay un autobús al pueblo?', pronunciation: 'eye oon ow-toh-BOOS al PWEH-bloh', blankWord: 'pueblo', environments: ['Rural']),
   Phrase(
     id: 'transportation_3',
@@ -254,6 +263,7 @@ const List<Phrase> allPhrases = [
   Phrase(id: 'transportation_24', categoryId: 'transportation', english: 'What time does the boat leave?', target: '¿A qué hora sale el barco?', pronunciation: 'ah keh OH-rah SAH-leh el BAR-koh', blankWord: 'barco', environments: ['Coastal']),
   Phrase(id: 'transportation_25', categoryId: 'transportation', english: 'Is the trail open?', target: '¿Está abierto el sendero?', pronunciation: 'ehs-TAH ah-bee-EHR-toh el sehn-DEH-roh', blankWord: 'sendero', environments: ['Mountain', 'Rural']),
   Phrase(id: 'transportation_26', categoryId: 'transportation', english: 'How long is the hike?', target: '¿Cuánto dura la caminata?', pronunciation: 'KWAHN-toh DOO-rah lah kah-mee-NAH-tah', blankWord: 'caminata', environments: ['Mountain', 'Rural']),
+  Phrase(id: 'transportation_27', categoryId: 'transportation', english: 'Do I need snow chains?', target: '¿Necesito cadenas para la nieve?', pronunciation: 'neh-seh-SEE-toh kah-DEH-nahs PAH-rah lah nee-EH-veh', blankWord: 'cadenas', environments: ['Mountain']),
   Phrase(id: 'transportation_16', categoryId: 'transportation', english: 'Where is the departure gate?', target: '¿Dónde está la puerta de embarque?', pronunciation: 'DOHN-deh ehs-TAH lah PWEHR-tah deh ehm-BAR-keh', blankWord: 'embarque'),
   Phrase(id: 'transportation_17', categoryId: 'transportation', english: 'I missed my flight', target: 'Perdí mi vuelo', pronunciation: 'pehr-DEE mee VWEH-loh', blankWord: 'vuelo'),
   Phrase(id: 'transportation_18', categoryId: 'transportation', english: 'Where is my luggage?', target: '¿Dónde está mi equipaje?', pronunciation: 'DOHN-deh ehs-TAH mee eh-kee-PAH-heh', blankWord: 'equipaje'),
@@ -269,6 +279,7 @@ const List<Phrase> allPhrases = [
   Phrase(id: 'conversation_11', categoryId: 'conversation', english: 'Where are you from?', target: '¿De dónde eres?', pronunciation: 'deh DOHN-deh EH-rehs', blankWord: 'eres'),
   Phrase(id: 'conversation_12', categoryId: 'conversation', english: "I'm from the United States", target: 'Soy de Estados Unidos', pronunciation: 'soy deh ehs-TAH-dohs oo-NEE-dohs', blankWord: 'Estados'),
   Phrase(id: 'conversation_26', categoryId: 'conversation', english: 'Is this neighborhood safe?', target: '¿Es seguro este barrio?', pronunciation: 'ehs seh-GOO-roh EHS-teh BAH-rree-oh', blankWord: 'barrio', environments: ['Urban']),
+  Phrase(id: 'conversation_27', categoryId: 'conversation', english: 'What time is high tide?', target: '¿A qué hora es la marea alta?', pronunciation: 'ah keh OH-rah ehs lah mah-REH-ah AHL-tah', blankWord: 'marea', environments: ['Coastal']),
   Phrase(id: 'conversation_8', categoryId: 'conversation', english: 'Do you speak English?', target: '¿Habla inglés?', pronunciation: 'AH-blah een-GLEHS', blankWord: 'inglés'),
   Phrase(id: 'conversation_9', categoryId: 'conversation', english: 'I speak a little Spanish', target: 'Hablo un poco de español', pronunciation: 'AH-bloh oon POH-koh deh ehs-pah-NYOL', blankWord: 'poco'),
   Phrase(id: 'conversation_2', categoryId: 'conversation', english: "I don't understand", target: 'No entiendo', pronunciation: 'noh en-tee-EHN-doh', blankWord: 'entiendo'),
@@ -324,6 +335,9 @@ const List<Phrase> allPhrases = [
     ],
   ),
   Phrase(id: 'emergencies_16', categoryId: 'emergencies', english: 'Is it safe to swim here?', target: '¿Es seguro nadar aquí?', pronunciation: 'ehs seh-GOO-roh nah-DAR ah-KEE', blankWord: 'nadar', environments: ['Coastal']),
+  Phrase(id: 'emergencies_18', categoryId: 'emergencies', english: 'Are there strong currents?', target: '¿Hay corrientes fuertes?', pronunciation: 'eye koh-rree-EHN-tehs FWEHR-tehs', blankWord: 'corrientes', environments: ['Coastal']),
+  Phrase(id: 'emergencies_19', categoryId: 'emergencies', english: 'Is there phone signal on the trail?', target: '¿Hay señal en el sendero?', pronunciation: 'eye seh-NYAHL ehn el sehn-DEH-roh', blankWord: 'señal', environments: ['Mountain', 'Rural']),
+  Phrase(id: 'emergencies_20', categoryId: 'emergencies', english: 'Are there pickpockets around here?', target: '¿Hay carteristas por aquí?', pronunciation: 'eye kar-teh-REES-tahs por ah-KEE', blankWord: 'carteristas', environments: ['Urban']),
   Phrase(
     id: 'emergencies_17',
     categoryId: 'emergencies',
@@ -374,6 +388,9 @@ const List<Phrase> allPhrases = [
   Phrase(id: 'shopping_8', categoryId: 'shopping', english: 'Where is the ATM?', target: '¿Dónde hay un cajero automático?', pronunciation: 'DOHN-deh eye oon kah-HEH-roh ow-toh-MAH-tee-koh', blankWord: 'cajero'),
   Phrase(id: 'shopping_9', categoryId: 'shopping', english: 'Can I have a bag?', target: '¿Me da una bolsa?', pronunciation: 'meh dah OO-nah BOHL-sah', blankWord: 'bolsa'),
   Phrase(id: 'shopping_13', categoryId: 'shopping', english: 'A receipt, please', target: 'El recibo, por favor', pronunciation: 'ehl reh-SEE-boh por fah-VOR', blankWord: 'recibo'),
+  Phrase(id: 'shopping_15', categoryId: 'shopping', english: 'Do you sell sunscreen?', target: '¿Venden protector solar?', pronunciation: 'VEHN-dehn proh-tehk-TOR soh-LAR', blankWord: 'protector', environments: ['Coastal']),
+  Phrase(id: 'shopping_17', categoryId: 'shopping', english: 'Is there an ATM in the village?', target: '¿Hay un cajero en el pueblo?', pronunciation: 'eye oon kah-HEH-roh ehn el PWEH-bloh', blankWord: 'cajero', environments: ['Rural']),
+  Phrase(id: 'shopping_18', categoryId: 'shopping', english: 'Where can I buy a transit pass?', target: '¿Dónde compro un abono de transporte?', pronunciation: 'DOHN-deh KOHM-proh oon ah-BOH-noh deh trahns-POR-teh', blankWord: 'abono', environments: ['Urban']),
 
   // Lodging
   Phrase(
@@ -406,11 +423,35 @@ const List<Phrase> allPhrases = [
   Phrase(id: 'lodging_7', categoryId: 'lodging', english: 'What is the wifi password?', target: '¿Cuál es la contraseña del wifi?', pronunciation: 'kwahl ehs lah kohn-trah-SEH-nyah del WEE-fee', blankWord: 'contraseña'),
   Phrase(id: 'lodging_10', categoryId: 'lodging', english: "The air conditioning doesn't work", target: 'El aire acondicionado no funciona', pronunciation: 'el EYE-reh ah-kohn-dee-see-oh-NAH-doh noh foon-see-OH-nah', blankWord: 'funciona'),
   Phrase(id: 'lodging_11', categoryId: 'lodging', english: 'I need more towels', target: 'Necesito más toallas', pronunciation: 'neh-seh-SEE-toh mahs toh-AH-yahs', blankWord: 'toallas'),
+  Phrase(id: 'lodging_15', categoryId: 'lodging', english: 'Do you have extra blankets?', target: '¿Tienen mantas extra?', pronunciation: 'tee-EH-nehn MAHN-tahs EHKS-trah', blankWord: 'mantas', environments: ['Mountain']),
+  Phrase(id: 'lodging_16', categoryId: 'lodging', english: 'Is there hot water?', target: '¿Hay agua caliente?', pronunciation: 'eye AH-gwah kah-lee-EHN-teh', blankWord: 'caliente', environments: ['Rural']),
+  Phrase(id: 'lodging_17', categoryId: 'lodging', english: 'Is there a luggage locker?', target: '¿Hay casilleros para el equipaje?', pronunciation: 'eye kah-see-YEH-rohs PAH-rah el eh-kee-PAH-heh', blankWord: 'casilleros', environments: ['Urban']),
   Phrase(id: 'lodging_12', categoryId: 'lodging', english: 'I lost my room key', target: 'Perdí la llave de mi habitación', pronunciation: 'pehr-DEE lah YAH-veh deh mee ah-bee-tah-see-OHN', blankWord: 'llave'),
   Phrase(id: 'lodging_9', categoryId: 'lodging', english: 'Can I leave my luggage here?', target: '¿Puedo dejar mi equipaje aquí?', pronunciation: 'PWEH-doh deh-HAR mee eh-kee-PAH-heh ah-KEE', blankWord: 'dejar'),
   Phrase(id: 'lodging_8', categoryId: 'lodging', english: 'What time is check-out?', target: '¿A qué hora es la salida?', pronunciation: 'ah keh OH-rah ehs lah sah-LEE-dah', blankWord: 'salida'),
   Phrase(id: 'lodging_13', categoryId: 'lodging', english: 'Can I get a late check-out?', target: '¿Puedo salir más tarde?', pronunciation: 'PWEH-doh sah-LEER mahs TAR-deh', blankWord: 'tarde'),
   Phrase(id: 'lodging_14', categoryId: 'lodging', english: 'Could you call me a taxi?', target: '¿Me puede llamar un taxi?', pronunciation: 'meh PWEH-deh yah-MAR oon TAHK-see', blankWord: 'llamar'),
+
+  // Activities — ordered as an outing actually unfolds: what's on, get in,
+  // then the specific things you'd only do in one kind of place.
+  Phrase(id: 'activities_1', categoryId: 'activities', english: 'What is there to do here?', target: '¿Qué hay para hacer aquí?', pronunciation: 'keh eye PAH-rah ah-SEHR ah-KEE', blankWord: 'hacer'),
+  Phrase(id: 'activities_2', categoryId: 'activities', english: 'Is it open today?', target: '¿Está abierto hoy?', pronunciation: 'ehs-TAH ah-bee-EHR-toh oy', blankWord: 'abierto'),
+  Phrase(id: 'activities_3', categoryId: 'activities', english: 'What time does it start?', target: '¿A qué hora empieza?', pronunciation: 'ah keh OH-rah ehm-pee-EH-sah', blankWord: 'empieza'),
+  Phrase(id: 'activities_4', categoryId: 'activities', english: 'How much is a ticket?', target: '¿Cuánto cuesta la entrada?', pronunciation: 'KWAHN-toh KWEHS-tah lah ehn-TRAH-dah', blankWord: 'entrada'),
+  Phrase(id: 'activities_5', categoryId: 'activities', english: 'Two tickets, please', target: 'Dos entradas, por favor', pronunciation: 'dohs ehn-TRAH-dahs por fah-VOR', blankWord: 'entradas'),
+  Phrase(id: 'activities_6', categoryId: 'activities', english: 'Do I need to book in advance?', target: '¿Necesito reservar con anticipación?', pronunciation: 'neh-seh-SEE-toh reh-sehr-VAR kohn ahn-tee-see-pah-see-OHN', blankWord: 'reservar'),
+  Phrase(id: 'activities_7', categoryId: 'activities', english: 'Is there a guided tour?', target: '¿Hay una visita guiada?', pronunciation: 'eye OO-nah vee-SEE-tah gee-AH-dah', blankWord: 'guiada'),
+  Phrase(id: 'activities_8', categoryId: 'activities', english: 'How long does it last?', target: '¿Cuánto dura la visita?', pronunciation: 'KWAHN-toh DOO-rah lah vee-SEE-tah', blankWord: 'visita'),
+  Phrase(id: 'activities_9', categoryId: 'activities', english: 'Where do we meet?', target: '¿Dónde nos encontramos?', pronunciation: 'DOHN-deh nohs ehn-kohn-TRAH-mohs', blankWord: 'encontramos'),
+  Phrase(id: 'activities_10', categoryId: 'activities', english: 'Can I take photos?', target: '¿Puedo tomar fotos?', pronunciation: 'PWEH-doh toh-MAR FOH-tohs', blankWord: 'fotos'),
+  Phrase(id: 'activities_11', categoryId: 'activities', english: 'Where can we rent surfboards?', target: '¿Dónde podemos alquilar tablas de surf?', pronunciation: 'DOHN-deh poh-DEH-mohs ahl-kee-LAR TAH-blahs deh soorf', blankWord: 'tablas', environments: ['Coastal']),
+  Phrase(id: 'activities_12', categoryId: 'activities', english: 'Can we rent a kayak?', target: '¿Podemos alquilar un kayak?', pronunciation: 'poh-DEH-mohs ahl-kee-LAR oon kah-YAHK', blankWord: 'kayak', environments: ['Coastal']),
+  Phrase(id: 'activities_13', categoryId: 'activities', english: 'Where can you go diving?', target: '¿Dónde se puede bucear?', pronunciation: 'DOHN-deh seh PWEH-deh boo-seh-AR', blankWord: 'bucear', environments: ['Coastal']),
+  Phrase(id: 'activities_14', categoryId: 'activities', english: 'Where can I rent hiking boots?', target: '¿Dónde puedo alquilar botas de montaña?', pronunciation: 'DOHN-deh PWEH-doh ahl-kee-LAR BOH-tahs deh mohn-TAH-nyah', blankWord: 'botas', environments: ['Mountain']),
+  Phrase(id: 'activities_15', categoryId: 'activities', english: 'Is there a guide for the summit?', target: '¿Hay un guía para la cumbre?', pronunciation: 'eye oon GEE-ah PAH-rah lah KOOM-breh', blankWord: 'cumbre', environments: ['Mountain']),
+  Phrase(id: 'activities_16', categoryId: 'activities', english: 'Are there tickets for the match?', target: '¿Hay entradas para el partido?', pronunciation: 'eye ehn-TRAH-dahs PAH-rah el par-TEE-doh', blankWord: 'partido', environments: ['Urban']),
+  Phrase(id: 'activities_17', categoryId: 'activities', english: 'Where can I hear live music?', target: '¿Dónde puedo escuchar música en vivo?', pronunciation: 'DOHN-deh PWEH-doh ehs-koo-CHAR MOO-see-kah ehn VEE-voh', blankWord: 'vivo', environments: ['Urban']),
+  Phrase(id: 'activities_18', categoryId: 'activities', english: 'Can we visit the farm?', target: '¿Podemos visitar la granja?', pronunciation: 'poh-DEH-mohs vee-see-TAR lah GRAHN-hah', blankWord: 'granja', environments: ['Rural']),
 
   // Health
   Phrase(id: 'health_1', categoryId: 'health', english: 'I have a headache', target: 'Me duele la cabeza', pronunciation: 'meh DWEH-leh lah kah-BEH-sah', blankWord: 'cabeza'),

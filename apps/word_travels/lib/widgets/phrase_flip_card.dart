@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../data/phrases.dart';
 import '../models/phrase.dart';
-import '../state/location_settings.dart';
+import '../state/trips.dart';
 import '../state/recent_phrases.dart';
 import '../state/vocab_bank.dart';
 import '../theme/pocket_talk_theme.dart';
@@ -55,11 +55,15 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
 
   @override
   Widget build(BuildContext context) {
+    // The bookmark means "in the trip I'm on", not "saved somewhere" — a
+    // phrase can sit in several decks, and tapping here should only touch
+    // the current one.
+    final tripId = context.select<Trips, String?>((t) => t.active?.id);
     final saved = context.select<VocabBank, bool>(
-      (bank) => bank.isSaved(widget.phrase.id),
+      (bank) => tripId != null && bank.isInTrip(widget.phrase.id, tripId),
     );
 
-    final country = context.select<LocationSettings, String?>((r) => r.country);
+    final country = context.select<Trips, String?>((t) => t.active?.country);
     final phrase = widget.phrase.forCountry(country);
     // A live-translated phrase belongs to no curated category, so it falls
     // back to the same neutral tint its result card uses on Translate —
@@ -162,7 +166,12 @@ class _PhraseFlipCardState extends State<PhraseFlipCard>
           IconButton(
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
-            onPressed: () => context.read<VocabBank>().toggle(widget.phrase.id),
+            onPressed: tripId == null
+                ? null
+                : () => context.read<VocabBank>().toggle(
+                    widget.phrase.id,
+                    tripId,
+                  ),
             icon: Icon(
               saved ? Icons.bookmark : Icons.bookmark_border,
               color: saved ? PTColors.mustard : PTColors.inkSoft,
