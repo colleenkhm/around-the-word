@@ -123,12 +123,12 @@ class _AppEntryState extends State<AppEntry> {
         );
       }
       return EnvironmentScreen(
-        onDone: (environments) {
+        onDone: (mutedTags) {
           context.read<Trips>().add(
             Trip.create(
               languageCode: currentLanguage.code,
               country: _draftCountry!,
-              environments: environments,
+              mutedTags: mutedTags,
             ),
           );
           setState(() => _draftCountry = null);

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/phrases.dart';
 import '../models/place.dart';
 import '../models/trip.dart';
 
@@ -43,7 +44,7 @@ class Trips extends ChangeNotifier {
   /// With no trip yet, an empty place shows everything.
   Place get activePlace {
     final trip = active;
-    return trip == null ? const Place(null) : Place(trip.country, trip.environments);
+    return trip == null ? const Place(null) : Place(trip.country, trip.mutedTags);
   }
 
   /// Trips that teach [languageCode], used to decide whether an umbrella
@@ -58,13 +59,42 @@ class Trips extends ChangeNotifier {
     if (stored != null) {
       final decoded = jsonDecode(stored) as List;
       _trips.addAll(
-        decoded.map((t) => Trip.fromJson(t as Map<String, dynamic>)),
+        decoded.map(
+          (t) => Trip.fromJson(_migrated(t as Map<String, dynamic>)),
+        ),
       );
     }
     _activeId = _prefs?.getString(_activeKey);
     _loaded = true;
     notifyListeners();
   }
+
+  /// A stored trip from before settings became mutable, brought forward.
+  ///
+  /// Those versions stored the settings the user had *picked*, meaning "show
+  /// only these"; muting inverts that, so a picked set becomes everything it
+  /// left out. An empty pick is the exception: it meant the user skipped the
+  /// question, not that they wanted nothing, so it converts to nothing muted
+  /// — which is also what fixes skipping having handed out the smallest
+  /// phrasebook rather than the largest.
+  Map<String, dynamic> _migrated(Map<String, dynamic> json) {
+    if (json.containsKey('mutedTags') || !json.containsKey('environments')) {
+      return json;
+    }
+    final picked = ((json['environments'] as List?) ?? const [])
+        .map((e) => e as String)
+        .toSet();
+    return {...json, 'mutedTags': _mutedForPicked(picked).toList()};
+  }
+
+  Set<String> _mutedForPicked(Set<String> picked) => picked.isEmpty
+      ? <String>{}
+      : allEnvironmentTags
+            .where(
+              (t) =>
+                  !picked.contains(t) && !picked.contains(activityParents[t]),
+            )
+            .toSet();
 
   /// Builds the first trip from the settings the pre-trips version stored,
   /// so an existing user keeps their country and settings instead of being
@@ -73,13 +103,13 @@ class Trips extends ChangeNotifier {
     if (_trips.isNotEmpty) return null;
     final country = _prefs?.getString(_legacyCountryKey);
     if (country == null) return null;
-    final environments =
+    final picked =
         _prefs?.getStringList(_legacyEnvironmentsKey)?.toSet() ?? <String>{};
     return add(
       Trip.create(
         languageCode: languageCode,
         country: country,
-        environments: environments,
+        mutedTags: _mutedForPicked(picked),
       ),
     );
   }

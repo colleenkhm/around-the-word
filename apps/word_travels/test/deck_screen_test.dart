@@ -165,6 +165,79 @@ void main() {
     });
   });
 
+  group('choosing what the session draws from', () {
+    testWidgets('it opens on the saved deck, with both pools counted', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _harness(VocabBank()..toggle('basics_1', _tripId)),
+      );
+
+      expect(find.text('My deck'), findsOneWidget);
+      expect(find.text('Everything'), findsOneWidget);
+      expect(find.text('YOUR DECK'), findsOneWidget);
+      // The saved deck holds one; the phrasebook holds the rest.
+      expect(find.text('1 phrase ready'), findsOneWidget);
+    });
+
+    testWidgets('switching to Everything drills the whole phrasebook', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _harness(VocabBank()..toggle('basics_1', _tripId)),
+      );
+
+      await tester.tap(find.text('Everything'));
+      await tester.pumpAndSettle();
+
+      final pool = phrasesForPlace(_trips.activePlace).length;
+      expect(pool, greaterThan(sessionLength));
+      // Far more than one sitting, so the card promises a round, not the lot.
+      expect(find.text('$sessionLength of $pool phrases ready'), findsOneWidget);
+    });
+
+    testWidgets('a muted topic stays in the saved deck', (tester) async {
+      // Muting says "don't drill me on surfing"; bookmarking a surf phrase
+      // says the opposite about that one phrase, and is the stronger signal.
+      final trips = Trips()
+        ..add(
+          Trip.create(
+            languageCode: currentLanguage.code,
+            country: 'Mexico',
+            name: 'Mexico',
+            mutedTags: withActivitiesMuted({'Coastal'}),
+          ),
+        );
+      final tripId = onlyTripId(trips);
+      final vocabBank = VocabBank()..toggle('activities_11', tripId);
+
+      await tester.pumpWidget(_harness(vocabBank, trips: trips));
+
+      expect(find.text('1 phrase ready'), findsOneWidget);
+      expect(find.text('¿Dónde podemos alquilar tablas de surf?'), findsOneWidget);
+    });
+
+    testWidgets('a muted topic is kept out of Everything', (tester) async {
+      final trips = Trips()
+        ..add(
+          Trip.create(
+            languageCode: currentLanguage.code,
+            country: 'Mexico',
+            name: 'Mexico',
+            mutedTags: withActivitiesMuted({'Coastal'}),
+          ),
+        );
+
+      await tester.pumpWidget(_harness(VocabBank(), trips: trips));
+      await tester.tap(find.text('Everything'));
+      await tester.pumpAndSettle();
+
+      final ids = phrasesForPlace(trips.activePlace).map((p) => p.id);
+      expect(ids, isNot(contains('activities_11')));
+      expect(ids, contains('basics_1'));
+    });
+  });
+
   group('looked-up phrases', () {
     testWidgets('show a generated pronunciation guide', (tester) async {
       final vocabBank = VocabBank()

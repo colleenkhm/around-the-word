@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
+import 'package:pocket_talk/data/phrases.dart';
+import 'package:pocket_talk/models/place.dart';
 import 'package:pocket_talk/screens/my_trip_screen.dart';
 import 'trip_support.dart';
 import 'package:pocket_talk/state/recent_phrases.dart';
 import 'package:pocket_talk/state/vocab_bank.dart';
 
-Widget _harness({ValueChanged<String>? onTranslate}) {
+Widget _harness({ValueChanged<String>? onTranslate, Set<String> muted = const {}}) {
   return MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => VocabBank()),
-      ChangeNotifierProvider.value(value: tripsWithOne()),
+      ChangeNotifierProvider.value(value: tripsWithOne(mutedTags: muted)),
       ChangeNotifierProvider(create: (_) => RecentPhrases()),
     ],
     child: MaterialApp(
@@ -36,6 +38,27 @@ void main() {
 
     expect(find.text('Gracias'), findsOneWidget);
     expect(find.text('Food & drink'), findsNothing);
+  });
+
+  testWidgets('a muted topic is hidden from browsing but not from search', (
+    tester,
+  ) async {
+    final muted = withActivitiesMuted({'Coastal'});
+    await tester.pumpWidget(_harness(muted: muted));
+
+    // The trip says how much it's put away, and the phrase count comes down
+    // with it.
+    final shown = phrasesForPlace(Place('Mexico', muted)).length;
+    expect(shown, lessThan(phrasesForCountry(const Place('Mexico')).length));
+    expect(find.textContaining('1 topic off'), findsOneWidget);
+    expect(find.textContaining('$shown phrases'), findsOneWidget);
+
+    // But someone who types "surf" has said exactly what they want, and a
+    // toggle they set weeks ago shouldn't get in the way of that.
+    await tester.enterText(find.byType(TextField).first, 'surf');
+    await tester.pumpAndSettle();
+
+    expect(find.text('¿Dónde podemos alquilar tablas de surf?'), findsOneWidget);
   });
 
   testWidgets('an unmatched search hands the query to Translate', (

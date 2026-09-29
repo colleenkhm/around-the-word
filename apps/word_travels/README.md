@@ -39,14 +39,54 @@ restyling a copy per screen.
 ### Trips
 
 A **trip** is the container for vocabulary: a name, a destination country and
-the settings (urban, coastal, ...) you'll be in. Those live on the trip
-rather than in global settings because they describe a journey, not the
-language — so two trips to different countries can show different wording
-(`carro` in Mexico, `auto` in Chile) without one overwriting the other.
+the topics you've switched off for it. Those live on the trip rather than in
+global settings because they describe a journey, not the language — so two
+trips to different countries can show different wording (`carro` in Mexico,
+`auto` in Chile) without one overwriting the other.
 
 `Trips` (`lib/state/trips.dart`) owns the list and which one is active, and
 exposes `activePlace`. Everything downstream still filters by a `Place`, so
 only the *source* of it moved.
+
+### Tailoring a trip: tags and muting
+
+A phrase can carry **tags** naming the setting or activity it belongs to —
+`Hiking`, `Public transit`, `Surfing`. The vocabulary is two levels deep:
+four settings (`Urban`, `Rural`, `Coastal`, `Mountain`), each with the
+activities that only come up there. `environmentOptions` in
+`lib/data/phrases.dart` is the whole list; `allEnvironmentTags` flattens it
+and is what a phrase's tags are checked against.
+
+**The nesting is a UI affordance, not a data relationship.** A surf phrase is
+tagged `'Surfing'` alone, never `'Surfing'` *and* `'Coastal'` — a setting
+never independently gates its own activities. Muting a setting mutes its
+activities alongside it (`withActivitiesMuted`), and each can then be
+switched back on by itself, so "not going near the coast, except to surf" is
+a state the model can express.
+
+**Everything is on by default.** `Trip.mutedTags` stores what the user
+switched *off*, not what they chose, so a setting or activity added in a
+later version is on for trips that already exist — a stored list of choices
+would silently never mention it. Empty means the whole phrasebook is in play,
+which is also why skipping the question during setup is now the generous
+answer rather than the stingy one.
+
+Muting reaches three places and deliberately stops short of two others:
+
+| | muted topics |
+| --- | --- |
+| Browsing by category (`phrasesForPlace`) | hidden |
+| The pre-populated practice deck ("Everything") | excluded |
+| Search on the My trip tab (`phrasesForCountry`) | **still found** |
+| The saved deck (`VocabBank.deckFor`) | **never filtered** |
+| The recent strip | **never filtered** |
+
+The last three are the point. Search and the recent strip are the user asking
+for something by name, and a toggle set weeks ago shouldn't override that;
+a phrase they bookmarked is a much stronger signal than a topic they left
+alone, so muting never takes it away. Country scope is separate and applies
+everywhere — that's `Phrase.availableIn`, while muting is
+`Phrase.isMutedIn`.
 
 Decks are membership, not copies: `VocabBank._decks` maps a phrase id to the
 set of trips holding it. Looking the same phrase up for a second trip adds
@@ -71,16 +111,25 @@ its state while you're on another:
    practice word; everything else is translated live and saved to the active
    trip's deck.
 2. **My trip** (`my_trip_screen.dart`) — the active trip's destination and
-   settings, then the curated set by category scoped to them. Its search
-   filters that set only and never calls the API; an unmatched search offers
-   to hand the query to Translate, via the `onTranslate` callback
-   `RootScaffold` passes down and `TranslateScreen.incomingQuery` picks up.
+   how much of the phrasebook it's showing, then the curated set by category
+   scoped to it. Its search covers the whole book for that country, muted
+   topics included, and never calls the API; an unmatched search offers to
+   hand the query to Translate, via the `onTranslate` callback `RootScaffold`
+   passes down and `TranslateScreen.incomingQuery` picks up.
 3. **Practice** (`deck_screen.dart`) — with one trip it opens straight into
    that deck; with several it lists a deck per trip, plus an umbrella deck
-   per language that two or more trips share. The session
-   (`practice_screen.dart`) takes its deck as a parameter and is a pushed
-   screen rather than inline, because the deck list below it shows every
-   answer.
+   per language that two or more trips share. Either way the deck screen
+   offers two pools: **My deck** (what you saved, never filtered by muting)
+   and **Everything** (the curated set for the trip minus muted topics, plus
+   your own lookups). The session (`practice_screen.dart`) takes its deck as
+   a parameter and is a pushed screen rather than inline, because the deck
+   list below it shows every answer.
+
+   A session asks `sessionLength` (20) phrases, taken off the top of the
+   weakest-first order — "Everything" can be over a hundred phrases, and a
+   round with no end in sight is one nobody finishes. "Practice again"
+   re-sorts against the scores just recorded, so the next round is the
+   next-weakest rather than a replay.
 
 ## Phrases come from two places
 

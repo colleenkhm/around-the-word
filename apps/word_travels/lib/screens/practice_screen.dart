@@ -9,6 +9,13 @@ import '../widgets/pt_app_bar.dart';
 
 enum _Result { unanswered, correct, incorrect }
 
+/// How many phrases one sitting asks. The deck a session is handed can be
+/// the whole phrasebook — well over a hundred — and a round with no end in
+/// sight is one nobody finishes, so a session takes a fixed bite off the top
+/// of the weakest-first order. "Practice again" re-sorts against the scores
+/// it just recorded, so the next round is the next-weakest, not a replay.
+const int sessionLength = 20;
+
 /// Fill-in-the-blank practice over one deck. One phrase at a time: English
 /// prompt, target sentence with the blank word missing, type the answer,
 /// check, move on.
@@ -47,12 +54,12 @@ class _PracticeScreenState extends State<PracticeScreen> {
     _deck = _newDeck();
   }
 
-  /// The deck worded for its destination, weakest first: sorted by practice
-  /// score ascending (a phrase missed more than it's been gotten right sits
-  /// at negative, and sorts ahead of one that's rarely missed), so drilling
-  /// time goes toward what actually still needs it. Shuffled first so
-  /// phrases sharing a score (most starting out at 0) don't always land in
-  /// the same order.
+  /// One round, worded for its destination and weakest first: sorted by
+  /// practice score ascending (a phrase missed more than it's been gotten
+  /// right sits at negative, and sorts ahead of one that's rarely missed),
+  /// so drilling time goes toward what actually still needs it. Shuffled
+  /// first so phrases sharing a score (most starting out at 0) don't always
+  /// land in the same order, then cut to [sessionLength].
   List<Phrase> _newDeck() {
     final scores = context.read<PracticeScores>();
     final deck = widget.phrases
@@ -62,7 +69,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
     deck.sort(
       (a, b) => scores.scoreFor(a.id).compareTo(scores.scoreFor(b.id)),
     );
-    return deck;
+    return deck.take(sessionLength).toList();
   }
 
   @override

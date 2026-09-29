@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -6,10 +8,10 @@ import 'package:pocket_talk/models/trip.dart';
 import 'package:pocket_talk/state/trips.dart';
 import 'package:pocket_talk/state/vocab_bank.dart';
 
-Trip _trip(String country, {Set<String> environments = const {}}) => Trip.create(
+Trip _trip(String country, {Set<String> mutedTags = const {}}) => Trip.create(
   languageCode: currentLanguage.code,
   country: country,
-  environments: environments,
+  mutedTags: mutedTags,
 );
 
 void main() {
@@ -32,10 +34,10 @@ void main() {
   test('the active trip decides what phrases are filtered by', () async {
     final trips = Trips();
     await trips.load();
-    trips.add(_trip('Chile', environments: {'Mountain'}));
+    trips.add(_trip('Chile', mutedTags: {'Mountain'}));
 
     expect(trips.activePlace.country, 'Chile');
-    expect(trips.activePlace.environments, {'Mountain'});
+    expect(trips.activePlace.mutedTags, {'Mountain'});
   });
 
   test('a trip is named after its destination unless given a name', () {
@@ -53,7 +55,7 @@ void main() {
   test('trips persist across a reload', () async {
     final first = Trips();
     await first.load();
-    first.add(_trip('Mexico', environments: {'Urban', 'Coastal'}));
+    first.add(_trip('Mexico', mutedTags: {'Urban', 'Coastal'}));
     first.add(_trip('Spain'));
     first.setActive(first.trips.first.id);
 
@@ -61,7 +63,7 @@ void main() {
     await second.load();
 
     expect(second.trips.map((t) => t.country), ['Mexico', 'Spain']);
-    expect(second.trips.first.environments, {'Urban', 'Coastal'});
+    expect(second.trips.first.mutedTags, {'Urban', 'Coastal'});
     expect(second.active?.country, 'Mexico');
   });
 
@@ -89,7 +91,7 @@ void main() {
   });
 
   group('carrying over a pre-trips install', () {
-    test('the old country and settings become the first trip', () async {
+    test('an old set of picked settings becomes everything else muted', () async {
       SharedPreferences.setMockInitialValues({
         'selected_country': 'Chile',
         'selected_environments': ['Coastal'],
@@ -102,7 +104,47 @@ void main() {
       expect(migrated, isNotNull);
       expect(trips.trips, hasLength(1));
       expect(trips.active?.country, 'Chile');
-      expect(trips.active?.environments, {'Coastal'});
+      // Picking Coastal used to mean "show me Coastal and nothing else
+      // setting-specific", which is now everything but Coastal muted — its
+      // activities included, since they came with it.
+      final muted = trips.active!.mutedTags;
+      expect(muted, isNot(contains('Coastal')));
+      expect(muted, isNot(contains('Surfing')));
+      expect(muted, containsAll(['Urban', 'Mountain', 'Rural', 'Hiking']));
+    });
+
+    test('an old install that skipped the question mutes nothing', () async {
+      // Skipping used to leave the user with *only* the untagged phrases.
+      // Carrying that over literally would mute the whole phrasebook, so the
+      // empty pick is read as the non-answer it was.
+      SharedPreferences.setMockInitialValues({'selected_country': 'Chile'});
+      final trips = Trips();
+      await trips.load();
+
+      trips.migrateLegacySettings(currentLanguage.code);
+
+      expect(trips.active?.mutedTags, isEmpty);
+    });
+
+    test('a trip stored before muting is converted on load', () async {
+      SharedPreferences.setMockInitialValues({
+        'trips': jsonEncode([
+          {
+            'id': 'trip_1',
+            'name': 'Santiago',
+            'languageCode': 'es',
+            'country': 'Chile',
+            'environments': ['Urban'],
+          },
+        ]),
+      });
+      final trips = Trips();
+      await trips.load();
+
+      final muted = trips.trips.single.mutedTags;
+      expect(muted, isNot(contains('Urban')));
+      expect(muted, isNot(contains('Public transit')));
+      expect(muted, contains('Coastal'));
     });
 
     test('everything already saved lands in that trip', () async {

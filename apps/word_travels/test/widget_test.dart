@@ -21,7 +21,10 @@ void main() {
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
 
-    expect(find.text('What will it be like there?'), findsOneWidget);
+    // Everything is on by default here, so this step is opt-out: tapping
+    // Coastal switches it off rather than choosing it.
+    expect(find.text('Anything you won\'t need?'), findsOneWidget);
+    expect(find.text('Skip'), findsOneWidget);
     await tester.tap(find.text('Coastal'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Continue'));
@@ -32,12 +35,12 @@ void main() {
     expect(find.textContaining('Type anything'), findsOneWidget);
 
     // The curated phrasebook is one tab over, now headed by the trip that
-    // was just set up.
+    // was just set up, and saying how much of it got switched off.
     await tester.tap(find.text('My trip'));
     await tester.pumpAndSettle();
 
     expect(find.textContaining('Mexico'), findsWidgets);
-    expect(find.textContaining('Coastal'), findsOneWidget);
+    expect(find.textContaining('1 topic off'), findsOneWidget);
     expect(find.text('Food & drink'), findsOneWidget);
   });
 }

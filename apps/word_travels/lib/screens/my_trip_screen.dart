@@ -43,10 +43,15 @@ class _MyTripScreenState extends State<MyTripScreen> {
     super.dispose();
   }
 
+  /// Searches the whole phrasebook for the country, including topics this
+  /// trip has muted. Muting shapes what's *offered* — the category tiles and
+  /// the practice deck — but someone typing a word into the search box has
+  /// told you exactly what they want, and a toggle they set weeks ago
+  /// shouldn't override that.
   List<Phrase> _searchResults(Place place) {
     final q = _query.trim().toLowerCase();
     if (q.isEmpty) return const [];
-    return phrasesForPlace(place).where((p) => p.matches(q, place.country)).toList();
+    return phrasesForCountry(place).where((p) => p.matches(q, place.country)).toList();
   }
 
   @override
@@ -109,16 +114,13 @@ class _MyTripScreenState extends State<MyTripScreen> {
     );
   }
 
-  /// Where this trip is going and how much of the phrasebook it opens up —
-  /// the settings are what narrow it, so it's worth saying which are on.
+  /// Where this trip is going and how much of the phrasebook it's showing —
+  /// muting is what narrows the count, so [tripSummary] says how much is off.
   String _subtitle(Trip? trip, Place place) {
     final count = phrasesForPlace(place).length;
     final phrases = '$count phrases across ${categories.length} categories';
     if (trip == null) return phrases;
-    final where = trip.environments.isEmpty
-        ? trip.country
-        : '${trip.country} · ${trip.environments.join(', ')}';
-    return '$where · $phrases';
+    return '${tripSummary(trip)} · $phrases';
   }
 
   Widget _buildResults(Place place) {

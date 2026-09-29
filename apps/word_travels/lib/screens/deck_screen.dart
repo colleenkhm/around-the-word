@@ -27,7 +27,7 @@ class DeckScreen extends StatelessWidget {
       final trip = trips.active;
       return _DeckDetail(
         title: 'Practice',
-        deck: trip == null ? const [] : context.watch<VocabBank>().deckFor(trip.id),
+        saved: trip == null ? const [] : context.watch<VocabBank>().deckFor(trip.id),
         place: trips.activePlace,
         showBack: false,
       );
@@ -66,7 +66,7 @@ class _DeckList extends StatelessWidget {
             title: trip.name,
             subtitle: trip.country,
             deck: bank.deckFor(trip.id),
-            place: Place(trip.country, trip.environments),
+            place: Place(trip.country, trip.mutedTags),
             scores: scores,
           ),
         if (umbrellas.isNotEmpty) ...[
@@ -128,7 +128,7 @@ class _DeckCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => _DeckDetail(
                 title: title,
-                deck: deck,
+                saved: deck,
                 place: place,
                 showBack: true,
               ),
@@ -172,34 +172,68 @@ class _DeckCard extends StatelessWidget {
   }
 }
 
-/// One deck: what's drillable right now, then the phrases it holds.
+/// Which pool a practice session draws from.
+enum _Source {
+  /// Only what the user saved or looked up for this trip. Never filtered by
+  /// the trip's muted topics: saving a phrase is a much stronger statement
+  /// than leaving a toggle alone, so a setting switched off weeks ago
+  /// shouldn't quietly delete something they bookmarked.
+  saved,
+
+  /// The curated phrasebook for the trip, minus its muted topics, plus
+  /// anything the user looked up — the whole relevant pool.
+  everything,
+}
+
+/// One deck: where the session draws from, what's drillable right now, then
+/// the phrases it holds.
 ///
 /// The session itself is a pushed screen rather than running inline, because
 /// the deck below lists every answer — an inline exercise would be sitting
 /// directly above its own answer key.
-class _DeckDetail extends StatelessWidget {
+class _DeckDetail extends StatefulWidget {
   const _DeckDetail({
     required this.title,
-    required this.deck,
+    required this.saved,
     required this.place,
     required this.showBack,
   });
 
   final String title;
-  final List<Phrase> deck;
+  final List<Phrase> saved;
   final Place place;
   final bool showBack;
 
   @override
+  State<_DeckDetail> createState() => _DeckDetailState();
+}
+
+class _DeckDetailState extends State<_DeckDetail> {
+  _Source _source = _Source.saved;
+
+  /// The curated set for the trip with the user's own lookups appended —
+  /// lookups aren't in `allPhrases`, so they'd otherwise vanish from the very
+  /// deck that calls itself everything. Curated wins on id collision, since
+  /// its wording and blank word are hand-written.
+  List<Phrase> get _everything {
+    final curated = phrasesForPlace(widget.place);
+    final ids = curated.map((p) => p.id).toSet();
+    return [...curated, ...widget.saved.where((p) => !ids.contains(p.id))];
+  }
+
+  List<Phrase> get _deck =>
+      _source == _Source.saved ? widget.saved : _everything;
+
+  @override
   Widget build(BuildContext context) {
     final scores = context.watch<PracticeScores>();
-    final visible = deck.where((p) => p.appliesTo(place)).toList();
-    final needWork = visible.where((p) => scores.scoreFor(p.id) < 0).length;
+    final deck = _deck;
+    final needWork = deck.where((p) => scores.scoreFor(p.id) < 0).length;
 
     return Scaffold(
-      appBar: showBack
-          ? PTAppBar.back(title: title)
-          : PTAppBar.mark(title: title),
+      appBar: widget.showBack
+          ? PTAppBar.back(title: widget.title)
+          : PTAppBar.mark(title: widget.title),
       body: SafeArea(
         top: false,
         child: Padding(
@@ -207,30 +241,111 @@ class _DeckDetail extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              _SourceToggle(
+                source: _source,
+                savedCount: widget.saved.length,
+                everythingCount: _everything.length,
+                onChanged: (s) => setState(() => _source = s),
+              ),
+              const SizedBox(height: 14),
               _StartCard(
-                deck: visible,
-                place: place,
+                deck: deck,
+                place: widget.place,
                 needWork: needWork,
-                title: title,
+                title: widget.title,
+                source: _source,
               ),
               const SizedBox(height: 18),
-              if (visible.isNotEmpty) ...[
+              if (deck.isNotEmpty) ...[
                 Text(
-                  'YOUR DECK',
+                  _source == _Source.saved ? 'YOUR DECK' : 'EVERYTHING',
                   style: ptMono(size: 10.5, color: PTColors.inkSoft),
                 ),
                 const SizedBox(height: 8),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: visible.length,
+                    itemCount: deck.length,
                     itemBuilder: (context, index) => PhraseFlipCard(
-                      key: ValueKey(visible[index].id),
-                      phrase: visible[index],
+                      key: ValueKey(deck[index].id),
+                      phrase: deck[index],
                     ),
                   ),
                 ),
               ],
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Picks the pool. Both counts are on the labels because the choice is
+/// really "the handful I picked" versus "the lot", and the numbers say that
+/// faster than the words do.
+class _SourceToggle extends StatelessWidget {
+  const _SourceToggle({
+    required this.source,
+    required this.savedCount,
+    required this.everythingCount,
+    required this.onChanged,
+  });
+
+  final _Source source;
+  final int savedCount;
+  final int everythingCount;
+  final ValueChanged<_Source> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        _tab('My deck', savedCount, _Source.saved),
+        const SizedBox(width: 8),
+        _tab('Everything', everythingCount, _Source.everything),
+      ],
+    );
+  }
+
+  Widget _tab(String label, int count, _Source value) {
+    final on = source == value;
+    return Expanded(
+      child: Material(
+        color: on ? PTColors.postalTint : PTColors.card,
+        borderRadius: BorderRadius.circular(9),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(9),
+          onTap: () => onChanged(value),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(9),
+              border: Border.all(
+                color: on ? PTColors.ink : PTColors.line,
+                width: on ? 1.4 : 1,
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  label,
+                  style: ptBody(
+                    size: 13,
+                    weight: on ? FontWeight.w600 : FontWeight.w400,
+                    color: on ? PTColors.postalInk : PTColors.inkSoft,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  '$count',
+                  style: ptMono(
+                    size: 11,
+                    color: on ? PTColors.postalInk : PTColors.inkSoft,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -244,12 +359,14 @@ class _StartCard extends StatelessWidget {
     required this.place,
     required this.needWork,
     required this.title,
+    required this.source,
   });
 
   final List<Phrase> deck;
   final Place place;
   final int needWork;
   final String title;
+  final _Source source;
 
   bool get _ready => deck.isNotEmpty;
 
@@ -321,9 +438,16 @@ class _StartCard extends StatelessWidget {
 
   String get _subtitle {
     if (!_ready) {
-      return 'Bookmark a phrase, or look one up — anything you translate is added here automatically.';
+      return source == _Source.saved
+          ? 'Bookmark a phrase, or look one up — anything you translate is added here automatically. Or switch to Everything and drill the whole phrasebook.'
+          : 'Nothing in the phrasebook is left for this trip. Check what you\'ve switched off under Edit.';
     }
-    final phrases = '${deck.length} ${deck.length == 1 ? 'phrase' : 'phrases'}';
+    final size = deck.length;
+    // A long pool is drilled a round at a time, so promising all of it would
+    // be a lie — say what this sitting will actually ask.
+    final phrases = size > sessionLength
+        ? '$sessionLength of $size phrases'
+        : '$size ${size == 1 ? 'phrase' : 'phrases'}';
     if (needWork == 0) return '$phrases ready';
     return '$phrases · $needWork ${needWork == 1 ? 'needs' : 'need'} work';
   }

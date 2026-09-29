@@ -119,4 +119,65 @@ void main() {
     expect(find.text('Correct!'), findsOneWidget);
     expect(scores.scoreFor(lookup.id), 0); // -1 then +1
   });
+
+  group('a long pool is drilled a round at a time', () {
+    testWidgets('a session stops at the round length', (tester) async {
+      final pool = phrasesForPlace(_trips.activePlace);
+      expect(pool.length, greaterThan(sessionLength));
+
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: VocabBank()),
+            ChangeNotifierProvider.value(value: _trips),
+            ChangeNotifierProvider.value(value: PracticeScores()),
+          ],
+          child: MaterialApp(
+            home: PracticeScreen(phrases: pool, place: _trips.activePlace),
+          ),
+        ),
+      );
+
+      // Not "1 of 188" — the whole phrasebook in one sitting is a session
+      // nobody finishes.
+      expect(find.text('1 of $sessionLength'), findsOneWidget);
+    });
+
+    testWidgets('the next round takes the next-weakest, not a replay', (
+      tester,
+    ) async {
+      final pool = phrasesForPlace(_trips.activePlace);
+      final scores = PracticeScores();
+      // Everything starts at 0, so the first round is an arbitrary 20 of
+      // them; answering pushes those up and out of the weakest slice.
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: VocabBank()),
+            ChangeNotifierProvider.value(value: _trips),
+            ChangeNotifierProvider.value(value: scores),
+          ],
+          child: MaterialApp(
+            home: PracticeScreen(phrases: pool, place: _trips.activePlace),
+          ),
+        ),
+      );
+
+      for (var i = 0; i < sessionLength; i++) {
+        await tester.enterText(find.byType(TextField), 'definitely wrong');
+        await tester.tap(find.text('Check'));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.text(i == sessionLength - 1 ? 'See results' : 'Next'),
+        );
+        await tester.pumpAndSettle();
+      }
+
+      expect(find.text('Nice work'), findsOneWidget);
+      // Exactly one round's worth got scored, not the whole pool — the rest
+      // of the phrasebook is still untouched, waiting for a later round.
+      final scored = pool.where((p) => scores.scoreFor(p.id) != 0);
+      expect(scored, hasLength(sessionLength));
+    });
+  });
 }

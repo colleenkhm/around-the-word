@@ -7,7 +7,7 @@ import 'package:pocket_talk/state/trips.dart';
 /// each test starts clean.
 Trips tripsWithOne({
   String country = 'Mexico',
-  Set<String> environments = const {},
+  Set<String> mutedTags = const {},
   String? name,
 }) {
   return Trips()
@@ -15,7 +15,7 @@ Trips tripsWithOne({
       Trip.create(
         languageCode: currentLanguage.code,
         country: country,
-        environments: environments,
+        mutedTags: mutedTags,
         name: name,
       ),
     );

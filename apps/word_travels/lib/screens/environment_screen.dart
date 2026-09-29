@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../data/phrases.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/place_picker_sheet.dart';
 
-/// Second step of setting up a trip: what kinds of setting it'll involve.
-/// Pick any number, or none — this only adds vocab, it never hides the
-/// language-wide basics.
+/// Second step of setting up a trip: anything it won't involve.
+///
+/// Everything starts on, so skipping this is the right answer for most
+/// people and costs them nothing — it's here for the traveler who already
+/// knows they don't want half the phrasebook in their practice sessions.
 class EnvironmentScreen extends StatefulWidget {
   const EnvironmentScreen({super.key, required this.onDone});
 
+  /// The tags to mute on the new trip — empty when nothing was switched off.
   final ValueChanged<Set<String>> onDone;
 
   @override
@@ -17,7 +19,7 @@ class EnvironmentScreen extends StatefulWidget {
 }
 
 class _EnvironmentScreenState extends State<EnvironmentScreen> {
-  final Set<String> _choices = {};
+  final Set<String> _muted = {};
 
   @override
   Widget build(BuildContext context) {
@@ -28,25 +30,20 @@ class _EnvironmentScreenState extends State<EnvironmentScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('What will it be like there?', style: ptHeading(size: 24)),
+              Text('Anything you won\'t need?', style: ptHeading(size: 24)),
               const SizedBox(height: 10),
               Text(
-                'Pick everything that applies, like a coastal city. We\'ll add vocab for those places. You can change this any time from the top right.',
+                'You\'ll get the whole phrasebook either way. Switching something off just keeps it out of practice, so you drill what the trip actually calls for. Skip this if you\'re not sure — it\'s all editable from the top right.',
                 style: ptBody(size: 14, color: PTColors.inkSoft).copyWith(height: 1.5),
               ),
               const SizedBox(height: 20),
               Expanded(
                 child: ListView(
                   children: [
-                    for (final e in environmentOptions)
-                      OptionTile(
-                        label: e.name,
-                        description: e.description,
-                        selected: _choices.contains(e.name),
-                        onTap: () => setState(() {
-                          if (!_choices.remove(e.name)) _choices.add(e.name);
-                        }),
-                      ),
+                    TagMutePicker(
+                      muted: _muted,
+                      onChanged: () => setState(() {}),
+                    ),
                   ],
                 ),
               ),
@@ -64,8 +61,8 @@ class _EnvironmentScreenState extends State<EnvironmentScreen> {
                       fontSize: 14.5,
                     ),
                   ),
-                  onPressed: () => widget.onDone(_choices),
-                  child: Text(_choices.isEmpty ? 'Skip' : 'Continue'),
+                  onPressed: () => widget.onDone(_muted),
+                  child: Text(_muted.isEmpty ? 'Skip' : 'Continue'),
                 ),
               ),
             ],

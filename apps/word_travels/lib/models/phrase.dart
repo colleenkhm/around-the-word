@@ -19,8 +19,10 @@ const String lookupCategoryId = 'lookup';
 /// specific to those countries (Chilean "¿Cachai?") and only their users
 /// see it.
 ///
-/// Independently, [environments] narrow a phrase to the kinds of setting where
-/// it's useful (a hiking phrase for mountain users). Empty means any setting.
+/// Independently, [tags] mark the setting or activity a phrase belongs to
+/// (a hiking phrase is tagged `'Hiking'`). Empty means it comes up on any
+/// trip; a tagged phrase drops out only once the user mutes every tag it
+/// carries.
 ///
 /// Separately, a phrase whose wording differs by country (car: "carro" in
 /// Mexico, "auto" in Chile) is flagged by giving it [variants] — one full
@@ -40,9 +42,15 @@ class Phrase {
   /// Countries this phrase is specific to; empty means the whole language.
   final List<String> countries;
 
-  /// Settings this phrase is specific to (see `environmentOptions`); empty
-  /// means it's useful in any setting.
-  final List<String> environments;
+  /// The settings or activities this phrase belongs to (see
+  /// `allEnvironmentTags`); empty means it's useful on any trip.
+  ///
+  /// A phrase names the most specific tag that fits and only that one —
+  /// `'Surfing'`, not `'Surfing'` plus its parent `'Coastal'`. Muting a
+  /// setting mutes its activities alongside it, so the parent tag would be
+  /// redundant, and carrying it would stop the user re-enabling one activity
+  /// under a muted setting.
+  final List<String> tags;
 
   /// The [Language.code] this phrase is in. Defaults to Spanish so none of
   /// the curated phrases below need to name it — it only matters for
@@ -59,7 +67,7 @@ class Phrase {
     required this.blankWord,
     this.variants = const [],
     this.countries = const [],
-    this.environments = const [],
+    this.tags = const [],
     this.languageCode = 'es',
   });
 
@@ -117,16 +125,26 @@ class Phrase {
   String get pronunciationGuide =>
       isLookup ? spanishPronunciation(target) : pronunciation;
 
-  /// Whether a user in [place] should see this phrase: its country scope
-  /// matches (or it's language-wide) and its setting scope matches (or it
-  /// suits any setting). A place with no country chosen yet sees everything.
-  bool appliesTo(Place place) {
+  /// Whether this phrase exists at all for a trip to [place] — its country
+  /// scope matches, or it's language-wide. A place with no country chosen
+  /// yet gets everything.
+  ///
+  /// Muting is deliberately *not* part of this: a muted phrase is still part
+  /// of the phrasebook and still turns up in search. See [isMutedIn].
+  bool availableIn(Place place) {
     if (place.country == null) return true;
-    final inCountry = countries.isEmpty || countries.contains(place.country);
-    final inSetting =
-        environments.isEmpty || environments.any(place.environments.contains);
-    return inCountry && inSetting;
+    return countries.isEmpty || countries.contains(place.country);
   }
+
+  /// Whether the trip has switched this phrase off — every tag it carries is
+  /// muted. Untagged phrases can never be muted; they're the language-wide
+  /// core.
+  ///
+  /// Note it takes *every* tag: a phrase tagged for two settings survives
+  /// until both are muted, so muting Coastal doesn't cost a Coastal+Mountain
+  /// phrase to someone still going to the mountains.
+  bool isMutedIn(Place place) =>
+      tags.isNotEmpty && tags.every(place.mutedTags.contains);
 
   bool get variesByCountry => variants.isNotEmpty;
 
@@ -149,6 +167,11 @@ class Phrase {
           target: v.target,
           pronunciation: v.pronunciation,
           blankWord: v.blankWord,
+          // Only [variants] collapses away — the scoping carries over, so a
+          // phrase stays filterable after it's been worded for a country.
+          countries: countries,
+          tags: tags,
+          languageCode: languageCode,
         );
       }
     }

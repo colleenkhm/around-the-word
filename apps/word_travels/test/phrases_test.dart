@@ -62,27 +62,75 @@ void main() {
     expect(phrasesForPlace(const Place('Mexico')).map((p) => p.id), contains('conversation_21'));
   });
 
-  test('phrases only name selectable settings', () {
-    final names = environmentOptions.map((e) => e.name);
+  test('phrases only name selectable settings or activities', () {
     for (final p in allPhrases) {
-      expect(names, containsAll(p.environments), reason: p.id);
+      expect(allEnvironmentTags, containsAll(p.tags), reason: p.id);
     }
   });
 
-  test('setting-specific phrases show only for matching settings', () {
-    ids(Place place) => phrasesForPlace(place).map((p) => p.id).toSet();
-    // transportation_25: trail, Mountain or Rural. transportation_19: metro, Urban.
-    expect(ids(const Place('Chile', {'Mountain'})), contains('transportation_25'));
-    expect(ids(const Place('Chile', {'Coastal', 'Urban'})), isNot(contains('transportation_25')));
-    expect(ids(const Place('Chile', {'Coastal', 'Urban'})), contains('transportation_19'));
-    expect(ids(const Place('Chile')), isNot(contains('transportation_19')));
-    expect(ids(const Place('Chile')), contains('basics_1'));
+  test('a phrase names one tag, not an activity and its setting', () {
+    for (final p in allPhrases) {
+      for (final tag in p.tags) {
+        final parent = activityParents[tag];
+        expect(
+          parent == null || !p.tags.contains(parent),
+          isTrue,
+          reason: '${p.id} names both $tag and its setting $parent',
+        );
+      }
+    }
   });
 
-  test('country and setting scopes both have to match', () {
+  test('every activity has phrases behind it', () {
+    for (final tag in activityParents.keys) {
+      expect(
+        allPhrases.where((p) => p.tags.contains(tag)),
+        isNotEmpty,
+        reason: '$tag is offered as a toggle but filters nothing',
+      );
+    }
+  });
+
+  test('a new trip mutes nothing and sees the whole phrasebook', () {
+    final all = phrasesForPlace(const Place('Chile')).map((p) => p.id).toSet();
+    expect(all, contains('basics_1'));
+    expect(all, contains('transportation_19')); // Public transit
+    expect(all, contains('activities_11')); // Surfing
+  });
+
+  test('muting a tag drops its phrases from what the trip is shown', () {
+    ids(Place place) => phrasesForPlace(place).map((p) => p.id).toSet();
+    expect(ids(const Place('Chile', {'Surfing'})), isNot(contains('activities_11')));
+    expect(ids(const Place('Chile', {'Surfing'})), contains('activities_13'));
+    // Untagged phrases are the language-wide core; muting can't reach them.
+    expect(ids(const Place('Chile', {'Surfing'})), contains('basics_1'));
+  });
+
+  test('a muted phrase is still in the book, so search can find it', () {
+    final place = const Place('Chile', {'Surfing'});
+    expect(
+      phrasesForCountry(place).map((p) => p.id),
+      contains('activities_11'),
+    );
+  });
+
+  test('a phrase survives until every tag it carries is muted', () {
+    // health_15 (sunscreen) is tagged for both Coastal and Mountain.
+    final p = allPhrases.firstWhere((p) => p.id == 'health_15');
+    expect(p.isMutedIn(const Place('Chile', {'Coastal'})), isFalse);
+    expect(p.isMutedIn(const Place('Chile', {'Coastal', 'Mountain'})), isTrue);
+  });
+
+  test('country scope still applies regardless of muting', () {
     final p = allPhrases.firstWhere((p) => p.id == 'conversation_24');
-    expect(p.appliesTo(const Place('Chile', {'Urban'})), isTrue);
-    expect(p.appliesTo(const Place('Mexico', {'Urban'})), isFalse);
+    expect(p.availableIn(const Place('Chile')), isTrue);
+    expect(p.availableIn(const Place('Mexico')), isFalse);
+  });
+
+  test('muting a setting mutes the activities under it', () {
+    final muted = withActivitiesMuted({'Coastal'});
+    expect(muted, containsAll(['Coastal', 'Surfing', 'Boats & ferries']));
+    expect(muted, isNot(contains('Hiking')));
   });
 
   test('phrase ids are unique', () {

@@ -178,7 +178,10 @@ class _TranslateScreenState extends State<TranslateScreen> {
     return _recentOrder
         .map((id) => resolvePhrase(context, id))
         .whereType<Phrase>()
-        .where((p) => p.appliesTo(place))
+        // Country scope only, not muting: these are phrases the user just
+        // looked at, so the strip shouldn't drop one because its topic is
+        // switched off for practice.
+        .where((p) => p.availableIn(place))
         .toList();
   }
 
