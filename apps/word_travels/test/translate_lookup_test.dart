@@ -14,10 +14,14 @@ import 'package:pocket_talk/widgets/ticket_row.dart';
 /// Stands in for the real translation API: records what it was asked for,
 /// and answers with a canned translation (or a failure).
 class _FakeTranslationProvider implements TranslationProvider {
-  _FakeTranslationProvider({this.fails = false});
+  _FakeTranslationProvider({this.failure});
 
   static const answer = 'mi vuelo se ha retrasado';
-  final bool fails;
+
+  /// Non-null to fail every call with this reason, so a test can check that
+  /// the screen says something different for each one.
+  final TranslationFailure? failure;
+
   int calls = 0;
   String? lastText;
   String? lastFrom;
@@ -33,7 +37,8 @@ class _FakeTranslationProvider implements TranslationProvider {
     lastText = text;
     lastFrom = from;
     lastTo = to;
-    if (fails) throw Exception('offline');
+    final f = failure;
+    if (f != null) throw TranslationException(f);
     return answer;
   }
 }
@@ -128,13 +133,48 @@ void main() {
     tester,
   ) async {
     final vocabBank = VocabBank();
-    final translator = _FakeTranslationProvider(fails: true);
+    final translator = _FakeTranslationProvider(
+      failure: TranslationFailure.unreachable,
+    );
     await tester.pumpWidget(_harness(translator, vocabBank: vocabBank));
 
     await _search(tester, 'my flight was delayed');
 
-    expect(find.textContaining("Couldn't translate"), findsOneWidget);
+    expect(find.textContaining('check your connection'), findsOneWidget);
     expect(vocabBank.savedPhrases, isEmpty);
+  });
+
+  testWidgets('a spent daily allowance is not reported as a network problem', (
+    tester,
+  ) async {
+    final translator = _FakeTranslationProvider(
+      failure: TranslationFailure.quotaExhausted,
+    );
+    await tester.pumpWidget(_harness(translator));
+
+    await _search(tester, 'my flight was delayed');
+
+    // Blaming the connection would send the user off to fix the wrong thing,
+    // and a retry can't succeed until tomorrow — so neither is offered.
+    expect(find.textContaining('free translations are used up'), findsOneWidget);
+    expect(find.textContaining('check your connection'), findsNothing);
+    expect(find.textContaining('tap to retry'), findsNothing);
+  });
+
+  testWidgets('a retryable failure offers a retry that calls again', (
+    tester,
+  ) async {
+    final translator = _FakeTranslationProvider(
+      failure: TranslationFailure.unreachable,
+    );
+    await tester.pumpWidget(_harness(translator));
+
+    await _search(tester, 'my flight was delayed');
+    expect(translator.calls, 1);
+
+    await tester.tap(find.textContaining('check your connection'));
+    await tester.pumpAndSettle();
+    expect(translator.calls, 2);
   });
 
   testWidgets('typing keeps debouncing instead of translating each keystroke', (

@@ -14,6 +14,10 @@ MyMemoryTranslationProvider providerFor(
   timeout: const Duration(milliseconds: 50),
 );
 
+Matcher failsWith(TranslationFailure failure) => throwsA(
+  isA<TranslationException>().having((e) => e.failure, 'failure', failure),
+);
+
 void main() {
   test('a successful response returns the translated text', () async {
     final provider = providerFor(
@@ -36,13 +40,15 @@ void main() {
     final provider = providerFor((_) => Completer<http.Response>().future);
     await expectLater(
       provider.translate('hello', from: 'en', to: 'es'),
-      throwsException,
+      failsWith(TranslationFailure.unreachable),
     );
   });
 
-  test('a refusal dressed up as HTTP 200 is not treated as a translation', () {
+  test('a spent quota dressed up as HTTP 200 reports as a spent quota', () {
     // MyMemory answers 200 with the complaint sitting in translatedText when
-    // the daily quota is gone; only responseStatus says so.
+    // the daily allowance is gone; only responseStatus says so. Reporting
+    // this as a network error would send the user to fix their wifi, and
+    // reporting it as a translation would save the complaint as Spanish.
     final provider = providerFor(
       (_) async => http.Response(
         '{"responseStatus": "403", "responseData": {"translatedText": '
@@ -52,15 +58,46 @@ void main() {
     );
     expect(
       provider.translate('hello', from: 'en', to: 'es'),
-      throwsException,
+      failsWith(TranslationFailure.quotaExhausted),
     );
   });
 
-  test('an unparseable body is an error, not a translation', () {
+  test('rate limiting is also a wait-until-later failure', () {
+    final provider = providerFor(
+      (_) async => http.Response('{"responseStatus": 429}', 200),
+    );
+    expect(
+      provider.translate('hello', from: 'en', to: 'es'),
+      failsWith(TranslationFailure.quotaExhausted),
+    );
+  });
+
+  test('an unparseable body is a service error, not a translation', () {
     final provider = providerFor((_) async => http.Response('not json', 200));
     expect(
       provider.translate('hello', from: 'en', to: 'es'),
-      throwsException,
+      failsWith(TranslationFailure.serviceError),
+    );
+  });
+
+  test('a non-200 HTTP status is a service error', () {
+    final provider = providerFor((_) async => http.Response('nope', 500));
+    expect(
+      provider.translate('hello', from: 'en', to: 'es'),
+      failsWith(TranslationFailure.serviceError),
+    );
+  });
+
+  test('an empty translation is reported as having none', () {
+    final provider = providerFor(
+      (_) async => http.Response(
+        '{"responseStatus": 200, "responseData": {"translatedText": ""}}',
+        200,
+      ),
+    );
+    expect(
+      provider.translate('hello', from: 'en', to: 'es'),
+      failsWith(TranslationFailure.noTranslation),
     );
   });
 }

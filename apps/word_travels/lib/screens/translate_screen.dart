@@ -65,7 +65,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
   Timer? _lookupDebounce;
   String? _lookupQuery;
   Phrase? _lookupResult;
-  String? _lookupError;
+  TranslationFailure? _lookupError;
 
   @override
   void initState() {
@@ -151,11 +151,16 @@ class _TranslateScreenState extends State<TranslateScreen> {
       if (tripId != null) context.read<VocabBank>().saveLookup(phrase, tripId);
       context.read<RecentPhrases>().recordView(phrase.id);
       setState(() => _lookupResult = phrase);
-    } catch (_) {
+    } catch (e) {
       if (!mounted || _query.trim() != query) return;
+      // A provider that doesn't say why is treated as a bad answer rather
+      // than assumed to be the network — guessing "check your connection"
+      // at someone whose connection is fine sends them to fix the wrong
+      // thing.
       setState(
-        () => _lookupError =
-            "Couldn't translate that — check your connection and tap to retry.",
+        () => _lookupError = e is TranslationException
+            ? e.failure
+            : TranslationFailure.serviceError,
       );
     }
   }
@@ -272,18 +277,9 @@ class _TranslateScreenState extends State<TranslateScreen> {
     }
 
     if (_lookupQuery == trimmed && _lookupError != null) {
-      return Center(
-        child: GestureDetector(
-          onTap: () => _runLookup(trimmed),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Text(
-              _lookupError!,
-              textAlign: TextAlign.center,
-              style: ptMono(size: 12.5),
-            ),
-          ),
-        ),
+      return _LookupError(
+        failure: _lookupError!,
+        onRetry: () => _runLookup(trimmed),
       );
     }
 
@@ -307,6 +303,49 @@ class _TranslateScreenState extends State<TranslateScreen> {
           Text('Translating...', style: ptMono(size: 12.5)),
         ],
       ),
+    );
+  }
+}
+
+/// What a failed lookup says. The provider reports why it failed; the words
+/// and the retry affordance are chosen here, because what the user should do
+/// about it differs — a spent daily allowance isn't fixed by trying again,
+/// so it doesn't pretend to be, and it points at the phrasebook, which works
+/// offline and is unaffected.
+class _LookupError extends StatelessWidget {
+  const _LookupError({required this.failure, required this.onRetry});
+
+  final TranslationFailure failure;
+  final VoidCallback onRetry;
+
+  /// Whether trying the same thing again could plausibly work.
+  bool get _retryable => failure != TranslationFailure.quotaExhausted;
+
+  String get _message => switch (failure) {
+    TranslationFailure.unreachable =>
+      "Couldn't reach the translation service — check your connection and tap to retry.",
+    TranslationFailure.quotaExhausted =>
+      "Today's free translations are used up. Your phrasebook still works — search it under My trip.",
+    TranslationFailure.serviceError =>
+      'The translation service had trouble with that. Tap to retry.',
+    TranslationFailure.noTranslation =>
+      "No translation came back for that. Try rewording it.",
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Text(
+        _message,
+        textAlign: TextAlign.center,
+        style: ptMono(size: 12.5),
+      ),
+    );
+    return Center(
+      child: _retryable
+          ? GestureDetector(onTap: onRetry, child: text)
+          : text,
     );
   }
 }
