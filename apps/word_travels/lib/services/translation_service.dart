@@ -10,9 +10,28 @@ abstract class TranslationProvider {
   Future<String> translate(String text, {required String from, required String to});
 }
 
+/// How long to wait on the translation service before giving up. Travel wifi
+/// — hotel, airport, café — is the normal case for this app, and a captive
+/// portal completes the TCP connection and then never answers. Without a
+/// deadline the request hangs forever and the UI sits on "Translating..."
+/// with nothing to retry, so this fails loudly instead.
+const Duration _requestTimeout = Duration(seconds: 10);
+
 /// Free, no API key required: https://mymemory.translated.net
 class MyMemoryTranslationProvider implements TranslationProvider {
-  const MyMemoryTranslationProvider();
+  const MyMemoryTranslationProvider({this.client, this.timeout = _requestTimeout});
+
+  /// The HTTP client to send through, or null to use a one-off client per
+  /// request (what the top-level `http.get` does). Only tests pass one, to
+  /// stand in for the network.
+  final http.Client? client;
+
+  final Duration timeout;
+
+  Future<http.Response> _get(Uri uri) {
+    final c = client;
+    return c == null ? http.get(uri) : c.get(uri);
+  }
 
   @override
   Future<String> translate(
@@ -27,7 +46,7 @@ class MyMemoryTranslationProvider implements TranslationProvider {
 
     final http.Response response;
     try {
-      response = await http.get(uri);
+      response = await _get(uri).timeout(timeout);
     } catch (_) {
       throw Exception('Could not reach the translation service.');
     }
