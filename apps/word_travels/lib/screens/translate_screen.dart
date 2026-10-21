@@ -204,8 +204,9 @@ class _TranslateScreenState extends State<TranslateScreen> {
   /// deciding to re-sort the strip (and scrolling it) is a change to state,
   /// not something to do while describing a frame.
   List<Phrase> _recentPhrases(Place place) {
+    final bank = context.read<VocabBank>();
     return _recentOrder
-        .map((id) => resolvePhrase(context, id))
+        .map(bank.resolve)
         .whereType<Phrase>()
         // Country scope only, not muting: these are phrases the user just
         // looked at, so the strip shouldn't drop one because its topic is

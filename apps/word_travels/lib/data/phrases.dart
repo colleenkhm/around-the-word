@@ -1,11 +1,11 @@
+// Material is here for the category tiles' IconData, nothing more — this is
+// a data file and deliberately knows nothing about state or widgets.
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../models/category.dart';
 import '../models/language.dart';
 import '../models/phrase.dart';
 import '../models/place.dart';
-import '../state/vocab_bank.dart';
 import '../theme/pocket_talk_theme.dart';
 
 /// Mock Spanish content, seeded from the original UI mockup plus a few
@@ -556,10 +556,7 @@ Phrase? phraseById(String id) {
   return null;
 }
 
-/// Resolves an id to a phrase from either source: the curated set, or one
-/// the user looked up live and got auto-saved to their vocab bank. Ids
-/// saved before this app knew about live lookups (recently-viewed history,
-/// vocab bank) only ever matched [phraseById]; this widens that without
-/// changing behavior for anything that still does.
-Phrase? resolvePhrase(BuildContext context, String id) =>
-    phraseById(id) ?? context.read<VocabBank>().dynamicPhrase(id);
+// Resolving an id to a phrase from *either* source — curated or looked up —
+// lives on the vocab bank, as `VocabBank.resolve`, since the bank is what
+// holds the looked-up content. [phraseById] above is only half the answer
+// and should not be called directly for a stored id.

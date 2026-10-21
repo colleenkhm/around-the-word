@@ -46,12 +46,19 @@ class VocabBank extends ChangeNotifier {
 
   /// Everything saved, regardless of trip.
   List<Phrase> get savedPhrases =>
-      _decks.keys.map(_resolve).whereType<Phrase>().toList();
+      _decks.keys.map(resolve).whereType<Phrase>().toList();
+
+  /// The phrase an id refers to, from either source: the curated set, or one
+  /// the user looked up live. Anywhere a stored id (a saved phrase, the
+  /// recent strip) is turned back into a phrase has to come through here —
+  /// `phraseById` alone only searches the curated set, so it would silently
+  /// drop everything the user looked up.
+  Phrase? resolve(String id) => phraseById(id) ?? _lookedUp[id];
 
   /// The deck for one trip.
   List<Phrase> deckFor(String tripId) => _decks.entries
       .where((e) => e.value.contains(tripId))
-      .map((e) => _resolve(e.key))
+      .map((e) => resolve(e.key))
       .whereType<Phrase>()
       .toList();
 
@@ -61,12 +68,10 @@ class VocabBank extends ChangeNotifier {
     final wanted = tripIds.toSet();
     return _decks.entries
         .where((e) => e.value.any(wanted.contains))
-        .map((e) => _resolve(e.key))
+        .map((e) => resolve(e.key))
         .whereType<Phrase>()
         .toList();
   }
-
-  Phrase? _resolve(String id) => phraseById(id) ?? _lookedUp[id];
 
   Future<void> load() async {
     _prefs = await SharedPreferences.getInstance();

@@ -162,10 +162,12 @@ own implementation, and English would need a real pronouncing dictionary.
 Their ids are `lookup_<languageCode>_<normalized english>`, so looking the
 same thing up twice overwrites rather than duplicating.
 
-**Resolving an id back to a phrase: use `resolvePhrase(context, id)`, not
+**Resolving an id back to a phrase: use `VocabBank.resolve(id)`, not
 `phraseById`.** `phraseById` only searches the curated set, so anywhere a
 saved or recent id is turned back into a phrase, it would silently drop
-everything the user looked up.
+everything the user looked up. It lives on the bank because the bank is what
+holds the looked-up content — `lib/data/phrases.dart` is data and knows
+nothing about state.
 
 ## Translation
 
