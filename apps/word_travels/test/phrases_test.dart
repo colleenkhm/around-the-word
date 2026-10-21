@@ -58,6 +58,39 @@ void main() {
     }
   });
 
+  group('grading a practice answer', () {
+    final propina = allPhrases.firstWhere((p) => p.id == 'food_21');
+    final cafe = allPhrases.firstWhere((p) => p.blankWord == 'café');
+
+    test('the word, accents and all, is exact', () {
+      expect(cafe.grade('café'), AnswerAccuracy.exact);
+      // Case and surrounding whitespace were always forgiven.
+      expect(cafe.grade('  CAFÉ '), AnswerAccuracy.exact);
+      expect(propina.grade('propina'), AnswerAccuracy.exact);
+    });
+
+    test('the right word without its accent scores, but is called out', () {
+      // A phone keyboard makes the accent real work, and search has always
+      // been accent-forgiving — practice shouldn't be the one place that
+      // silently isn't.
+      expect(cafe.grade('cafe'), AnswerAccuracy.accentsMissing);
+      expect(cafe.grade('CAFE'), AnswerAccuracy.accentsMissing);
+      expect(AnswerAccuracy.accentsMissing.isCorrect, isTrue);
+    });
+
+    test('a different word is wrong', () {
+      expect(cafe.grade('agua'), AnswerAccuracy.wrong);
+      expect(cafe.grade(''), AnswerAccuracy.wrong);
+      expect(cafe.grade('caf'), AnswerAccuracy.wrong);
+      expect(AnswerAccuracy.wrong.isCorrect, isFalse);
+    });
+
+    test('a word with no accent in it can only be exact or wrong', () {
+      expect(propina.grade('propina'), AnswerAccuracy.exact);
+      expect(propina.grade('propino'), AnswerAccuracy.wrong);
+    });
+  });
+
   group('blanking the practice word', () {
     Phrase withBlank(String target, String blankWord) => Phrase(
       id: 'test',

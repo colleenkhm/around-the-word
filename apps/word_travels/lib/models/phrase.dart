@@ -7,6 +7,23 @@ import 'pronunciation.dart';
 /// phrasebook grid.
 const String lookupCategoryId = 'lookup';
 
+/// How a practice answer compares to the word being drilled.
+enum AnswerAccuracy {
+  /// A different word.
+  wrong,
+
+  /// The right word, spelled without its accent ("mas" for "más"). Counts as
+  /// correct — the user knew it, and a phone keyboard makes the accent real
+  /// work — but it's worth showing them the spelling.
+  accentsMissing,
+
+  /// The word, accents and all.
+  exact;
+
+  /// Whether this earns a point. Both kinds of right answer do.
+  bool get isCorrect => this != AnswerAccuracy.wrong;
+}
+
 /// A single phrase: shown as a flip card while browsing, and as a
 /// fill-in-the-blank exercise once it's in the vocab bank.
 ///
@@ -231,11 +248,24 @@ class Phrase {
     return target.replaceRange(match.start, match.end, blank);
   }
 
-  bool checkAnswer(String attempt) {
-    return _normalize(attempt) == _normalize(blankWord);
+  /// How close [attempt] is to [blankWord].
+  ///
+  /// The accent-only miss is called out separately rather than folded into
+  /// either side: marking it wrong punishes a phone keyboard for someone who
+  /// clearly knew the word, and marking it simply right never shows them the
+  /// spelling they're missing. Search is already accent-forgiving (see
+  /// [normalizeForSearch]) — this keeps practice from being the one place
+  /// that silently isn't.
+  AnswerAccuracy grade(String attempt) {
+    final trimmed = attempt.trim();
+    if (trimmed.toLowerCase() == blankWord.toLowerCase()) {
+      return AnswerAccuracy.exact;
+    }
+    if (normalizeForSearch(trimmed) == normalizeForSearch(blankWord)) {
+      return AnswerAccuracy.accentsMissing;
+    }
+    return AnswerAccuracy.wrong;
   }
-
-  static String _normalize(String s) => s.trim().toLowerCase();
 }
 
 /// One country's wording of a phrase, e.g. Chile: "¿Dónde puedo arrendar un auto?".

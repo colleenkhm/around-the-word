@@ -7,7 +7,22 @@ import '../state/practice_scores.dart';
 import '../theme/pocket_talk_theme.dart';
 import '../widgets/pt_app_bar.dart';
 
-enum _Result { unanswered, correct, incorrect }
+enum _Result {
+  unanswered,
+  correct,
+
+  /// The right word without its accent. Scores as correct; shown differently,
+  /// so the user sees the spelling they missed.
+  correctWithoutAccents,
+
+  incorrect;
+
+  static _Result of(AnswerAccuracy accuracy) => switch (accuracy) {
+    AnswerAccuracy.exact => _Result.correct,
+    AnswerAccuracy.accentsMissing => _Result.correctWithoutAccents,
+    AnswerAccuracy.wrong => _Result.incorrect,
+  };
+}
 
 /// How many phrases one sitting asks. The deck a session is handed can be
 /// the whole phrasebook — well over a hundred — and a round with no end in
@@ -85,16 +100,16 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   void _check() {
     if (_result != _Result.unanswered) return;
-    final correct = _current.checkAnswer(_answerController.text);
+    final accuracy = _current.grade(_answerController.text);
     final scores = context.read<PracticeScores>();
-    if (correct) {
+    if (accuracy.isCorrect) {
       scores.recordCorrect(_current.id);
     } else {
       scores.recordIncorrect(_current.id);
     }
     setState(() {
-      _result = correct ? _Result.correct : _Result.incorrect;
-      if (correct) _correctCount++;
+      _result = _Result.of(accuracy);
+      if (accuracy.isCorrect) _correctCount++;
     });
   }
 
@@ -253,20 +268,27 @@ class _FeedbackBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final correct = result == _Result.correct;
+    // An accent-only miss reads as the win it scored, with the spelling
+    // alongside it — the point is to teach the accent, not to dock a mark
+    // for a keyboard that makes it awkward.
+    final scored = result != _Result.incorrect;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: correct ? const Color(0xFFE9EFE0) : const Color(0xFFF3DFDA),
+        color: scored ? const Color(0xFFE9EFE0) : const Color(0xFFF3DFDA),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        correct ? 'Correct!' : 'Not quite — it\'s "$correctWord"',
+        switch (result) {
+          _Result.correct => 'Correct!',
+          _Result.correctWithoutAccents => 'Correct — with the accent: "$correctWord"',
+          _ => 'Not quite — it\'s "$correctWord"',
+        },
         style: TextStyle(
           fontFamily: 'IBM Plex Sans',
           fontWeight: FontWeight.w500,
           fontSize: 13.5,
-          color: correct ? PTColors.sageInk : PTColors.postalInk,
+          color: scored ? PTColors.sageInk : PTColors.postalInk,
         ),
       ),
     );

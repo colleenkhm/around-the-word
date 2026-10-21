@@ -77,6 +77,27 @@ void main() {
     expect(find.text('Correct!'), findsOneWidget);
   });
 
+  testWidgets('the right word without its accent scores and shows the spelling', (
+    tester,
+  ) async {
+    // food_11 — "I would like a coffee" / "Quisiera un café", drilling "café".
+    final vocabBank = VocabBank()..toggle('food_11', _tripId);
+    final scores = PracticeScores();
+    await tester.pumpWidget(_harness(vocabBank: vocabBank, scores: scores));
+
+    await tester.enterText(find.byType(TextField), 'cafe');
+    await tester.tap(find.text('Check'));
+    await tester.pump();
+
+    // Scores like any other correct answer, rather than being docked for a
+    // keyboard that makes the accent awkward...
+    expect(scores.scoreFor('food_11'), 1);
+    expect(find.text('Not quite — it\'s "café"'), findsNothing);
+    // ...but the accent they missed is on screen.
+    expect(find.textContaining('café'), findsWidgets);
+    expect(find.textContaining('Correct'), findsOneWidget);
+  });
+
   testWidgets('a wrong answer subtracts a point from that phrase', (
     tester,
   ) async {
