@@ -3,22 +3,119 @@ import 'package:pocket_talk/data/phrases.dart';
 import 'package:pocket_talk/models/phrase.dart';
 import 'package:pocket_talk/models/place.dart';
 
+/// Asserts the blank in [blanked] stands where a whole word stood, rather
+/// than inside one. Checked on the rendered output, so it holds whatever
+/// [Phrase.targetWithBlank] does internally.
+void expectWholeWordBlank(String blankWord, String blanked, String reason) {
+  final blank = '_' * blankWord.length;
+  final start = blanked.indexOf(blank);
+  expect(start, isNot(-1), reason: '$reason: nothing was blanked');
+
+  final letter = RegExp(r'[\p{L}\p{N}]', unicode: true);
+  if (start > 0) {
+    expect(
+      letter.hasMatch(blanked[start - 1]),
+      isFalse,
+      reason: '$reason: the blank starts inside a word — $blanked',
+    );
+  }
+  final end = start + blank.length;
+  if (end < blanked.length) {
+    expect(
+      letter.hasMatch(blanked[end]),
+      isFalse,
+      reason: '$reason: the blank ends inside a word — $blanked',
+    );
+  }
+}
+
 void main() {
-  test('every blank word appears in its phrase', () {
+  test('every blank word appears as a whole word in its phrase', () {
+    // `contains` alone was the weaker invariant: it passes for a blank word
+    // buried inside a longer one, which is exactly the case that blanks the
+    // wrong letters.
     for (final p in allPhrases) {
       expect(
         p.target.toLowerCase(),
         contains(p.blankWord.toLowerCase()),
         reason: p.id,
       );
+      expectWholeWordBlank(p.blankWord, p.targetWithBlank, p.id);
+
       for (final v in p.variants) {
         expect(
           v.target.toLowerCase(),
           contains(v.blankWord.toLowerCase()),
           reason: '${p.id} ${v.countryLabel}',
         );
+        final variant = p.forCountry(v.countries.first);
+        expectWholeWordBlank(
+          variant.blankWord,
+          variant.targetWithBlank,
+          '${p.id} ${v.countryLabel}',
+        );
       }
     }
+  });
+
+  group('blanking the practice word', () {
+    Phrase withBlank(String target, String blankWord) => Phrase(
+      id: 'test',
+      categoryId: 'food',
+      english: 'test',
+      target: target,
+      pronunciation: '',
+      blankWord: blankWord,
+    );
+
+    test('skips a longer word the blank word is only part of', () {
+      // "Esto" would match first on a plain substring search, asking the user
+      // for a word that isn't the one being drilled.
+      expect(
+        withBlank('Esto es bueno', 'es').targetWithBlank,
+        'Esto __ bueno',
+      );
+    });
+
+    test('a word ending in an accented letter still matches as a whole', () {
+      // The case `\b` gets wrong: it's ASCII-only, so it doesn't see a word
+      // boundary after the "á" and `\bestá\b` matches nothing at all.
+      expect(
+        withBlank('¿Está lejos de aquí?', 'está').targetWithBlank,
+        '¿____ lejos de aquí?',
+      );
+      expect(
+        withBlank('Soy alérgico a los frutos secos', 'alérgico').targetWithBlank,
+        'Soy ________ a los frutos secos',
+      );
+    });
+
+    test('a one-letter word next to an accent is matched on its own', () {
+      expect(
+        withBlank('Soy alérgico a los frutos secos', 'a').targetWithBlank,
+        'Soy alérgico _ los frutos secos',
+      );
+    });
+
+    test('punctuation around a word still counts as a boundary', () {
+      expect(
+        withBlank('¿Esto pica?', 'pica').targetWithBlank,
+        '¿Esto ____?',
+      );
+      expect(
+        withBlank('La cuenta, por favor', 'cuenta').targetWithBlank,
+        'La ______, por favor',
+      );
+    });
+
+    test('a blank word buried in a longer one still blanks something', () {
+      // There's no whole word to blank here, so this falls back to the old
+      // substring behavior. It's a content mistake either way — the
+      // whole-word invariant above fails it — but printing the sentence with
+      // the answer still in it would be the worse failure.
+      expect(withBlank('la parada', 'para').targetWithBlank, 'la ____da');
+      expect(withBlank('Está lejos', 'est').targetWithBlank, '___á lejos');
+    });
   });
 
   test('phrases with variants repeat their first variant as the default', () {

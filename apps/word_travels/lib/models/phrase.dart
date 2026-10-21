@@ -202,9 +202,30 @@ class Phrase {
   }
 
   /// [target] with [blankWord] replaced by a blank, for the practice screen.
+  ///
+  /// Matches [blankWord] as a whole word. A plain substring match would blank
+  /// the wrong letters as soon as the word turns up inside a longer one —
+  /// blanking "es" in "Esto es bueno" would hit "Esto" first and ask for a
+  /// word that isn't the one being drilled.
+  ///
+  /// Note the boundaries are spelled out as Unicode property escapes rather
+  /// than `\b`, which (like `\w`) is ASCII-only in Dart and would treat the
+  /// accented letter in "está" as a word boundary.
   String get targetWithBlank {
-    final pattern = RegExp(RegExp.escape(blankWord), caseSensitive: false);
-    final match = pattern.firstMatch(target);
+    final escaped = RegExp.escape(blankWord);
+    const edge = r'[\p{L}\p{N}]';
+    final whole = RegExp(
+      '(?<!$edge)$escaped(?!$edge)',
+      caseSensitive: false,
+      unicode: true,
+    );
+    // Falls back to a substring match rather than giving up: a blank word
+    // that only ever appears inside a longer one is a content mistake
+    // (phrases_test.dart fails it), and blanking the wrong letters is still
+    // a better failure than printing the sentence with the answer in it.
+    final match =
+        whole.firstMatch(target) ??
+        RegExp(escaped, caseSensitive: false).firstMatch(target);
     if (match == null) return target;
     final blank = '_' * blankWord.length;
     return target.replaceRange(match.start, match.end, blank);
