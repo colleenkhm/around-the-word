@@ -67,10 +67,43 @@ class _TranslateScreenState extends State<TranslateScreen> {
   Phrase? _lookupResult;
   TranslationFailure? _lookupError;
 
+  /// The store the strip is subscribed to. Held so the listener can be
+  /// detached again, and so a provider swap is noticed.
+  RecentPhrases? _recent;
+
   @override
   void initState() {
     super.initState();
     if (widget.incomingQuery != null) _adoptIncomingQuery();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final recent = context.read<RecentPhrases>();
+    if (recent == _recent) return;
+    _recent?.removeListener(_onRecentChanged);
+    _recent = recent..addListener(_onRecentChanged);
+    _recentOrder = recent.ids;
+  }
+
+  /// A new lookup landed, or a card already on screen was re-tapped. Adopting
+  /// a fresh order is deliberately limited to the first case — see
+  /// [_recentOrder].
+  void _onRecentChanged() {
+    final liveIds = _recent?.ids ?? const <String>[];
+    if (setEquals(liveIds.toSet(), _recentOrder.toSet())) return;
+    setState(() => _recentOrder = liveIds);
+    // After the frame that lays the new order out, so there's something to
+    // scroll.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_recentScrollController.hasClients) return;
+      _recentScrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
+    });
   }
 
   @override
@@ -93,6 +126,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
 
   @override
   void dispose() {
+    _recent?.removeListener(_onRecentChanged);
     _searchController.dispose();
     _recentScrollController.dispose();
     _lookupDebounce?.cancel();
@@ -166,20 +200,10 @@ class _TranslateScreenState extends State<TranslateScreen> {
   }
 
   /// Recently viewed phrases that still apply to [place], most recent first.
+  /// Pure: the order it reads is adopted in [_onRecentChanged], since
+  /// deciding to re-sort the strip (and scrolling it) is a change to state,
+  /// not something to do while describing a frame.
   List<Phrase> _recentPhrases(Place place) {
-    final liveIds = context.watch<RecentPhrases>().ids;
-    if (!setEquals(liveIds.toSet(), _recentOrder.toSet())) {
-      _recentOrder = liveIds;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_recentScrollController.hasClients) {
-          _recentScrollController.animateTo(
-            0,
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeOut,
-          );
-        }
-      });
-    }
     return _recentOrder
         .map((id) => resolvePhrase(context, id))
         .whereType<Phrase>()
