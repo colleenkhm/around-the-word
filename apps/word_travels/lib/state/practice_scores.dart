@@ -12,7 +12,14 @@ class PracticeScores extends ChangeNotifier {
   static const _prefsKey = 'practice_scores';
 
   final Map<String, int> _scores = {};
+  bool _loaded = false;
   SharedPreferences? _prefs;
+
+  /// False until storage has been read. [load] replaces whatever is in
+  /// memory, so a score recorded before it lands would be thrown away — the
+  /// app waits on this before building anything that can record one, the
+  /// same way it waits on `VocabBank.loaded`.
+  bool get loaded => _loaded;
 
   /// A phrase's score; 0 if it's never been practiced.
   int scoreFor(String phraseId) => _scores[phraseId] ?? 0;
@@ -26,6 +33,7 @@ class PracticeScores extends ChangeNotifier {
         ..clear()
         ..addAll(decoded.map((id, score) => MapEntry(id, score as int)));
     }
+    _loaded = true;
     notifyListeners();
   }
 

@@ -95,7 +95,16 @@ class _AppEntryState extends State<AppEntry> {
   Widget build(BuildContext context) {
     final trips = context.watch<Trips>();
     final bank = context.watch<VocabBank>();
-    if (_seenWelcome == null || !trips.loaded || !bank.loaded) {
+    // Every store has to be up before any of the app is built. Each one's
+    // load() replaces what's in memory, so a card flipped or a question
+    // answered in the gap would be silently discarded a moment later.
+    final stored = [
+      trips.loaded,
+      bank.loaded,
+      context.watch<RecentPhrases>().loaded,
+      context.watch<PracticeScores>().loaded,
+    ];
+    if (_seenWelcome == null || stored.contains(false)) {
       return const Scaffold(body: SizedBox.shrink());
     }
 

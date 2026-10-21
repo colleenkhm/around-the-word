@@ -31,6 +31,15 @@ void main() {
     expect(recent.ids, isNot(contains('id_0')));
   });
 
+  test('loaded is false until storage has been read', () async {
+    final recent = RecentPhrases();
+    // The app gates on this: load() replaces what's in memory, so a view
+    // recorded before it lands would be discarded.
+    expect(recent.loaded, isFalse);
+    await recent.load();
+    expect(recent.loaded, isTrue);
+  });
+
   test('persists across a reload', () async {
     final first = RecentPhrases();
     await first.load();

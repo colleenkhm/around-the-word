@@ -11,9 +11,16 @@ class RecentPhrases extends ChangeNotifier {
   static const maxEntries = 8;
 
   final List<String> _ids = [];
+  bool _loaded = false;
   SharedPreferences? _prefs;
 
   List<String> get ids => List.unmodifiable(_ids);
+
+  /// False until storage has been read. [load] replaces whatever is in
+  /// memory, so a view recorded before it lands would be thrown away — the
+  /// app waits on this before building anything that can record one, the
+  /// same way it waits on `VocabBank.loaded`.
+  bool get loaded => _loaded;
 
   Future<void> load() async {
     _prefs = await SharedPreferences.getInstance();
@@ -21,6 +28,7 @@ class RecentPhrases extends ChangeNotifier {
     _ids
       ..clear()
       ..addAll(stored);
+    _loaded = true;
     notifyListeners();
   }
 

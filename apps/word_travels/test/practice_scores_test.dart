@@ -33,6 +33,15 @@ void main() {
     expect(scores.scoreFor('basics_3'), 0);
   });
 
+  test('loaded is false until storage has been read', () async {
+    final scores = PracticeScores();
+    // The app gates on this: load() replaces what's in memory, so a score
+    // recorded before it lands would be discarded.
+    expect(scores.loaded, isFalse);
+    await scores.load();
+    expect(scores.loaded, isTrue);
+  });
+
   test('persists across a reload', () async {
     final first = PracticeScores();
     await first.load();
