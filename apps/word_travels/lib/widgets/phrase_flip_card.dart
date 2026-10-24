@@ -8,7 +8,7 @@ import '../models/phrase.dart';
 import '../state/trips.dart';
 import '../state/recent_phrases.dart';
 import '../state/vocab_bank.dart';
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 import 'ticket_row.dart';
 
 /// A ticket-style row for one phrase. Tap the card to flip between the

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../data/phrases.dart';
 import '../state/trips.dart';
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 import 'place_picker_sheet.dart';
 
 /// The app's one app-bar shape, matching the mockup's `.app-bar`: a thin

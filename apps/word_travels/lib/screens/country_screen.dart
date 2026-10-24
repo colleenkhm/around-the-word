@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/phrases.dart';
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 import '../widgets/place_picker_sheet.dart';
 
 /// First step of setting up a trip: pick its destination. Required —

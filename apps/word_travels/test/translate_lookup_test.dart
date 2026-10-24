@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
-import 'package:pocket_talk/models/phrase.dart';
-import 'package:pocket_talk/screens/translate_screen.dart';
-import 'package:pocket_talk/services/translation_service.dart';
-import 'package:pocket_talk/state/trips.dart';
+import 'package:word_travels/models/phrase.dart';
+import 'package:word_travels/screens/translate_screen.dart';
+import 'package:word_travels/services/translation_service.dart';
+import 'package:word_travels/state/trips.dart';
 import 'trip_support.dart';
-import 'package:pocket_talk/state/recent_phrases.dart';
-import 'package:pocket_talk/state/vocab_bank.dart';
-import 'package:pocket_talk/widgets/ticket_row.dart';
+import 'package:word_travels/state/recent_phrases.dart';
+import 'package:word_travels/state/vocab_bank.dart';
+import 'package:word_travels/widgets/ticket_row.dart';
 
 /// Stands in for the real translation API: records what it was asked for,
 /// and answers with a canned translation (or a failure).

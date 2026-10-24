@@ -6,7 +6,7 @@ import '../models/category.dart';
 import '../models/language.dart';
 import '../models/phrase.dart';
 import '../models/place.dart';
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 
 /// Mock Spanish content, seeded from the original UI mockup plus a few
 /// extra categories so Home isn't just Food & drink. Placeholder data —

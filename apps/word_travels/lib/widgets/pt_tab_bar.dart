@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 
 class PTTabItem {
   final IconData icon;

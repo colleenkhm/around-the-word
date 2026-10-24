@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
-import 'package:pocket_talk/data/phrases.dart';
-import 'package:pocket_talk/models/place.dart';
-import 'package:pocket_talk/screens/my_trip_screen.dart';
+import 'package:word_travels/data/phrases.dart';
+import 'package:word_travels/models/place.dart';
+import 'package:word_travels/screens/my_trip_screen.dart';
 import 'trip_support.dart';
-import 'package:pocket_talk/state/recent_phrases.dart';
-import 'package:pocket_talk/state/vocab_bank.dart';
+import 'package:word_travels/state/recent_phrases.dart';
+import 'package:word_travels/state/vocab_bank.dart';
 
 Widget _harness({ValueChanged<String>? onTranslate, Set<String> muted = const {}}) {
   return MultiProvider(

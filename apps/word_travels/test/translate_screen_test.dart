@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
-import 'package:pocket_talk/screens/translate_screen.dart';
+import 'package:word_travels/screens/translate_screen.dart';
 import 'trip_support.dart';
-import 'package:pocket_talk/state/recent_phrases.dart';
-import 'package:pocket_talk/state/vocab_bank.dart';
-import 'package:pocket_talk/widgets/phrase_flip_card.dart';
+import 'package:word_travels/state/recent_phrases.dart';
+import 'package:word_travels/state/vocab_bank.dart';
+import 'package:word_travels/widgets/phrase_flip_card.dart';
 
 const _englishFaceKey = Key('phrase_flip_english_face');
 

@@ -11,7 +11,7 @@ import '../services/translation_service.dart';
 import '../state/trips.dart';
 import '../state/recent_phrases.dart';
 import '../state/vocab_bank.dart';
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 import '../widgets/phrase_flip_card.dart';
 import '../widgets/pt_app_bar.dart';
 import '../widgets/pt_search_field.dart';
@@ -222,7 +222,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
     final recent = _recentPhrases(place);
 
     return Scaffold(
-      appBar: const PTAppBar.mark(title: 'Pocket Talk'),
+      appBar: const PTAppBar.mark(title: 'Word Travels'),
       body: SafeArea(
         top: false,
         child: Padding(

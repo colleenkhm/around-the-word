@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/phrase.dart';
 import '../models/place.dart';
 import '../state/practice_scores.dart';
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 import '../widgets/pt_app_bar.dart';
 
 enum _Result {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Pocket Talk's palette and type ramp, ported from the postal/vintage-travel
+/// Word Travels' palette and type ramp, ported from the postal/vintage-travel
 /// mockup this app started from.
 ///
 /// One thing the mockup's CSS makes easy to miss: `--paper` is the *outer
@@ -71,7 +71,7 @@ class PTTints {
   static const activities = PTTint(PTColors.roseTint, PTColors.roseInk);
 }
 
-ThemeData buildPocketTalkTheme() {
+ThemeData buildWordTravelsTheme() {
   final base = ThemeData(
     useMaterial3: true,
     scaffoldBackgroundColor: PTColors.card,

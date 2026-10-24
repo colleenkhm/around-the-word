@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:pocket_talk/data/phrases.dart';
-import 'package:pocket_talk/models/trip.dart';
-import 'package:pocket_talk/state/trips.dart';
-import 'package:pocket_talk/state/vocab_bank.dart';
+import 'package:word_travels/data/phrases.dart';
+import 'package:word_travels/models/trip.dart';
+import 'package:word_travels/state/trips.dart';
+import 'package:word_travels/state/vocab_bank.dart';
 
 Trip _trip(String country, {Set<String> mutedTags = const {}}) => Trip.create(
   languageCode: currentLanguage.code,

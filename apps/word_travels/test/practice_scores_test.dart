@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:pocket_talk/state/practice_scores.dart';
+import 'package:word_travels/state/practice_scores.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));

@@ -15,17 +15,17 @@ import 'state/trips.dart';
 import 'state/practice_scores.dart';
 import 'state/recent_phrases.dart';
 import 'state/vocab_bank.dart';
-import 'theme/pocket_talk_theme.dart';
+import 'theme/word_travels_theme.dart';
 import 'widgets/pt_tab_bar.dart';
 
 const _seenWelcomeKey = 'seen_welcome';
 
 void main() {
-  runApp(const PocketTalkApp());
+  runApp(const WordTravelsApp());
 }
 
-class PocketTalkApp extends StatelessWidget {
-  const PocketTalkApp({super.key});
+class WordTravelsApp extends StatelessWidget {
+  const WordTravelsApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +38,9 @@ class PocketTalkApp extends StatelessWidget {
         Provider<TranslationProvider>.value(value: activeTranslationProvider),
       ],
       child: MaterialApp(
-        title: 'Pocket Talk',
+        title: 'Word Travels',
         debugShowCheckedModeBanner: false,
-        theme: buildPocketTalkTheme(),
+        theme: buildWordTravelsTheme(),
         home: const AppEntry(),
       ),
     );

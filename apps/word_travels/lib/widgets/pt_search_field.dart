@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 
 /// The app's one search input: a tinted rounded row with a leading magnifier.
 /// Used by Translate, Phrasebook and the category screens — built once here

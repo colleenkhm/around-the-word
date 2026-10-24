@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 import '../widgets/place_picker_sheet.dart';
 
 /// Second step of setting up a trip: anything it won't involve.

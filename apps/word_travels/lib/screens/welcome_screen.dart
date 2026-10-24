@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 
 /// First-launch splash, matching the mockup's welcome screen: the postal
 /// cancellation-stamp mark, tagline, feature pills, and one CTA.
@@ -20,7 +20,7 @@ class WelcomeScreen extends StatelessWidget {
               const Spacer(),
               const _Stamp(),
               const SizedBox(height: 20),
-              Text('Pocket Talk', style: ptHeading(size: 26)),
+              Text('Word Travels', style: ptHeading(size: 26)),
               const SizedBox(height: 10),
               Text(
                 'The words you already know, right when you need them.',

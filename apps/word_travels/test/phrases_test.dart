@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocket_talk/data/phrases.dart';
-import 'package:pocket_talk/models/phrase.dart';
-import 'package:pocket_talk/models/place.dart';
+import 'package:word_travels/data/phrases.dart';
+import 'package:word_travels/models/phrase.dart';
+import 'package:word_travels/models/place.dart';
 
 /// Asserts the blank in [blanked] stands where a whole word stood, rather
 /// than inside one. Checked on the rendered output, so it holds whatever

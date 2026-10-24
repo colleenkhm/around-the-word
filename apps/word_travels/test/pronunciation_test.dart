@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:pocket_talk/data/phrases.dart';
-import 'package:pocket_talk/models/pronunciation.dart';
+import 'package:word_travels/data/phrases.dart';
+import 'package:word_travels/models/pronunciation.dart';
 
 /// How closely the generator has to track the hand-written guides. It sits
 /// at 93.6% exact / 98.1% per-word against the curated set; the floors here

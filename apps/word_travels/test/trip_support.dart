@@ -1,6 +1,6 @@
-import 'package:pocket_talk/data/phrases.dart';
-import 'package:pocket_talk/models/trip.dart';
-import 'package:pocket_talk/state/trips.dart';
+import 'package:word_travels/data/phrases.dart';
+import 'package:word_travels/models/trip.dart';
+import 'package:word_travels/state/trips.dart';
 
 /// A [Trips] holding one trip, for screens that need somewhere to save to.
 /// Not loaded from storage — `load()` isn't called, so nothing persists and

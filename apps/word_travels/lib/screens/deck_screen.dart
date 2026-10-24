@@ -7,7 +7,7 @@ import '../models/place.dart';
 import '../state/practice_scores.dart';
 import '../state/trips.dart';
 import '../state/vocab_bank.dart';
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 import '../widgets/phrase_flip_card.dart';
 import '../widgets/pt_app_bar.dart';
 import 'practice_screen.dart';

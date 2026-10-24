@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
-import 'package:pocket_talk/data/phrases.dart';
-import 'package:pocket_talk/models/phrase.dart';
-import 'package:pocket_talk/models/trip.dart';
-import 'package:pocket_talk/screens/deck_screen.dart';
-import 'package:pocket_talk/screens/practice_screen.dart';
-import 'package:pocket_talk/state/practice_scores.dart';
-import 'package:pocket_talk/state/trips.dart';
-import 'package:pocket_talk/state/vocab_bank.dart';
+import 'package:word_travels/data/phrases.dart';
+import 'package:word_travels/models/phrase.dart';
+import 'package:word_travels/models/trip.dart';
+import 'package:word_travels/screens/deck_screen.dart';
+import 'package:word_travels/screens/practice_screen.dart';
+import 'package:word_travels/state/practice_scores.dart';
+import 'package:word_travels/state/trips.dart';
+import 'package:word_travels/state/vocab_bank.dart';
 
 import 'trip_support.dart';
 

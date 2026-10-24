@@ -9,7 +9,7 @@ import '../models/phrase.dart';
 import '../models/place.dart';
 import '../models/trip.dart';
 import '../state/trips.dart';
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 import '../widgets/phrase_flip_card.dart';
 import '../widgets/pt_app_bar.dart';
 import '../widgets/pt_search_field.dart';

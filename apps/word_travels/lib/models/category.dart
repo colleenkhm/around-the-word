@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 
 /// A topic grouping of phrases (Food & drink, Transportation, ...).
 /// Not tied to a country or trip — just a bucket a user can browse and

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:pocket_talk/services/translation_service.dart';
+import 'package:word_travels/services/translation_service.dart';
 
 /// A provider wired to [handler] instead of the network, with a short
 /// deadline so the timeout case doesn't make the suite wait on it.

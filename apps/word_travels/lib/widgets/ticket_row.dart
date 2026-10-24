@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 
 /// The mockup's `.ticket-row`: a card-row panel with two small circular
 /// notches cut into its left/right edges (colored to match the surface

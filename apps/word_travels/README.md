@@ -1,4 +1,4 @@
-# Pocket Talk
+# Word Travels
 
 Travel phrases you actually need, saved and drilled. A curated Spanish
 phrasebook scoped to where you are, plus a general translation lookup for
@@ -25,7 +25,7 @@ network call is translation (see below).
 | `lib/models/trip.dart` | A trip: name, destination, settings — the container decks hang off |
 | `lib/services/` | `TranslationProvider` and its implementations |
 | `lib/screens/`, `lib/widgets/` | UI |
-| `lib/theme/pocket_talk_theme.dart` | Palette (`PTColors`, `PTTints`) and type ramp (`ptHeading`, `ptBody`, `ptMono`) |
+| `lib/theme/word_travels_theme.dart` | Palette (`PTColors`, `PTTints`) and type ramp (`ptHeading`, `ptBody`, `ptMono`) |
 
 State objects: `VocabBank` (deck membership plus looked-up phrase content),
 `PracticeScores` (per-phrase running score, weakest drilled first),

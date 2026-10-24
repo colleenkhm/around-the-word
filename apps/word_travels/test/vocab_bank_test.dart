@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:pocket_talk/data/phrases.dart';
-import 'package:pocket_talk/models/phrase.dart';
-import 'package:pocket_talk/state/vocab_bank.dart';
+import 'package:word_travels/data/phrases.dart';
+import 'package:word_travels/models/phrase.dart';
+import 'package:word_travels/state/vocab_bank.dart';
 
 const _mexico = 'trip_mexico';
 const _spain = 'trip_spain';

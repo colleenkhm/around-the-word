@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
-import 'package:pocket_talk/models/phrase.dart';
-import 'package:pocket_talk/state/trips.dart';
+import 'package:word_travels/models/phrase.dart';
+import 'package:word_travels/state/trips.dart';
 import 'trip_support.dart';
-import 'package:pocket_talk/state/recent_phrases.dart';
-import 'package:pocket_talk/state/vocab_bank.dart';
-import 'package:pocket_talk/widgets/phrase_flip_card.dart';
+import 'package:word_travels/state/recent_phrases.dart';
+import 'package:word_travels/state/vocab_bank.dart';
+import 'package:word_travels/widgets/phrase_flip_card.dart';
 
 // A short phrase, so a text-sized (rather than row-wide) tap area would
 // leave most of the row untappable — the bug this guards against.

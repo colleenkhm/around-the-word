@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:pocket_talk/main.dart';
+import 'package:word_travels/main.dart';
 
 void main() {
   testWidgets('welcome, country and setting picks lead to the app', (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
 
-    await tester.pumpWidget(const PocketTalkApp());
+    await tester.pumpWidget(const WordTravelsApp());
     await tester.pumpAndSettle();
 
     expect(find.text('Get started'), findsOneWidget);

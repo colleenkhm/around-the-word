@@ -6,7 +6,7 @@ import '../models/place.dart';
 import '../models/trip.dart';
 import '../state/trips.dart';
 import '../state/vocab_bank.dart';
-import '../theme/pocket_talk_theme.dart';
+import '../theme/word_travels_theme.dart';
 
 /// Switch between trips, or start a new one. Each trip keeps its own
 /// vocabulary, so this is also what decides where a lookup gets saved.
