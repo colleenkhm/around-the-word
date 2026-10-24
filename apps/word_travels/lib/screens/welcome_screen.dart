@@ -93,7 +93,7 @@ class _Stamp extends StatelessWidget {
           ),
           child: CustomPaint(
             painter: _DashedCirclePainter(),
-            child: Center(child: Text('PT', style: ptHeading(size: 15))),
+            child: Center(child: Text('WT', style: ptHeading(size: 15))),
           ),
         ),
       ),

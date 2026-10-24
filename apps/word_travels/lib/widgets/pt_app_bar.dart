@@ -7,7 +7,7 @@ import '../theme/word_travels_theme.dart';
 import 'place_picker_sheet.dart';
 
 /// The app's one app-bar shape, matching the mockup's `.app-bar`: a thin
-/// bottom divider, Fraunces title, and either the circular "PT" monogram
+/// bottom divider, Fraunces title, and either the circular "WT" monogram
 /// (top-level screens) or a back chevron (pushed screens) as the leading
 /// element. Built on Flutter's own [AppBar] (for correct status-bar/notch
 /// handling) rather than a hand-rolled container, just fully restyled.
@@ -110,7 +110,7 @@ class _Mark extends StatelessWidget {
         shape: BoxShape.circle,
         border: Border.all(color: PTColors.ink, width: 1.6),
       ),
-      child: Text('PT', style: ptHeading(size: 10)),
+      child: Text('WT', style: ptHeading(size: 10)),
     );
   }
 }
