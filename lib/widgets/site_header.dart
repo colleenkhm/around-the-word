@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../theme/accordion_theme.dart';
 
-/// App's persistent site-wide nav bar — "Forin" wordmark next to a globe
-/// icon on the left, the tagline on the right. One fixed look by default;
-/// see [backgroundColor]. No "About" link — per direction received
-/// 2026-08-31, the wordmark (home) is the only nav needed; navigation
-/// doesn't need to be more complicated than that right now.
+/// App's persistent site-wide nav bar — "whereabout" wordmark next to a
+/// globe icon. One fixed look by default; see [backgroundColor]. No "About"
+/// link — per direction received 2026-08-31, the wordmark (home) is the
+/// only nav needed; navigation doesn't need to be more complicated than
+/// that right now.
 class SiteHeader extends StatelessWidget {
   final VoidCallback? onHomeTap;
   final Color? backgroundColor;
@@ -30,33 +30,24 @@ class SiteHeader extends StatelessWidget {
       letterSpacing: -0.1,
       color: Colors.white,
     );
-    final taglineStyle = TextStyle(
-      fontFamily: AccordionTheme.dmSans,
-      fontSize: 11,
-      fontStyle: FontStyle.italic,
-      color: Colors.white.withValues(alpha: 0.65),
-    );
-
     return Container(
       color: background,
+      width: double.infinity,
       padding: EdgeInsets.fromLTRB(20, topInset + 24, 20, 10),
-      child: Row(
-        children: [
-          _tappable(
-            onTap: onHomeTap,
-            tooltip: 'Home',
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.public, size: 22, color: iconColor),
-                const SizedBox(width: 8),
-                Text('Forin', style: wordmarkStyle),
-              ],
-            ),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: _tappable(
+          onTap: onHomeTap,
+          tooltip: 'Home',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.public, size: 22, color: iconColor),
+              const SizedBox(width: 8),
+              Text('whereabout', style: wordmarkStyle),
+            ],
           ),
-          const Spacer(),
-          Text('making the foreign familiar', style: taglineStyle),
-        ],
+        ),
       ),
     );
   }

@@ -1,4 +1,4 @@
--- Forin: hand-researched Costa Rica language data — the first real values
+-- Whereabout: hand-researched Costa Rica language data — the first real values
 -- for the percent_speakers/is_official columns added in migration 025.
 -- See that file's NUMBERING WARNING before pushing either one.
 -- Tier C: hand-curated, not importer output. Every figure below is
@@ -16,7 +16,7 @@
 -- Mekatelyu (Limonese Creole, spoken in Limón province by the Afro-Costa
 -- Rican community) is deliberately NOT included here: no verified ISO
 -- 639-3 code or population figure was confirmed during this pass. Logged
--- as a known gap in forin-scratch-notes.md rather than guessed at.
+-- as a known gap in whereabout-scratch-notes.md rather than guessed at.
 
 -- New language rows REST Countries never surfaces (indigenous languages,
 -- not official anywhere, so seed_country_languages.py never creates them).

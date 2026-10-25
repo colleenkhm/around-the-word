@@ -1,4 +1,4 @@
--- Forin: percentage-of-speakers + official/unofficial status for
+-- Whereabout: percentage-of-speakers + official/unofficial status for
 -- country_languages. Added 2026-09-20 per direct request.
 --
 -- NUMBERING WARNING: local `main` tops out at 022, but per HANDOFF.md's

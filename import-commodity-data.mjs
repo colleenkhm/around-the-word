@@ -1,4 +1,4 @@
-// Forin: commodity data importer
+// Whereabout: commodity data importer
 //
 // Fills country_facts and cities for ALL countries — entirely from free,
 // no-account, no-key sources:

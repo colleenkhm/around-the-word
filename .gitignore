@@ -62,9 +62,9 @@ node_modules/
 /CLAUDE.md
 /docs/HANDOFF.md
 /docs/design-preferences.md
-/docs/forin-client-design.md
-/docs/forin-data-architecture.md
-/docs/forin-scratch-notes.md
+/docs/whereabout-client-design.md
+/docs/whereabout-data-architecture.md
+/docs/whereabout-scratch-notes.md
 /docs/language-app-system-design.md
 /docs/app-design-doc.md
 /docs/state-dept-data-handoff.md

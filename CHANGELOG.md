@@ -1,8 +1,8 @@
 # Changelog
 
-All notable changes to Forin (renamed from whereabout 2026-08-31, which was
-itself renamed from "Around the Word" — see the 0.4.0 entry below) are
-logged here, one entry per version
+All notable changes to whereabout (renamed from "Around the Word" — see the
+0.4.0 entry below; briefly renamed to Forin 2026-08-31, then back — see the
+dated entries below) are logged here, one entry per version
 bump in [pubspec.yaml](pubspec.yaml). Loosely follows
 [Keep a Changelog](https://keepachangelog.com/) and
 [Semantic Versioning](https://semver.org/) — while the app is pre-1.0
@@ -21,6 +21,10 @@ refactors/doc updates unless they're worth calling out.
 - **App renamed from "whereabout" to "Forin"** (tagline: "making the foreign
   familiar"). App title, iOS/Android bundle identifiers, and web app name
   all updated — same class of change as the 0.4.0 rename below.
+- **App renamed back from "Forin" to "whereabout," temporarily** — expect
+  this to change again. Same scope as the rename above, reverted: app
+  title, iOS/Android bundle identifiers, web app name, package name, and
+  the `docs/forin-*.md` planning docs (now `docs/whereabout-*.md`).
 - New "Holidays" section on the country page — public holidays, sourced
   from Nager.Date.
 

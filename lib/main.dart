@@ -22,18 +22,18 @@ Future<void> main() async {
   // country_facts.timezone lookup (see CountryHeader's local-time logic).
   tz_data.initializeTimeZones();
 
-  runApp(const ForinApp());
+  runApp(const WhereaboutApp());
 }
 
-class ForinApp extends StatelessWidget {
-  const ForinApp({super.key});
+class WhereaboutApp extends StatelessWidget {
+  const WhereaboutApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => TripSelection()..loadReferenceData(),
       child: MaterialApp(
-        title: 'Forin',
+        title: 'whereabout',
         theme: _theme,
         debugShowCheckedModeBanner: false,
         home: const DestinationScreen(),
