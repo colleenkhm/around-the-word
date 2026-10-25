@@ -17,16 +17,30 @@ refactors/doc updates unless they're worth calling out.
 
 ## [Unreleased]
 
+### Added
+- "Holidays" section on the country page — public holidays, sourced from
+  Nager.Date. Data is imported; the section isn't in the app yet.
+
+## [0.5.0] — 2026-10-25
+
+First web preview, published at www.whereabout.world.
+
+### Added
+- Language section shows roughly what share of the population speaks each
+  language, including common unofficial languages (Costa Rica only so far).
+
 ### Changed
-- **App renamed from "whereabout" to "Forin"** (tagline: "making the foreign
-  familiar"). App title, iOS/Android bundle identifiers, and web app name
-  all updated — same class of change as the 0.4.0 rename below.
-- **App renamed back from "Forin" to "whereabout," temporarily** — expect
-  this to change again. Same scope as the rename above, reverted: app
-  title, iOS/Android bundle identifiers, web app name, package name, and
-  the `docs/forin-*.md` planning docs (now `docs/whereabout-*.md`).
-- New "Holidays" section on the country page — public holidays, sourced
-  from Nager.Date.
+- Country page colors now follow the country's flag.
+- Cities section shows a shorter list.
+- Home screen: header is just the wordmark (no About link or tagline);
+  footer reads "built by Colleen Murray."
+- Name is still "whereabout." A rename to "Forin" was made on 2026-08-31
+  and reverted on 2026-10-25, before release; expect the name to change
+  again.
+
+### Fixed
+- Country pages showing no data at all (a database update hadn't been
+  applied).
 
 ## [0.4.0] — 2026-08-21
 
