@@ -9,7 +9,7 @@ import '../widgets/site_footer.dart';
 import '../widgets/site_header.dart';
 import 'country_header_preview_screen.dart';
 
-/// Screen 1: "Where are you going?" — a search-first destination picker.
+/// Screen 1: "Where to?" — a search-first destination picker.
 /// Every country opens the country page, `active` or not — see
 /// `CountryHeaderPreviewScreen`. See HANDOFF.md for history.
 /// Copy changed to "Tell me about..." 2026-08-31, alongside the
@@ -72,7 +72,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                   children: [
                     const SizedBox(height: 56),
                     Text(
-                      'Where are you going?',
+                      'Where to?',
                       style: AccordionTheme.pageHeading(31),
                       textAlign: TextAlign.center,
                     ),

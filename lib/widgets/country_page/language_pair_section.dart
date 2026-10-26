@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_theme/shared_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../feature_flags.dart';
 import '../../models/country_bundle.dart';
 import '../../models/language_content.dart';
 
@@ -13,6 +14,7 @@ final _wordTravelsUri = kIsWeb
 
 /// Word Travels only teaches Spanish so far.
 bool _hasWordTravels(List<LanguageEntry> languages) =>
+    wordTravelsEnabled &&
     languages.any((l) => l.name.toLowerCase() == 'spanish');
 
 /// The "Language" [AccordionSection]'s expanded content — a country's
