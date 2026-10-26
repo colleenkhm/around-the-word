@@ -156,6 +156,7 @@ class SupabaseCountryRepository {
       'lastImportedAt': row['last_imported_at'],
       'emergencyNumber': null,
       'borderingCountryCodes': (row['neighbors'] as List?)?.cast<String>() ?? [],
+      'climates': row['climates'] ?? [],
     };
   }
 
@@ -212,7 +213,6 @@ class SupabaseCountryRepository {
         'whyShort': e['why_short'] ?? '',
         'why': e['why'] ?? '',
         'crowdLevel': validCrowdLevels.contains(crowdLevel) ? crowdLevel : 'moderate',
-        'weatherNote': null,
       };
     }).toList();
   }

@@ -125,14 +125,12 @@ class BestTime {
   final String whyShort;
   final String why;
   final CrowdLevel crowdLevel;
-  final String? weatherNote;
 
   const BestTime({
     required this.months,
     required this.whyShort,
     required this.why,
     required this.crowdLevel,
-    this.weatherNote,
   });
 
   factory BestTime.fromJson(Map<String, dynamic> json) {
@@ -141,7 +139,6 @@ class BestTime {
       whyShort: json['whyShort'] as String,
       why: json['why'] as String,
       crowdLevel: _crowdLevelFromJson(json['crowdLevel'] as String),
-      weatherNote: json['weatherNote'] as String?,
     );
   }
 }
