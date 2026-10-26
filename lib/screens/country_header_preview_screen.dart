@@ -16,21 +16,22 @@ import '../state/trip_selection.dart';
 import '../theme/section_palette.dart';
 import '../utils/flag_palette.dart' show extractFlagBaseColors;
 import 'destination_screen.dart';
-import '../widgets/country_page/accordion_section.dart';
 import '../widgets/country_page/additional_resources_section.dart';
 import '../widgets/country_page/best_times_section.dart';
 import '../widgets/country_page/cities_section.dart';
 import '../widgets/country_page/country_header.dart';
+import '../widgets/country_page/fact_card_content.dart';
 import '../widgets/country_page/language_pair_section.dart';
 import '../widgets/country_page/border_countries_section.dart';
 import '../widgets/country_page/paper_texture.dart';
+import '../widgets/country_page/postage_card.dart';
 import '../widgets/country_page/practical_norms_section.dart';
 import '../widgets/country_page/travel_advisory_section.dart';
 import '../widgets/country_page/visa_section.dart';
 import '../widgets/site_footer.dart';
 import '../widgets/site_header.dart';
 
-/// The country page — a collapsible accordion of sections. See
+/// The country page — a grid of flip/open cards under the masthead. See
 /// HANDOFF.md for the full decision history.
 class CountryHeaderPreviewScreen extends StatefulWidget {
   final country_model.Country country;
@@ -40,18 +41,6 @@ class CountryHeaderPreviewScreen extends StatefulWidget {
   @override
   State<CountryHeaderPreviewScreen> createState() =>
       _CountryHeaderPreviewScreenState();
-}
-
-/// Accordion row order.
-enum _Section {
-  visa,
-  cities,
-  borderCountries,
-  times,
-  advisory,
-  language,
-  norms,
-  resources,
 }
 
 class _CountryHeaderPreviewScreenState
@@ -64,11 +53,6 @@ class _CountryHeaderPreviewScreenState
 
   // Falls back to hand-picked defaults until flag colors load.
   SectionPalette _palette = SectionPalette.fallback;
-
-  // Starts fully collapsed.
-  final Map<_Section, bool> _expanded = {
-    for (final s in _Section.values) s: false,
-  };
 
   @override
   void initState() {
@@ -88,8 +72,9 @@ class _CountryHeaderPreviewScreenState
 
     CountryBundle? supabaseBundle;
     try {
-      supabaseBundle = await SupabaseCountryRepository()
-          .fetchCountryBundle(widget.country.countryCode);
+      supabaseBundle = await SupabaseCountryRepository().fetchCountryBundle(
+        widget.country.countryCode,
+      );
     } catch (error) {
       debugPrint('Supabase fetch failed for $code: $error');
     }
@@ -185,21 +170,6 @@ class _CountryHeaderPreviewScreenState
       .where((a) => a.issuingAuthority == 'US State Department')
       .toList();
 
-  bool get _allExpanded => _expanded.values.every((v) => v);
-
-  void _toggle(_Section section) {
-    setState(() => _expanded[section] = !_expanded[section]!);
-  }
-
-  void _toggleAll() {
-    final next = !_allExpanded;
-    setState(() {
-      for (final s in _Section.values) {
-        _expanded[s] = next;
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final bundle = _bundle;
@@ -237,26 +207,9 @@ class _CountryHeaderPreviewScreenState
                                   ? 'Costa Rica'
                                   : null,
                               nativeNameRomanized: null,
-                              utcOffsetMinutes: bundle.facts.utcOffsetMinutes,
-                              timezone: bundle.facts.timezone,
-                              // Live via CurrencyService/_loadExchangeRate —
-                              // null until it resolves, never a mock value.
-                              exchangeRate: _exchangeRate,
-                              currencyName: bundle.facts.currencyName,
-                              allExpanded: _allExpanded,
-                              onToggleAll: _toggleAll,
-                              accent: _palette.visa,
                               header: _palette.header,
-                              stub: _palette.stub,
                             ),
-                            _visaSection(bundle),
-                            _citiesSection(bundle),
-                            _borderCountriesSection(bundle, trip.countries),
-                            _timesSection(bundle),
-                            _advisorySection(bundle),
-                            _languageSection(bundle),
-                            _normsSection(bundle),
-                            _resourcesSection(resources),
+                            _cardGrid(bundle, trip.countries, resources),
                             const SiteFooter(),
                           ],
                         ),
@@ -269,186 +222,219 @@ class _CountryHeaderPreviewScreenState
     );
   }
 
-  // --- Sections -----------------------------------------------------------
+  // --- Cards --------------------------------------------------------------
 
-  Widget _visaSection(CountryBundle bundle) {
-    final visa = bundle.visa;
-    final colors = _palette.visa;
-    return AccordionSection(
-      title: 'Visa & Entry',
-      tint: colors.tint,
-      textColor: colors.textColor,
-      hasData: visa != null,
-      meta: visa == null ? null : _firstClause(visa.summary),
-      expanded: _expanded[_Section.visa]!,
-      onToggle: () => _toggle(_Section.visa),
-      contentBuilder: (_) => VisaSection(
-        visa: visa!,
-        regionalNote: bundle.regionalNote,
-        accent: colors.accentOnWhite,
-      ),
-    );
-  }
-
-  Widget _citiesSection(CountryBundle bundle) {
-    final cities = bundle.cities;
-    final colors = _palette.cities;
-    return AccordionSection(
-      title: 'Cities',
-      tint: colors.tint,
-      textColor: colors.textColor,
-      hasData: cities.isNotEmpty,
-      meta: cities.isEmpty
-          ? null
-          : '${cities.length} destination${cities.length == 1 ? '' : 's'}',
-      expanded: _expanded[_Section.cities]!,
-      onToggle: () => _toggle(_Section.cities),
-      contentBuilder: (_) => CitiesSection(
-        cities: cities,
-        capital: bundle.facts.capital,
-        accent: colors.accentOnWhite,
-      ),
-    );
-  }
-
-  Widget _timesSection(CountryBundle bundle) {
-    final bestTimes = bundle.guide.bestTimes;
-    final colors = _palette.times;
-    return AccordionSection(
-      title: 'When to Visit',
-      tint: colors.tint,
-      textColor: colors.textColor,
-      hasData: bestTimes.isNotEmpty,
-      meta: bestTimes.isEmpty
-          ? null
-          : bestTimes.map((b) => b.months).join(' · '),
-      expanded: _expanded[_Section.times]!,
-      onToggle: () => _toggle(_Section.times),
-      contentBuilder: (_) => BestTimesSection(bestTimes: bestTimes, palette: _palette.cycle),
-    );
-  }
-
-  Widget _advisorySection(CountryBundle bundle) {
-    final advisories = _usAdvisories(bundle);
-    final first = advisories.isEmpty ? null : advisories.first;
-    final metaLabel = first == null
-        ? null
-        : [first.level, first.issuingAuthority].nonNulls.join(' · ');
-    final colors = _palette.advisory;
-    return AccordionSection(
-      title: 'Travel Advisory',
-      tint: colors.tint,
-      textColor: colors.textColor,
-      hasData: advisories.isNotEmpty,
-      meta: metaLabel,
-      expanded: _expanded[_Section.advisory]!,
-      onToggle: () => _toggle(_Section.advisory),
-      contentBuilder: (_) => TravelAdvisorySection(
-        advisories: advisories,
-        emergencyNumber: bundle.facts.emergencyNumber,
-        accent: colors.accentOnWhite,
-      ),
-    );
-  }
-
-  Widget _languageSection(CountryBundle bundle) {
-    final languages = bundle.facts.languages;
-    final featuredWord = bundle.words.isEmpty ? null : bundle.words.first;
-    final hasData = languages.isNotEmpty || featuredWord != null;
-    final colors = _palette.language;
-    return AccordionSection(
-      title: 'Language',
-      tint: colors.tint,
-      textColor: colors.textColor,
-      hasData: hasData,
-      meta: languages.isEmpty ? null : languages.map((l) => l.name).join(' · '),
-      expanded: _expanded[_Section.language]!,
-      onToggle: () => _toggle(_Section.language),
-      contentBuilder: (_) => LanguagePairSection(
-        languages: languages,
-        featuredWord: featuredWord,
-        tint: colors.tint,
-        textColor: colors.textColor,
-        accentOnWhite: colors.accentOnWhite,
-      ),
-    );
-  }
-  
-    Widget _borderCountriesSection(
+  Widget _cardGrid(
     CountryBundle bundle,
     List<country_model.Country> allCountries,
+    List<Resource> resources,
   ) {
-    final codes = bundle.facts.borderingCountryCodes;
-    final colors = _palette.borderCountries;
-    return AccordionSection(
-      title: 'Border Countries',
-      tint: colors.tint,
-      textColor: colors.textColor,
-      hasData: codes.isNotEmpty,
-      meta: codes.isEmpty
-          ? null
-          : '${codes.length} bordering ${codes.length == 1 ? 'country' : 'countries'}',
-      expanded: _expanded[_Section.borderCountries]!,
-      onToggle: () => _toggle(_Section.borderCountries),
-      contentBuilder: (_) => BorderCountriesSection(
-        borderingCountryCodes: codes,
-        allCountries: allCountries,
-        accent: colors.accentOnWhite,
-        onTapBorderCountry: (country) {
-          context.read<TripSelection>().selectCountry(country);
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) =>
-                  CountryHeaderPreviewScreen(country: country),
+    final advisories = _usAdvisories(bundle);
+    final advisory = advisories.isEmpty ? null : advisories.first;
+    final hasTime =
+        bundle.facts.timezone != null || bundle.facts.utcOffsetMinutes != null;
+    final languages = bundle.facts.languages;
+    final featuredWord = bundle.words.isEmpty ? null : bundle.words.first;
+    final borderCodes = bundle.facts.borderingCountryCodes;
+
+    // face shows up front, back flips, sheet opens.
+    final specs = <_CardSpec>[
+      _CardSpec(
+        'Local Time',
+        Icons.schedule,
+        hasTime,
+        face: (colors) => LocalTimeFacts(
+          timezone: bundle.facts.timezone,
+          utcOffsetMinutes: bundle.facts.utcOffsetMinutes,
+          latitude: bundle.facts.latitude,
+          ink: colors.textColor,
+        ),
+      ),
+      _CardSpec(
+        'Currency',
+        Icons.payments_outlined,
+        bundle.facts.currencyCode != null,
+        face: (colors) => CurrencyFacts(
+          // Live; null until it resolves, never a mock value.
+          rate: _exchangeRate,
+          currencyName: bundle.facts.currencyName,
+          ink: colors.textColor,
+        ),
+      ),
+      _CardSpec(
+        'Travel Advisory',
+        Icons.shield_outlined,
+        advisory != null,
+        face: (colors) => AdvisoryLevelFacts(
+          advisory: advisory!,
+          emergencyNumber: bundle.facts.emergencyNumber,
+          ink: colors.textColor,
+        ),
+        back: (colors) => AdvisorySummaryBack(
+          advisory: advisory!,
+          accent: colors.accentOnWhite,
+          onReadMore: () => showPostageSheet(
+            context,
+            title: 'Travel Advisory',
+            icon: Icons.shield_outlined,
+            colors: colors,
+            builder: (_) => TravelAdvisorySection(
+              advisories: advisories,
+              emergencyNumber: bundle.facts.emergencyNumber,
+              accent: colors.accentOnWhite,
             ),
-          );
-        },
+          ),
+        ),
+      ),
+      _CardSpec(
+        'Visa & Entry',
+        Icons.badge_outlined,
+        bundle.visa != null,
+        sheet: (colors) => VisaSection(
+          visa: bundle.visa!,
+          regionalNote: bundle.regionalNote,
+          accent: colors.accentOnWhite,
+        ),
+      ),
+      _CardSpec(
+        'Language',
+        Icons.translate,
+        languages.isNotEmpty || featuredWord != null,
+        sheet: (colors) => LanguagePairSection(
+          languages: languages,
+          featuredWord: featuredWord,
+          tint: colors.tint,
+          textColor: colors.textColor,
+          accentOnWhite: colors.accentOnWhite,
+        ),
+      ),
+      _CardSpec(
+        'When to Visit',
+        Icons.wb_sunny_outlined,
+        bundle.guide.bestTimes.isNotEmpty,
+        sheet: (colors) => BestTimesSection(
+          bestTimes: bundle.guide.bestTimes,
+          palette: _palette.cycle,
+        ),
+      ),
+      _CardSpec(
+        'Cities',
+        Icons.location_city,
+        bundle.cities.isNotEmpty,
+        sheet: (colors) => CitiesSection(
+          cities: bundle.cities,
+          capital: bundle.facts.capital,
+          accent: colors.accentOnWhite,
+        ),
+      ),
+      _CardSpec(
+        'Border Countries',
+        Icons.map_outlined,
+        borderCodes.isNotEmpty,
+        sheet: (colors) => BorderCountriesSection(
+          borderingCountryCodes: borderCodes,
+          allCountries: allCountries,
+          accent: colors.accentOnWhite,
+          onTapBorderCountry: (country) {
+            context.read<TripSelection>().selectCountry(country);
+            final navigator = Navigator.of(context);
+            navigator.pop(); // the sheet
+            navigator.push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    CountryHeaderPreviewScreen(country: country),
+              ),
+            );
+          },
+        ),
+      ),
+      _CardSpec(
+        'Practical Norms',
+        Icons.tips_and_updates_outlined,
+        bundle.guide.practicalNorms.isNotEmpty,
+        sheet: (colors) => PracticalNormsSection(
+          norms: bundle.guide.practicalNorms,
+          tint: colors.tint,
+          textColor: colors.textColor,
+        ),
+      ),
+      _CardSpec(
+        'Resources',
+        Icons.link,
+        resources.isNotEmpty,
+        sheet: (colors) => AdditionalResourcesSection(
+          resources: resources,
+          accent: colors.accentOnWhite,
+        ),
+      ),
+    ];
+
+    final cycle = _palette.cycle;
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1100),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth;
+            final columns = width >= 900 ? 4 : (width >= 600 ? 3 : 2);
+            return GridView.count(
+              crossAxisCount: columns,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
+              mainAxisSpacing: 18,
+              crossAxisSpacing: 14,
+              childAspectRatio: 0.82,
+              children: [
+                for (var i = 0; i < specs.length; i++)
+                  _card(specs[i], cycle[i % cycle.length], i),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
 
-  Widget _normsSection(CountryBundle bundle) {
-    final norms = bundle.guide.practicalNorms;
-    final colors = _palette.norms;
-    return AccordionSection(
-      title: 'Practical Norms',
-      tint: colors.tint,
-      textColor: colors.textColor,
-      hasData: norms.isNotEmpty,
-      meta: norms.isEmpty ? null : norms.map((n) => n.title).join(' · '),
-      expanded: _expanded[_Section.norms]!,
-      onToggle: () => _toggle(_Section.norms),
-      contentBuilder: (_) => PracticalNormsSection(
-        norms: norms,
-        tint: colors.tint,
-        textColor: colors.textColor,
-      ),
-    );
-  }
-
-  Widget _resourcesSection(List<Resource> resources) {
-    final colors = _palette.resources;
-    return AccordionSection(
-      title: 'Additional Resources',
-      tint: colors.tint,
-      textColor: colors.textColor,
-      hasData: resources.isNotEmpty,
-      meta: resources.isEmpty
+  Widget _card(_CardSpec spec, SectionColors colors, int index) {
+    final sheet = spec.sheet;
+    final back = spec.back;
+    final face = spec.face;
+    return PostageCard(
+      title: spec.title,
+      icon: spec.icon,
+      colors: colors,
+      hasData: spec.hasData,
+      tiltDegrees: postageCardTilts[index % postageCardTilts.length],
+      face: face == null ? null : (_) => face(colors),
+      back: back == null ? null : (_) => back(colors),
+      onOpen: sheet == null
           ? null
-          : resources.map((r) => r.label).join(' · '),
-      expanded: _expanded[_Section.resources]!,
-      onToggle: () => _toggle(_Section.resources),
-      contentBuilder: (_) => AdditionalResourcesSection(
-        resources: resources,
-        accent: colors.accentOnWhite,
-      ),
+          : () => showPostageSheet(
+              context,
+              title: spec.title,
+              icon: spec.icon,
+              colors: colors,
+              builder: (_) => sheet(colors),
+            ),
     );
   }
+}
 
-  // First clause of the summary, truncated, for a collapsed row's meta.
-  String _firstClause(String summary) {
-    final period = summary.indexOf('.');
-    final clause = period == -1 ? summary : summary.substring(0, period);
-    return clause.length > 60 ? '${clause.substring(0, 60)}…' : clause;
-  }
+class _CardSpec {
+  final String title;
+  final IconData icon;
+  final bool hasData;
+  final Widget Function(SectionColors colors)? face;
+  final Widget Function(SectionColors colors)? back;
+  final Widget Function(SectionColors colors)? sheet;
+
+  const _CardSpec(
+    this.title,
+    this.icon,
+    this.hasData, {
+    this.face,
+    this.back,
+    this.sheet,
+  });
 }

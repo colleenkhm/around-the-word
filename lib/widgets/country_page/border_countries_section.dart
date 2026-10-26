@@ -3,7 +3,7 @@ import 'package:shared_theme/shared_theme.dart';
 
 import '../../models/country.dart';
 
-/// The "Border Countries" [AccordionSection]'s expanded content — every
+/// The "Border Countries" card's sheet content — every
 /// country this one shares a land border with, on the section's plain
 /// white background, each row linking to that country's own page.
 class BorderCountriesSection extends StatelessWidget {
@@ -78,7 +78,9 @@ class _BorderCountryRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
       decoration: isLast
           ? null
-          : const BoxDecoration(border: Border(bottom: BorderSide(color: AccordionTheme.rule))),
+          : const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AccordionTheme.rule)),
+            ),
       child: Row(
         children: [
           Expanded(
@@ -90,7 +92,8 @@ class _BorderCountryRow extends StatelessWidget {
           ),
           // Chevron is the only tappable-link affordance now; absent
           // entirely for an unresolved code.
-          if (country != null) Icon(Icons.chevron_right, size: 16, color: accent),
+          if (country != null)
+            Icon(Icons.chevron_right, size: 16, color: accent),
         ],
       ),
     );

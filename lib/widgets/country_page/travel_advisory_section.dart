@@ -5,7 +5,7 @@ import '../../models/travel_info.dart';
 import '../../utils/format_date.dart';
 import 'external_link.dart';
 
-/// The "Travel Advisory" [AccordionSection]'s expanded content, including
+/// The Travel Advisory card's "Read more" sheet content, including
 /// the top-right "Emergency" stamp.
 class TravelAdvisorySection extends StatelessWidget {
   final List<TravelAdvisory> advisories;
@@ -22,12 +22,6 @@ class TravelAdvisorySection extends StatelessWidget {
     required this.accent,
     this.emergencyNumber,
   });
-
-  // Leading digit from a level string like "Level 2", or null.
-  int? _levelNumber(TravelAdvisory a) {
-    final match = RegExp(r'(\d+)').firstMatch(a.level ?? '');
-    return match == null ? null : int.parse(match.group(1)!);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +46,7 @@ class TravelAdvisorySection extends StatelessWidget {
                 ],
                 _AdvisoryRow(
                   advisory: advisories[i],
-                  level: _levelNumber(advisories[i]),
+                  level: advisories[i].levelNumber,
                   accent: accent,
                 ),
               ],

@@ -23,17 +23,21 @@ class ExternalLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
+      onTap: () =>
+          launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: fontFamily,
-              fontWeight: FontWeight.w600,
-              fontSize: 11.5,
-              color: color,
+          // Flexible so a long label wraps on a narrow card.
+          Flexible(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontFamily: fontFamily,
+                fontWeight: FontWeight.w600,
+                fontSize: 11.5,
+                color: color,
+              ),
             ),
           ),
           const SizedBox(width: 2),

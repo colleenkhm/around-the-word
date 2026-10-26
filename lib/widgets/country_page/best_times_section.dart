@@ -4,7 +4,7 @@ import 'package:shared_theme/shared_theme.dart';
 import '../../models/country_guide.dart';
 import '../../theme/section_palette.dart';
 
-/// The "When to Visit" [AccordionSection]'s expanded content — a two-up
+/// The "When to Visit" card's sheet content — a two-up
 /// grid of month squares, each a different flag-derived color (cycling
 /// through [SectionPalette.cycle]) and styled after the "Word of the day"
 /// card: bold headline, parenthetical short reason, fuller prose below.
@@ -17,7 +17,11 @@ class BestTimesSection extends StatelessWidget {
   /// The per-country accent cycle each square draws its color from.
   final List<SectionColors> palette;
 
-  const BestTimesSection({super.key, required this.bestTimes, required this.palette});
+  const BestTimesSection({
+    super.key,
+    required this.bestTimes,
+    required this.palette,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +42,9 @@ class BestTimesSection extends StatelessWidget {
             _MonthRow(
               first: squares[row * 2],
               firstColors: palette[(row * 2) % palette.length],
-              second: row * 2 + 1 < squares.length ? squares[row * 2 + 1] : null,
+              second: row * 2 + 1 < squares.length
+                  ? squares[row * 2 + 1]
+                  : null,
               secondColors: palette[(row * 2 + 1) % palette.length],
             ),
           ],
@@ -76,7 +82,9 @@ class _MonthRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(child: _MonthCard(square: first, colors: firstColors)),
+          Expanded(
+            child: _MonthCard(square: first, colors: firstColors),
+          ),
           const SizedBox(width: 10),
           Expanded(
             child: second == null
@@ -106,7 +114,13 @@ class _MonthCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(square.month, style: AccordionTheme.sHead.copyWith(fontSize: 17, color: textColor)),
+          Text(
+            square.month,
+            style: AccordionTheme.sHead.copyWith(
+              fontSize: 17,
+              color: textColor,
+            ),
+          ),
           const SizedBox(height: 3),
           Text(
             '(${bestTime.whyShort})',
@@ -120,7 +134,10 @@ class _MonthCard extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             bestTime.why,
-            style: AccordionTheme.sBody.copyWith(fontSize: 12.5, color: textColor.withValues(alpha: 0.85)),
+            style: AccordionTheme.sBody.copyWith(
+              fontSize: 12.5,
+              color: textColor.withValues(alpha: 0.85),
+            ),
           ),
         ],
       ),

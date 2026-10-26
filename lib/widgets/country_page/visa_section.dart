@@ -6,7 +6,7 @@ import '../../models/travel_info.dart';
 import '../../utils/format_date.dart';
 import 'external_link.dart';
 
-/// The "Visa & Entry" [AccordionSection]'s expanded content. No invented
+/// The "Visa & Entry" card's sheet content. No invented
 /// "No visa required" headline — [VisaInfo.summary] is free text only.
 class VisaSection extends StatelessWidget {
   final VisaInfo visa;

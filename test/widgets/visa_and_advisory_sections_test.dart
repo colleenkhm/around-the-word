@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:whereabout/models/travel_info.dart';
+import 'package:whereabout/widgets/country_page/fact_card_content.dart';
 import 'package:whereabout/widgets/country_page/travel_advisory_section.dart';
 import 'package:whereabout/widgets/country_page/visa_section.dart';
 
@@ -116,4 +117,48 @@ void main() {
       expect(find.text('EMERGENCY'), findsOneWidget);
     },
   );
+
+  // Card-sized, since card content lays out against a fixed height.
+  Widget card(Widget child) => SizedBox(width: 170, height: 210, child: child);
+
+  testWidgets('AdvisoryLevelFacts: renders level, label, emergency number', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      card(
+        AdvisoryLevelFacts(
+          advisory: advisory,
+          emergencyNumber: '911',
+          ink: Colors.white,
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Level 1'), findsOneWidget);
+    expect(find.text('Exercise Normal Precautions'), findsOneWidget);
+    expect(find.text('Emergency 911'), findsOneWidget);
+  });
+
+  testWidgets('AdvisorySummaryBack: shows summary, Read more fires', (
+    tester,
+  ) async {
+    var opened = false;
+    await pump(
+      tester,
+      card(
+        AdvisorySummaryBack(
+          advisory: advisory,
+          accent: _accent,
+          onReadMore: () => opened = true,
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Overall a very safe destination.'), findsOneWidget);
+    await tester.tap(find.text('Read more'));
+    expect(opened, isTrue);
+  });
 }

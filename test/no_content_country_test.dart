@@ -27,19 +27,19 @@ void main() {
       await tester.tap(find.text('Mexico'));
       await tester.pumpAndSettle();
 
-      // The country name renders (ticket header), and every accordion
-      // section is present as a row, but collapsed by default — its
-      // "Coming soon" body only shows once expanded (see
-      // AccordionSection's class doc). (Collapsed-row subheadings, which
-      // would otherwise read "Coming soon" too, are hidden for now — see
-      // AccordionSection.showSubheading — so not asserted here.)
+      // The country name renders, and every card is present even with no
+      // data — tapping one flips it to its "Coming soon" back.
       expect(find.text('Mexico'), findsWidgets);
       expect(find.text('What do you want to learn?'), findsNothing);
       expect(find.text('Cities'), findsOneWidget);
 
+      await tester.ensureVisible(find.text('Cities'));
       await tester.tap(find.text('Cities'));
       await tester.pumpAndSettle();
-      expect(find.text("Coming soon — we haven't curated this yet."), findsOneWidget);
+      expect(
+        find.text("Coming soon — we haven't curated this yet."),
+        findsOneWidget,
+      );
     },
   );
 }

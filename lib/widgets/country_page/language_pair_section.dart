@@ -17,7 +17,7 @@ bool _hasWordTravels(List<LanguageEntry> languages) =>
     wordTravelsEnabled &&
     languages.any((l) => l.name.toLowerCase() == 'spanish');
 
-/// The "Language" [AccordionSection]'s expanded content — a country's
+/// The "Language" card's sheet content — a country's
 /// languages (official and commonly-spoken-but-not) side by side with a
 /// "Word of the day" card. Content-only, no card chrome or heading.
 class LanguagePairSection extends StatelessWidget {
@@ -51,8 +51,11 @@ class LanguagePairSection extends StatelessWidget {
     final learnUri = _hasWordTravels(languages) ? _wordTravelsUri : null;
     final learnLanguage = learnUri != null
         ? 'Spanish'
-        : languages.where((l) => l.isOfficial).firstOrNull?.name ?? languages.firstOrNull?.name;
-    final learnLabel = learnLanguage == null ? 'Learn →' : 'Learn $learnLanguage →';
+        : languages.where((l) => l.isOfficial).firstOrNull?.name ??
+              languages.firstOrNull?.name;
+    final learnLabel = learnLanguage == null
+        ? 'Learn →'
+        : 'Learn $learnLanguage →';
 
     final languagesCard = showLanguages
         ? _LanguagesCard(
@@ -61,7 +64,12 @@ class LanguagePairSection extends StatelessWidget {
             textColor: textColor,
             // Link lives here when there's no word card to carry it.
             learnButton: !showWord && learnUri != null
-                ? _LearnButton(label: learnLabel, uri: learnUri, background: textColor, foreground: tint)
+                ? _LearnButton(
+                    label: learnLabel,
+                    uri: learnUri,
+                    background: textColor,
+                    foreground: tint,
+                  )
                 : null,
           )
         : null;
@@ -100,7 +108,12 @@ class _LanguagesCard extends StatelessWidget {
   final Color textColor;
   final Widget? learnButton;
 
-  const _LanguagesCard({required this.languages, required this.tint, required this.textColor, this.learnButton});
+  const _LanguagesCard({
+    required this.languages,
+    required this.tint,
+    required this.textColor,
+    this.learnButton,
+  });
 
   /// Most-spoken first by [LanguageEntry.percentSpeakers] once every
   /// language has a figure; until then official first, so a partly
@@ -112,15 +125,22 @@ class _LanguagesCard extends StatelessWidget {
   /// English alone.
   List<LanguageEntry> get _displayLanguages {
     final complete = languages.every((l) => l.percentSpeakers != null);
-    final sorted = [...languages]..sort((a, b) {
-      if (!complete && a.isOfficial != b.isOfficial) return a.isOfficial ? -1 : 1;
-      final byPercent = (b.percentSpeakers ?? -1).compareTo(a.percentSpeakers ?? -1);
-      if (byPercent != 0) return byPercent;
-      if (a.isOfficial != b.isOfficial) return a.isOfficial ? -1 : 1;
-      return 0;
-    });
+    final sorted = [...languages]
+      ..sort((a, b) {
+        if (!complete && a.isOfficial != b.isOfficial) {
+          return a.isOfficial ? -1 : 1;
+        }
+        final byPercent = (b.percentSpeakers ?? -1).compareTo(
+          a.percentSpeakers ?? -1,
+        );
+        if (byPercent != 0) return byPercent;
+        if (a.isOfficial != b.isOfficial) return a.isOfficial ? -1 : 1;
+        return 0;
+      });
     final hasEnglish = sorted.any((l) => l.name.toLowerCase() == 'english');
-    if (!hasEnglish) sorted.add(const LanguageEntry(name: 'English', isOfficial: false));
+    if (!hasEnglish) {
+      sorted.add(const LanguageEntry(name: 'English', isOfficial: false));
+    }
     return sorted;
   }
 
@@ -135,13 +155,21 @@ class _LanguagesCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('LANGUAGES', style: AccordionTheme.sLabel.copyWith(color: textColor.withValues(alpha: 0.75))),
+            Text(
+              'LANGUAGES',
+              style: AccordionTheme.sLabel.copyWith(
+                color: textColor.withValues(alpha: 0.75),
+              ),
+            ),
             const SizedBox(height: 8),
             for (var i = 0; i < display.length; i++) ...[
               if (i != 0)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Container(height: 1, color: textColor.withValues(alpha: 0.15)),
+                  child: Container(
+                    height: 1,
+                    color: textColor.withValues(alpha: 0.15),
+                  ),
                 ),
               _LanguageRow(entry: display[i], textColor: textColor),
             ],
@@ -179,7 +207,12 @@ class _LanguageRow extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: Text(entry.name, style: AccordionTheme.rowTitle.copyWith(color: textColor))),
+              Expanded(
+                child: Text(
+                  entry.name,
+                  style: AccordionTheme.rowTitle.copyWith(color: textColor),
+                ),
+              ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                 decoration: BoxDecoration(
@@ -212,7 +245,9 @@ class _LanguageRow extends StatelessWidget {
                       value: (percent / 100).clamp(0.0, 1.0),
                       minHeight: 5,
                       backgroundColor: textColor.withValues(alpha: 0.15),
-                      valueColor: AlwaysStoppedAnimation(textColor.withValues(alpha: 0.85)),
+                      valueColor: AlwaysStoppedAnimation(
+                        textColor.withValues(alpha: 0.85),
+                      ),
                     ),
                   ),
                 ),
@@ -255,7 +290,11 @@ class _WordOfDayCard extends StatelessWidget {
   final Color accent;
   final Widget learnButton;
 
-  const _WordOfDayCard({required this.word, required this.accent, required this.learnButton});
+  const _WordOfDayCard({
+    required this.word,
+    required this.accent,
+    required this.learnButton,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -274,20 +313,33 @@ class _WordOfDayCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('WORD OF THE DAY', style: AccordionTheme.sLabel.copyWith(color: accent)),
+              Text(
+                'WORD OF THE DAY',
+                style: AccordionTheme.sLabel.copyWith(color: accent),
+              ),
               const SizedBox(height: 8),
               Text(
                 word.lemma,
-                style: AccordionTheme.sHead.copyWith(fontSize: 22, fontWeight: FontWeight.w900),
+                style: AccordionTheme.sHead.copyWith(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               if (word.pronunciation != null) ...[
                 const SizedBox(height: 4),
-                Text(word.pronunciation!, style: AccordionTheme.tfSub.copyWith(color: accent)),
+                Text(
+                  word.pronunciation!,
+                  style: AccordionTheme.tfSub.copyWith(color: accent),
+                ),
               ],
               const SizedBox(height: 5),
               Text(
                 word.translation,
-                style: AccordionTheme.sBody.copyWith(fontSize: 12.5, fontWeight: FontWeight.w600, color: AccordionTheme.ink2),
+                style: AccordionTheme.sBody.copyWith(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w600,
+                  color: AccordionTheme.ink2,
+                ),
               ),
               if (word.usageNote != null) ...[
                 const SizedBox(height: 4),
@@ -317,7 +369,12 @@ class _LearnButton extends StatelessWidget {
   final Color background;
   final Color foreground;
 
-  const _LearnButton({required this.label, required this.uri, required this.background, required this.foreground});
+  const _LearnButton({
+    required this.label,
+    required this.uri,
+    required this.background,
+    required this.foreground,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -327,7 +384,9 @@ class _LearnButton extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(4),
         // Same tab on web, so Back returns here.
-        onTap: uri == null ? null : () => launchUrl(uri!, webOnlyWindowName: '_self'),
+        onTap: uri == null
+            ? null
+            : () => launchUrl(uri!, webOnlyWindowName: '_self'),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
           child: Text(

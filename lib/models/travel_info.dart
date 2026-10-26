@@ -21,6 +21,12 @@ class TravelAdvisory {
     required this.lastVerifiedAt,
   });
 
+  /// Leading digit of [level] (e.g. "Level 2"), or null.
+  int? get levelNumber {
+    final match = RegExp(r'(\d+)').firstMatch(level ?? '');
+    return match == null ? null : int.parse(match.group(1)!);
+  }
+
   factory TravelAdvisory.fromJson(Map<String, dynamic> json) {
     return TravelAdvisory(
       issuingAuthority: json['issuingAuthority'] as String,

@@ -4,7 +4,7 @@ import 'package:shared_theme/shared_theme.dart';
 import '../../models/country_bundle.dart';
 import '../../utils/format_population.dart';
 
-/// The "Cities" [AccordionSection]'s expanded content — a numbered list
+/// The "Cities" card's sheet content — a numbered list
 /// of cities on the section's plain white background. No chevron/tap
 /// affordance — there's no dedicated city page to link to yet.
 class CitiesSection extends StatelessWidget {
@@ -60,7 +60,9 @@ class CitiesSection extends StatelessWidget {
         ? sorted.take(_maxDisplayed).toList()
         : [
             capitalCity,
-            ...sorted.where((city) => city != capitalCity).take(_maxDisplayed - 1),
+            ...sorted
+                .where((city) => city != capitalCity)
+                .take(_maxDisplayed - 1),
           ];
 
     return Column(
@@ -105,14 +107,19 @@ class _CityRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
       decoration: isLast
           ? null
-          : const BoxDecoration(border: Border(bottom: BorderSide(color: AccordionTheme.rule))),
+          : const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AccordionTheme.rule)),
+            ),
       child: Row(
         children: [
           SizedBox(
             width: 18,
             child: Text(
               index.toString().padLeft(2, '0'),
-              style: AccordionTheme.rowMeta.copyWith(color: accent, fontWeight: FontWeight.w600),
+              style: AccordionTheme.rowMeta.copyWith(
+                color: accent,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           const SizedBox(width: 10),
@@ -128,7 +135,13 @@ class _CityRow extends StatelessWidget {
                 ),
                 if (city.isFeatured) ...[
                   const SizedBox(width: 5),
-                  const Text('★', style: TextStyle(color: AccordionTheme.butterDark, fontSize: 11)),
+                  const Text(
+                    '★',
+                    style: TextStyle(
+                      color: AccordionTheme.butterDark,
+                      fontSize: 11,
+                    ),
+                  ),
                 ],
               ],
             ),
