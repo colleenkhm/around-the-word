@@ -50,7 +50,7 @@ tools/vocab_tagger/.venv/
 # Commodity importer (dev-only, not part of the Flutter app)
 tools/commodity_importer/.venv/
 .env
-.env.scripts
+.env.*
 
 # Node (import scripts use Supabase/xlsx packages)
 node_modules/
@@ -68,3 +68,12 @@ node_modules/
 /docs/language-app-system-design.md
 /docs/app-design-doc.md
 /docs/state-dept-data-handoff.md
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
+
+# Supabase CLI cache (linked project, versions)
+supabase/.temp/

@@ -1,6 +1,6 @@
 """
 Fetches top-population cities from GeoNames and outputs a CSV matching the
-`cities` table columns (see around-the-word-data-architecture.md's
+`cities` table columns (see whereabout-data-architecture.md's
 "Commodity: cities" section) — paste the rows straight into the Cities
 sheet of the collection spreadsheet.
 
