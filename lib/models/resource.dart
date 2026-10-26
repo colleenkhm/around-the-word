@@ -8,9 +8,6 @@ class Resource {
   const Resource({required this.label, required this.url});
 
   factory Resource.fromJson(Map<String, dynamic> json) {
-    return Resource(
-      label: json['label'] as String,
-      url: json['url'] as String,
-    );
+    return Resource(label: json['label'] as String, url: json['url'] as String);
   }
 }

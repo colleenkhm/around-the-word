@@ -58,8 +58,16 @@ class SectionPalette {
   /// All eight section accents in a fixed order, for widgets that want a
   /// color cycle rather than one fixed section color — e.g. each month
   /// square in [BestTimesSection] gets the next one, wrapping around.
-  List<SectionColors> get cycle =>
-      [visa, cities, borderCountries, times, advisory, language, norms, resources];
+  List<SectionColors> get cycle => [
+    visa,
+    cities,
+    borderCountries,
+    times,
+    advisory,
+    language,
+    norms,
+    resources,
+  ];
 
   /// Maps [colors] (most-prominent first) onto the eight sections,
   /// cycling if fewer than eight.
@@ -75,7 +83,10 @@ class SectionPalette {
     // blended block with the stub above it instead of a new section. Push
     // headerSource later in the cycle so a different flag color leads.
     final sectionSource = _withoutLeading(colors, headerSource);
-    final ordered = List.generate(8, (i) => sectionSource[i % sectionSource.length]);
+    final ordered = List.generate(
+      8,
+      (i) => sectionSource[i % sectionSource.length],
+    );
     final sectionColors = ordered.map(_colorsFor).toList();
     return SectionPalette(
       visa: sectionColors[0],
@@ -110,7 +121,8 @@ class SectionPalette {
   // achromatic — a genuinely colorless flag, not just white/black-first.
   static Color _headerSource(List<Color> colors) {
     for (final color in colors) {
-      if (HSLColor.fromColor(color).saturation >= _achromaticSaturationThreshold) {
+      if (HSLColor.fromColor(color).saturation >=
+          _achromaticSaturationThreshold) {
         return color;
       }
     }

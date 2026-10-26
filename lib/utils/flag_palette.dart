@@ -36,7 +36,9 @@ Future<List<Color>?> extractFlagBaseColors(String isoCode) async {
     // Keeps only the largest of each near-duplicate color cluster.
     final baseColors = <Color>[];
     for (final swatch in major) {
-      final isDuplicate = baseColors.any((c) => _distance(c, swatch.color) < 0.12);
+      final isDuplicate = baseColors.any(
+        (c) => _distance(c, swatch.color) < 0.12,
+      );
       if (!isDuplicate) baseColors.add(swatch.color);
     }
     return baseColors.isEmpty ? null : baseColors;
@@ -51,7 +53,8 @@ bool _avoidNearRedLine(HSLColor color) {
   const redLineMinHue = 10.0;
   const redLineMaxHue = 37.0;
   const redLineMaxSaturation = 0.82;
-  final isNearRedILine = color.hue >= redLineMinHue &&
+  final isNearRedILine =
+      color.hue >= redLineMinHue &&
       color.hue <= redLineMaxHue &&
       color.saturation <= redLineMaxSaturation;
   return !isNearRedILine;

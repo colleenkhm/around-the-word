@@ -11,7 +11,11 @@ class DividedCard extends StatelessWidget {
   /// Forwarded to [TicketPanel.color].
   final Color color;
 
-  const DividedCard({super.key, required this.children, this.color = CountryTheme.card});
+  const DividedCard({
+    super.key,
+    required this.children,
+    this.color = CountryTheme.card,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -20,10 +20,7 @@ class SectionHeading extends StatelessWidget {
           Text(label, style: CountryTheme.sectionLabel),
           const SizedBox(width: 9),
           const Expanded(child: DashedDivider(height: 8)),
-          if (trailing != null) ...[
-            const SizedBox(width: 8),
-            trailing!,
-          ],
+          if (trailing != null) ...[const SizedBox(width: 8), trailing!],
         ],
       ),
     );

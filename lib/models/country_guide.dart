@@ -107,7 +107,11 @@ class Festival {
   final String body;
   final String months;
 
-  const Festival({required this.title, required this.body, required this.months});
+  const Festival({
+    required this.title,
+    required this.body,
+    required this.months,
+  });
 
   factory Festival.fromJson(Map<String, dynamic> json) {
     return Festival(
@@ -268,7 +272,11 @@ class PrepNote {
   final String body;
   final Urgency urgency;
 
-  const PrepNote({required this.title, required this.body, required this.urgency});
+  const PrepNote({
+    required this.title,
+    required this.body,
+    required this.urgency,
+  });
 
   factory PrepNote.fromJson(Map<String, dynamic> json) {
     return PrepNote(

@@ -8,7 +8,9 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
-          body: TicketPanel(child: Padding(padding: EdgeInsets.all(20), child: Text('Hi'))),
+          body: TicketPanel(
+            child: Padding(padding: EdgeInsets.all(20), child: Text('Hi')),
+          ),
         ),
       ),
     );
@@ -17,7 +19,9 @@ void main() {
     expect(find.text('Hi'), findsOneWidget);
   });
 
-  testWidgets('renders inside an IntrinsicHeight without throwing', (tester) async {
+  testWidgets('renders inside an IntrinsicHeight without throwing', (
+    tester,
+  ) async {
     // TicketPanel wraps its content in ClipPath + CustomPaint, not
     // LayoutBuilder — both support intrinsic-dimension queries (they just
     // clip/paint over whatever size layout already resolved), unlike

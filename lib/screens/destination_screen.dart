@@ -55,7 +55,9 @@ class _DestinationScreenState extends State<DestinationScreen> {
     final results = _query.isEmpty
         ? const <Country>[]
         : trip.countries
-              .where((c) => c.name.toLowerCase().startsWith(_query.toLowerCase()))
+              .where(
+                (c) => c.name.toLowerCase().startsWith(_query.toLowerCase()),
+              )
               .toList();
 
     return Scaffold(

@@ -80,11 +80,11 @@ class CountryTheme {
   static const advisoryLevel4 = Color(0xFF8B2020);
 
   static Color advisoryColor(int level) => switch (level) {
-        1 => advisoryLevel1,
-        2 => advisoryLevel2,
-        3 => advisoryLevel3,
-        _ => advisoryLevel4,
-      };
+    1 => advisoryLevel1,
+    2 => advisoryLevel2,
+    3 => advisoryLevel3,
+    _ => advisoryLevel4,
+  };
 
   /// A light pastel of [base]'s hue. Currently unused.
   static Color lightTint(Color base) {
@@ -101,13 +101,13 @@ class CountryTheme {
 
   /// The big country name.
   static TextStyle countryName(double fontSize) => TextStyle(
-        fontFamily: _libreBaskerville,
-        fontWeight: FontWeight.w700,
-        fontSize: fontSize,
-        height: 1.1,
-        letterSpacing: fontSize * -0.01,
-        color: ink,
-      );
+    fontFamily: _libreBaskerville,
+    fontWeight: FontWeight.w700,
+    fontSize: fontSize,
+    height: 1.1,
+    letterSpacing: fontSize * -0.01,
+    color: ink,
+  );
 
   /// Ticket header's native name, on the navy block.
   static const ticketNativeName = TextStyle(

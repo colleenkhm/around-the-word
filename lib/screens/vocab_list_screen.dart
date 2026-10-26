@@ -37,10 +37,8 @@ class VocabListScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => FlashcardScreen(
-                      title: subject.name,
-                      deck: entries,
-                    ),
+                    builder: (context) =>
+                        FlashcardScreen(title: subject.name, deck: entries),
                   ),
                 );
               },

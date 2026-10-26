@@ -10,11 +10,7 @@ class SiteHeader extends StatelessWidget {
   final VoidCallback? onHomeTap;
   final Color? backgroundColor;
 
-  const SiteHeader({
-    super.key,
-    this.onHomeTap,
-    this.backgroundColor,
-  });
+  const SiteHeader({super.key, this.onHomeTap, this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {

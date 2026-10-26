@@ -10,7 +10,7 @@ import '../models/vocab_entry.dart';
 /// personalizing -> learn/use.
 class TripSelection extends ChangeNotifier {
   TripSelection({ContentRepository? repository})
-      : _repository = repository ?? ContentRepository();
+    : _repository = repository ?? ContentRepository();
 
   final ContentRepository _repository;
 

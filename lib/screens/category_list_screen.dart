@@ -19,7 +19,8 @@ class CategoryListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final trip = context.watch<TripSelection>();
-    final subjects = subjectsToShow ??
+    final subjects =
+        subjectsToShow ??
         trip.subjects
             .where((s) => trip.selectedCategoryIds.contains(s.id))
             .toList();

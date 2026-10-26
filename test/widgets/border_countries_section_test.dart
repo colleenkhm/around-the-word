@@ -72,25 +72,26 @@ void main() {
     expect(find.text('ZZ'), findsOneWidget);
   });
 
-  testWidgets('tapping a resolved border country calls onTapBorderCountry with it', (
-    tester,
-  ) async {
-    Country? tapped;
-    await pump(
-      tester,
-      BorderCountriesSection(
-        borderingCountryCodes: const ['PA'],
-        allCountries: allCountries,
-        accent: _accent,
-        onTapBorderCountry: (country) => tapped = country,
-      ),
-    );
+  testWidgets(
+    'tapping a resolved border country calls onTapBorderCountry with it',
+    (tester) async {
+      Country? tapped;
+      await pump(
+        tester,
+        BorderCountriesSection(
+          borderingCountryCodes: const ['PA'],
+          allCountries: allCountries,
+          accent: _accent,
+          onTapBorderCountry: (country) => tapped = country,
+        ),
+      );
 
-    await tester.tap(find.text('Panama'));
-    await tester.pump();
+      await tester.tap(find.text('Panama'));
+      await tester.pump();
 
-    expect(tapped?.countryCode, 'PA');
-  });
+      expect(tapped?.countryCode, 'PA');
+    },
+  );
 
   testWidgets('empty list renders nothing', (tester) async {
     await pump(

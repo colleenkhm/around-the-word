@@ -15,7 +15,9 @@ import 'package:whereabout/widgets/country_page/section_heading.dart';
 /// gap for this one failure mode, not as general coverage of the preview
 /// screen.
 void main() {
-  testWidgets('renders inside an IntrinsicHeight without throwing', (tester) async {
+  testWidgets('renders inside an IntrinsicHeight without throwing', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
@@ -38,15 +40,18 @@ void main() {
     expect(find.text('Visa & entry'), findsOneWidget);
   });
 
-  testWidgets('renders at a realistic narrow (mobile) width without overflowing', (tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(
-          body: SizedBox(width: 150, child: SectionHeading('Cities')),
+  testWidgets(
+    'renders at a realistic narrow (mobile) width without overflowing',
+    (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SizedBox(width: 150, child: SectionHeading('Cities')),
+          ),
         ),
-      ),
-    );
+      );
 
-    expect(tester.takeException(), isNull);
-  });
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

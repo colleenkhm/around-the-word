@@ -12,14 +12,21 @@ class TicketPanel extends StatelessWidget {
   /// alternate tone for a panel that should read as sitting on the page.
   final Color color;
 
-  const TicketPanel({super.key, required this.child, this.color = CountryTheme.card});
+  const TicketPanel({
+    super.key,
+    required this.child,
+    this.color = CountryTheme.card,
+  });
 
   static const _cornerRadius = CountryTheme.cardRadius;
   static const _notchRadius = 7.0;
 
   @override
   Widget build(BuildContext context) {
-    const clipper = _TicketEdgeClipper(cornerRadius: _cornerRadius, notchRadius: _notchRadius);
+    const clipper = _TicketEdgeClipper(
+      cornerRadius: _cornerRadius,
+      notchRadius: _notchRadius,
+    );
     return Stack(
       children: [
         ClipPath(
@@ -28,7 +35,10 @@ class TicketPanel extends StatelessWidget {
         ),
         Positioned.fill(
           child: CustomPaint(
-            painter: _TicketEdgePainter(clipper: clipper, color: CountryTheme.rule),
+            painter: _TicketEdgePainter(
+              clipper: clipper,
+              color: CountryTheme.rule,
+            ),
           ),
         ),
       ],
@@ -40,15 +50,25 @@ class _TicketEdgeClipper extends CustomClipper<Path> {
   final double cornerRadius;
   final double notchRadius;
 
-  const _TicketEdgeClipper({required this.cornerRadius, required this.notchRadius});
+  const _TicketEdgeClipper({
+    required this.cornerRadius,
+    required this.notchRadius,
+  });
 
   Path path(Size size) {
     final base = Path()
-      ..addRRect(RRect.fromRectAndRadius(Offset.zero & size, Radius.circular(cornerRadius)));
+      ..addRRect(
+        RRect.fromRectAndRadius(
+          Offset.zero & size,
+          Radius.circular(cornerRadius),
+        ),
+      );
     final midY = size.height / 2;
     final notches = Path()
       ..addOval(Rect.fromCircle(center: Offset(0, midY), radius: notchRadius))
-      ..addOval(Rect.fromCircle(center: Offset(size.width, midY), radius: notchRadius));
+      ..addOval(
+        Rect.fromCircle(center: Offset(size.width, midY), radius: notchRadius),
+      );
     return Path.combine(PathOperation.difference, base, notches);
   }
 
@@ -57,7 +77,8 @@ class _TicketEdgeClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(covariant _TicketEdgeClipper oldClipper) =>
-      oldClipper.cornerRadius != cornerRadius || oldClipper.notchRadius != notchRadius;
+      oldClipper.cornerRadius != cornerRadius ||
+      oldClipper.notchRadius != notchRadius;
 }
 
 class _TicketEdgePainter extends CustomPainter {
@@ -82,7 +103,10 @@ class _TicketEdgePainter extends CustomPainter {
       while (distance < metric.length) {
         final next = distance + (drawing ? _dashLength : _gapLength);
         if (drawing) {
-          canvas.drawPath(metric.extractPath(distance, next.clamp(0, metric.length)), paint);
+          canvas.drawPath(
+            metric.extractPath(distance, next.clamp(0, metric.length)),
+            paint,
+          );
         }
         distance = next;
         drawing = !drawing;

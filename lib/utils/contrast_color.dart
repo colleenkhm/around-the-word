@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 /// Picks black or white, whichever reads better on [background], via the
 /// real WCAG 2.0 relative-luminance formula.
 Color readableTextColor(Color background) {
-  return _contrastRatio(background, Colors.white) >= _contrastRatio(background, Colors.black)
+  return _contrastRatio(background, Colors.white) >=
+          _contrastRatio(background, Colors.black)
       ? Colors.white
       : Colors.black;
 }

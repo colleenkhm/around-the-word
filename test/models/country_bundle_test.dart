@@ -27,7 +27,12 @@ void main() {
     expect(bundle.country.contentStatus, ContentStatus.partial);
     expect(bundle.facts.capital, 'San José');
     expect(bundle.facts.currencyCode, 'CRC');
-    expect(bundle.facts.languages.map((l) => l.name), ['Spanish', 'English', 'Cabécar', 'Bribri']);
+    expect(bundle.facts.languages.map((l) => l.name), [
+      'Spanish',
+      'English',
+      'Cabécar',
+      'Bribri',
+    ]);
     final spanish = bundle.facts.languages.first;
     expect(spanish.isOfficial, isTrue);
     expect(spanish.percentSpeakers, isNull); // unverified, migration 030
@@ -39,7 +44,10 @@ void main() {
   test('parses cities, distinguishing featured from non-featured', () {
     expect(bundle.cities, hasLength(4));
     expect(bundle.cities.where((c) => c.isFeatured), hasLength(3));
-    expect(bundle.cities.firstWhere((c) => c.name == 'Limón').isFeatured, isFalse);
+    expect(
+      bundle.cities.firstWhere((c) => c.name == 'Limón').isFeatured,
+      isFalse,
+    );
   });
 
   test('leader is null (not shown in V1 — see Open Decisions)', () {
@@ -53,8 +61,9 @@ void main() {
     expect(dry.crowdLevel, CrowdLevel.high);
 
     expect(bundle.guide.practicalNorms, hasLength(3));
-    final tipping = bundle.guide.practicalNorms
-        .firstWhere((n) => n.type == 'tipping_norm');
+    final tipping = bundle.guide.practicalNorms.firstWhere(
+      (n) => n.type == 'tipping_norm',
+    );
     expect(tipping.severity, Severity.important);
 
     expect(bundle.guide.festivals, hasLength(1));
@@ -62,17 +71,23 @@ void main() {
     expect(bundle.guide.isEmpty, isFalse);
   });
 
-  test('groups points of interest by city, leaving regional ones unassigned', () {
-    expect(bundle.pointsOfInterest, hasLength(3));
-    final regional =
-        bundle.pointsOfInterest.where((p) => p.cityId == null).toList();
-    expect(regional, hasLength(1));
-    expect(regional.single.name, 'Monteverde Cloud Forest Reserve');
-    expect(regional.single.poiType, PoiType.landmark);
-  });
+  test(
+    'groups points of interest by city, leaving regional ones unassigned',
+    () {
+      expect(bundle.pointsOfInterest, hasLength(3));
+      final regional = bundle.pointsOfInterest
+          .where((p) => p.cityId == null)
+          .toList();
+      expect(regional, hasLength(1));
+      expect(regional.single.name, 'Monteverde Cloud Forest Reserve');
+      expect(regional.single.poiType, PoiType.landmark);
+    },
+  );
 
   test('parses phrases down to their tokens', () {
-    final pura = bundle.phrases.firstWhere((p) => p.id == 'phrase-cr-pura-vida');
+    final pura = bundle.phrases.firstWhere(
+      (p) => p.id == 'phrase-cr-pura-vida',
+    );
     expect(pura.formality, Formality.informal);
     expect(pura.tokens, hasLength(2));
 
@@ -102,13 +117,16 @@ void main() {
     );
   });
 
-  test('advisories always carry an issuing authority and verification date', () {
-    expect(bundle.advisories, hasLength(2));
-    for (final advisory in bundle.advisories) {
-      expect(advisory.issuingAuthority, isNotEmpty);
-      expect(advisory.officialUrl, startsWith('https://'));
-    }
-  });
+  test(
+    'advisories always carry an issuing authority and verification date',
+    () {
+      expect(bundle.advisories, hasLength(2));
+      for (final advisory in bundle.advisories) {
+        expect(advisory.issuingAuthority, isNotEmpty);
+        expect(advisory.officialUrl, startsWith('https://'));
+      }
+    },
+  );
 
   test('visa info is present and nationality-scoped', () {
     expect(bundle.visa, isNotNull);

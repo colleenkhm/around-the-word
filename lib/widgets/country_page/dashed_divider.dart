@@ -24,7 +24,9 @@ class DashedDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
-      child: CustomPaint(painter: _DashedLinePainter(color: color, strokeWidth: strokeWidth)),
+      child: CustomPaint(
+        painter: _DashedLinePainter(color: color, strokeWidth: strokeWidth),
+      ),
     );
   }
 }

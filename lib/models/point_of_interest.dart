@@ -11,7 +11,8 @@ PoiType _poiTypeFromJson(String value) =>
 class PointOfInterest {
   final String id;
   final PoiType poiType;
-  final List<String> tags; // breakfast/lunch/dinner/coffee/bar — restaurants only
+  final List<String>
+  tags; // breakfast/lunch/dinner/coffee/bar — restaurants only
   final String name;
   final String description;
   final String? dressCode;
@@ -37,7 +38,9 @@ class PointOfInterest {
     return PointOfInterest(
       id: json['id'] as String,
       poiType: _poiTypeFromJson(json['poiType'] as String),
-      tags: (json['tags'] as List<dynamic>? ?? []).map((e) => e as String).toList(),
+      tags: (json['tags'] as List<dynamic>? ?? [])
+          .map((e) => e as String)
+          .toList(),
       name: json['name'] as String,
       description: json['description'] as String,
       dressCode: json['dressCode'] as String?,

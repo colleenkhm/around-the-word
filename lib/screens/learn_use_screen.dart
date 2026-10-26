@@ -25,10 +25,8 @@ class LearnUseScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => FlashcardScreen(
-                      title: 'Learn',
-                      deck: trip.mixedDeck,
-                    ),
+                    builder: (context) =>
+                        FlashcardScreen(title: 'Learn', deck: trip.mixedDeck),
                   ),
                 );
               },

@@ -37,7 +37,10 @@ class SupabaseCountryRepository {
         .eq('country_id', countryId)
         .maybeSingle();
 
-    final cityRows = await _client.from('cities').select().eq('country_id', countryId);
+    final cityRows = await _client
+        .from('cities')
+        .select()
+        .eq('country_id', countryId);
 
     final guideRow = await _client
         .from('country_guides')
@@ -50,7 +53,9 @@ class SupabaseCountryRepository {
     // itself (see migration 023).
     final languageRows = await _client
         .from('country_languages')
-        .select('is_official, percent_speakers, percent_status, usage_note, languages(name)')
+        .select(
+          'is_official, percent_speakers, percent_status, usage_note, languages(name)',
+        )
         .eq('country_id', countryId);
 
     final advisoryRows = await _client
@@ -65,7 +70,9 @@ class SupabaseCountryRepository {
         .limit(1); // only the word-of-the-day card reads this today
 
     final guide = CountryGuide.fromJson(_guideJson(guideRow));
-    final advisories = advisoryRows.map((r) => TravelAdvisory.fromJson(_advisoryJson(r))).toList();
+    final advisories = advisoryRows
+        .map((r) => TravelAdvisory.fromJson(_advisoryJson(r)))
+        .toList();
     final words = wordRows.map((r) => Word.fromJson(_wordJson(r))).toList();
     final visa = await _fetchUsVisa(countryId);
 
@@ -74,7 +81,8 @@ class SupabaseCountryRepository {
         'id': countryRow['id'],
         'isoCode': countryRow['iso_code'],
         'nameCommon': countryRow['name_common'],
-        'nameOfficial': countryRow['name_official'] ?? countryRow['name_common'],
+        'nameOfficial':
+            countryRow['name_official'] ?? countryRow['name_common'],
         'contentStatus': countryRow['content_status'] ?? 'none',
       }),
       facts: CountryFacts.fromJson(_factsJson(factsRow, languageRows)),
@@ -136,7 +144,10 @@ class SupabaseCountryRepository {
     });
   }
 
-  Map<String, dynamic> _factsJson(Map<String, dynamic>? row, List<Map<String, dynamic>> languageRows) {
+  Map<String, dynamic> _factsJson(
+    Map<String, dynamic>? row,
+    List<Map<String, dynamic>> languageRows,
+  ) {
     final languages = languageRows.map(_languageJson).toList();
     if (row == null) return {'languages': languages};
     return {
@@ -155,7 +166,8 @@ class SupabaseCountryRepository {
       'accentColorHex': null,
       'lastImportedAt': row['last_imported_at'],
       'emergencyNumber': null,
-      'borderingCountryCodes': (row['neighbors'] as List?)?.cast<String>() ?? [],
+      'borderingCountryCodes':
+          (row['neighbors'] as List?)?.cast<String>() ?? [],
     };
   }
 
@@ -163,7 +175,9 @@ class SupabaseCountryRepository {
     'name': (row['languages'] as Map<String, dynamic>)['name'],
     'isOfficial': row['is_official'] ?? true,
     // Unverified figures never reach the app (migration 030).
-    'percentSpeakers': row['percent_status'] == 'verified' ? row['percent_speakers'] : null,
+    'percentSpeakers': row['percent_status'] == 'verified'
+        ? row['percent_speakers']
+        : null,
     'usageNote': row['usage_note'],
   };
 
@@ -212,7 +226,9 @@ class SupabaseCountryRepository {
         'months': e['months'],
         'whyShort': e['why_short'] ?? '',
         'why': e['why'] ?? '',
-        'crowdLevel': validCrowdLevels.contains(crowdLevel) ? crowdLevel : 'moderate',
+        'crowdLevel': validCrowdLevels.contains(crowdLevel)
+            ? crowdLevel
+            : 'moderate',
         'weatherNote': null,
       };
     }).toList();

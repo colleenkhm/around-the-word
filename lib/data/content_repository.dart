@@ -37,8 +37,7 @@ class ContentRepository {
   /// All vocab for [countryCode], keyed by subject id. Missing file
   /// resolves to an empty map rather than throwing.
   Future<Map<String, List<VocabEntry>>> loadContent(String countryCode) async {
-    final path =
-        'assets/data/content/${countryCode.toLowerCase()}.json';
+    final path = 'assets/data/content/${countryCode.toLowerCase()}.json';
     String raw;
     try {
       raw = await rootBundle.loadString(path);
