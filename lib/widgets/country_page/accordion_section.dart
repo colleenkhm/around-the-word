@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../theme/accordion_theme.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 /// One collapsible row of the accordion-style country page. Collapsed:
 /// tinted row, title + optional meta. Expanded: [contentBuilder] renders

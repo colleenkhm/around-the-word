@@ -17,14 +17,14 @@
       {
         "name": "Spanish",
         "isOfficial": true,
-        "percentSpeakers": 99,
+        "percentSpeakers": null,
         "usageNote": "Nearly universal first language. ~99% is a rounded estimate — no single census/survey question gives an exact figure."
       },
       {
         "name": "English",
         "isOfficial": false,
         "percentSpeakers": null,
-        "usageNote": "Most widely spoken foreign language; compulsory in schools and common in tourism areas. No reliable population-wide percentage figure found."
+        "usageNote": "Most widely spoken foreign language; compulsory in schools and common in tourism areas."
       },
       {
         "name": "Cabécar",

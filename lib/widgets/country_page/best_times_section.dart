@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 import '../../models/country_guide.dart';
-import '../../theme/accordion_theme.dart';
 import '../../theme/section_palette.dart';
 
 /// The "When to Visit" [AccordionSection]'s expanded content — a two-up

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_theme/shared_theme.dart';
 
-import '../theme/accordion_theme.dart';
 import '../widgets/site_footer.dart';
 
 /// Placeholder destination for the "About" link. Content not written yet.

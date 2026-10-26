@@ -1,0 +1,35 @@
+{
+  "GE": {
+    "percent": 26,
+    "source": "CRRC Caucasus Barometer 2024 Georgia (national household survey), KNOWENG: self-rated English ability Intermediate 16% + Advanced 10%. Beginner (20%) excluded as below conversational. https://www.caucasusbarometer.org/en/cb2024ge/KNOWENG/",
+    "checked": "2026-10-25"
+  },
+  "TK": {
+    "percent": 48.6,
+    "source": "Profile of Tokelau: 2016 Tokelau Census (Tokelau NSO / Stats NZ), p.26: 48.6% of usual residents could have a conversation in English. https://www.tokelau.org.nz/site/tokelau/files/TokelauNSO/2016Census/profile-tokelau-2016-census-final-to-print28jun17jj.pdf",
+    "checked": "2026-10-25"
+  },
+  "CW": {"percent": null, "reason": "2011 census: most-spoken language only (English 3.1%); 2023 census: home language (3.8%). No ability question.", "checked": "2026-10-25"},
+  "SX": {"percent": null, "reason": "Only figure is 2001 census home/main language (67.5%).", "checked": "2026-10-25"},
+  "JE": {"percent": null, "reason": "2021 census asked no language question (States Assembly WQ.28/2024); 94.6% figure is 2001 main language.", "checked": "2026-10-25"},
+  "RS": {"percent": null, "reason": "RZS 2022 AES gives English 52.8% as a share of reported foreign languages, not of adults. Eurostat AES (edat_aes_l51) gives only level among knowers.", "checked": "2026-10-25"},
+  "AL": {"percent": null, "reason": "Eurostat AES publishes only number of foreign languages known and level among knowers, not % knowing English.", "checked": "2026-10-25"},
+  "BA": {"percent": null, "reason": "Same as AL (Eurostat AES).", "checked": "2026-10-25"},
+  "MK": {"percent": null, "reason": "Same as AL (Eurostat AES).", "checked": "2026-10-25"},
+  "FO": {"percent": null, "reason": "2011 census covers Faroese skills and first language only.", "checked": "2026-10-25"},
+  "TV": {"percent": null, "reason": "2017 mini-census has no language question.", "checked": "2026-10-25"},
+  "NU": {"percent": null, "reason": "2017 census: main household language only (Table 3.9).", "checked": "2026-10-25"},
+  "FK": {"percent": null, "reason": "No published census language-ability table (2016 report link dead; 2021 none found). Factbook 89% is a 2006 estimate of unclear measure.", "checked": "2026-10-25"},
+  "KG": {"percent": null, "reason": "2022 census asked other languages spoken fluently, but Book II Table 3.9 assigns one second language per person (English 38,166, ~0.55%), undercounting multilinguals.", "checked": "2026-10-25"},
+  "BY": {"percent": null, "reason": "2019 census published native/home language; no English fluency figure found.", "checked": "2026-10-25"},
+  "TJ": {"percent": null, "reason": "2020 census language volume not reachable; only a 2014 informal 5% estimate.", "checked": "2026-10-25"},
+  "MD": {"percent": null, "reason": "2014 census: usual language only; English inside 0.5% 'other'.", "checked": "2026-10-25"},
+  "TL": {"percent": null, "reason": "2022 census asks English literacy (read/write), not speaking, and main tables don't break it out.", "checked": "2026-10-25"},
+  "MN": {"percent": null, "reason": "No census figure; 2020 LFS covers literacy in any other language.", "checked": "2026-10-25"},
+  "MV": {"percent": null, "reason": "2022 census measures English literacy, not speaking.", "checked": "2026-10-25"},
+  "TC": {"percent": null, "reason": "2012 census publishes no language breakdown.", "checked": "2026-10-25"},
+  "BI": {"percent": null, "reason": "No English figure in 2008 census outputs.", "checked": "2026-10-25"},
+  "KR": {"percent": null, "reason": "No official survey; only a non-representative 2017 Job Korea poll and EF EPI (proficiency score).", "checked": "2026-10-25"},
+  "SH": {"percent": null, "reason": "2021 census publishes no language table.", "checked": "2026-10-25"},
+  "MC": {"percent": null, "reason": "IMSEE census covers nationality, not language.", "checked": "2026-10-25"}
+}

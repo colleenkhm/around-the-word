@@ -50,7 +50,7 @@ class SupabaseCountryRepository {
     // itself (see migration 023).
     final languageRows = await _client
         .from('country_languages')
-        .select('is_official, percent_speakers, usage_note, languages(name)')
+        .select('is_official, percent_speakers, percent_status, usage_note, languages(name)')
         .eq('country_id', countryId);
 
     final advisoryRows = await _client
@@ -162,7 +162,8 @@ class SupabaseCountryRepository {
   Map<String, dynamic> _languageJson(Map<String, dynamic> row) => {
     'name': (row['languages'] as Map<String, dynamic>)['name'],
     'isOfficial': row['is_official'] ?? true,
-    'percentSpeakers': row['percent_speakers'],
+    // Unverified figures never reach the app (migration 030).
+    'percentSpeakers': row['percent_status'] == 'verified' ? row['percent_speakers'] : null,
     'usageNote': row['usage_note'],
   };
 

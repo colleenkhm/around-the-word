@@ -19,8 +19,8 @@ ContentStatus _contentStatusFromJson(String value) =>
 /// One language spoken in a country — official or not. Backed by
 /// `country_languages`/`languages`; see the data architecture doc's
 /// "Curated: language content" section. [percentSpeakers] is null, not 0,
-/// whenever no reasonably sourced figure exists — never guessed (Tier C,
-/// same standard as `usageNote`).
+/// unless the figure is verified against its primary source (migration
+/// 030's `percent_status`) — never guessed.
 class LanguageEntry {
   final String name;
   final bool isOfficial;

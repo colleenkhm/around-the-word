@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_theme/shared_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/resource.dart';
-import '../../theme/accordion_theme.dart';
 
 /// The "Additional Resources" [AccordionSection]'s expanded content —
 /// generic, non-country-specific links (Google Translate, Wikitravel).

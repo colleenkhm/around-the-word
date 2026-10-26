@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 import '../models/country.dart';
 import '../state/trip_selection.dart';
-import '../theme/accordion_theme.dart';
 import '../widgets/country_page/dashed_divider.dart';
 import '../widgets/site_footer.dart';
 import '../widgets/site_header.dart';

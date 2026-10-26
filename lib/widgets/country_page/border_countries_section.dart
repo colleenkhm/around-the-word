@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 import '../../models/country.dart';
-import '../../theme/accordion_theme.dart';
 
 /// The "Border Countries" [AccordionSection]'s expanded content — every
 /// country this one shares a land border with, on the section's plain

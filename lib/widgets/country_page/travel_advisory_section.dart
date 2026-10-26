@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 import '../../models/travel_info.dart';
-import '../../theme/accordion_theme.dart';
 import '../../utils/format_date.dart';
 import 'external_link.dart';
 

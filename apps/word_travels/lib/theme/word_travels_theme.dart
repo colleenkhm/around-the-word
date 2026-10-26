@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:shared_theme/shared_theme.dart';
 
-/// Word Travels' palette and type ramp, ported from the postal/vintage-travel
-/// mockup this app started from.
-///
-/// One thing the mockup's CSS makes easy to miss: `--paper` is the *outer
-/// webpage* backdrop behind the phone mockups (textured, never seen inside
-/// a real device) — the phone's actual screen surface is `--card`. So the
-/// app itself uses [card] as its base surface throughout; [paper] isn't
-/// used at all here.
+/// Word Travels' palette and type ramp, blended with whereabout's: surfaces,
+/// ink and type come from the shared [AccordionTheme], while the postal red
+/// and the per-category tints stay as this app's own warm accent family.
 class PTColors {
   PTColors._();
 
-  static const paper = Color(0xFFEDE6D6); // outer mockup backdrop only
-  static const card = Color(0xFFF7F2E7); // the app's actual surface
-  static const cardRow = Color(0xFFF1EAD8);
-  static const ink = Color(0xFF1E2A38);
-  static const inkSoft = Color(0xFF5B6472);
-  static const line = Color(0x291E2A38); // ink @ 16%
+  // Shared with whereabout.
+  static const card = AccordionTheme.page; // the app's base surface
+  static const cardRow = AccordionTheme.white;
+  static const ink = AccordionTheme.ink;
+  static const inkSoft = AccordionTheme.ink3;
+  static const line = AccordionTheme.rule;
 
   static const postal = Color(0xFFB4402C);
   static const postalInk = Color(0xFF5C1C12);
@@ -71,25 +67,10 @@ class PTTints {
   static const activities = PTTint(PTColors.roseTint, PTColors.roseInk);
 }
 
+/// The shared base theme, plus this app's postal-red text selection.
 ThemeData buildWordTravelsTheme() {
-  final base = ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: PTColors.card,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: PTColors.postal,
-      brightness: Brightness.light,
-      surface: PTColors.card,
-    ),
+  return sharedThemeData.copyWith(
     splashFactory: InkRipple.splashFactory,
-  );
-
-  return base.copyWith(
-    scaffoldBackgroundColor: PTColors.card,
-    textTheme: base.textTheme.apply(
-      bodyColor: PTColors.ink,
-      displayColor: PTColors.ink,
-      fontFamily: 'IBM Plex Sans',
-    ),
     dividerTheme: const DividerThemeData(
       color: PTColors.line,
       thickness: 1,
@@ -103,10 +84,10 @@ ThemeData buildWordTravelsTheme() {
   );
 }
 
-/// Headline/display text — Fraunces, matches the mockup's serif accents.
+/// Headline/display text — Fraunces, shared with whereabout.
 TextStyle ptHeading({double size = 20, FontWeight weight = FontWeight.w600, Color? color}) {
   return TextStyle(
-    fontFamily: 'Fraunces',
+    fontFamily: AccordionTheme.fraunces,
     fontWeight: weight,
     fontSize: size,
     color: color ?? PTColors.ink,
@@ -114,10 +95,10 @@ TextStyle ptHeading({double size = 20, FontWeight weight = FontWeight.w600, Colo
   );
 }
 
-/// Body text — IBM Plex Sans, the mockup's default sans.
+/// Body text — DM Sans, shared with whereabout.
 TextStyle ptBody({double size = 14, FontWeight weight = FontWeight.w400, Color? color}) {
   return TextStyle(
-    fontFamily: 'IBM Plex Sans',
+    fontFamily: AccordionTheme.dmSans,
     fontWeight: weight,
     fontSize: size,
     color: color ?? PTColors.ink,
@@ -127,7 +108,7 @@ TextStyle ptBody({double size = 14, FontWeight weight = FontWeight.w400, Color? 
 /// Mono labels — pronunciation, counts, chips of fact.
 TextStyle ptMono({double size = 11, FontWeight weight = FontWeight.w400, Color? color}) {
   return TextStyle(
-    fontFamily: 'IBM Plex Mono',
+    fontFamily: AccordionTheme.dmMono,
     fontWeight: weight,
     fontSize: size,
     color: color ?? PTColors.inkSoft,

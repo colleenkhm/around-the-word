@@ -1,8 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 import '../data/currency_service.dart';
 import '../data/supabase_country_repository.dart';
@@ -13,7 +13,6 @@ import '../models/live_data.dart';
 import '../models/resource.dart';
 import '../models/travel_info.dart';
 import '../state/trip_selection.dart';
-import '../theme/accordion_theme.dart';
 import '../theme/section_palette.dart';
 import '../utils/flag_palette.dart' show extractFlagBaseColors;
 import 'destination_screen.dart';

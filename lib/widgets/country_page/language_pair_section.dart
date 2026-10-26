@@ -1,8 +1,19 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_theme/shared_theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/country_bundle.dart';
 import '../../models/language_content.dart';
-import '../../theme/accordion_theme.dart';
+
+/// Word Travels, deployed under this site's /word-travels/ path.
+final _wordTravelsUri = kIsWeb
+    ? Uri.base.resolve('/word-travels/')
+    : Uri.parse('https://www.whereabout.world/word-travels/');
+
+/// Word Travels only teaches Spanish so far.
+bool _hasWordTravels(List<LanguageEntry> languages) =>
+    languages.any((l) => l.name.toLowerCase() == 'spanish');
 
 /// The "Language" [AccordionSection]'s expanded content — a country's
 /// languages (official and commonly-spoken-but-not) side by side with a
@@ -35,14 +46,33 @@ class LanguagePairSection extends StatelessWidget {
     final showWord = featuredWord != null;
     if (!showLanguages && !showWord) return const SizedBox.shrink();
 
+    final learnUri = _hasWordTravels(languages) ? _wordTravelsUri : null;
+    final learnLanguage = learnUri != null
+        ? 'Spanish'
+        : languages.where((l) => l.isOfficial).firstOrNull?.name ?? languages.firstOrNull?.name;
+    final learnLabel = learnLanguage == null ? 'Learn →' : 'Learn $learnLanguage →';
+
     final languagesCard = showLanguages
-        ? _LanguagesCard(languages: languages, tint: tint, textColor: textColor)
+        ? _LanguagesCard(
+            languages: languages,
+            tint: tint,
+            textColor: textColor,
+            // Link lives here when there's no word card to carry it.
+            learnButton: !showWord && learnUri != null
+                ? _LearnButton(label: learnLabel, uri: learnUri, background: textColor, foreground: tint)
+                : null,
+          )
         : null;
     final wordCard = showWord
         ? _WordOfDayCard(
             word: featuredWord!,
-            languageName: showLanguages ? languages.first.name : null,
             accent: accentOnWhite,
+            learnButton: _LearnButton(
+              label: learnLabel,
+              uri: learnUri,
+              background: AccordionTheme.ink,
+              foreground: AccordionTheme.white,
+            ),
           )
         : null;
 
@@ -66,19 +96,26 @@ class _LanguagesCard extends StatelessWidget {
   final List<LanguageEntry> languages;
   final Color tint;
   final Color textColor;
+  final Widget? learnButton;
 
-  const _LanguagesCard({required this.languages, required this.tint, required this.textColor});
+  const _LanguagesCard({required this.languages, required this.tint, required this.textColor, this.learnButton});
 
-  /// Official languages first, then by [LanguageEntry.percentSpeakers]
-  /// descending (no-data entries last) — and English always present, even
-  /// when the source data has no entry for it, so a traveler can always
-  /// see at a glance whether it's spoken here. Only runs once there's at
-  /// least one real language on record; a country with none yet still
-  /// reads "coming soon" rather than showing English alone.
+  /// Most-spoken first by [LanguageEntry.percentSpeakers] once every
+  /// language has a figure; until then official first, so a partly
+  /// researched country can't rank English above its own language.
+  /// English always present, even when the source data has no entry for
+  /// it, so a traveler can always see at a glance whether it's spoken
+  /// here. Only runs once there's at least one real language on record; a
+  /// country with none yet still reads "coming soon" rather than showing
+  /// English alone.
   List<LanguageEntry> get _displayLanguages {
+    final complete = languages.every((l) => l.percentSpeakers != null);
     final sorted = [...languages]..sort((a, b) {
+      if (!complete && a.isOfficial != b.isOfficial) return a.isOfficial ? -1 : 1;
+      final byPercent = (b.percentSpeakers ?? -1).compareTo(a.percentSpeakers ?? -1);
+      if (byPercent != 0) return byPercent;
       if (a.isOfficial != b.isOfficial) return a.isOfficial ? -1 : 1;
-      return (b.percentSpeakers ?? -1).compareTo(a.percentSpeakers ?? -1);
+      return 0;
     });
     final hasEnglish = sorted.any((l) => l.name.toLowerCase() == 'english');
     if (!hasEnglish) sorted.add(const LanguageEntry(name: 'English', isOfficial: false));
@@ -105,6 +142,10 @@ class _LanguagesCard extends StatelessWidget {
                   child: Container(height: 1, color: textColor.withValues(alpha: 0.15)),
                 ),
               _LanguageRow(entry: display[i], textColor: textColor),
+            ],
+            if (learnButton != null) ...[
+              const SizedBox(height: 12),
+              learnButton!,
             ],
           ],
         ),
@@ -209,12 +250,10 @@ class _LanguageRow extends StatelessWidget {
 class _WordOfDayCard extends StatelessWidget {
   final Word word;
 
-  /// First official language, if known — feeds the "Learn ___" label.
-  final String? languageName;
-
   final Color accent;
+  final Widget learnButton;
 
-  const _WordOfDayCard({required this.word, required this.accent, this.languageName});
+  const _WordOfDayCard({required this.word, required this.accent, required this.learnButton});
 
   @override
   Widget build(BuildContext context) {
@@ -260,25 +299,44 @@ class _WordOfDayCard extends StatelessWidget {
                 ),
               ],
               const SizedBox(height: 10),
-              // Static, not tappable.
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-                decoration: BoxDecoration(
-                  color: AccordionTheme.ink,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  languageName == null ? 'Learn →' : 'Learn $languageName →',
-                  style: const TextStyle(
-                    fontFamily: AccordionTheme.dmMono,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.5,
-                    color: AccordionTheme.white,
-                  ),
-                ),
-              ),
+              learnButton,
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// "Learn ___ →" — links to Word Travels when [uri] is set, static otherwise.
+class _LearnButton extends StatelessWidget {
+  final String label;
+  final Uri? uri;
+  final Color background;
+  final Color foreground;
+
+  const _LearnButton({required this.label, required this.uri, required this.background, required this.foreground});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: background,
+      borderRadius: BorderRadius.circular(4),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(4),
+        // Same tab on web, so Back returns here.
+        onTap: uri == null ? null : () => launchUrl(uri!, webOnlyWindowName: '_self'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontFamily: AccordionTheme.dmMono,
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.5,
+              color: foreground,
+            ),
           ),
         ),
       ),

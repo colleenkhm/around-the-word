@@ -1,11 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:shared_theme/shared_theme.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../models/country_bundle.dart';
 import '../../models/live_data.dart';
-import '../../theme/accordion_theme.dart';
 import '../../theme/section_palette.dart';
 import '../../utils/flag_url.dart';
 import 'dashed_divider.dart';

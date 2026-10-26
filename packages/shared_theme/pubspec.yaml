@@ -1,0 +1,46 @@
+name: shared_theme
+description: "Design tokens, fonts and base theme shared by whereabout and Word Travels."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+
+flutter:
+  # Variable fonts, repeated per weight so Flutter uses the real weight axis.
+  fonts:
+    - family: Fraunces
+      fonts:
+        - asset: fonts/Fraunces-Variable.ttf
+          weight: 400
+        - asset: fonts/Fraunces-Variable.ttf
+          weight: 500
+        - asset: fonts/Fraunces-Variable.ttf
+          weight: 600
+        - asset: fonts/Fraunces-Variable.ttf
+          weight: 700
+        - asset: fonts/Fraunces-Variable.ttf
+          weight: 900
+    - family: DM Sans
+      fonts:
+        - asset: fonts/DMSans-Variable.ttf
+          weight: 400
+        - asset: fonts/DMSans-Variable.ttf
+          weight: 500
+        - asset: fonts/DMSans-Variable.ttf
+          weight: 600
+        - asset: fonts/DMSans-Variable.ttf
+          weight: 700
+    - family: DM Mono
+      fonts:
+        - asset: fonts/DMMono-Regular.ttf
+          weight: 400
+        - asset: fonts/DMMono-Medium.ttf
+          weight: 500

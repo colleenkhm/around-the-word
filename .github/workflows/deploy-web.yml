@@ -35,6 +35,14 @@ jobs:
       - run: flutter pub get
       - run: flutter build web --release --base-href /
 
+      # Word Travels ships alongside, at /word-travels/.
+      - name: Build Word Travels
+        working-directory: apps/word_travels
+        run: |
+          flutter pub get
+          flutter build web --release --base-href /word-travels/
+          cp -r build/web ../../build/web/word-travels
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

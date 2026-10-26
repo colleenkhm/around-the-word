@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../theme/accordion_theme.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 /// App's persistent site-wide nav bar — "whereabout" wordmark next to a
 /// globe icon. One fixed look by default; see [backgroundColor]. No "About"

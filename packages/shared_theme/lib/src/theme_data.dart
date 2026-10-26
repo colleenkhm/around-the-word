@@ -1,0 +1,65 @@
+import 'package:flutter/material.dart';
+
+import 'accordion_theme.dart';
+
+/// App-wide default theme for both apps, based on [AccordionTheme]. Only
+/// sets what plain `Scaffold`/`AppBar`/`TextField`/`Text` pick up
+/// automatically — custom widgets hardcode `AccordionTheme` directly.
+final sharedThemeData = ThemeData(
+  useMaterial3: true,
+  scaffoldBackgroundColor: AccordionTheme.page,
+  colorScheme: const ColorScheme.light(
+    primary: AccordionTheme.ink,
+    onPrimary: AccordionTheme.white,
+    secondary: AccordionTheme.roseDark,
+    onSecondary: AccordionTheme.white,
+    surface: AccordionTheme.page,
+    onSurface: AccordionTheme.ink,
+    error: AccordionTheme.danger,
+    onError: AccordionTheme.white,
+  ),
+  fontFamily: AccordionTheme.dmSans,
+  dividerColor: AccordionTheme.rule,
+  appBarTheme: const AppBarTheme(
+    backgroundColor: AccordionTheme.ink,
+    foregroundColor: AccordionTheme.white,
+    elevation: 0,
+    titleTextStyle: TextStyle(
+      fontFamily: AccordionTheme.fraunces,
+      fontWeight: FontWeight.w700,
+      fontSize: 20,
+      color: AccordionTheme.white,
+    ),
+  ),
+  textTheme: const TextTheme(
+    headlineMedium: TextStyle(
+      fontFamily: AccordionTheme.fraunces,
+      fontWeight: FontWeight.w700,
+      color: AccordionTheme.ink,
+    ),
+    headlineSmall: TextStyle(
+      fontFamily: AccordionTheme.fraunces,
+      fontWeight: FontWeight.w700,
+      color: AccordionTheme.ink,
+    ),
+    titleMedium: TextStyle(fontFamily: AccordionTheme.dmSans, color: AccordionTheme.ink),
+    bodyMedium: TextStyle(fontFamily: AccordionTheme.dmSans, color: AccordionTheme.ink2),
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    filled: true,
+    fillColor: AccordionTheme.white,
+    labelStyle: const TextStyle(fontFamily: AccordionTheme.dmMono, color: AccordionTheme.ink3, fontSize: 13),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(AccordionTheme.cardRadius),
+      borderSide: const BorderSide(color: AccordionTheme.rule),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(AccordionTheme.cardRadius),
+      borderSide: const BorderSide(color: AccordionTheme.rule),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(AccordionTheme.cardRadius),
+      borderSide: const BorderSide(color: AccordionTheme.ink, width: 1.5),
+    ),
+  ),
+);

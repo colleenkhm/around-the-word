@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 import '../theme/word_travels_theme.dart';
 
@@ -47,7 +48,7 @@ class WelcomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 13),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     textStyle: const TextStyle(
-                      fontFamily: 'IBM Plex Sans',
+                      fontFamily: AccordionTheme.dmSans,
                       fontWeight: FontWeight.w500,
                       fontSize: 14.5,
                     ),

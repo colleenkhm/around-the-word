@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 import '../theme/word_travels_theme.dart';
 
@@ -75,7 +76,7 @@ class _TabButton extends StatelessWidget {
             Text(
               item.label,
               style: TextStyle(
-                fontFamily: 'IBM Plex Sans',
+                fontFamily: AccordionTheme.dmSans,
                 fontSize: 10.5,
                 color: color,
                 fontWeight: selected ? FontWeight.w500 : FontWeight.w400,

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Design tokens for the country page's collapsible-sections restyle.
-/// A parallel token set to [CountryTheme], scoped to the country page
-/// only. See HANDOFF.md for history.
+/// Shared design tokens for whereabout and Word Travels. Started as the
+/// country page's collapsible-sections restyle. See HANDOFF.md for history.
 class AccordionTheme {
   AccordionTheme._();
 
@@ -54,9 +53,10 @@ class AccordionTheme {
 
   // --- Fonts --------------------------------------------------------------
 
-  static const fraunces = 'Fraunces';
-  static const dmSans = 'DM Sans';
-  static const dmMono = 'DM Mono';
+  // Package-bundled fonts resolve under a "packages/<name>/" prefix.
+  static const fraunces = 'packages/shared_theme/Fraunces';
+  static const dmSans = 'packages/shared_theme/DM Sans';
+  static const dmMono = 'packages/shared_theme/DM Mono';
 
   // --- Text styles ----------------------------------------------------
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 import '../models/phrase.dart';
 import '../models/place.dart';
@@ -211,7 +212,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
           autofocus: true,
           enabled: _result == _Result.unanswered,
           onSubmitted: (_) => _check(),
-          style: const TextStyle(fontFamily: 'IBM Plex Sans', fontSize: 15),
+          style: const TextStyle(fontFamily: AccordionTheme.dmSans, fontSize: 15),
           decoration: InputDecoration(
             hintText: 'Type the missing word',
             filled: true,
@@ -237,7 +238,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
               foregroundColor: const Color(0xFFFBE9E2),
               padding: const EdgeInsets.symmetric(vertical: 13),
               textStyle: const TextStyle(
-                fontFamily: 'IBM Plex Sans',
+                fontFamily: AccordionTheme.dmSans,
                 fontWeight: FontWeight.w500,
                 fontSize: 14.5,
               ),
@@ -285,7 +286,7 @@ class _FeedbackBanner extends StatelessWidget {
           _ => 'Not quite — it\'s "$correctWord"',
         },
         style: TextStyle(
-          fontFamily: 'IBM Plex Sans',
+          fontFamily: AccordionTheme.dmSans,
           fontWeight: FontWeight.w500,
           fontSize: 13.5,
           color: scored ? PTColors.sageInk : PTColors.postalInk,

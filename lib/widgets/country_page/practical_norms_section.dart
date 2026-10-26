@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 import '../../models/country_guide.dart';
-import '../../theme/accordion_theme.dart';
 
 /// The "Practical Norms" [AccordionSection]'s expanded content — icon +
 /// title + detail rows, one per [NormItem]. Icon is generic by

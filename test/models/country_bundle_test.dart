@@ -30,10 +30,10 @@ void main() {
     expect(bundle.facts.languages.map((l) => l.name), ['Spanish', 'English', 'Cabécar', 'Bribri']);
     final spanish = bundle.facts.languages.first;
     expect(spanish.isOfficial, isTrue);
-    expect(spanish.percentSpeakers, 99);
+    expect(spanish.percentSpeakers, isNull); // unverified, migration 030
     final english = bundle.facts.languages[1];
     expect(english.isOfficial, isFalse);
-    expect(english.percentSpeakers, isNull);
+    expect(english.percentSpeakers, isNull); // unverified, migration 030
   });
 
   test('parses cities, distinguishing featured from non-featured', () {

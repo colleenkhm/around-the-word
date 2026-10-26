@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 import '../data/phrases.dart';
 import '../models/phrase.dart';
@@ -413,7 +414,7 @@ class _StartCard extends StatelessWidget {
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 13),
                 textStyle: const TextStyle(
-                  fontFamily: 'IBM Plex Sans',
+                  fontFamily: AccordionTheme.dmSans,
                   fontWeight: FontWeight.w500,
                   fontSize: 14.5,
                 ),

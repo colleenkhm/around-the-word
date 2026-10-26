@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_theme/shared_theme.dart';
 
 import '../../models/country_bundle.dart';
-import '../../theme/accordion_theme.dart';
 import '../../utils/format_population.dart';
 
 /// The "Cities" [AccordionSection]'s expanded content — a numbered list

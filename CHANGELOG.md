@@ -21,6 +21,30 @@ refactors/doc updates unless they're worth calling out.
 - "Holidays" section on the country page — public holidays, sourced from
   Nager.Date. Data is imported; the section isn't in the app yet.
 
+## [0.6.0] — 2026-10-25
+
+### Added
+- Word Travels, the Spanish phrasebook-and-practice app, now ships
+  alongside whereabout at `/word-travels/`, restyled to match
+  whereabout's look (same page color, type and ink, with its own warm
+  category colors kept as accents).
+- The Language section's "Learn Spanish →" button now opens Word Travels
+  for any country where Spanish is spoken. When a country has no word of
+  the day, the button sits under the languages list instead.
+- English is listed on every country's Language section.
+- Speaker percentages appear only once verified against an official
+  source (census, statistics office, or national survey); being filled
+  in country by country.
+
+### Changed
+- Languages are listed most-spoken first once every language in a
+  country has a verified figure; until then, official languages first.
+
+### Fixed
+- The "Learn ___" label could name a non-official language (e.g.
+  "Learn Cabécar") depending on data order; it now names Spanish when
+  linking to Word Travels, otherwise the first official language.
+
 ## [0.5.0] — 2026-10-25
 
 First web preview, published at www.whereabout.world.
