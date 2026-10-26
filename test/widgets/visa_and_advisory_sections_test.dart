@@ -121,24 +121,15 @@ void main() {
   // Card-sized, since card content lays out against a fixed height.
   Widget card(Widget child) => SizedBox(width: 170, height: 210, child: child);
 
-  testWidgets('AdvisoryLevelFacts: renders level, label, emergency number', (
-    tester,
-  ) async {
+  testWidgets('AdvisoryLevelFacts: renders level and label', (tester) async {
     await pump(
       tester,
-      card(
-        AdvisoryLevelFacts(
-          advisory: advisory,
-          emergencyNumber: '911',
-          ink: Colors.white,
-        ),
-      ),
+      card(AdvisoryLevelFacts(advisory: advisory, ink: Colors.white)),
     );
 
     expect(tester.takeException(), isNull);
     expect(find.text('Level 1'), findsOneWidget);
     expect(find.text('Exercise Normal Precautions'), findsOneWidget);
-    expect(find.text('Emergency 911'), findsOneWidget);
   });
 
   testWidgets('AdvisorySummaryBack: shows summary, Read more fires', (

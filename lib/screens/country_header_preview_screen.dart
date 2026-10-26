@@ -265,11 +265,8 @@ class _CountryHeaderPreviewScreenState
         'Travel Advisory',
         Icons.shield_outlined,
         advisory != null,
-        face: (colors) => AdvisoryLevelFacts(
-          advisory: advisory!,
-          emergencyNumber: bundle.facts.emergencyNumber,
-          ink: colors.textColor,
-        ),
+        face: (colors) =>
+            AdvisoryLevelFacts(advisory: advisory!, ink: colors.textColor),
         back: (colors) => AdvisorySummaryBack(
           advisory: advisory!,
           accent: colors.accentOnWhite,
@@ -377,17 +374,27 @@ class _CountryHeaderPreviewScreenState
           builder: (context, constraints) {
             final width = constraints.maxWidth;
             final columns = width >= 900 ? 4 : (width >= 600 ? 3 : 2);
-            return GridView.count(
-              crossAxisCount: columns,
+            // Stagger rows so colors don't stack into solid columns.
+            final period = _cyclePeriod(cycle);
+            final stagger = period > 1 && columns % period == 0;
+            return GridView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
-              mainAxisSpacing: 18,
-              crossAxisSpacing: 14,
-              childAspectRatio: 0.82,
+              // Fixed height: content doesn't grow with card width.
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: columns,
+                mainAxisSpacing: 18,
+                crossAxisSpacing: 14,
+                mainAxisExtent: 160,
+              ),
               children: [
                 for (var i = 0; i < specs.length; i++)
-                  _card(specs[i], cycle[i % cycle.length], i),
+                  _card(
+                    specs[i],
+                    cycle[(i + (stagger ? i ~/ columns : 0)) % cycle.length],
+                    i,
+                  ),
               ],
             );
           },
@@ -418,6 +425,21 @@ class _CountryHeaderPreviewScreenState
               builder: (_) => sheet(colors),
             ),
     );
+  }
+
+  // Number of distinct colors before the cycle repeats.
+  static int _cyclePeriod(List<SectionColors> cycle) {
+    for (var p = 1; p < cycle.length; p++) {
+      var repeats = true;
+      for (var i = p; i < cycle.length; i++) {
+        if (cycle[i].tint != cycle[i % p].tint) {
+          repeats = false;
+          break;
+        }
+      }
+      if (repeats) return p;
+    }
+    return cycle.length;
   }
 }
 

@@ -213,10 +213,9 @@ class CurrencyFacts extends StatelessWidget {
   }
 }
 
-/// Travel Advisory card front: the level, plus label and emergency number.
+/// Travel Advisory card front: the level plus its label.
 class AdvisoryLevelFacts extends StatelessWidget {
   final TravelAdvisory advisory;
-  final String? emergencyNumber;
 
   /// Text color — the card's on-tint color.
   final Color ink;
@@ -225,7 +224,6 @@ class AdvisoryLevelFacts extends StatelessWidget {
     super.key,
     required this.advisory,
     required this.ink,
-    this.emergencyNumber,
   });
 
   @override
@@ -259,23 +257,6 @@ class AdvisoryLevelFacts extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ],
-        const Spacer(),
-        if (emergencyNumber != null)
-          Row(
-            children: [
-              Icon(Icons.call, size: 12, color: ink),
-              const SizedBox(width: 4),
-              Flexible(
-                child: Text(
-                  'Emergency $emergencyNumber',
-                  style: AccordionTheme.srcRow.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: ink,
-                  ),
-                ),
-              ),
-            ],
-          ),
       ],
     );
   }
