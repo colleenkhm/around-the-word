@@ -271,6 +271,24 @@ async function importCities() {
   console.log(`cities: ${ok} countries processed, ${failed} failed.`);
 }
 
+// Centroid lands in open ocean (or off the islands) for these, so GeoNames
+// returns no zone. See scratch notes' Known data gaps.
+const TIMEZONE_OVERRIDES = {
+  AS: 'Pacific/Pago_Pago',
+  BS: 'America/Nassau',
+  CC: 'Indian/Cocos',
+  CV: 'Atlantic/Cape_Verde',
+  FJ: 'Pacific/Fiji',
+  KY: 'America/Cayman',
+  MF: 'America/Marigot',
+  MH: 'Pacific/Majuro',
+  PF: 'Pacific/Tahiti', // Papeete; Marquesas/Gambier differ
+  SJ: 'Arctic/Longyearbyen',
+  ST: 'Africa/Sao_Tome',
+  TV: 'Pacific/Funafuti',
+  VU: 'Pacific/Efate',
+};
+
 async function importTimezones() {
   if (!GEONAMES_USERNAME) {
     console.warn('No GEONAMES_USERNAME set — skipping timezone import.');
@@ -298,6 +316,13 @@ async function importTimezones() {
     if (fact && fact.source && fact.source !== 'mledoze+worldbank') {
       console.log(`  [${i + 1}/${countries.length}] ${country.iso_code}... skipped (manually edited)`);
       skipped++;
+      continue;
+    }
+    const override = TIMEZONE_OVERRIDES[country.iso_code];
+    if (override) {
+      await supabase.from('country_facts').update({ timezone: override }).eq('country_id', country.id);
+      console.log(`  [${i + 1}/${countries.length}] ${country.iso_code}... ${override} (override)`);
+      ok++;
       continue;
     }
     if (!fact || fact.latitude == null || fact.longitude == null) {

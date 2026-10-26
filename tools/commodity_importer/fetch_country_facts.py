@@ -71,9 +71,20 @@ def fetch_one(iso2, api_key):
     return objects[0]
 
 
+# REST Countries' first-listed currency is wrong for these (defunct or
+# non-ISO code). See scratch notes' Known data gaps.
+CURRENCY_OVERRIDES = {
+    "CU": {"code": "CUP", "name": "Cuban peso"},  # CUC retired 2021
+    "CK": {"code": "NZD", "name": "New Zealand dollar"},  # CKD not ISO
+    "ZW": {"code": "ZWG", "name": "Zimbabwe Gold"},  # BWP listed first
+    "PS": {"code": "ILS", "name": "Israeli new shekel"},  # EGP listed first
+    "EH": {"code": "MAD", "name": "Moroccan dirham"},  # DZD listed first
+}
+
+
 def normalize(iso2, data, fetched_at):
     currencies = data.get("currencies") or []
-    currency = currencies[0] if currencies else {}
+    currency = CURRENCY_OVERRIDES.get(iso2) or (currencies[0] if currencies else {})
 
     calling_codes = data.get("calling_codes") or []
     calling_code = "+" + calling_codes[0] if calling_codes else None
