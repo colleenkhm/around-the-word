@@ -4,6 +4,9 @@ const _monthAbbrev = [
   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
 ];
 
-/// 2026-07-01T00:00:00Z -> "Jul 1, 2026". No timezone conversion.
-String formatShortDate(DateTime date) =>
-    '${_monthAbbrev[date.month - 1]} ${date.day}, ${date.year}';
+/// "Jul 1, 2026", in the viewer's timezone. Date-only values (parsed as
+/// local) pass through unchanged.
+String formatShortDate(DateTime date) {
+  final local = date.toLocal();
+  return '${_monthAbbrev[local.month - 1]} ${local.day}, ${local.year}';
+}
