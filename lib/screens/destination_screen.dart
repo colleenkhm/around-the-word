@@ -9,12 +9,12 @@ import '../widgets/site_footer.dart';
 import '../widgets/site_header.dart';
 import 'country_header_preview_screen.dart';
 
-/// Screen 1: "Where are you going?" — a search-first destination picker.
+/// Screen 1: "Where to?" — a search-first destination picker.
 /// Every country opens the country page, `active` or not — see
 /// `CountryHeaderPreviewScreen`. See HANDOFF.md for history.
 /// Copy changed to "Tell me about..." 2026-08-31, alongside the
 /// Whereabout -> Forin rename; changed back 2026-10-25 alongside the
-/// rename back to whereabout.
+/// rename back to whereabout. Shortened to "Where to?" 2026-10-27.
 class DestinationScreen extends StatefulWidget {
   const DestinationScreen({super.key});
 
@@ -23,6 +23,12 @@ class DestinationScreen extends StatefulWidget {
 }
 
 class _DestinationScreenState extends State<DestinationScreen> {
+  static const _headingTop = 88.0;
+  static const _headingGap = 36.0;
+
+  // Keeps the logo where it sat with the old 56/24 spacing.
+  static const _logoLift = (_headingTop - 56 + _headingGap - 24) / 2;
+
   final _searchController = TextEditingController();
   String _query = '';
 
@@ -47,7 +53,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
 
     if (trip.loadingReferenceData) {
       return const Scaffold(
-        backgroundColor: AccordionTheme.page,
+        backgroundColor: AccordionTheme.logoSkyPale,
         body: Center(child: CircularProgressIndicator()),
       );
     }
@@ -59,24 +65,26 @@ class _DestinationScreenState extends State<DestinationScreen> {
               .toList();
 
     return Scaffold(
-      backgroundColor: AccordionTheme.page,
+      backgroundColor: AccordionTheme.logoSkyPale,
       body: SafeArea(
         top: false,
         child: Column(
           children: [
-            const SiteHeader(),
+            const SiteHeader(backgroundColor: AccordionTheme.logoGreen),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
-                    const SizedBox(height: 56),
+                    const SizedBox(height: _headingTop),
                     Text(
-                      'Where are you going?',
-                      style: AccordionTheme.pageHeading(31),
+                      'Where to?',
+                      style: AccordionTheme.pageHeading(
+                        31,
+                      ).copyWith(color: AccordionTheme.logoGreen),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: _headingGap),
                     TextField(
                       controller: _searchController,
                       style: const TextStyle(
@@ -91,16 +99,18 @@ class _DestinationScreenState extends State<DestinationScreen> {
                         ),
                         prefixIcon: Icon(
                           Icons.search,
-                          color: AccordionTheme.ink3,
+                          color: AccordionTheme.logoGreen,
                         ),
                         filled: true,
                         fillColor: AccordionTheme.white,
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AccordionTheme.rule),
+                          borderSide: BorderSide(
+                            color: AccordionTheme.logoSkyRule,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: AccordionTheme.ink,
+                            color: AccordionTheme.logoGreen,
                             width: 1.5,
                           ),
                         ),
@@ -114,7 +124,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                               itemCount: results.length,
                               separatorBuilder: (context, index) =>
                                   const DashedDivider(
-                                    color: AccordionTheme.rule,
+                                    color: AccordionTheme.logoSkyRule,
                                   ),
                               itemBuilder: (context, index) {
                                 final country = results[index];
@@ -128,19 +138,22 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                   ),
                                   trailing: const Icon(
                                     Icons.chevron_right,
-                                    color: AccordionTheme.ruleDark,
+                                    color: AccordionTheme.logoGreen,
                                   ),
                                   onTap: () => _selectCountry(trip, country),
                                 );
                               },
                             )
-                          // Decorative filler with no search in progress.
+                          // Logo with no search in progress.
                           : Center(
-                              child: Icon(
-                                Icons.public,
-                                size: 160,
-                                color: AccordionTheme.ink.withValues(
-                                  alpha: 0.08,
+                              child: Transform.translate(
+                                offset: const Offset(0, -_logoLift),
+                                child: Image.asset(
+                                  'assets/branding/whereabout.png',
+                                  width: 220,
+                                  height: 220,
+                                  cacheWidth: 660,
+                                  semanticLabel: 'whereabout logo',
                                 ),
                               ),
                             ),
