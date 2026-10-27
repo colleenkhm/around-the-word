@@ -21,6 +21,13 @@ refactors/doc updates unless they're worth calling out.
 - "Holidays" section on the country page — public holidays, sourced from
   Nager.Date. Data is imported; the section isn't in the app yet.
 
+## [0.5.1] — 2026-10-26
+
+### Changed
+- Travel advisories and US entry requirements refresh from the State
+  Department when a country page is opened and its data is over 30 days
+  old, so "last verified" dates stay current.
+
 ## [0.5.0] — 2026-10-25
 
 First web preview, published at www.whereabout.world.
