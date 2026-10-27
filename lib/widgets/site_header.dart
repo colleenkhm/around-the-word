@@ -33,7 +33,7 @@ class SiteHeader extends StatelessWidget {
     return Container(
       color: background,
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(20, topInset + 24, 20, 10),
+      padding: EdgeInsets.fromLTRB(20, topInset + 16, 20, 16),
       child: Align(
         alignment: Alignment.centerLeft,
         child: _tappable(
