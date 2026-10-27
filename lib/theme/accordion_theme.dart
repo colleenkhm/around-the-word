@@ -20,6 +20,17 @@ class AccordionTheme {
   static const butterDark = Color(0xFFB08020);
   static const roseDark = Color(0xFFC45070);
 
+  // --- Logo (home screen) ---------------------------------------------------
+
+  static const logoGreen = Color(0xFF017B40);
+  static const logoSky = Color(0xFF97D8F5);
+
+  /// Pale wash of [logoSky], for the home page canvas.
+  static const logoSkyPale = Color(0xFFEDF7FC);
+
+  /// Field borders and dividers on [logoSkyPale].
+  static const logoSkyRule = Color(0xFFC4E6F6);
+
   // --- Ink --------------------------------------------------------------
 
   static const ink = Color(0xFF1A1520);
