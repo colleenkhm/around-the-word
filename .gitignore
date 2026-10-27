@@ -50,7 +50,7 @@ tools/vocab_tagger/.venv/
 # Commodity importer (dev-only, not part of the Flutter app)
 tools/commodity_importer/.venv/
 .env
-.env.scripts
+.env.*
 
 # Node (import scripts use Supabase/xlsx packages)
 node_modules/
@@ -68,3 +68,25 @@ node_modules/
 /docs/language-app-system-design.md
 /docs/app-design-doc.md
 /docs/state-dept-data-handoff.md
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
+
+# Supabase CLI cache (linked project, versions)
+supabase/.temp/
+
+# Generated Flutter files under apps/ and packages/ — covered by their own
+# .gitignores too, but those vanish on branches that don't track these dirs.
+apps/*/android/local.properties
+apps/*/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+apps/*/ios/Flutter/Generated.xcconfig
+apps/*/ios/Flutter/flutter_export_environment.sh
+apps/*/ios/Flutter/ephemeral/
+apps/*/ios/Runner/GeneratedPluginRegistrant.*
+apps/*/macos/Flutter/ephemeral/
+apps/*/linux/flutter/ephemeral/
+apps/*/windows/flutter/ephemeral/
+packages/*/pubspec.lock

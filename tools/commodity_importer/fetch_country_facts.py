@@ -1,6 +1,6 @@
 """
 Fetches commodity country facts from REST Countries and outputs a CSV
-matching the `country_facts` table columns (see around-the-word-data-
+matching the `country_facts` table columns (see whereabout-data-
 architecture.md's "Schema" section) — paste the rows straight into the
 Country Facts sheet of the collection spreadsheet.
 

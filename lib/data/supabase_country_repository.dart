@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/country_bundle.dart';
@@ -18,6 +19,9 @@ import '../models/language_content.dart';
 /// phrases, categories aren't shown anywhere yet, so they're left empty
 /// rather than fetched unused. See HANDOFF.md for the full list of what's
 /// not wired yet.
+// Keep in sync with STALE_AFTER_DAYS in refresh-country-state-dept.
+const stateDeptStaleAfter = Duration(days: 30);
+
 class SupabaseCountryRepository {
   SupabaseClient get _client => Supabase.instance.client;
 
@@ -53,10 +57,12 @@ class SupabaseCountryRepository {
         .select('is_official, percent_speakers, usage_note, languages(name)')
         .eq('country_id', countryId);
 
-    final advisoryRows = await _client
-        .from('travel_advisories')
-        .select()
-        .eq('country_id', countryId);
+    var advisoryRows = await _fetchAdvisoryRows(countryId);
+    var visa = await _fetchUsVisa(countryId);
+    if (_isStateDeptStale(isoCode, advisoryRows, visa) && await _refreshStateDept(isoCode)) {
+      advisoryRows = await _fetchAdvisoryRows(countryId);
+      visa = await _fetchUsVisa(countryId);
+    }
 
     final wordRows = await _client
         .from('words')
@@ -67,7 +73,6 @@ class SupabaseCountryRepository {
     final guide = CountryGuide.fromJson(_guideJson(guideRow));
     final advisories = advisoryRows.map((r) => TravelAdvisory.fromJson(_advisoryJson(r))).toList();
     final words = wordRows.map((r) => Word.fromJson(_wordJson(r))).toList();
-    final visa = await _fetchUsVisa(countryId);
 
     return CountryBundle(
       country: Country.fromJson({
@@ -91,6 +96,40 @@ class SupabaseCountryRepository {
       regionalNote: null, // regional_notes join not wired yet
       fetchedAt: DateTime.now(),
     );
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchAdvisoryRows(String countryId) =>
+      _client.from('travel_advisories').select().eq('country_id', countryId);
+
+  // Missing or older than 30 days. Server re-checks and rate-limits.
+  bool _isStateDeptStale(String isoCode, List<Map<String, dynamic>> advisoryRows, VisaInfo? visa) {
+    final cutoff = DateTime.now().subtract(stateDeptStaleAfter);
+    bool isStale(Object? verifiedAt) {
+      final parsed = verifiedAt is String ? DateTime.tryParse(verifiedAt) : null;
+      return parsed == null || parsed.isBefore(cutoff);
+    }
+
+    final usAdvisory = advisoryRows
+        .where((r) => r['issuing_authority'] == 'US State Department')
+        .firstOrNull;
+    if (isStale(usAdvisory?['last_verified_at'])) return true;
+    return isoCode != 'US' && (visa == null || visa.lastVerifiedAt.isBefore(cutoff));
+  }
+
+  // True if anything was refetched. Failure keeps the cached rows.
+  Future<bool> _refreshStateDept(String isoCode) async {
+    try {
+      final response = await _client.functions.invoke(
+        'refresh-country-state-dept',
+        queryParameters: {'iso': isoCode},
+        method: HttpMethod.get,
+      );
+      final data = response.data;
+      return data is Map && data['refreshed'] == true;
+    } catch (error) {
+      debugPrint('State Dept refresh failed for $isoCode: $error');
+      return false;
+    }
   }
 
   // Visa requirements are nationality-specific — US only, matching the
@@ -156,6 +195,7 @@ class SupabaseCountryRepository {
       'lastImportedAt': row['last_imported_at'],
       'emergencyNumber': null,
       'borderingCountryCodes': (row['neighbors'] as List?)?.cast<String>() ?? [],
+      'climates': row['climates'] ?? [],
     };
   }
 
@@ -212,7 +252,6 @@ class SupabaseCountryRepository {
         'whyShort': e['why_short'] ?? '',
         'why': e['why'] ?? '',
         'crowdLevel': validCrowdLevels.contains(crowdLevel) ? crowdLevel : 'moderate',
-        'weatherNote': null,
       };
     }).toList();
   }

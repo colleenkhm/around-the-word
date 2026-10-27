@@ -3,6 +3,7 @@
 /// live fetch exists yet; instances are mock values for now.
 library;
 
+/// V2 city pages only — dropped from V1 country pages.
 class WeatherOutlook {
   final String countryId;
   final String? cityId;

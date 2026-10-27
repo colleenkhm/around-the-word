@@ -1,6 +1,6 @@
 // Whereabout: curated data importer
 //
-// Reads aroundtheworddatacollection.xlsx and pushes everything real in it
+// Reads whereabout-data-collection.xlsx and pushes everything real in it
 // into Supabase. This is YOUR researched content — nothing here is fetched
 // from a third party. Safe to re-run; everything upserts on a stable key.
 //
@@ -15,7 +15,7 @@
 // Setup (same env vars as the commodity importer):
 //   export SUPABASE_URL="https://xxxx.supabase.co"
 //   export SUPABASE_SERVICE_ROLE_KEY="ey..."
-//   export XLSX_PATH="./aroundtheworddatacollection.xlsx"   // defaults to cwd
+//   export XLSX_PATH="./whereabout-data-collection.xlsx"   // defaults to cwd
 //
 // Run:
 //   node import-curated-data.mjs                  // everything
@@ -28,11 +28,11 @@
 import { createClient } from '@supabase/supabase-js';
 import XLSX from 'xlsx';
 import { config } from 'dotenv';
-config({ path: '.env.scripts', quiet: true });
+config({ path: process.env.ENV_FILE ?? '.env.scripts', quiet: true });
 
 const SUPABASE_URL = (process.env.SUPABASE_URL ?? '').replace(/\/+$/, '');
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const XLSX_PATH = process.env.XLSX_PATH || './aroundtheworddatacollection.xlsx';
+const XLSX_PATH = process.env.XLSX_PATH || './whereabout-data-collection.xlsx';
 
 if (!SUPABASE_URL || !SERVICE_KEY) {
   console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY env vars.');

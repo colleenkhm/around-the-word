@@ -1,0 +1,40 @@
+name: Deploy staging
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+concurrency:
+  group: staging
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.2
+          channel: stable
+          cache: true
+
+      # Dev Supabase project, never prod.
+      - name: Write .env
+        run: |
+          echo "SUPABASE_URL=${{ secrets.DEV_SUPABASE_URL }}" > .env
+          echo "SUPABASE_PUBLISHABLE_KEY=${{ secrets.DEV_SUPABASE_PUBLISHABLE_KEY }}" >> .env
+
+      - run: flutter pub get
+      - run: flutter build web --release --base-href /
+
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          wranglerVersion: "4.153.0"
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy

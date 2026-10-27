@@ -104,6 +104,9 @@ class CountryFacts {
   /// field (REST Countries' `borders`), hand-set until the importer exists.
   final List<String> borderingCountryCodes;
 
+  /// Köppen climate zones. Commodity, no importer yet.
+  final List<Climate> climates;
+
   const CountryFacts({
     this.flagSvgUrl,
     this.capital,
@@ -120,6 +123,7 @@ class CountryFacts {
     this.lastImportedAt,
     this.emergencyNumber,
     this.borderingCountryCodes = const [],
+    this.climates = const [],
   });
 
   factory CountryFacts.fromJson(Map<String, dynamic> json) {
@@ -146,6 +150,30 @@ class CountryFacts {
           (json['borderingCountryCodes'] as List<dynamic>? ?? [])
               .map((e) => e as String)
               .toList(),
+      climates: (json['climates'] as List<dynamic>? ?? [])
+          .map((e) => Climate.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+}
+
+class Climate {
+  /// Köppen code, e.g. "Af", "Cfb".
+  final String koppen;
+
+  /// e.g. "Tropical monsoon climate". Null for split codes like "As/Aw".
+  final String? label;
+
+  /// Cities in this zone, e.g. "San José, Heredia".
+  final String? regions;
+
+  const Climate({required this.koppen, this.label, this.regions});
+
+  factory Climate.fromJson(Map<String, dynamic> json) {
+    return Climate(
+      koppen: json['koppen'] as String,
+      label: json['label'] as String?,
+      regions: json['regions'] as String?,
     );
   }
 }
