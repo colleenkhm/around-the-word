@@ -63,6 +63,24 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+
+# App icons + favicon from the master logo. Regenerate with
+# `dart run flutter_launcher_icons`, then revert its stray
+# ios/Runner.xcodeproj/project.pbxproj edit (known 0.14.x bug).
+flutter_launcher_icons:
+  image_path: assets/branding/whereabout.png
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  background_color_ios: "#FFFFFF"
+  web:
+    generate: true
+  macos:
+    generate: true
+  windows:
+    generate: true
+    icon_size: 256
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -81,6 +99,7 @@ flutter:
     - assets/data/resources.json
     - assets/data/content/
     - assets/data/bundles/
+    - assets/branding/whereabout.png
     - .env
 
   # Bundled locally rather than fetched at runtime (e.g. via a Google
