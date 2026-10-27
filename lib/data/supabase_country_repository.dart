@@ -156,6 +156,8 @@ class SupabaseCountryRepository {
         .limit(1);
     if (rows.isEmpty) return null;
     final row = rows.first;
+    // Unverified placeholder rows count as no data.
+    if (row['last_verified_at'] == null) return null;
 
     return VisaInfo.fromJson({
       // `visa_requirements.issuing_authority` isn't migrated into the live

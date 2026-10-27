@@ -126,6 +126,45 @@ class VisaSection extends StatelessWidget {
   }
 }
 
+/// Shown instead of [VisaSection] when there's no verified visa row.
+class VisaNoResults extends StatelessWidget {
+  /// The country's State Dept page; general country index if null.
+  final String? stateDeptUrl;
+  final Color accent;
+
+  static const _fallbackUrl =
+      'https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages.html';
+
+  const VisaNoResults({super.key, required this.accent, this.stateDeptUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      child: Text.rich(
+        TextSpan(
+          style: AccordionTheme.sBody,
+          children: [
+            const TextSpan(
+              text: 'No visa information available at this time. Check the ',
+            ),
+            WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: ExternalLink(
+                label: 'US State Department',
+                url: stateDeptUrl ?? _fallbackUrl,
+                color: accent,
+                fontFamily: AccordionTheme.dmMono,
+              ),
+            ),
+            const TextSpan(text: ' for the latest information.'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// The "upcoming requirement" highlight box — `.visa-warn`.
 class _RegionalNoteWarning extends StatelessWidget {
   final String summary;
