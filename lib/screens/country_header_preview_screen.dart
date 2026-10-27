@@ -279,15 +279,20 @@ class _CountryHeaderPreviewScreenState
       title: 'Visa & Entry',
       tint: colors.tint,
       textColor: colors.textColor,
-      hasData: visa != null,
+      hasData: true,
       meta: visa == null ? null : _firstClause(visa.summary),
       expanded: _expanded[_Section.visa]!,
       onToggle: () => _toggle(_Section.visa),
-      contentBuilder: (_) => VisaSection(
-        visa: visa!,
-        regionalNote: bundle.regionalNote,
-        accent: colors.accentOnWhite,
-      ),
+      contentBuilder: (_) => visa == null
+          ? VisaNoResults(
+              stateDeptUrl: _usAdvisories(bundle).firstOrNull?.officialUrl,
+              accent: colors.accentOnWhite,
+            )
+          : VisaSection(
+              visa: visa,
+              regionalNote: bundle.regionalNote,
+              accent: colors.accentOnWhite,
+            ),
     );
   }
 
