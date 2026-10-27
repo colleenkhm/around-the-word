@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:shared_theme/shared_theme.dart';
 
 import '../../models/country_bundle.dart';
+import '../../models/live_data.dart';
 import '../../theme/section_palette.dart';
 import '../../utils/flag_url.dart';
+import 'header_facts.dart';
 
-/// Country-page masthead: flag stamp, name, native name. Local time and
-/// currency live on their own cards below it.
+/// Country-page masthead: flag stamp, name, native name, then local time
+/// and currency.
 class CountryHeader extends StatelessWidget {
   final CountryBundle bundle;
   final String? nativeName;
   final String? nativeNameRomanized;
+
+  /// Live; null renders an em dash.
+  final ExchangeRate? exchangeRate;
 
   /// Masthead's own colors — a deepened flag color.
   final SectionColors header;
@@ -21,67 +26,108 @@ class CountryHeader extends StatelessWidget {
     required this.header,
     this.nativeName,
     this.nativeNameRomanized,
+    this.exchangeRate,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.sizeOf(context).width >= 900;
     final onHeaderSoft = header.textColor.withValues(alpha: 0.55);
+    final facts = bundle.facts;
+    final hasTime = facts.timezone != null || facts.utcOffsetMinutes != null;
+    final hasCurrency = facts.currencyCode != null;
 
     return Container(
       width: double.infinity,
       color: header.tint,
       padding: const EdgeInsets.fromLTRB(20, 6, 20, 20),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            // Room for the flag, positioned absolutely.
-            padding: EdgeInsets.only(right: isDesktop ? 94 : 74),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          _nameBlock(isDesktop, onHeaderSoft),
+          if (hasTime || hasCurrency) ...[
+            const SizedBox(height: 16),
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: header.textColor.withValues(alpha: 0.2),
+            ),
+            const SizedBox(height: 14),
+            Wrap(
+              spacing: 40,
+              runSpacing: 16,
               children: [
-                Text(
-                  'DESTINATION',
-                  style: AccordionTheme.tkEyebrow.copyWith(color: onHeaderSoft),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  bundle.country.nameCommon,
-                  style: AccordionTheme.tkName(
-                    isDesktop ? 50 : 36,
-                  ).copyWith(color: header.textColor),
-                ),
-                if (nativeName != null) ...[
-                  const SizedBox(height: 12),
-                  Text.rich(
-                    TextSpan(
-                      style: AccordionTheme.tkNative.copyWith(
-                        color: onHeaderSoft,
-                      ),
-                      children: [
-                        TextSpan(text: nativeName),
-                        if (nativeNameRomanized != null) ...[
-                          const TextSpan(text: '   ·   '),
-                          TextSpan(text: nativeNameRomanized),
-                        ],
-                      ],
-                    ),
+                if (hasTime)
+                  LocalTimeFacts(
+                    timezone: facts.timezone,
+                    utcOffsetMinutes: facts.utcOffsetMinutes,
+                    latitude: facts.latitude,
+                    ink: header.textColor,
                   ),
-                ],
+                if (hasCurrency)
+                  CurrencyFacts(
+                    rate: exchangeRate,
+                    currencyName: facts.currencyName,
+                    ink: header.textColor,
+                  ),
               ],
             ),
-          ),
-          // Stretched top/bottom so Center has room to work with.
-          Positioned(
-            top: 0,
-            right: 0,
-            bottom: 0,
-            child: Center(
-              child: _Flag(isoCode: bundle.country.isoCode, desktop: isDesktop),
-            ),
-          ),
+          ],
         ],
       ),
+    );
+  }
+
+  Widget _nameBlock(bool isDesktop, Color onHeaderSoft) {
+    return Stack(
+      children: [
+        Padding(
+          // Room for the flag, positioned absolutely.
+          padding: EdgeInsets.only(right: isDesktop ? 94 : 74),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'DESTINATION',
+                style: AccordionTheme.tkEyebrow.copyWith(color: onHeaderSoft),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                bundle.country.nameCommon,
+                style: AccordionTheme.tkName(
+                  isDesktop ? 50 : 36,
+                ).copyWith(color: header.textColor),
+              ),
+              if (nativeName != null) ...[
+                const SizedBox(height: 12),
+                Text.rich(
+                  TextSpan(
+                    style: AccordionTheme.tkNative.copyWith(
+                      color: onHeaderSoft,
+                    ),
+                    children: [
+                      TextSpan(text: nativeName),
+                      if (nativeNameRomanized != null) ...[
+                        const TextSpan(text: '   ·   '),
+                        TextSpan(text: nativeNameRomanized),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+        // Stretched top/bottom so Center has room to work with.
+        Positioned(
+          top: 0,
+          right: 0,
+          bottom: 0,
+          child: Center(
+            child: _Flag(isoCode: bundle.country.isoCode, desktop: isDesktop),
+          ),
+        ),
+      ],
     );
   }
 }

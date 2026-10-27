@@ -207,6 +207,8 @@ class _CountryHeaderPreviewScreenState
                                   ? 'Costa Rica'
                                   : null,
                               nativeNameRomanized: null,
+                              // Live; null until it resolves, never a mock value.
+                              exchangeRate: _exchangeRate,
                               header: _palette.header,
                             ),
                             _cardGrid(bundle, trip.countries, resources),
@@ -231,36 +233,12 @@ class _CountryHeaderPreviewScreenState
   ) {
     final advisories = _usAdvisories(bundle);
     final advisory = advisories.isEmpty ? null : advisories.first;
-    final hasTime =
-        bundle.facts.timezone != null || bundle.facts.utcOffsetMinutes != null;
     final languages = bundle.facts.languages;
     final featuredWord = bundle.words.isEmpty ? null : bundle.words.first;
     final borderCodes = bundle.facts.borderingCountryCodes;
 
     // face shows up front, back flips, sheet opens.
     final specs = <_CardSpec>[
-      _CardSpec(
-        'Local Time',
-        Icons.schedule,
-        hasTime,
-        face: (colors) => LocalTimeFacts(
-          timezone: bundle.facts.timezone,
-          utcOffsetMinutes: bundle.facts.utcOffsetMinutes,
-          latitude: bundle.facts.latitude,
-          ink: colors.textColor,
-        ),
-      ),
-      _CardSpec(
-        'Currency',
-        Icons.payments_outlined,
-        bundle.facts.currencyCode != null,
-        face: (colors) => CurrencyFacts(
-          // Live; null until it resolves, never a mock value.
-          rate: _exchangeRate,
-          currencyName: bundle.facts.currencyName,
-          ink: colors.textColor,
-        ),
-      ),
       _CardSpec(
         'Travel Advisory',
         Icons.shield_outlined,

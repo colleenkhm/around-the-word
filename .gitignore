@@ -51,6 +51,8 @@ tools/vocab_tagger/.venv/
 tools/commodity_importer/.venv/
 .env
 .env.scripts
+.env.prod
+.env.scripts.prod
 
 # Node (import scripts use Supabase/xlsx packages)
 node_modules/
