@@ -69,17 +69,13 @@ class _LanguagesCard extends StatelessWidget {
 
   const _LanguagesCard({required this.languages, required this.tint, required this.textColor});
 
-  /// Official languages first, then by [LanguageEntry.percentSpeakers]
-  /// descending (no-data entries last) — and English always present, even
-  /// when the source data has no entry for it, so a traveler can always
-  /// see at a glance whether it's spoken here. Only runs once there's at
-  /// least one real language on record; a country with none yet still
-  /// reads "coming soon" rather than showing English alone.
+  /// By [LanguageEntry.percentSpeakers] descending — only verified
+  /// countries reach here, so every entry has a figure. English is always
+  /// present, even when the source data has no entry for it, so a traveler
+  /// can always see at a glance whether it's spoken here.
   List<LanguageEntry> get _displayLanguages {
-    final sorted = [...languages]..sort((a, b) {
-      if (a.isOfficial != b.isOfficial) return a.isOfficial ? -1 : 1;
-      return (b.percentSpeakers ?? -1).compareTo(a.percentSpeakers ?? -1);
-    });
+    final sorted = [...languages]
+      ..sort((a, b) => (b.percentSpeakers ?? -1).compareTo(a.percentSpeakers ?? -1));
     final hasEnglish = sorted.any((l) => l.name.toLowerCase() == 'english');
     if (!hasEnglish) sorted.add(const LanguageEntry(name: 'English', isOfficial: false));
     return sorted;
@@ -137,23 +133,21 @@ class _LanguageRow extends StatelessWidget {
           Row(
             children: [
               Expanded(child: Text(entry.name, style: AccordionTheme.rowTitle.copyWith(color: textColor))),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                decoration: BoxDecoration(
-                  color: textColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(3),
-                ),
-                child: Text(
-                  entry.isOfficial ? 'official' : 'unofficial',
+              // Unofficial is implied by absence.
+              if (entry.isOfficial) ...[
+                Icon(Icons.star, size: 11, color: textColor),
+                const SizedBox(width: 3),
+                Text(
+                  'official',
                   style: TextStyle(
                     fontFamily: AccordionTheme.dmMono,
-                    fontSize: 8,
+                    fontSize: 9,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,
                     color: textColor,
                   ),
                 ),
-              ),
+              ],
             ],
           ),
           // No bar when there's no sourced figure — an empty/zero-filled

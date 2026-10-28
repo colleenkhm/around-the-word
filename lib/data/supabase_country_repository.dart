@@ -54,7 +54,7 @@ class SupabaseCountryRepository {
     // itself (see migration 023).
     final languageRows = await _client
         .from('country_languages')
-        .select('is_official, percent_speakers, usage_note, languages(name)')
+        .select('is_official, percent_speakers, percent_status, usage_note, languages(name)')
         .eq('country_id', countryId);
 
     var advisoryRows = await _fetchAdvisoryRows(countryId);
@@ -178,7 +178,9 @@ class SupabaseCountryRepository {
   }
 
   Map<String, dynamic> _factsJson(Map<String, dynamic>? row, List<Map<String, dynamic>> languageRows) {
-    final languages = languageRows.map(_languageJson).toList();
+    // All-or-nothing: a partly verified country reads "coming soon".
+    final verified = languageRows.isNotEmpty && languageRows.every((r) => r['percent_status'] == 'verified');
+    final languages = verified ? languageRows.map(_languageJson).toList() : <Map<String, dynamic>>[];
     if (row == null) return {'languages': languages};
     return {
       'flagSvgUrl': null,
