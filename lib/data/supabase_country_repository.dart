@@ -54,7 +54,7 @@ class SupabaseCountryRepository {
     // itself (see migration 023).
     final languageRows = await _client
         .from('country_languages')
-        .select('is_official, percent_speakers, percent_status, usage_note, languages(name)')
+        .select('is_official, percent_speakers, percent_status, percent_speakers_source, percent_source_url, usage_note, languages(name)')
         .eq('country_id', countryId);
 
     var advisoryRows = await _fetchAdvisoryRows(countryId);
@@ -208,6 +208,8 @@ class SupabaseCountryRepository {
     'isOfficial': row['is_official'] ?? true,
     'percentSpeakers': row['percent_speakers'],
     'usageNote': row['usage_note'],
+    'source': row['percent_speakers_source'],
+    'sourceUrl': row['percent_source_url'],
   };
 
   Map<String, dynamic> _cityJson(Map<String, dynamic> row) => {

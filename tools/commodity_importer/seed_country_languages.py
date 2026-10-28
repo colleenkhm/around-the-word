@@ -1,7 +1,8 @@
 """
 Seeds the `languages` and `country_languages` tables directly in the live
 Supabase project, from data already sitting in `country_facts.official_languages`
-(itself REST Countries data, imported earlier by fetch_country_facts.py).
+(mledoze/countries data, imported by import-commodity-data.mjs; originally
+REST Countries, whose importer was removed 2026-10-27).
 
 **Deliberate exception to CLAUDE.md's "language content is hand-curated, API
 or not" rule** — confirmed 2026-08-26. `country_languages` was originally
@@ -16,8 +17,8 @@ official-languages list doesn't reflect real-world primacy; this script sets
 ranking to do better with, so a country with several official languages
 gets several `is_primary = true` rows until someone corrects it by hand.
 
-**Writes to Supabase directly**, unlike fetch_country_facts.py / fetch_cities.py
-which only emit CSV for the collection spreadsheet — those two predate
+**Writes to Supabase directly**, unlike fetch_cities.py, which only emits
+CSV for the collection spreadsheet — it predates
 Supabase existing; `languages`/`country_languages` are live tables today
 with real FKs (`words.language_id`, `phrases.language_id`) already pointing
 at hand-entered rows, so round-tripping through a spreadsheet would risk a

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/country_bundle.dart';
 import '../../models/language_content.dart';
 import '../../theme/accordion_theme.dart';
+import 'external_link.dart';
 
 /// The "Language" [AccordionSection]'s expanded content — a country's
 /// languages (official and commonly-spoken-but-not) side by side with a
@@ -81,6 +82,12 @@ class _LanguagesCard extends StatelessWidget {
     return sorted;
   }
 
+  /// URL → short label, deduped. Citations required by source terms.
+  Map<String, String> get _sources => {
+        for (final l in languages)
+          if (l.sourceUrl != null && l.source != null) l.sourceUrl!: l.source!.split(',').first.trim(),
+      };
+
   @override
   Widget build(BuildContext context) {
     final display = _displayLanguages;
@@ -101,6 +108,19 @@ class _LanguagesCard extends StatelessWidget {
                   child: Container(height: 1, color: textColor.withValues(alpha: 0.15)),
                 ),
               _LanguageRow(entry: display[i], textColor: textColor),
+            ],
+            if (_sources.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Container(height: 1, color: textColor.withValues(alpha: 0.15)),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 12,
+                runSpacing: 4,
+                children: [
+                  for (final MapEntry(key: url, value: label) in _sources.entries)
+                    ExternalLink(label: label, url: url, color: textColor, fontFamily: AccordionTheme.dmMono),
+                ],
+              ),
             ],
           ],
         ),

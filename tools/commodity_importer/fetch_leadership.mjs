@@ -53,7 +53,7 @@ const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 const DRY_RUN = process.argv.includes('--dry-run');
 const LEADER_CHUNK_SIZE = 80; // country->leader pass, empirically ~1s at this size
 const POSITION_CHUNK_SIZE = 80; // leader->positions pass, keyed on QIDs directly
-const USER_AGENT = 'whereabout-commodity-importer/0.1 (leadership fetch; contact via project owner)';
+const USER_AGENT = 'whereabout-commodity-importer/0.1 (https://www.whereabout.world; leadership fetch)';
 const FETCH_TIMEOUT_MS = 30_000;
 const MAX_RETRIES = 2;
 

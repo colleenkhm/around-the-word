@@ -4,10 +4,10 @@
 // no-account, no-key sources:
 //   - names, capital, currency, calling code, languages, lat/lng,
 //     region/subregion, borders  -> mledoze/countries (static JSON on GitHub,
-//     MIT licensed, the same dataset the old free REST Countries API used
-//     to serve — no rate limit, no ToS restriction on storing a local copy)
-//   - population                 -> World Bank Open Data API (free, no key)
-//   - cities                     -> GeoNames (free account, generous limits)
+//     ODbL licensed: storing is fine, but needs attribution and stays
+//     share-alike — credited on the About screen)
+//   - population                 -> World Bank Open Data API (free, no key, CC BY 4.0)
+//   - cities                     -> GeoNames (free account, CC BY 4.0)
 //
 // Flags are intentionally NOT touched here — handled elsewhere in the app already.
 //
@@ -54,6 +54,34 @@ const timezonesOnly = args.includes('--timezones-only');
 const shouldImportTimezones = !args.includes('--skip-timezones');
 
 const CITIES_PER_COUNTRY = 5; // top N by population, mirrors is_major cutoff
+
+// mledoze lists a defunct, non-ISO, or wrong currency first for these.
+// Mirrors migrations 031/033.
+const CURRENCY_OVERRIDES = {
+  CU: ['CUP', 'Cuban peso'],             // CUC retired January 2021
+  CK: ['NZD', 'New Zealand dollar'],     // CKD isn't ISO; pegged 1:1 to NZD
+  ZW: ['ZWG', 'Zimbabwe Gold'],          // ZWG since April 2024
+  PS: ['ILS', 'Israeli new shekel'],     // primary under the Paris Protocol
+  EH: ['MAD', 'Moroccan dirham'],        // Moroccan-administered areas
+};
+
+// Centroid sits in open ocean, so GeoNames returns no zone. Mirrors
+// migration 032. BV and HM are uninhabited with no IANA zone.
+const TIMEZONE_OVERRIDES = {
+  AS: 'Pacific/Pago_Pago',
+  BS: 'America/Nassau',
+  CC: 'Indian/Cocos',
+  CV: 'Atlantic/Cape_Verde',
+  FJ: 'Pacific/Fiji',
+  KY: 'America/Cayman',
+  MF: 'America/Marigot',
+  MH: 'Pacific/Majuro',
+  PF: 'Pacific/Tahiti',                  // Papeete; Marquesas/Gambier differ
+  SJ: 'Arctic/Longyearbyen',
+  ST: 'Africa/Sao_Tome',
+  TV: 'Pacific/Funafuti',
+  VU: 'Pacific/Efate',
+};
 
 // ---------------------------------------------------------------
 // Step 1: countries + country_facts
@@ -126,8 +154,9 @@ async function importCountryFacts() {
         countryId = inserted.id;
       }
 
-      const currencyCode = c.currencies ? Object.keys(c.currencies)[0] : null;
-      const currencyName = currencyCode ? c.currencies[currencyCode]?.name ?? null : null;
+      const firstCurrency = c.currencies ? Object.keys(c.currencies)[0] : null;
+      const [currencyCode, currencyName] = CURRENCY_OVERRIDES[isoCode] ??
+        [firstCurrency, firstCurrency ? c.currencies[firstCurrency]?.name ?? null : null];
       const callingCode = c.idd?.root
         ? `${c.idd.root}${c.idd.suffixes?.[0] ?? ''}`
         : null;
@@ -140,25 +169,22 @@ async function importCountryFacts() {
         .filter(Boolean);
 
       const population = populationByCca3.get(c.cca3) ?? null;
-      
-      // Guard against clobbering hand-edited facts: if this row's source
-// has been changed away from the importer's own value (e.g. to
-// 'manual'), skip it. Set country_facts.source = 'manual' after any
-// hand edit in the Table Editor to protect it from future re-imports.
-const { data: existingFacts } = await supabase
-  .from('country_facts')
-  .select('source')
-  .eq('country_id', countryId)
-  .maybeSingle();
 
-if (existingFacts && existingFacts.source && existingFacts.source !== 'mledoze+worldbank') {
-  console.log(`  Skipping ${isoCode}: country_facts.source = "${existingFacts.source}" (manually edited, not overwriting)`);
-  ok++;
-  continue;
-}const factsOnly = args.includes('--facts-only');
-const citiesOnly = args.includes('--cities-only');
-const timezonesOnly = args.includes('--timezones-only');
-const shouldImportTimezones = !args.includes('--skip-timezones');
+      // Guard against clobbering hand-edited facts: if this row's source
+      // has been changed away from the importer's own value (e.g. to
+      // 'manual'), skip it. Set country_facts.source = 'manual' after any
+      // hand edit in the Table Editor to protect it from future re-imports.
+      const { data: existingFacts } = await supabase
+        .from('country_facts')
+        .select('source')
+        .eq('country_id', countryId)
+        .maybeSingle();
+
+      if (existingFacts && existingFacts.source && existingFacts.source !== 'mledoze+worldbank') {
+        console.log(`  Skipping ${isoCode}: country_facts.source = "${existingFacts.source}" (manually edited, not overwriting)`);
+        ok++;
+        continue;
+      }
 
       const { error: factsError } = await supabase
         .from('country_facts')
@@ -298,6 +324,13 @@ async function importTimezones() {
     if (fact && fact.source && fact.source !== 'mledoze+worldbank') {
       console.log(`  [${i + 1}/${countries.length}] ${country.iso_code}... skipped (manually edited)`);
       skipped++;
+      continue;
+    }
+    const override = TIMEZONE_OVERRIDES[country.iso_code];
+    if (override) {
+      await supabase.from('country_facts').update({ timezone: override }).eq('country_id', country.id);
+      console.log(`  [${i + 1}/${countries.length}] ${country.iso_code}... ${override} (override)`);
+      ok++;
       continue;
     }
     if (!fact || fact.latitude == null || fact.longitude == null) {
