@@ -1,6 +1,6 @@
 -- Whereabout: REST Countries' first-listed currency is wrong for these, so
 -- the importer stored a currency that isn't the one travelers use. Mirrors
--- CURRENCY_OVERRIDES in fetch_country_facts.py.
+-- CURRENCY_OVERRIDES in import-commodity-data.mjs.
 update country_facts
 set currency_code = 'ZWG', currency_name = 'Zimbabwe Gold'
 where country_id = 'ZW';  -- was BWP; ZWG since April 2024

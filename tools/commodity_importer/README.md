@@ -6,16 +6,14 @@ Content-authoring tools, not part of the Flutter app. Fetches the "free
 section, or `CLAUDE.md`'s condensed version) — and outputs CSV shaped to
 paste straight into the collection spreadsheet.
 
-**Covers REST Countries (country facts, languages) and GeoNames (cities).**
-The State Dept Consular Affairs API (advisories/visas) is left for
-later — the doc designs that one around a weekly live cron against
-Postgres, not a one-time spreadsheet fill.
+**Covers GeoNames (cities) and languages.** Country facts come from
+`import-commodity-data.mjs` at the repo root (mledoze/countries + World
+Bank). The old REST Countries script (`fetch_country_facts.py`) was
+removed 2026-10-27: REST Countries' 2026-10-13 terms ban storing API
+data beyond 3 days, which is all that script did. See HANDOFF.md.
 
-**`fetch_country_facts.py` and `fetch_cities.py` write CSV to stdout, not a
-database** — they predate Supabase and still feed the collection
-spreadsheet. Once every field on the Edge Function's plate needs a live
-cron, this fetch/normalize logic carries over directly, only the output
-target changes.
+**`fetch_cities.py` writes CSV to stdout, not a database** — it predates
+Supabase and still feeds the collection spreadsheet.
 
 **`seed_country_languages.py` is the exception: it writes to the live
 Supabase project directly**, since `languages`/`country_languages` already
@@ -52,9 +50,6 @@ over the free one.
 ```bash
 source .venv/bin/activate
 
-# Country facts — one row per ISO 3166-1 alpha-2 code.
-python fetch_country_facts.py CR PT GR > country_facts.csv
-
 # Cities — top N by population per country. is_major is set on every row;
 # is_featured is always left blank (see script docstring — that column is
 # an editorial call, never auto-filled).
@@ -67,22 +62,16 @@ python seed_country_languages.py --dry-run   # preview first
 python seed_country_languages.py
 ```
 
-Both accept as many ISO codes as you want in one run — pass whatever
+`fetch_cities.py` accepts as many ISO codes as you want in one run — pass whatever
 countries you're actively collecting for. A country that 404s (bad code,
 GeoNames rate limit, etc.) is skipped with a message on stderr rather than
 aborting the whole batch.
 
-**Always spot-check before pasting into the sheet.** These are a first
-pass, not a guarantee — REST Countries occasionally has gaps (a missing
-`idd` block, a currency with no `name`), and GeoNames' population figures
-lag real-world numbers by however old its underlying dataset is.
+**Always spot-check before pasting into the sheet.** This is a first
+pass, not a guarantee — GeoNames' population figures lag real-world
+numbers by however old its underlying dataset is.
 
 ## Output columns
-
-`fetch_country_facts.py` → `country_facts` table columns, plus one bonus
-column (`native_name`, from REST Countries' `name.nativeName` — useful for
-the country-page header's small-type native name, not itself a
-`country_facts` column; drop it if the sheet doesn't want it).
 
 `fetch_cities.py` → `cities` table columns exactly.
 

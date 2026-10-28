@@ -27,11 +27,17 @@ class LanguageEntry {
   final double? percentSpeakers;
   final String? usageNote;
 
+  /// Full citation for [percentSpeakers].
+  final String? source;
+  final String? sourceUrl;
+
   const LanguageEntry({
     required this.name,
     required this.isOfficial,
     this.percentSpeakers,
     this.usageNote,
+    this.source,
+    this.sourceUrl,
   });
 
   factory LanguageEntry.fromJson(Map<String, dynamic> json) {
@@ -40,6 +46,8 @@ class LanguageEntry {
       isOfficial: json['isOfficial'] as bool? ?? false,
       percentSpeakers: (json['percentSpeakers'] as num?)?.toDouble(),
       usageNote: json['usageNote'] as String?,
+      source: json['source'] as String?,
+      sourceUrl: json['sourceUrl'] as String?,
     );
   }
 }

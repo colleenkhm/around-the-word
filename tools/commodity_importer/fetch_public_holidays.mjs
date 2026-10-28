@@ -50,7 +50,7 @@ const yearsArg = process.argv.find((a) => a.startsWith('--years='));
 const currentYear = new Date().getFullYear();
 const YEARS = yearsArg ? yearsArg.split('=')[1].split(',').map(Number) : [currentYear, currentYear + 1];
 const BASE_URL = 'https://date.nager.at/api/v3';
-const USER_AGENT = 'whereabout-commodity-importer/0.1 (public holidays fetch)';
+const USER_AGENT = 'whereabout-commodity-importer/0.1 (https://www.whereabout.world; public holidays fetch)';
 const REQUEST_DELAY_MS = 150; // polite pacing; Nager.Date has no documented hard rate limit
 
 function sleep(ms) {
