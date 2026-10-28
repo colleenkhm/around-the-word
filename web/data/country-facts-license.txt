@@ -1,0 +1,18 @@
+whereabout country facts (country-facts.csv)
+
+This database is made available under the Open Database License (ODbL) 1.0:
+https://opendatacommons.org/licenses/odbl/1-0/
+
+It is a Derivative Database of mledoze/countries
+(https://github.com/mledoze/countries), which is made available under the
+ODbL. Copyright notices from mledoze/countries apply.
+
+Column sources:
+- population: World Bank Open Data (https://data.worldbank.org/),
+  CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+- timezone: GeoNames (https://www.geonames.org/),
+  CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+- all other columns: mledoze/countries, with corrections (e.g. retired or
+  non-ISO currency codes replaced with the currency travelers actually use)
+
+Arrays and objects are JSON-encoded.

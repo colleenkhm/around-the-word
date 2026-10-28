@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/accordion_theme.dart';
+import '../coming_soon.dart';
 
 /// One collapsible row of the accordion-style country page. Collapsed:
 /// tinted row, title + optional meta. Expanded: [contentBuilder] renders
@@ -55,7 +56,7 @@ class AccordionSection extends StatelessWidget {
               color: AccordionTheme.white,
               border: Border(bottom: BorderSide(color: AccordionTheme.rule)),
             ),
-            child: hasData ? contentBuilder(context) : const _ComingSoon(),
+            child: hasData ? contentBuilder(context) : const ComingSoon(),
           ),
       ],
     );
@@ -163,25 +164,6 @@ class _Chevron extends StatelessWidget {
         expanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
         size: 18,
         color: textColor.withValues(alpha: 0.8),
-      ),
-    );
-  }
-}
-
-/// Expanded-but-no-data state.
-class _ComingSoon extends StatelessWidget {
-  const _ComingSoon();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-      child: Text(
-        "Coming soon — we haven't curated this yet.",
-        style: AccordionTheme.sBody.copyWith(
-          color: AccordionTheme.ink3,
-          fontStyle: FontStyle.italic,
-        ),
       ),
     );
   }

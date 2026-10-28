@@ -360,7 +360,8 @@ class _CountryHeaderPreviewScreenState
   Widget _languageSection(CountryBundle bundle) {
     final languages = bundle.facts.languages;
     final featuredWord = bundle.words.isEmpty ? null : bundle.words.first;
-    final hasData = languages.isNotEmpty || featuredWord != null;
+    // Verified languages only (see repository); a word alone isn't enough.
+    final hasData = languages.isNotEmpty;
     final colors = _palette.language;
     return AccordionSection(
       title: 'Language',

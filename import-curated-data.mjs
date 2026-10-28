@@ -19,7 +19,7 @@
 //
 // Run:
 //   node import-curated-data.mjs                  // everything
-//   node import-curated-data.mjs --only=categories,regional_notes,cities,guides,poi,words,phrases,visas,advisories
+//   node import-curated-data.mjs --only=categories,regional_notes,cities,guides,poi,words,phrases,visas,advisories,languages
 //
 // Order matters on a fresh run: categories before words/phrases (need
 // category_id), cities before poi (need city_id), countries must already
@@ -324,7 +324,7 @@ function toDifficultyInt(value) {
 
 let languageIdCache = null;
 
-async function getLanguageId(isoCode) {
+async function getLanguageId(isoCode, name = null) {
   if (!languageIdCache) languageIdCache = new Map();
   if (languageIdCache.has(isoCode)) return languageIdCache.get(isoCode);
 
@@ -332,7 +332,7 @@ async function getLanguageId(isoCode) {
   if (existing) { languageIdCache.set(isoCode, existing.id); return existing.id; }
 
   const { data: inserted, error } = await supabase.from('languages')
-    .insert({ iso_code: isoCode, name: LANGUAGE_NAMES[isoCode] ?? isoCode })
+    .insert({ iso_code: isoCode, name: name ?? LANGUAGE_NAMES[isoCode] ?? isoCode })
     .select('id').single();
   if (error) throw error;
   languageIdCache.set(isoCode, inserted.id);
@@ -487,6 +487,56 @@ async function importAdvisories() {
 }
 
 // ---------------------------------------------------------------
+// Languages (per-country speaker percentages + verification state)
+// ---------------------------------------------------------------
+// Only percent fields and is_official are written; usage_note/is_primary
+// stay as hand-set in Supabase. See migration 030 for the status values.
+const PERCENT_STATUSES = new Set(['verified', 'unverified', 'no_source', 'needs_research']);
+
+async function importLanguages() {
+  console.log('Importing Languages...');
+  const rows = sheetRows('Languages').filter(
+    (r) => isCountryCode(r.country_code) && typeof r.language_code === 'string' && r.notes !== 'example row — delete or skip',
+  );
+  console.log(`  ${rows.length} real rows.`);
+  let skipped = 0;
+  for (const r of rows) {
+    const where = `${r.country_code}/${r.language_code}`;
+    const status = r.status ?? 'needs_research';
+    const percent = typeof r.percent_speakers === 'number' ? r.percent_speakers : null;
+    if (!PERCENT_STATUSES.has(status)) { console.warn(`  ${where}: unknown status "${status}", skipped.`); skipped++; continue; }
+    if (status === 'verified' && (percent === null || !r.percent_year || !r.source_url)) {
+      console.warn(`  ${where}: verified needs percent_speakers, percent_year and source_url, skipped.`); skipped++; continue;
+    }
+    if ((status === 'no_source' || status === 'needs_research') && percent !== null) {
+      console.warn(`  ${where}: has a figure but status ${status}, skipped.`); skipped++; continue;
+    }
+
+    const countryId = await getCountryId(r.country_code);
+    if (!countryId) { skipped++; continue; }
+    const languageId = await getLanguageId(r.language_code, r.language_name);
+    const fields = {
+      percent_speakers: percent,
+      percent_status: status,
+      percent_year: r.percent_year ?? null,
+      percent_source_url: r.source_url ?? null,
+      percent_speakers_source: r.source_citation ?? null,
+      ...(typeof r.is_official === 'boolean' ? { is_official: r.is_official } : {}),
+    };
+
+    const { data: updated, error } = await supabase.from('country_languages')
+      .update(fields).eq('country_id', countryId).eq('language_id', languageId).select('country_id');
+    if (error) throw error;
+    if (updated.length === 0) {
+      const { error: insertError } = await supabase.from('country_languages')
+        .insert({ country_id: countryId, language_id: languageId, is_primary: false, is_official: false, ...fields });
+      if (insertError) throw insertError;
+    }
+  }
+  console.log(`  Done.${skipped ? ` ${skipped} rows skipped (see warnings).` : ''}`);
+}
+
+// ---------------------------------------------------------------
 async function main() {
   console.log(`Reading ${XLSX_PATH}...`);
 
@@ -499,6 +549,7 @@ async function main() {
   if (shouldRun('phrases')) await importPhrases();
   if (shouldRun('visas')) await importVisas();
   if (shouldRun('advisories')) await importAdvisories();
+  if (shouldRun('languages')) await importLanguages();
 
   console.log('\nDone. Note: Contributors sheet had no real rows yet (only instructional text) — nothing to import there.');
 }

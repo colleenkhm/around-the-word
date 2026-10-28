@@ -21,6 +21,17 @@ refactors/doc updates unless they're worth calling out.
 - "Holidays" section on the country page — public holidays, sourced from
   Nager.Date. Data is imported; the section isn't in the app yet.
 
+## [0.7.0] — 2026-10-27
+
+### Added
+- About page now lists where the app's data comes from, with each
+  source's license and credit.
+- Each country's Languages section links to the survey or census behind
+  its speaker percentages.
+- The country facts data (capitals, currencies, calling codes, borders,
+  population, time zones) can be downloaded as a CSV from the About page,
+  under the Open Database License.
+
 ## [0.5.1] — 2026-10-26
 
 ### Changed

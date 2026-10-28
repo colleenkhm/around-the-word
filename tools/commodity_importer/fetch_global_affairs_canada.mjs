@@ -48,7 +48,7 @@ const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const FEED_URL = 'https://data.international.gc.ca/travel-voyage/index-updated.json';
-const USER_AGENT = 'whereabout-commodity-importer/0.1 (Global Affairs Canada advisories fetch)';
+const USER_AGENT = 'whereabout-commodity-importer/0.1 (https://www.whereabout.world; Global Affairs Canada advisories fetch)';
 
 function toIsoDate(gacDate) {
   // "2026-07-29 14:31:46" -> "2026-07-29"
